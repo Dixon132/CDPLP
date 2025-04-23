@@ -185,14 +185,22 @@ model reportes {
   usuarios         usuarios? @relation(fields: [id_creador], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 
+enum RolUsuario {
+  SECRETARIO_GENERAL
+  PRESIDENTE
+  VICEPRESIDENTE
+  VOCAL
+  SECRETARIO
+}
+
 model roles {
-  id_rol       Int       @id @default(autoincrement())
+  id_rol       Int         @id @default(autoincrement())
   id_usuario   Int?
-  rol          String?   @db.VarChar(50)
-  fecha_inicio DateTime? @db.Date
-  fecha_fin    DateTime? @db.Date
+  rol          RolUsuario? @default(SECRETARIO_GENERAL)
+  fecha_inicio DateTime?   @db.Date
+  fecha_fin    DateTime?   @db.Date
   activo       Boolean?
-  usuarios     usuarios? @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
+  usuarios     usuarios?   @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model solicitudes_actividad_social {
@@ -226,8 +234,9 @@ model usuarios {
   contrase_a                  String?                       @map("contraseña") @db.VarChar(300)
   telefono                    String?                       @db.VarChar(20)
   direccion                   String?                       @db.VarChar(200)
-  fecha_registro              DateTime?                     @db.Date
-  estado                      String?                       @db.VarChar(20)
+  fecha_registro              DateTime?                     @default(now()) @db.Date
+  fecha_actualizacion         DateTime?                     @updatedAt @db.Date
+  estado                      String?                       @default("ACTIVO") @db.VarChar(20)
   actividades_institucionales actividades_institucionales[]
   actividades_sociales        actividades_sociales[]
   movimientos_financieros     movimientos_financieros[]

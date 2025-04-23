@@ -8,7 +8,7 @@ import NotFoundException from "../../../exceptions/not-found";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../../../utils/secrets";
 export const singUp = async(req: Request, res: Response)=>{
-    signupSchema.parse(req.body)
+    const validated = signupSchema.parse(req.body)
     const {
         nombre,
         apellido,
@@ -16,7 +16,7 @@ export const singUp = async(req: Request, res: Response)=>{
         contraseña,
         telefono,
         direccion
-    } = req.body
+    } = validated
     let user = await prismaClient.usuarios.findFirst({
         where: {correo}
     })

@@ -297,6 +297,7 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   telefono: 'telefono',
   direccion: 'direccion',
   fecha_registro: 'fecha_registro',
+  fecha_actualizacion: 'fecha_actualizacion',
   estado: 'estado'
 };
 
@@ -314,7 +315,13 @@ exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
 };
-
+exports.RolUsuario = exports.$Enums.RolUsuario = {
+  SECRETARIO_GENERAL: 'SECRETARIO_GENERAL',
+  PRESIDENTE: 'PRESIDENTE',
+  VICEPRESIDENTE: 'VICEPRESIDENTE',
+  VOCAL: 'VOCAL',
+  SECRETARIO: 'SECRETARIO'
+};
 
 exports.Prisma.ModelName = {
   actividades_institucionales: 'actividades_institucionales',

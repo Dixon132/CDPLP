@@ -1,13 +1,17 @@
 import {Request, Response, Router} from 'express'
 import { authMiddleware } from '../../../middlewares/auth'
+import { getUsuarios, getUsuarioById, updateUsuarioById,desactivarUsuarioById,activarUsuarioById,getUsuariosFiltrados } from '../controllers/usuario'
+import errorHandler from '../../../utils/error-handler'
 
 const usuarioRouter:Router = Router()
 
-usuarioRouter.get('/add:id', [authMiddleware],((req: Request, res: Response)=>{
-    res.json({hola:'holaGET'})
-}))
-usuarioRouter.post('/get', (req: Request, res: Response)=>{
-    res.json({hola:'holaPOST'})
-})
+usuarioRouter.get('/', errorHandler(getUsuarios))
+usuarioRouter.get('/:id', errorHandler(getUsuarioById))
+usuarioRouter.put('/:id', errorHandler(updateUsuarioById))
+usuarioRouter.delete('/:id/desactivar', errorHandler(desactivarUsuarioById))
+usuarioRouter.post('/:id/activar', errorHandler(activarUsuarioById))
+usuarioRouter.get('/filtrar', errorHandler(getUsuariosFiltrados))
+
+
 
 export default usuarioRouter

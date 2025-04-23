@@ -105,6 +105,26 @@ export type tareas_proyecto = $Result.DefaultSelection<Prisma.$tareas_proyectoPa
 export type usuarios = $Result.DefaultSelection<Prisma.$usuariosPayload>
 
 /**
+ * Enums
+ */
+export namespace $Enums {
+  export const RolUsuario: {
+  SECRETARIO_GENERAL: 'SECRETARIO_GENERAL',
+  PRESIDENTE: 'PRESIDENTE',
+  VICEPRESIDENTE: 'VICEPRESIDENTE',
+  VOCAL: 'VOCAL',
+  SECRETARIO: 'SECRETARIO'
+};
+
+export type RolUsuario = (typeof RolUsuario)[keyof typeof RolUsuario]
+
+}
+
+export type RolUsuario = $Enums.RolUsuario
+
+export const RolUsuario: typeof $Enums.RolUsuario
+
+/**
  * ##  Prisma Client ʲˢ
  *
  * Type-safe database client for TypeScript & Node.js
@@ -19529,7 +19549,7 @@ export namespace Prisma {
   export type RolesMinAggregateOutputType = {
     id_rol: number | null
     id_usuario: number | null
-    rol: string | null
+    rol: $Enums.RolUsuario | null
     fecha_inicio: Date | null
     fecha_fin: Date | null
     activo: boolean | null
@@ -19538,7 +19558,7 @@ export namespace Prisma {
   export type RolesMaxAggregateOutputType = {
     id_rol: number | null
     id_usuario: number | null
-    rol: string | null
+    rol: $Enums.RolUsuario | null
     fecha_inicio: Date | null
     fecha_fin: Date | null
     activo: boolean | null
@@ -19682,7 +19702,7 @@ export namespace Prisma {
   export type RolesGroupByOutputType = {
     id_rol: number
     id_usuario: number | null
-    rol: string | null
+    rol: $Enums.RolUsuario | null
     fecha_inicio: Date | null
     fecha_fin: Date | null
     activo: boolean | null
@@ -19765,7 +19785,7 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id_rol: number
       id_usuario: number | null
-      rol: string | null
+      rol: $Enums.RolUsuario | null
       fecha_inicio: Date | null
       fecha_fin: Date | null
       activo: boolean | null
@@ -20195,7 +20215,7 @@ export namespace Prisma {
   interface rolesFieldRefs {
     readonly id_rol: FieldRef<"roles", 'Int'>
     readonly id_usuario: FieldRef<"roles", 'Int'>
-    readonly rol: FieldRef<"roles", 'String'>
+    readonly rol: FieldRef<"roles", 'RolUsuario'>
     readonly fecha_inicio: FieldRef<"roles", 'DateTime'>
     readonly fecha_fin: FieldRef<"roles", 'DateTime'>
     readonly activo: FieldRef<"roles", 'Boolean'>
@@ -22963,6 +22983,7 @@ export namespace Prisma {
     telefono: string | null
     direccion: string | null
     fecha_registro: Date | null
+    fecha_actualizacion: Date | null
     estado: string | null
   }
 
@@ -22975,6 +22996,7 @@ export namespace Prisma {
     telefono: string | null
     direccion: string | null
     fecha_registro: Date | null
+    fecha_actualizacion: Date | null
     estado: string | null
   }
 
@@ -22987,6 +23009,7 @@ export namespace Prisma {
     telefono: number
     direccion: number
     fecha_registro: number
+    fecha_actualizacion: number
     estado: number
     _all: number
   }
@@ -23009,6 +23032,7 @@ export namespace Prisma {
     telefono?: true
     direccion?: true
     fecha_registro?: true
+    fecha_actualizacion?: true
     estado?: true
   }
 
@@ -23021,6 +23045,7 @@ export namespace Prisma {
     telefono?: true
     direccion?: true
     fecha_registro?: true
+    fecha_actualizacion?: true
     estado?: true
   }
 
@@ -23033,6 +23058,7 @@ export namespace Prisma {
     telefono?: true
     direccion?: true
     fecha_registro?: true
+    fecha_actualizacion?: true
     estado?: true
     _all?: true
   }
@@ -23132,6 +23158,7 @@ export namespace Prisma {
     telefono: string | null
     direccion: string | null
     fecha_registro: Date | null
+    fecha_actualizacion: Date | null
     estado: string | null
     _count: UsuariosCountAggregateOutputType | null
     _avg: UsuariosAvgAggregateOutputType | null
@@ -23163,6 +23190,7 @@ export namespace Prisma {
     telefono?: boolean
     direccion?: boolean
     fecha_registro?: boolean
+    fecha_actualizacion?: boolean
     estado?: boolean
     actividades_institucionales?: boolean | usuarios$actividades_institucionalesArgs<ExtArgs>
     actividades_sociales?: boolean | usuarios$actividades_socialesArgs<ExtArgs>
@@ -23183,6 +23211,7 @@ export namespace Prisma {
     telefono?: boolean
     direccion?: boolean
     fecha_registro?: boolean
+    fecha_actualizacion?: boolean
     estado?: boolean
   }, ExtArgs["result"]["usuarios"]>
 
@@ -23195,6 +23224,7 @@ export namespace Prisma {
     telefono?: boolean
     direccion?: boolean
     fecha_registro?: boolean
+    fecha_actualizacion?: boolean
     estado?: boolean
   }, ExtArgs["result"]["usuarios"]>
 
@@ -23207,10 +23237,11 @@ export namespace Prisma {
     telefono?: boolean
     direccion?: boolean
     fecha_registro?: boolean
+    fecha_actualizacion?: boolean
     estado?: boolean
   }
 
-  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_usuario" | "nombre" | "apellido" | "correo" | "contrase_a" | "telefono" | "direccion" | "fecha_registro" | "estado", ExtArgs["result"]["usuarios"]>
+  export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_usuario" | "nombre" | "apellido" | "correo" | "contrase_a" | "telefono" | "direccion" | "fecha_registro" | "fecha_actualizacion" | "estado", ExtArgs["result"]["usuarios"]>
   export type usuariosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | usuarios$actividades_institucionalesArgs<ExtArgs>
     actividades_sociales?: boolean | usuarios$actividades_socialesArgs<ExtArgs>
@@ -23244,6 +23275,7 @@ export namespace Prisma {
       telefono: string | null
       direccion: string | null
       fecha_registro: Date | null
+      fecha_actualizacion: Date | null
       estado: string | null
     }, ExtArgs["result"]["usuarios"]>
     composites: {}
@@ -23683,6 +23715,7 @@ export namespace Prisma {
     readonly telefono: FieldRef<"usuarios", 'String'>
     readonly direccion: FieldRef<"usuarios", 'String'>
     readonly fecha_registro: FieldRef<"usuarios", 'DateTime'>
+    readonly fecha_actualizacion: FieldRef<"usuarios", 'DateTime'>
     readonly estado: FieldRef<"usuarios", 'String'>
   }
     
@@ -24503,6 +24536,7 @@ export namespace Prisma {
     telefono: 'telefono',
     direccion: 'direccion',
     fecha_registro: 'fecha_registro',
+    fecha_actualizacion: 'fecha_actualizacion',
     estado: 'estado'
   };
 
@@ -24591,6 +24625,20 @@ export namespace Prisma {
    * Reference to a field of type 'Decimal[]'
    */
   export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'RolUsuario'
+   */
+  export type EnumRolUsuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RolUsuario'>
+    
+
+
+  /**
+   * Reference to a field of type 'RolUsuario[]'
+   */
+  export type ListEnumRolUsuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RolUsuario[]'>
     
 
 
@@ -25635,7 +25683,7 @@ export namespace Prisma {
     NOT?: rolesWhereInput | rolesWhereInput[]
     id_rol?: IntFilter<"roles"> | number
     id_usuario?: IntNullableFilter<"roles"> | number | null
-    rol?: StringNullableFilter<"roles"> | string | null
+    rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
     fecha_inicio?: DateTimeNullableFilter<"roles"> | Date | string | null
     fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
     activo?: BoolNullableFilter<"roles"> | boolean | null
@@ -25658,7 +25706,7 @@ export namespace Prisma {
     OR?: rolesWhereInput[]
     NOT?: rolesWhereInput | rolesWhereInput[]
     id_usuario?: IntNullableFilter<"roles"> | number | null
-    rol?: StringNullableFilter<"roles"> | string | null
+    rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
     fecha_inicio?: DateTimeNullableFilter<"roles"> | Date | string | null
     fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
     activo?: BoolNullableFilter<"roles"> | boolean | null
@@ -25685,7 +25733,7 @@ export namespace Prisma {
     NOT?: rolesScalarWhereWithAggregatesInput | rolesScalarWhereWithAggregatesInput[]
     id_rol?: IntWithAggregatesFilter<"roles"> | number
     id_usuario?: IntNullableWithAggregatesFilter<"roles"> | number | null
-    rol?: StringNullableWithAggregatesFilter<"roles"> | string | null
+    rol?: EnumRolUsuarioNullableWithAggregatesFilter<"roles"> | $Enums.RolUsuario | null
     fecha_inicio?: DateTimeNullableWithAggregatesFilter<"roles"> | Date | string | null
     fecha_fin?: DateTimeNullableWithAggregatesFilter<"roles"> | Date | string | null
     activo?: BoolNullableWithAggregatesFilter<"roles"> | boolean | null
@@ -25840,6 +25888,7 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"usuarios"> | string | null
     direccion?: StringNullableFilter<"usuarios"> | string | null
     fecha_registro?: DateTimeNullableFilter<"usuarios"> | Date | string | null
+    fecha_actualizacion?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     estado?: StringNullableFilter<"usuarios"> | string | null
     actividades_institucionales?: Actividades_institucionalesListRelationFilter
     actividades_sociales?: Actividades_socialesListRelationFilter
@@ -25859,6 +25908,7 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
     fecha_registro?: SortOrderInput | SortOrder
+    fecha_actualizacion?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     actividades_institucionales?: actividades_institucionalesOrderByRelationAggregateInput
     actividades_sociales?: actividades_socialesOrderByRelationAggregateInput
@@ -25881,6 +25931,7 @@ export namespace Prisma {
     telefono?: StringNullableFilter<"usuarios"> | string | null
     direccion?: StringNullableFilter<"usuarios"> | string | null
     fecha_registro?: DateTimeNullableFilter<"usuarios"> | Date | string | null
+    fecha_actualizacion?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     estado?: StringNullableFilter<"usuarios"> | string | null
     actividades_institucionales?: Actividades_institucionalesListRelationFilter
     actividades_sociales?: Actividades_socialesListRelationFilter
@@ -25900,6 +25951,7 @@ export namespace Prisma {
     telefono?: SortOrderInput | SortOrder
     direccion?: SortOrderInput | SortOrder
     fecha_registro?: SortOrderInput | SortOrder
+    fecha_actualizacion?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     _count?: usuariosCountOrderByAggregateInput
     _avg?: usuariosAvgOrderByAggregateInput
@@ -25920,6 +25972,7 @@ export namespace Prisma {
     telefono?: StringNullableWithAggregatesFilter<"usuarios"> | string | null
     direccion?: StringNullableWithAggregatesFilter<"usuarios"> | string | null
     fecha_registro?: DateTimeNullableWithAggregatesFilter<"usuarios"> | Date | string | null
+    fecha_actualizacion?: DateTimeNullableWithAggregatesFilter<"usuarios"> | Date | string | null
     estado?: StringNullableWithAggregatesFilter<"usuarios"> | string | null
   }
 
@@ -26918,7 +26971,7 @@ export namespace Prisma {
   }
 
   export type rolesCreateInput = {
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
@@ -26928,14 +26981,14 @@ export namespace Prisma {
   export type rolesUncheckedCreateInput = {
     id_rol?: number
     id_usuario?: number | null
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
   }
 
   export type rolesUpdateInput = {
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -26945,7 +26998,7 @@ export namespace Prisma {
   export type rolesUncheckedUpdateInput = {
     id_rol?: IntFieldUpdateOperationsInput | number
     id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -26954,14 +27007,14 @@ export namespace Prisma {
   export type rolesCreateManyInput = {
     id_rol?: number
     id_usuario?: number | null
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
   }
 
   export type rolesUpdateManyMutationInput = {
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -26970,7 +27023,7 @@ export namespace Prisma {
   export type rolesUncheckedUpdateManyInput = {
     id_rol?: IntFieldUpdateOperationsInput | number
     id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -27120,6 +27173,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -27139,6 +27193,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -27157,6 +27212,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -27176,6 +27232,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -27195,6 +27252,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
   }
 
@@ -27206,6 +27264,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -27218,6 +27277,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -28101,6 +28161,13 @@ export namespace Prisma {
     id_creador?: SortOrder
   }
 
+  export type EnumRolUsuarioNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RolUsuario | EnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRolUsuarioNullableFilter<$PrismaModel> | $Enums.RolUsuario | null
+  }
+
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
@@ -28141,6 +28208,16 @@ export namespace Prisma {
   export type rolesSumOrderByAggregateInput = {
     id_rol?: SortOrder
     id_usuario?: SortOrder
+  }
+
+  export type EnumRolUsuarioNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RolUsuario | EnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRolUsuarioNullableWithAggregatesFilter<$PrismaModel> | $Enums.RolUsuario | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
+    _max?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
   }
 
   export type BoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -28295,6 +28372,7 @@ export namespace Prisma {
     telefono?: SortOrder
     direccion?: SortOrder
     fecha_registro?: SortOrder
+    fecha_actualizacion?: SortOrder
     estado?: SortOrder
   }
 
@@ -28311,6 +28389,7 @@ export namespace Prisma {
     telefono?: SortOrder
     direccion?: SortOrder
     fecha_registro?: SortOrder
+    fecha_actualizacion?: SortOrder
     estado?: SortOrder
   }
 
@@ -28323,6 +28402,7 @@ export namespace Prisma {
     telefono?: SortOrder
     direccion?: SortOrder
     fecha_registro?: SortOrder
+    fecha_actualizacion?: SortOrder
     estado?: SortOrder
   }
 
@@ -29318,6 +29398,10 @@ export namespace Prisma {
     connect?: usuariosWhereUniqueInput
   }
 
+  export type NullableEnumRolUsuarioFieldUpdateOperationsInput = {
+    set?: $Enums.RolUsuario | null
+  }
+
   export type NullableBoolFieldUpdateOperationsInput = {
     set?: boolean | null
   }
@@ -29859,9 +29943,26 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
+  export type NestedEnumRolUsuarioNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.RolUsuario | EnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRolUsuarioNullableFilter<$PrismaModel> | $Enums.RolUsuario | null
+  }
+
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
+  }
+
+  export type NestedEnumRolUsuarioNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.RolUsuario | EnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    in?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.RolUsuario[] | ListEnumRolUsuarioFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumRolUsuarioNullableWithAggregatesFilter<$PrismaModel> | $Enums.RolUsuario | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
+    _max?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -29880,6 +29981,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuariosInput
@@ -29898,6 +30000,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuariosInput
@@ -29977,6 +30080,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuariosNestedInput
@@ -29995,6 +30099,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -30065,6 +30170,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuariosInput
@@ -30083,6 +30189,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuariosInput
@@ -30184,6 +30291,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuariosNestedInput
@@ -30202,6 +30310,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -31017,6 +31126,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -31035,6 +31145,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -31124,6 +31235,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -31142,6 +31254,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -31664,6 +31777,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -31682,6 +31796,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -31771,6 +31886,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -31789,6 +31905,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -31937,6 +32054,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -31955,6 +32073,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -31988,6 +32107,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -32006,6 +32126,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -32023,6 +32144,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -32041,6 +32163,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -32074,6 +32197,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -32092,6 +32216,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -32211,6 +32336,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesCreateNestedManyWithoutUsuariosInput
@@ -32229,6 +32355,7 @@ export namespace Prisma {
     telefono?: string | null
     direccion?: string | null
     fecha_registro?: Date | string | null
+    fecha_actualizacion?: Date | string | null
     estado?: string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
     actividades_sociales?: actividades_socialesUncheckedCreateNestedManyWithoutUsuariosInput
@@ -32292,6 +32419,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUpdateManyWithoutUsuariosNestedInput
@@ -32310,6 +32438,7 @@ export namespace Prisma {
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     direccion?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
     actividades_sociales?: actividades_socialesUncheckedUpdateManyWithoutUsuariosNestedInput
@@ -32487,7 +32616,7 @@ export namespace Prisma {
   }
 
   export type rolesCreateWithoutUsuariosInput = {
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
@@ -32495,7 +32624,7 @@ export namespace Prisma {
 
   export type rolesUncheckedCreateWithoutUsuariosInput = {
     id_rol?: number
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
@@ -32681,7 +32810,7 @@ export namespace Prisma {
     NOT?: rolesScalarWhereInput | rolesScalarWhereInput[]
     id_rol?: IntFilter<"roles"> | number
     id_usuario?: IntNullableFilter<"roles"> | number | null
-    rol?: StringNullableFilter<"roles"> | string | null
+    rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
     fecha_inicio?: DateTimeNullableFilter<"roles"> | Date | string | null
     fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
     activo?: BoolNullableFilter<"roles"> | boolean | null
@@ -33282,7 +33411,7 @@ export namespace Prisma {
 
   export type rolesCreateManyUsuariosInput = {
     id_rol?: number
-    rol?: string | null
+    rol?: $Enums.RolUsuario | null
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
     activo?: boolean | null
@@ -33470,7 +33599,7 @@ export namespace Prisma {
   }
 
   export type rolesUpdateWithoutUsuariosInput = {
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -33478,7 +33607,7 @@ export namespace Prisma {
 
   export type rolesUncheckedUpdateWithoutUsuariosInput = {
     id_rol?: IntFieldUpdateOperationsInput | number
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
@@ -33486,7 +33615,7 @@ export namespace Prisma {
 
   export type rolesUncheckedUpdateManyWithoutUsuariosInput = {
     id_rol?: IntFieldUpdateOperationsInput | number
-    rol?: NullableStringFieldUpdateOperationsInput | string | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
     fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
