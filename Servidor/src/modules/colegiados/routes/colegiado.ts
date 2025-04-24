@@ -5,9 +5,9 @@ import { authMiddleware } from "../../../middlewares/auth";
 
 const colegiadoRouter: Router = Router()
 
-colegiadoRouter.get('/', [authMiddleware],errorHandler(getColegiados))
-colegiadoRouter.post('/', [authMiddleware],errorHandler(createColegiado))
-colegiadoRouter.put('/:id', [authMiddleware],errorHandler(updateEstadoColegiadoById))
+colegiadoRouter.get('/', errorHandler(getColegiados))
+colegiadoRouter.post('/', errorHandler(createColegiado))
+colegiadoRouter.put('/:id', errorHandler(updateEstadoColegiadoById))
 
 
 export default colegiadoRouter

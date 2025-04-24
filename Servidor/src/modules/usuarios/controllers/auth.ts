@@ -37,7 +37,7 @@ export const singUp = async(req: Request, res: Response)=>{
 }
 
 export const login = async(req: Request, res: Response)=>{
-    loginSchema.parse(req.body)
+    
     const {
         correo,
         contraseña
