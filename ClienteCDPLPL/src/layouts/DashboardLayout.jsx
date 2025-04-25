@@ -2,7 +2,9 @@ import React, { useState } from 'react';
 import Sidebar  from '../components/Sidebar';
 import { HeaderDashboard } from '../components/HeaderDashboard';
 import { Outlet } from 'react-router-dom';
+import { useAxiosInterceptor } from '../hooks/useAxiosInterceptor';
 export const DashboardLayout= () => {
+    
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
     const toggleSidebar = () => {

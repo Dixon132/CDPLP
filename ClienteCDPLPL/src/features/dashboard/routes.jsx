@@ -8,6 +8,8 @@ import Ac_institucionales from "./pages/Ac-Inst/Ac_institucionales";
 import Proyecto from "./pages/Proyectos/Proyecto";
 import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
+import { RequireRole } from "../../components/RequireRole";
+
 
 export const dashboardRoutes = {
     path: '/dashboard',
@@ -15,7 +17,11 @@ export const dashboardRoutes = {
     children: [
         {
             index: true,
-            element: <PrincipalPage/>
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE']}>
+                    <PrincipalPage/>
+                </RequireRole>
+            )
         },
         {
             path: 'usuarios',

@@ -1,28 +1,35 @@
 import axios from "axios";
 import { useEffect, useState } from 'react';
 import Tables from "../../components/Tables";
+import { useAxiosInterceptor } from "../../../../hooks/useAxiosInterceptor";
+import { getAllActiveUsuarios } from "../../services/usuarios";
 const Usuarios = () => {
-
-    const [usuarios, setUsuarios] = useState([]);
-
     useEffect(() => {
-        axios.get('/api/usuarios/usuario/').then((res) => {
-            setUsuarios(res.data);
-        });
+        // función interna async para poder usar await
+        async function fetchUsuarios() {
+            const data = await getAllActiveUsuarios();
+            console.log(data)
+        }
+        fetchUsuarios();
     }, []);
-
-    const handleEdit = (item) => console.log('Editar usuario', item);
-    const handleDelete = (item) => console.log('Eliminar usuario', item);
-    const handleCreate = () => console.log('Crear usuario');
-
-    return (
-        <Tables
-            data={usuarios}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onCreate={handleCreate}
-        />
-    );
+    return(
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    )
 };
 
 export default Usuarios;

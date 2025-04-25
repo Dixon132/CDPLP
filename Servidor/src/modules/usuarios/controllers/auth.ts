@@ -7,6 +7,7 @@ import {hashSync, compareSync} from 'bcrypt'
 import NotFoundException from "../../../exceptions/not-found";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../../../utils/secrets";
+import UnauthorizedException from "../../../exceptions/unauthorized";
 export const singUp = async(req: Request, res: Response)=>{
     const validated = signupSchema.parse(req.body)
     const {
@@ -44,14 +45,24 @@ export const login = async(req: Request, res: Response)=>{
     } = req.body
     let user = await prismaClient.usuarios.findFirst({where: {correo}})
     if(!user){
-        throw new NotFoundException('Usuario no encontrado!',ErrorCodes.USER_NOT_FOUND)
+        throw new UnauthorizedException('Usuario no encontrado!',ErrorCodes.USER_NOT_FOUND)
     }
     if(!compareSync(contraseña,user.contrase_a!)){
-        throw new NotFoundException('Contraseña incorrecta!',ErrorCodes.USER_NOT_FOUND)
+        throw new UnauthorizedException('Contraseña incorrecta!',ErrorCodes.USER_NOT_FOUND)
     }
+    const rol = await prismaClient.roles.findFirstOrThrow({
+        where:{
+            id_usuario: user.id_usuario
+        },
+        select:{
+            rol: true
+        }
+
+    })
     
     const token = jwt.sign({
-        userId: user.id_usuario
+        userId: user.id_usuario,
+        rol
     }, JWT_SECRET!, {expiresIn: '10h'})
     res.json({user, token})
 }   

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { authRouter } from "../features/auth/routes";
 import { dashboardRoutes } from "../features/dashboard/routes";
+import NotFound from "../features/users/pages/NotFound";
 
 export const router = createBrowserRouter([
     {
@@ -12,6 +13,6 @@ export const router = createBrowserRouter([
     authRouter,
     {
         path: "*",
-        element: <div>404</div>
+        element: <NotFound/>
     }
 ])
