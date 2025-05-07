@@ -4,7 +4,7 @@ export const colegiadoSchema = z.object({
     carnet_identidad: z.string()
         .min(1, "El carnet de identidad es requerido")
         .max(20, "El carnet de identidad no puede exceder 20 caracteres")
-        .regex(/^[0-9]+$/, "El carnet de identidad solo debe contener números"),
+        ,
     
     nombre: z.string()
         .min(1, "El nombre es requerido")

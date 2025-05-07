@@ -1,27 +1,61 @@
-import axios from "axios";
+import Modal from "../../../../components/Modal";
+import { Button, ButtonCreate } from "../../components/Button";
+import { EmptyTd, H1, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
 import { useEffect, useState } from 'react';
-import Tables from "../../components/Tables";
+import { getAllProyectos } from "../../services/proyectos";
+
+
 const Proyecto = () => {
+    const [proyectos, setProyectos] = useState([])
+    const [mostrarModal, SetMostrarModal] = useState(false)
+    const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const [totalPage, setTotalPage] = useState(1)
 
-    const [usuarios, setUsuarios] = useState([]);
-
+    async function fetchProyectos(){
+        const{proyectos, total, page: currentPage, totalPages} = await getAllProyectos({page, search});
+        setProyectos(proyectos)
+        setTotal(total)
+        setTotalPage(totalPages)    
+        setPage(currentPage)
+        console.log('se hizo peticion de proyectos')
+    }
     useEffect(() => {
-        axios.get('/api/proyectos/proyecto/getAll').then((res) => {
-            setUsuarios(res.data);
-        });
-    }, []);
-
-    const handleEdit = (item) => console.log('Editar usuario', item);
-    const handleDelete = (item) => console.log('Eliminar usuario', item);
-    const handleCreate = () => console.log('Crear usuario');
-
+        fetchProyectos()
+    }, [page, search]);
     return (
-        <Tables
-            data={usuarios}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onCreate={handleCreate}
-        />
+    <>
+        <H1>Lista de Proyectos</H1>
+        <ButtonCreate onClick={() => SetMostrarModal(true)}>Crear proyecto</ButtonCreate>
+        <Tables>
+            <THead th={['titulo', 'descripcion', 'fecha inicio', 'fecha fin', 'responsable', 'presupuesto', 'estado']} />
+            <TBody>
+                {!proyectos.length ? (
+                    <EmptyTd />
+                ) : (
+                    proyectos.map((item) => (
+                        <tr key={item.id_proyecto}>
+                            <Td>{item.titulo}</Td>
+                            <Td>{item.descripcion}</Td>
+                            <Td>{item.fecha_inicio}</Td>
+                            <Td>{item.fecha_fin}</Td>
+                            <Td>{item.responsable}</Td>
+                            <Td>{item.presupuesto}</Td>
+                            <Td estado={true}>{item.estado}</Td>
+                        <Td>
+                            <Button className="bg-red-300 hover:bg-red-400">Desactivar</Button>
+                        </Td>
+                    </tr>
+                )))}
+            </TBody>
+            <Tfooter total={total} totalPage={totalPage} Page={page}/>
+        </Tables>
+        <Modal isOpen={mostrarModal} title='Crear Proyecto' onClose={()=>SetMostrarModal(false)}>
+            sadas
+        </Modal>
+    
+    </>
     );
 };
 

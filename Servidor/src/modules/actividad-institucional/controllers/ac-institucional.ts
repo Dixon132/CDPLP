@@ -2,10 +2,49 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { actividadInstitucionalSchema } from "../schemas/ac-institucional";
 
-export const getActInst = async(req: Request, res: Response)=>{
-    const actividades = await prismaClient.actividades_institucionales.findMany()
-    res.status(200).json(actividades)
-}
+export const getActInst = async (req: Request, res: Response) => {
+    const { page = 1, limit = 15, search = '' } = req.query;
+    const skip: number = (Number(page) - 1) * Number(limit);
+    const take: number = Number(limit);
+
+    const searchFields = ['titulo', 'descripcion', 'tipo', 'motivo', 'lugar']; 
+
+    const searchFilter = search
+        ? {
+            OR: searchFields.map(field => ({
+                [field]: {
+                    contains: search,
+                    mode: 'insensitive',
+                },
+            })),
+        }
+        : {};
+
+    const actividades = await prismaClient.actividades_institucionales.findMany({
+        where: {
+            ...searchFilter,
+        },
+        skip,
+        take,
+        select:{
+            usuarios:true
+        }
+    });
+
+    const total = await prismaClient.actividades_institucionales.count({
+        where: {
+            ...searchFilter,
+        },
+    });
+
+    res.status(200).json({
+        data: actividades,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / take),
+    });
+};
+
 export const updateEstadoActInst = async(req: Request, res: Response)=>{
     const id = req.params.id
     const {estado} = req.body

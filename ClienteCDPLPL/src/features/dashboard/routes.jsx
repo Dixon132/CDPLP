@@ -9,6 +9,7 @@ import Proyecto from "./pages/Proyectos/Proyecto";
 import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import { RequireRole } from "../../components/RequireRole";
+import NotAuthorized from "./pages/NotAuthorized";
 
 
 export const dashboardRoutes = {
@@ -25,7 +26,9 @@ export const dashboardRoutes = {
         },
         {
             path: 'usuarios',
-            element: <Usuarios/>,
+            element: <RequireRole allowedRoles={['PRESIDENTE']}>
+                    <Usuarios/>
+                </RequireRole>
         },
         {
             path: 'colegiados',
@@ -50,6 +53,10 @@ export const dashboardRoutes = {
         {
             path: 'ajustes',
             element: <Ajustes/>
+        },
+        {
+            path: 'notAuthorized',
+            element: <NotAuthorized/>
         }
     ]
 }

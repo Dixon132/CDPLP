@@ -1,28 +1,73 @@
-import axios from "axios";
+import Modal from "../../../../components/Modal";
+import { Button, ButtonCreate } from "../../components/Button";
+import { EmptyTd, H1, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
+
 import { useEffect, useState } from 'react';
-import Tables from "../../components/Tables";
-const Ac_social = () => {
+import { gelAllActividadesSociales } from "../../services/ac-sociales";
+const Ac_sociales = () => {
 
-    const [usuarios, setUsuarios] = useState([]);
-
-    useEffect(() => {
-        axios.get('/api/ac-sociales/ac-social/').then((res) => {
-            setUsuarios(res.data);
-        });
-    }, []);
-
-    const handleEdit = (item) => console.log('Editar usuario', item);
-    const handleDelete = (item) => console.log('Eliminar usuario', item);
-    const handleCreate = () => console.log('Crear usuario');
-
+    const [actSociales, setActSociales] = useState([])
+    const [mostrarModal, SetMostrarModal] = useState(false)
+    const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+    const [total, setTotal] = useState(0)
+    const [totalPage, setTotalPage] = useState(1)
+        async function fetchSociales() {
+            const {data, total, page: currentPage, totalPages} = await gelAllActividadesSociales({page, search});
+            setActSociales(data)
+            setTotal(total)
+            setTotalPage(totalPages)
+            setPage(currentPage)
+            console.log('se hizo peticion de usuarios')
+        }
+        useEffect(() => {
+            fetchSociales()
+        }, [page, search]);
+        
     return (
-        <Tables
-            data={usuarios}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            onCreate={handleCreate}
-        />
+        <>
+        <H1>Lista de actividades institucionales</H1>
+        <ButtonCreate onClick={()=>SetMostrarModal(true)}>Crear actividad institucional</ButtonCreate>
+        <Tables>
+            <THead th={['Nombre','Descripcion','Ubicacion','Motivo','Origen intervencion', 'Fecha inicio', 'Fecha fin', 'Costo', 'Estado', 'Tipo','Responsable']}/>
+            <TBody>
+                {!actSociales.length ? (
+                    <tr>
+
+                    <EmptyTd/>
+                    </tr>
+                ) : (
+
+                    actSociales.map((item, index) => (
+                        <tr key={item.id_actividad_social}>
+                        <Td>{item.nombre}</Td>
+                        <Td>{item.descripcion}</Td>
+                        <Td>{item.ubicacion}</Td>
+                        <Td>{item.motivo}</Td>
+                        <Td>{item.origen_intervencion}</Td>
+                        <Td>{item.fecha_inicio}</Td>
+                        <Td>{item.fecha_fin}</Td>
+                        <Td>{item.costo}</Td>
+                        <Td estado={true}>{item.estado}</Td>
+                        <Td>{item.usuarios.nombre}</Td>
+                        <Td>
+                            <Button className="bg-red-300 hover:bg-red-400">Desactivar</Button>
+                        </Td>
+                    </tr>
+                    )
+                ))}
+            </TBody>
+            <Tfooter total={total} totalPage={totalPage} Page={page}/>
+        </Tables>
+        <Modal isOpen={mostrarModal} title='Crear Proyecto' onClose={()=>SetMostrarModal(false)}>
+            sadas
+        </Modal>
+
+        </>
     );
 };
 
-export default Ac_social
+
+
+
+export default Ac_sociales;

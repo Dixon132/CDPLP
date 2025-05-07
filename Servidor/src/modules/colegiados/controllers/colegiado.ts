@@ -25,14 +25,48 @@ export const createColegiado = async(req: Request, res: Response)=>{
         throw new BadRequestException('Hubo un error al crear el registro del colegiado', ErrorCodes.INTERNAL_EXCEPTION)
     }
 }
-export const getColegiados = async(req: Request, res: Response)=> {
-    const colegiados= await prismaClient.colegiados.findMany({
-        where:{
-            estado: 'ACTIVO'
+export const getColegiados = async (req: Request, res: Response) => {
+    const { page = 1, limit = 15, search = '' } = req.query;
+    const skip: number = (Number(page) - 1) * Number(limit);
+    const take: number = Number(limit);
+    
+    const searchFields = ['nombre', 'apellido', 'ci', 'correo', 'telefono','especialidades']; // ajusta estos campos según tu modelo
+
+    const searchFilter = search
+        ? {
+            OR: searchFields.map(field => ({
+                [field]: {
+                    contains: search,
+                    mode: 'insensitive',
+                },
+            })),
         }
-    })
-    res.status(200).json(colegiados)
-}
+        : {};
+
+    const colegiados = await prismaClient.colegiados.findMany({
+        where: {
+            estado: 'ACTIVO',
+            ...searchFilter,
+        },
+        skip,
+        take,
+    });
+
+    const total = await prismaClient.colegiados.count({
+        where: {
+            estado: 'ACTIVO',
+            ...searchFilter,
+        },
+    });
+
+    res.status(200).json({
+        data: colegiados,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / take),
+    });
+};
+
 export const updateEstadoColegiadoById = async(req: Request, res: Response)=>{
     const id = req.params.id
     const {estado} = req.body

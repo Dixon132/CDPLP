@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { configureAxiosGlobal } from '../../../utils/axiosGlobalConfig';
 import { parseToken } from '../../../utils/parsejwt';
-
+import { motion } from 'framer-motion';
 export const Login = () => {
     
         const navigate = useNavigate()
@@ -36,14 +36,17 @@ export const Login = () => {
 
         return (
 
-            <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+            <motion.form  initial={{ opacity: 0, x: 200 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 1 }} className="w-1/2 border p-10 rounded-3xl space-y-6" onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                    <label  className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Email address
+                    <label  className="block text-sm font-medium text-gray-700 ">
+                        Correo electronico
                     </label>
                     <div className="mt-1">
                         <input
-                            className='bg-white w-full h-7 rounded p-2'
+                            className='bg-white w-full h-7 rounded p-4 border'
                             type='email'
                             {...register('correo', {required: 'Este campo es obligatiorio'})}
                         />
@@ -51,8 +54,8 @@ export const Login = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Password
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 ">
+                        Contraseña
                     </label>
                     <div className="mt-1 relative">
                         <input
@@ -63,24 +66,14 @@ export const Login = () => {
                                 minLength: {value:8, message:'minimo 8 caracteres'}    
                             })}
                             placeholder="••••••••"
-                            className='bg-white w-full h-7 rounded p-2'
+                            className='bg-white w-full h-7 border rounded p-4'
                         />
                         {errors.correo && <span>{errors.correo.message}</span>}
                         
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                        <input
-                            id="remember-me"
-                            name="remember-me"
-                            type="checkbox"
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded bg-white"
-                            />
-                            {errors.correo && <span>{errors.correo.message}</span>}
-                    </div>
-                </div>
+                
 
                 <div>
                     <button
@@ -91,13 +84,8 @@ export const Login = () => {
                     </button>
                 </div>
 
-                <div className="text-sm text-center">
-                    <span className="text-gray-600 dark:text-gray-400">Don't have an account? </span>
-                    <a href="/signup" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
-                        Sign up
-                    </a>
-                </div>
-            </form>
+                
+            </motion.form>
 
         );
     };

@@ -3,8 +3,34 @@ import prismaClient from "../../../utils/prismaClient"
 import { proyectoSchema } from "../schemas/proyectos"
 
 export const getProyectos = async(req: Request, res: Response)=>{
-    const proyectos = await prismaClient.proyectos.findMany()
-    res.status(200).json(proyectos)
+    const {page = 1, limit = 15, search= ''}= req.query
+    const skip: number = (Number(page) - 1) * Number(limit)
+    const take: number = Number(limit)
+    const searchFields = ['titulo', 'descripcion', 'fecha_inicio', 'fecha_fin', 'id_responsable', 'presupuesto', 'estado']
+    const searchFilter = search
+        ? {
+            OR: searchFields.map(field => ({
+                [field]: {
+                    contains: search,
+                    mode: 'insensitive',
+                },
+            })),
+        }
+        : {};
+    const proyectos = await prismaClient.proyectos.findMany({
+        where:{
+            ...searchFilter
+        },
+        skip,
+        take
+    })
+    const total = await prismaClient.proyectos.count({
+        where:{
+            ...searchFilter
+        }
+    })
+
+    res.status(200).json({proyectos,total, page: Number(page), totalPages: Math.ceil(total / take)})
     
 }
 

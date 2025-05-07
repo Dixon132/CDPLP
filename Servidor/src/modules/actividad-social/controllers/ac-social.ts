@@ -2,14 +2,49 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { actividadSocialSchema } from "../schemas/ac-social";
 
-export const getActividadesSociales = async(req:Request, res: Response)=>{
-    const actividad = await prismaClient.actividades_sociales.findMany({
-        where:{
-            estado: 'ACTIVO'
+export const getActividadesSociales = async (req: Request, res: Response) => {
+    const { page = 1, limit = 15, search = '' } = req.query;
+    const skip: number = (Number(page) - 1) * Number(limit);
+    const take: number = Number(limit);
+
+    const searchFields = ['titulo', 'descripcion', 'lugar', 'tipo']; // ajusta estos campos según tu modelo
+
+    const searchFilter = search
+        ? {
+            OR: searchFields.map(field => ({
+                [field]: {
+                    contains: search,
+                    mode: 'insensitive',
+                },
+            })),
         }
-    })
-    res.status(200).json(actividad)
-}
+        : {};
+
+    const actividades = await prismaClient.actividades_sociales.findMany({
+        where: {
+            ...searchFilter,
+        },
+        skip,
+        take,
+        include: {
+            usuarios: true
+        },
+    });
+
+    const total = await prismaClient.actividades_sociales.count({
+        where: {
+            ...searchFilter,
+        },
+    });
+
+    res.status(200).json({
+        data: actividades,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / take),
+    });
+};
+
 export const getActividadSocialById = async(req:Request, res: Response)=>{
     const id = req.params.id
     const actividad = await prismaClient.actividades_sociales.findFirstOrThrow({
