@@ -4,6 +4,7 @@ import { EmptyTd, H1, Tables, TBody, Td, Tfooter, THead } from "../../components
 
 import { useEffect, useState } from 'react';
 import { gelAllActividadesSociales } from "../../services/ac-sociales";
+import CreateActividadSocial from "./components/CreateActividadSocial";
 const Ac_sociales = () => {
 
     const [actSociales, setActSociales] = useState([])
@@ -26,8 +27,8 @@ const Ac_sociales = () => {
         
     return (
         <>
-        <H1>Lista de actividades institucionales</H1>
-        <ButtonCreate onClick={()=>SetMostrarModal(true)}>Crear actividad institucional</ButtonCreate>
+        <H1>Lista de actividades sociales</H1>
+        <ButtonCreate onClick={()=>SetMostrarModal(true)}>Crear actividad social</ButtonCreate>
         <Tables>
             <THead th={['Nombre','Descripcion','Ubicacion','Motivo','Origen intervencion', 'Fecha inicio', 'Fecha fin', 'Costo', 'Estado', 'Tipo','Responsable']}/>
             <TBody>
@@ -60,7 +61,7 @@ const Ac_sociales = () => {
             <Tfooter total={total} totalPage={totalPage} Page={page}/>
         </Tables>
         <Modal isOpen={mostrarModal} title='Crear Proyecto' onClose={()=>SetMostrarModal(false)}>
-            sadas
+            <CreateActividadSocial/>
         </Modal>
 
         </>

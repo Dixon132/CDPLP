@@ -1,13 +1,53 @@
 import { Request, Response } from "express"
 import prismaClient from "../../../utils/prismaClient"
 
-export const getRoles = async (req: Request, res: Response)=>{
+export const getRoles = async (req: Request, res: Response) => {
+    const { page = 1, limit = 15, search = '' } = req.query
+    const skip: number = (Number(page) - 1) * Number(limit)
+    const take: number = Number(limit)
+    const searchFields = ['rol'];
+
+    const searchFilter = search
+        ? {
+            OR: searchFields.map(field => ({
+                [field]: {
+                    contains: search,
+                    mode: 'insensitive',
+                },
+            })),
+        }
+        : {};
+
     const roles = await prismaClient.roles.findMany({
-        where:{
-            activo: true
+        where: {
+            activo: true,
+            ...searchFilter
+        },
+        include: {
+            usuarios: {
+                select: {
+                    nombre: true,
+                    apellido: true
+                }
+            }
+        },
+        skip,
+        take
+    })
+
+    const total = await prismaClient.roles.count({
+        where: {
+            activo: true,
+            ...searchFilter
         }
     })
-    res.status(200).json(roles)
+
+    res.status(200).json({
+        data: roles,
+        total,
+        page: Number(page),
+        totalPages: Math.ceil(total / take)
+    })
 }
 
 export const createRole = async (req: Request, res: Response)=>{

@@ -1,91 +1,153 @@
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form'
-import { Eye, EyeOff } from 'lucide-react';
-import { AuthLayout } from '../../../layouts/AuthLayout';
+import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { configureAxiosGlobal } from '../../../utils/axiosGlobalConfig';
-import { parseToken } from '../../../utils/parsejwt';
 import { motion } from 'framer-motion';
-export const Login = () => {
-    
-        const navigate = useNavigate()
-        const {
-            register,
-            handleSubmit,
-            formState: { errors },
-            reset
-        } = useForm();
+import Modal from '../../../components/Modal';
 
-    const onSubmit = async(data)=>{
+export const Login = () => {
+    const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+        reset
+    } = useForm();
+    
+    const onSubmit = async(data) => {
         try {
+            setIsLoading(true);
+            setError(null);
             const response = await axios.post('/api/usuarios/auth/login', {
                 correo: data.correo,
                 contraseña: data.contraseña,
-            });         
-            const {token }= response.data;
-            localStorage.setItem("token", token);
-            configureAxiosGlobal()
-            navigate('/dashboard')
-        } catch (error) {
-            console.error("Error al iniciar sesión:", error.response.data.message);
-        }
-        
-    }
-
-
-        return (
-
-            <motion.form  initial={{ opacity: 0, x: 200 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }} className="w-1/2 border p-10 rounded-3xl space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                <div>
-                    <label  className="block text-sm font-medium text-gray-700 ">
-                        Correo electronico
-                    </label>
-                    <div className="mt-1">
-                        <input
-                            className='bg-white w-full h-7 rounded p-4 border'
-                            type='email'
-                            {...register('correo', {required: 'Este campo es obligatiorio'})}
-                        />
-                    </div>
-                </div>
-
-                <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 ">
-                        Contraseña
-                    </label>
-                    <div className="mt-1 relative">
-                        <input
-                            id="password"
-                            name="password"
-                            {...register('contraseña',{
-                                required:'La contraseña es obligatoria',
-                                minLength: {value:8, message:'minimo 8 caracteres'}    
-                            })}
-                            placeholder="••••••••"
-                            className='bg-white w-full h-7 border rounded p-4'
-                        />
-                        {errors.correo && <span>{errors.correo.message}</span>}
-                        
-                    </div>
-                </div>
-
+            }); 
                 
+            const {token} = response.data;
+            localStorage.setItem("token", token);
+            configureAxiosGlobal();
+            navigate('/dashboard');
+        } catch (error) {
+            setError(error.response?.data?.message || 'Error al iniciar sesión');
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
-                <div>
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
+
+    return (
+        <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 p-5">
+            <motion.div
+                initial={{ opacity: 0, x: 200 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 1 }}
+                className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8"
+            >
+                <h1 className="text-3xl font-semibold text-center text-indigo-900 mb-8">
+                    Iniciar Sesión
+                </h1>
+
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                    <div className="space-y-2">
+                        <label 
+                            htmlFor="email" 
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Correo electrónico
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            className={`w-full px-4 py-3 rounded-lg border ${
+                                errors.correo 
+                                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                    : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'
+                            } focus:outline-none focus:ring-2 transition-colors duration-200`}
+                            {...register('correo', {
+                                required: 'Este campo es obligatorio',
+                                pattern: {
+                                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                    message: 'Correo electrónico inválido'
+                                }
+                            })}
+                        />
+                        {errors.correo && (
+                            <p className="text-sm text-red-500 mt-1">
+                                {errors.correo.message}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="space-y-2">
+                        <label 
+                            htmlFor="password" 
+                            className="block text-sm font-medium text-gray-700"
+                        >
+                            Contraseña
+                        </label>
+                        <div className="relative">
+                            <input
+                                type={showPassword ? 'text' : 'password'}
+                                id="password"
+                                className={`w-full px-4 py-3 rounded-lg border ${
+                                    errors.contraseña 
+                                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                                        : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'
+                                } focus:outline-none focus:ring-2 transition-colors duration-200`}
+                                {...register('contraseña', {
+                                    required: 'La contraseña es obligatoria',
+                                    minLength: {
+                                        value: 8,
+                                        message: 'Mínimo 8 caracteres'
+                                    }
+                                })}
+                            />
+                            <button
+                                type="button"
+                                onClick={handleClickShowPassword}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600 transition-colors duration-200"
+                            >
+                                {showPassword ? '👁️' : '👁️‍🗨️'}
+                            </button>
+                        </div>
+                        {errors.contraseña && (
+                            <p className="text-sm text-red-500 mt-1">
+                                {errors.contraseña.message}
+                            </p>
+                        )}
+                    </div>
+
                     <button
                         type="submit"
-                        className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        disabled={isLoading}
+                        className={`w-full bg-indigo-900 text-white py-3 px-4 rounded-lg font-semibold 
+                                 hover:bg-indigo-800 transform hover:-translate-y-0.5 transition-all duration-200 
+                                 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+                                 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed
+                                 ${isLoading ? 'animate-pulse' : ''}`}
                     >
-                        Sign in
+                        {isLoading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
                     </button>
-                </div>
-
-                
-            </motion.form>
-
-        );
-    };
+                </form>
+            </motion.div>
+            
+            {error && (
+                <Modal
+                    isOpen={!!error}
+                    onClose={() => setError(null)}
+                    title="Error"
+                    message={error}
+                    type="error"
+                />
+            )}
+        </div>
+    );
+};

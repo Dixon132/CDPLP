@@ -16,8 +16,10 @@ export const singUp = async(req: Request, res: Response)=>{
         correo,
         contraseña,
         telefono,
-        direccion
-    } = validated
+        direccion,
+        rol,
+    } = req.body
+    
     let user = await prismaClient.usuarios.findFirst({
         where: {correo}
     })
@@ -32,6 +34,12 @@ export const singUp = async(req: Request, res: Response)=>{
             contrase_a: hashSync(contraseña, 10),
             telefono,
             direccion
+        }
+    })
+    const roles = await prismaClient.roles.create({
+        data:{
+            id_usuario:user.id_usuario ,
+            rol
         }
     })
     res.json(user)

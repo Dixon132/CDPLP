@@ -11,6 +11,7 @@ export const desactivarUsuarios = async(id)=>{
     return alert('exito')
 }
 export const createUsuario = async(data)=>{
-    const res = axios('/api/usuarios/auth/signup')
+    const res =await axios.post('/api/usuarios/auth/signup',data)
+    return res.data
 
 }

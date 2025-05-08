@@ -199,7 +199,7 @@ model roles {
   rol          RolUsuario? @default(SECRETARIO_GENERAL)
   fecha_inicio DateTime?   @db.Date
   fecha_fin    DateTime?   @db.Date
-  activo       Boolean?
+  activo       Boolean?    @default(true)
   usuarios     usuarios?   @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 

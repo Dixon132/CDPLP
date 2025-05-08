@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Button, TextField, Box, Typography, Container, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
+import { createUsuario } from '../../../services/usuarios';
 
 const CreateUser = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -11,8 +12,8 @@ const CreateUser = () => {
     ];
 
     const onSubmit = (data) => {
-        console.log(data);
-        // Aquí puedes agregar la lógica para enviar los datos al backend
+        const user = createUsuario(data)
+        
     };
 
     return (

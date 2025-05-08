@@ -3,6 +3,7 @@ import { Button, ButtonCreate } from "../../components/Button";
 import { EmptyTd, H1, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
 import { useEffect, useState } from 'react';
 import { getAllProyectos } from "../../services/proyectos";
+import CreateProyecto from "./components/CreateProyecto";
 
 
 const Proyecto = () => {
@@ -52,7 +53,7 @@ const Proyecto = () => {
             <Tfooter total={total} totalPage={totalPage} Page={page}/>
         </Tables>
         <Modal isOpen={mostrarModal} title='Crear Proyecto' onClose={()=>SetMostrarModal(false)}>
-            sadas
+            <CreateProyecto/>
         </Modal>
     
     </>

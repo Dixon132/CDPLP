@@ -6,3 +6,6 @@ export const getAllProyectos = async({page=1,limit=15,search=''})=>{
     })
     return res.data
 }
+export const createProyecto = (data)=>{
+    
+}

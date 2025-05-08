@@ -30,11 +30,11 @@ export const colegiadoSchema = z.object({
         .min(1, "Las especialidades son requeridas")
         .max(200, "Las especialidades no pueden exceder 200 caracteres"),
     
-    fecha_inscripcion: z.string()
-        .datetime({ message: "La fecha de inscripción debe estar en formato ISO 8601" }),
+    fecha_inscripcion: z.coerce.date().optional()
+        ,
     
-    fecha_renovacion: z.string()
-        .datetime({ message: "La fecha de renovación debe estar en formato ISO 8601" })
+    fecha_renovacion: z.coerce.date()
+        
         .optional(),
     
     estado: z.enum(["ACTIVO", "INACTIVO", "SUSPENDIDO"])

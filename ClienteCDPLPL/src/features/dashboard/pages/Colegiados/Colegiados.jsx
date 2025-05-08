@@ -1,8 +1,9 @@
 import Modal from "../../../../components/Modal";
 import { Button, ButtonCreate } from "../../components/Button";
 import { EmptyTd, H1, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
-import { getAllColegiados } from "../../services/colegiados";
+import { getAllColegiados, updateEstadoColegiado } from "../../services/colegiados";
 import { useEffect, useState } from 'react';
+import CreateColegiado from "./components/CreateColegiado";
 
 const Colegiados = () => {
     const [colegiados, setColegiados] = useState([])
@@ -46,7 +47,7 @@ const Colegiados = () => {
                         <Td>{item.fecha_renovacion}</Td>
                         <Td estado={true}>{item.estado}</Td>
                         <Td>
-                            <Button className="bg-red-300 hover:bg-red-400">Desactivar</Button>
+                            <Button onClick={()=>updateEstadoColegiado(item.id_colegiado)} className="bg-red-300 hover:bg-red-400">Desactivar</Button>
                         </Td>
                     </tr>
                     )
@@ -55,7 +56,7 @@ const Colegiados = () => {
             <Tfooter total={total} totalPage={totalPage} Page={page}/>
         </Tables>
         <Modal isOpen={mostrarModal} title='Crear Proyecto' onClose={()=>SetMostrarModal(false)}>
-            sadas
+            <CreateColegiado/>
         </Modal>
 
         </>

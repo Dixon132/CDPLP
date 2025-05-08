@@ -80,6 +80,9 @@ export const Tfooter = ({ total, totalPage, Page }) => {
 }
 export const EmptyTd = ()=>{
     return(
+        <tr>
+
         <td>NO DATA</td>
+        </tr>
     )
 }

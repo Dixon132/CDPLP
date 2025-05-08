@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getRoles, createRole, updateRoleById } from "../controllers/roles";
+import {  createRole, getRoles, updateRoleById } from "../controllers/roles";
 import errorHandler from "../../../utils/error-handler";
 
 const rolesRouter: Router = Router()

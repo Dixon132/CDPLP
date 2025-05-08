@@ -10,6 +10,7 @@ import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import { RequireRole } from "../../components/RequireRole";
 import NotAuthorized from "./pages/NotAuthorized";
+import Roles from "./pages/Usuarios/Roles";
 
 
 export const dashboardRoutes = {
@@ -57,6 +58,10 @@ export const dashboardRoutes = {
         {
             path: 'notAuthorized',
             element: <NotAuthorized/>
+        },
+        {
+            path: 'roles',
+            element: <Roles/>
         }
     ]
 }
