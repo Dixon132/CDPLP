@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 
 export const getUsuarios = async (req: Request, res: Response) => {
-    const { page = 1, limit = 15, search = '' } = req.query
+    const { page = 1, limit = 15, search = '', inactivos } = req.query
     const skip: number = (Number(page) - 1) * Number(limit)
     const take: number = Number(limit)
     const searchFields = ['nombre', 'apellido', 'correo', 'direccion', 'telefono'];
-
+    const mostrarInactivos = inactivos === 'true';
     const searchFilter = search
         ? {
             OR: searchFields.map(field => ({
@@ -20,7 +20,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
 
     const usuario = await prismaClient.usuarios.findMany({
         where: {
-            estado: 'ACTIVO',
+            estado: mostrarInactivos ? 'INACTIVO' : 'ACTIVO',
             ...searchFilter
         },
         skip,
@@ -28,7 +28,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
     })
     const total = await prismaClient.usuarios.count({
         where: {
-            estado: 'ACTIVO',
+            estado: mostrarInactivos ? 'INACTIVO' : 'ACTIVO',
             ...searchFilter
         }
     })
@@ -39,11 +39,16 @@ export const getUsuarios = async (req: Request, res: Response) => {
         totalPages: Math.ceil(total / take)
     })
 }
+
 export const getUsuarioById = async (req: Request, res: Response) => {
     const id = req.params.id
     const usuario = await prismaClient.usuarios.findUnique({
         where: {
             id_usuario: +id
+        },
+        select:{
+            telefono:true,
+            direccion: true
         }
     })
     res.status(200).json(usuario)

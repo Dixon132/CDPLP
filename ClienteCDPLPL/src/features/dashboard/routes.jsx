@@ -11,6 +11,8 @@ import Ajustes from "./pages/Ajustes/Ajustes";
 import { RequireRole } from "../../components/RequireRole";
 import NotAuthorized from "./pages/NotAuthorized";
 import Roles from "./pages/Usuarios/Roles";
+import Documentos from "./pages/Colegiados/Documentos";
+import Pagos from "./pages/Colegiados/Pagos";
 
 
 export const dashboardRoutes = {
@@ -34,6 +36,16 @@ export const dashboardRoutes = {
         {
             path: 'colegiados',
             element: <Colegiados/>,
+            children: [
+                {
+                    path: 'documentos/:id',
+                    element: <Documentos/>
+                },
+                {
+                    path: 'pagos/:id',
+                    element: <Pagos/>
+                }
+            ]
         },
         {
             path: 'actividades_sociales',

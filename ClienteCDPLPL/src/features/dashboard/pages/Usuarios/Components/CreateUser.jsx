@@ -3,17 +3,19 @@ import { Button, TextField, Box, Typography, Container, MenuItem, Select, FormCo
 import { createUsuario } from '../../../services/usuarios';
 
 const CreateUser = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const roles = [
         { value: 'PRESIDENTE', label: 'PRESIDENTE' },
         { value: 'VICEPRESIDENTE', label: 'VICEPRESIDENTE' },
-        { value: 'editor', label: 'Editor' }
+        { value: 'SECRETARIO_GENERAL', label: 'SECRETARIO_GENERAL' },
+        { value: 'VOCAL', label: 'VOCAL' },
+        { value: 'SECRETARIO', label: 'SECRETARIO' }
     ];
 
     const onSubmit = (data) => {
         const user = createUsuario(data)
-        
+        reset()
     };
 
     return (

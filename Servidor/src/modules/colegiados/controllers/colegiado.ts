@@ -26,11 +26,11 @@ export const createColegiado = async(req: Request, res: Response)=>{
     }
 }
 export const getColegiados = async (req: Request, res: Response) => {
-    const { page = 1, limit = 15, search = '' } = req.query;
+    const { page = 1, limit = 15, search = '', inactivos } = req.query;
     const skip: number = (Number(page) - 1) * Number(limit);
     const take: number = Number(limit);
-    
-    const searchFields = ['nombre', 'apellido', 'ci', 'correo', 'telefono','especialidades']; // ajusta estos campos según tu modelo
+    const mostrarInactivos = inactivos === 'true'
+    const searchFields = ['nombre', 'apellido', 'carnet_identidad', 'correo', 'telefono','especialidades']; // ajusta estos campos según tu modelo
 
     const searchFilter = search
         ? {
@@ -45,7 +45,7 @@ export const getColegiados = async (req: Request, res: Response) => {
 
     const colegiados = await prismaClient.colegiados.findMany({
         where: {
-            estado: 'ACTIVO',
+            estado:  mostrarInactivos ? 'INACTIVO' : 'ACTIVO',
             ...searchFilter,
         },
         skip,
@@ -54,7 +54,7 @@ export const getColegiados = async (req: Request, res: Response) => {
 
     const total = await prismaClient.colegiados.count({
         where: {
-            estado: 'ACTIVO',
+            estado:  mostrarInactivos ? 'INACTIVO' : 'ACTIVO',
             ...searchFilter,
         },
     });
@@ -79,4 +79,30 @@ export const updateEstadoColegiadoById = async(req: Request, res: Response)=>{
         }
     })
     res.status(200).json(colegiado)
+}
+export const updateColegiado = async(req: Request, res: Response)=>{
+    const id = req.params.id
+    const {correo, telefono} = req.body
+    const data = await prismaClient.colegiados.update({
+        where:{
+            id_colegiado: +id
+        },
+        data:{
+            correo,
+            telefono
+        }
+    })
+}
+export const getColegiadoById = async(req: Request, res: Response)=>{
+    const id = req.params.id
+    const data = await prismaClient.colegiados.findFirstOrThrow({
+        where: {
+            id_colegiado: +id
+        },
+        select:{
+            telefono: true,
+            correo: true
+        }
+    })
+    res.status(200).json(data)
 }

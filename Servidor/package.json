@@ -10,18 +10,22 @@
   "author": "Diego Alex",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.808.0",
     "@prisma/client": "^6.6.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.2",
     "prisma": "^6.6.0",
+    "uuid": "^11.1.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "@types/jsonwebtoken": "^9.0.9",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.1",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.14.1",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",

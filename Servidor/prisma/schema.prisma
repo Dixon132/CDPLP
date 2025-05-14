@@ -80,14 +80,23 @@ model colegiados_asignados_social {
 model documentos_colegiados {
   id_documento      Int         @id @default(autoincrement())
   id_colegiado      Int?
-  tipo_documento    String?     @db.VarChar(100)
+  tipo_documento    TipoDocumento
   archivo           String?
-  fecha_entrega     DateTime?   @db.Date
+  fecha_entrega     DateTime?   @db.Date @default(now())
   fecha_vencimiento DateTime?   @db.Date
-  estado            String?     @db.VarChar(50)
+  estado String? @db.VarChar(50) @default("VIGENTE")
   colegiados        colegiados? @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
-
+enum TipoDocumento {
+  TITULO_PROFESIONAL
+  TITULO_POSTGRADO
+  HOJA_DE_VIDA
+  FOTOGRAFIA
+  CEDULA_IDENTIDAD
+  COMPROBANTE
+  CERTIFICADO_DE_TRIBUNAL
+  CERTIFICADO_DE_ANTECEDENTES
+}
 model etapas_proyecto {
   id_etapa        Int               @id @default(autoincrement())
   id_proyecto     Int?
