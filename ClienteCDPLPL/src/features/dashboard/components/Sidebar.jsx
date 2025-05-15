@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Home,
   BarChart2,
@@ -16,21 +16,50 @@ import {
   UserCog
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-
+import { parseToken } from '../../../utils/parsejwt';
 const Sidebar = ({ collapsed }) => {
-  const mainNavItems = [
+  const [rol, setRol] = useState('')
+  const getRol = ()=>{
+    const token = localStorage.getItem('token');
+    if (!token) return <Navigate to="/auth/login" replace />;
+  
+    const {rol} = parseToken(token);
+    console.log(rol)
+    
+    return rol.rol
+  }
+  useEffect(()=>{
+    setRol(getRol())
+  },[])
+  let mainNavItems = [];
+  if(rol==="NO_DEFINIDO"){
+    mainNavItems = [
+    { title: 'Cerrar Sesion', icon: <LogOut size={20} /> }
+  ];
+  }
+  else if (rol === "PRESIDENTE") {
+  mainNavItems = [
     { title: 'Dashboard', icon: <Home size={20} />, active: true },
-    {
-      title: 'Usuarios',
-      icon: <UserCog size={20} />,
-      subtitles: ['Roles']
-    },
+    { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'] },
     { title: 'Colegiados', icon: <UsersRound size={20} /> },
     { title: 'Proyectos', icon: <FolderDot size={20} /> },
     { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} /> },
     { title: 'Actividades_Institucionales', icon: <BookMarked size={20} /> },
     { title: 'Tesoreria', icon: <DollarSign size={20} /> },
   ];
+} else if (rol === "SECRETARIO") {
+  mainNavItems = [
+    { title: 'Dashboard', icon: <Home size={20} />, active: true },
+    { title: 'Colegiados', icon: <UsersRound size={20} /> },
+    { title: 'Actividades_Institucionales', icon: <BookMarked size={20} /> },
+    { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} /> },
+  ];
+} else if (rol === "TESORERO") {
+  mainNavItems = [
+    { title: 'Dashboard', icon: <Home size={20} />, active: true },
+    { title: 'Tesoreria', icon: <DollarSign size={20} /> },
+  ];
+}
 
   const secondaryNavItems = [
     { title: 'Ajustes', icon: <Settings size={20} /> },

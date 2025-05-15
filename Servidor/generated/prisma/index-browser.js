@@ -262,10 +262,10 @@ exports.Prisma.ReportesScalarFieldEnum = {
 exports.Prisma.RolesScalarFieldEnum = {
   id_rol: 'id_rol',
   id_usuario: 'id_usuario',
-  rol: 'rol',
   fecha_inicio: 'fecha_inicio',
   fecha_fin: 'fecha_fin',
-  activo: 'activo'
+  activo: 'activo',
+  rol: 'rol'
 };
 
 exports.Prisma.Solicitudes_actividad_socialScalarFieldEnum = {
@@ -297,8 +297,8 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   telefono: 'telefono',
   direccion: 'direccion',
   fecha_registro: 'fecha_registro',
-  fecha_actualizacion: 'fecha_actualizacion',
-  estado: 'estado'
+  estado: 'estado',
+  fecha_actualizacion: 'fecha_actualizacion'
 };
 
 exports.Prisma.SortOrder = {
@@ -320,7 +320,9 @@ exports.RolUsuario = exports.$Enums.RolUsuario = {
   PRESIDENTE: 'PRESIDENTE',
   VICEPRESIDENTE: 'VICEPRESIDENTE',
   VOCAL: 'VOCAL',
-  SECRETARIO: 'SECRETARIO'
+  SECRETARIO: 'SECRETARIO',
+  TESORERO: 'TESORERO',
+  NO_DEFINIDO: 'NO_DEFINIDO'
 };
 
 exports.Prisma.ModelName = {

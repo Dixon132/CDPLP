@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getAlldocs } from "../../services/colegiados";
+import { getAlldocs, verDocumento } from "../../services/colegiados";
 import { useState } from "react";
 import parseDate from "../../../../utils/parseData";
 import Modal from "../../../../components/Modal";
 import AñadirDocumento from "./components/AñadirDocumento";
+import { Button } from "../../components/Button";
 const TIPO_DOCUMENTOS = [
     "TITULO_PROFESIONAL",
     "TITULO_POSTGRADO",
@@ -57,7 +58,9 @@ const Documentos = () => {
                             return (
                                 <tr key={i} className={`text-center ${existe ? "" : "text-gray-400 bg-gray-50"}`}>
                                     <td className="p-2 border">{tipo.replace(/_/g, ' ')}</td>
-                                    <td className="p-2 border">{doc?.archivo || "No subido"}</td>
+                                    <td className="p-2 border">{doc?.archivo ? <Button onClick={() => verDocumento(doc.id_documento)}>
+                                        Ver PDF
+                                    </Button> : "No subido"}</td>
                                     <td className="p-2 border">{doc?.fecha_entrega ? parseDate(doc.fecha_entrega) : "-"}</td>
                                     <td className="p-2 border">{doc?.fecha_vencimiento ? parseDate(doc.fecha_vencimiento) : "-"}</td>
                                     <td className="p-2 border">{doc?.estado || "Pendiente"}</td>
@@ -65,7 +68,7 @@ const Documentos = () => {
                                         {existe ? (
                                             <button className="bg-blue-500 text-white px-2 py-1 rounded">Editar</button>
                                         ) : (
-                                            <button onClick={()=>{
+                                            <button onClick={() => {
                                                 setModalAñadir(true)
                                                 setTipoDoc(tipo)
                                             }} className="bg-green-500 text-white px-2 py-1 rounded">Añadir</button>
@@ -81,7 +84,7 @@ const Documentos = () => {
             <div className="text-center border-b h-10 flex justify-center items-center">
                 <h2 className="font-bold text-1xl">Especialidades</h2>
             </div>
-            <Modal isOpen={modalAñadir} onClose={()=>setModalAñadir(false)} title={'Añadir documento'}>
+            <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir documento'}>
                 <AñadirDocumento id={id} tipoDoc={tipoDoc} />
             </Modal>
         </div>

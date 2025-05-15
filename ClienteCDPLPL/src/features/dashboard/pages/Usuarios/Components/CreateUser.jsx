@@ -10,7 +10,8 @@ const CreateUser = () => {
         { value: 'VICEPRESIDENTE', label: 'VICEPRESIDENTE' },
         { value: 'SECRETARIO_GENERAL', label: 'SECRETARIO_GENERAL' },
         { value: 'VOCAL', label: 'VOCAL' },
-        { value: 'SECRETARIO', label: 'SECRETARIO' }
+        { value: 'SECRETARIO', label: 'SECRETARIO' },
+        { value: 'TESORERO', label: 'TESORERO' }
     ];
 
     const onSubmit = (data) => {
@@ -88,25 +89,7 @@ const CreateUser = () => {
                             helperText={errors.direccion?.message}
                         />
 
-                        <FormControl fullWidth error={!!errors.rol}>
-                            <InputLabel id="rol-label">Rol</InputLabel>
-                            <Select
-                                labelId="rol-label"
-                                label="Rol"
-                                {...register('rol', { required: 'El rol es requerido' })}
-                            >
-                                {roles.map((role) => (
-                                    <MenuItem key={role.value} value={role.value}>
-                                        {role.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                            {errors.rol && (
-                                <Typography color="error" variant="caption">
-                                    {errors.rol.message}
-                                </Typography>
-                            )}
-                        </FormControl>
+                        
 
                         <Button 
                             type="submit" 

@@ -30,3 +30,10 @@ export const getAlldocs = async(id)=>{
     const res = await axios.get(`/api/colegiados/documentos/${id}`)
     return res.data
 }
+export const verDocumento = async (id) => {
+  const response = await axios.get(`/api/colegiados/documentos/ver/${id}`);
+  const url = response.data.url;
+
+  // Abre el PDF en una nueva pestaña
+  window.open(url, "_blank");
+};

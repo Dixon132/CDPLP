@@ -19,9 +19,10 @@ export const subirAaws = async (file: Express.Multer.File) => {
         Key: `documentos/${nombreFinal}`,
         Body: file.buffer,
         ContentType: file.mimetype,
-        ACL: "public-read", // o privado si prefieres controlar el acceso
+
     });
 
     await s3.send(comando);
-    return `https://${process.env.AWS_BUCKET_NAME}.s3.amazonaws.com/documentos/${nombreFinal}`;
+    return `documentos/${nombreFinal}`; // ✅ solo la key
+
 };
