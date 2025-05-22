@@ -5,6 +5,7 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { subirAaws } from "../../../utils/uploadS3";
+import { Param } from "@prisma/client/runtime/library";
 dotenv.config();
 const s3 = new S3Client({
     region: process.env.AWS_REGION!,

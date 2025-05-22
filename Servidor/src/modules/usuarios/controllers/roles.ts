@@ -2,11 +2,11 @@ import { Request, Response } from "express"
 import prismaClient from "../../../utils/prismaClient"
 
 export const getRoles = async (req: Request, res: Response) => {
-    const { page = 1, limit = 15, search = '' } = req.query
+    const { page = 1, limit = 15, search = '', inactivos } = req.query
     const skip: number = (Number(page) - 1) * Number(limit)
     const take: number = Number(limit)
     const searchFields = ['rol'];
-
+    const mostrarInactivos = inactivos === 'true';
     const searchFilter = search
         ? {
             OR: searchFields.map(field => ({
@@ -17,10 +17,9 @@ export const getRoles = async (req: Request, res: Response) => {
             })),
         }
         : {};
-
     const roles = await prismaClient.roles.findMany({
         where: {
-            activo: true,
+            activo: mostrarInactivos ? false : true,
             ...searchFilter
         },
         include: {
@@ -37,7 +36,7 @@ export const getRoles = async (req: Request, res: Response) => {
 
     const total = await prismaClient.roles.count({
         where: {
-            activo: true,
+            activo: mostrarInactivos ? false : true,
             ...searchFilter
         }
     })
@@ -59,14 +58,35 @@ export const createRole = async (req: Request, res: Response)=>{
 }
 export const updateRoleById = async (req: Request, res: Response)=>{
     const id = req.params.id
+    const {estado} = req.body
+    
     const rol = await prismaClient.roles.update({
         where:{
             id_rol: +id
         },
         data: {
-            activo: false
+            activo: estado==="ACTIVO" ? true : false 
         }
     })
     res.status(200).json(rol)
 }
 
+export const updateRol = async (req: Request, res: Response)=>{
+    const id = req.params.id
+    const {
+        fecha_inicio,
+        fecha_fin,
+        rol
+    } = req.body
+    const data = await prismaClient.roles.update({
+        where:{
+            id_rol: +id
+        },
+        data:{
+            fecha_fin: new Date(fecha_fin),
+            fecha_inicio: new Date(fecha_inicio),
+            rol
+        }
+    })
+    res.status(200).json(data)
+}

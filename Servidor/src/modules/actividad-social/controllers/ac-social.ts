@@ -7,8 +7,7 @@ export const getActividadesSociales = async (req: Request, res: Response) => {
     const skip: number = (Number(page) - 1) * Number(limit);
     const take: number = Number(limit);
 
-    const searchFields = ['titulo', 'descripcion', 'lugar', 'tipo']; // ajusta estos campos según tu modelo
-
+    const searchFields = ['nombre', 'descripcion', 'ubicacion', 'tipo'];
     const searchFilter = search
         ? {
             OR: searchFields.map(field => ({
@@ -45,7 +44,10 @@ export const getActividadesSociales = async (req: Request, res: Response) => {
     });
 };
 
-export const getActividadSocialById = async(req:Request, res: Response)=>{
+
+
+
+export const getActividadSocialById = async (req: Request, res: Response) => {
     const id = req.params.id
     const actividad = await prismaClient.actividades_sociales.findFirstOrThrow({
         where: {
@@ -54,23 +56,23 @@ export const getActividadSocialById = async(req:Request, res: Response)=>{
     })
     res.status(200).json(actividad)
 }
-export const updateEstadoById = async(req:Request, res: Response)=>{
+export const updateEstadoById = async (req: Request, res: Response) => {
     const id = req.params.id
-    const {estado} = req.body
+    const { estado } = req.body
     const updatedActividad = await prismaClient.actividades_sociales.update({
-        where:{
+        where: {
             id_actividad_social: +id
         },
-        data:{
+        data: {
             estado
         }
-    }) 
+    })
     res.status(200).json(updatedActividad)
 }
-export const createActividadSocial = async(req:Request, res: Response)=>{
+export const createActividadSocial = async (req: Request, res: Response) => {
     const validatedData = actividadSocialSchema.parse(req.body)
     const actividad = await prismaClient.actividades_sociales.create({
-        data:{
+        data: {
             nombre: validatedData.nombre,
             descripcion: validatedData.descripcion,
             ubicacion: validatedData.ubicacion,
@@ -87,3 +89,35 @@ export const createActividadSocial = async(req:Request, res: Response)=>{
     })
     res.status(200).json(actividad)
 }
+
+export const getActividadSocialesById = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    try {
+        const actividad = await prismaClient.actividades_sociales.findUnique({
+            where: { id_actividad_social: id },
+            include: {
+                usuarios: true,                          // responsable
+                solicitudes_actividad_social: true,      // solicitud
+                colegiados_asignados_social: {          // array de colegiados
+                    include: {
+                        colegiados: true
+                    }
+                },
+                origen_movimiento: true
+            }
+        });
+
+        if (!actividad) {
+            return res.status(404).json({ error: 'No se encontró la actividad' });
+        }
+
+        res.json(actividad);
+    } catch (error) {
+        console.error('Error fetching actividad:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};

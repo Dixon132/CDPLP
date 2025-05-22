@@ -4,7 +4,7 @@ import { H1, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
 import Modal from "../../../../components/Modal";
 import { Button, ButtonCreate } from "../../components/Button";
 import AsignarRol from "./Components/AsignarRol";
-import { desactivarRol, getAllRoles } from "../../services/roles";
+import { estadoRol, getAllRoles } from "../../services/roles";
 
 
 const Roles = () => {
@@ -12,13 +12,13 @@ const Roles = () => {
     const [mostrarModal, setMostrarModal] = useState(false);
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
+    const [currentId, setCurrentId] = useState(null)
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
-
+    const [mostrarInactivos, setMostrarInactivos] = useState(false)
     const fetchRoles = async () => {
         try {
-            const { data, total, page: currentPage, totalPages } = await getAllRoles({ page, search });
-            
+            const { data, total, page: currentPage, totalPages } = await getAllRoles({ page, search, inactivos:mostrarInactivos });
             setRoles(data);
             setTotal(total);
             setTotalPage(totalPages);
@@ -30,7 +30,7 @@ const Roles = () => {
 
     useEffect(() => {
         fetchRoles();
-    }, [page, search]);
+    }, [page, search, mostrarInactivos]);
 
     const handleDesactivarRol = async (idRol) => {
         try {
@@ -49,13 +49,13 @@ const Roles = () => {
     return (
         <>
             <H1>Lista de Roles</H1>
-            <ButtonCreate onClick={() => setMostrarModal(true)}>
-                Asignar Rol
-            </ButtonCreate>
+            <Button className={mostrarInactivos ? "bg-green-300" : "bg-red-300"} onClick={() => setMostrarInactivos(!mostrarInactivos)}>
+                {mostrarInactivos ? "Ver Roles activos" : "Ver Roles inactivos"}
+            </Button>
             <Tables>
                 <THead th={['Usuario', 'Rol', 'Fecha Inicio', 'Fecha Fin', 'Estado']} />
                 <TBody>
-                    {!roles? (
+                    {!roles ? (
                         <tr>
                             <td colSpan="5" className="text-center py-4 text-gray-500">
                                 No hay roles registrados
@@ -70,29 +70,38 @@ const Roles = () => {
                                 <Td>{rol.fecha_fin ? new Date(rol.fecha_fin).toLocaleDateString() : 'No definida'}</Td>
                                 <Td estado={rol.activo}>{rol.activo ? 'Activo' : 'Inactivo'}</Td>
                                 <Td>
-                                    <Button 
-                                        className="bg-red-300 hover:bg-red-400"
-                                        onClick={() => handleDesactivarRol(rol.id_rol)}
-                                    >
-                                        Desactivar
+                                    <Button onClick={()=>{
+                                        setCurrentId(rol.id_rol)
+                                        setMostrarModal(true)
+                                    }} className="bg-amber-200 hover:bg-amber-400">
+                                        Modificar
                                     </Button>
+                                    <Button className="bg-red-300 hover:bg-red-400" onClick={() => {
+                                        if (mostrarInactivos) {
+                                            estadoRol(rol.id_rol, "ACTIVO")
+                                            
+                                        } else {
+                                            estadoRol(rol.id_rol, "INACTIVO")
+                                        }
+                                    }
+                                    }>{mostrarInactivos ? "Activar Rol" : "Desactivar Rol"}</Button>
                                 </Td>
                             </tr>
                         ))
                     )}
                 </TBody>
-                <Tfooter 
-                    total={total} 
-                    totalPage={totalPage} 
+                <Tfooter
+                    total={total}
+                    totalPage={totalPage}
                     Page={page}
                 />
             </Tables>
 
-            <Modal 
-                isOpen={mostrarModal} 
+            <Modal
+                isOpen={mostrarModal}
                 onClose={() => setMostrarModal(false)}
             >
-                <AsignarRol onSuccess={handleSuccess} />
+                <AsignarRol id={currentId} onClose={()=>setMostrarModal(false)} />
             </Modal>
         </>
     );

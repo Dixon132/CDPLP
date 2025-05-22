@@ -7,6 +7,9 @@ import CreateColegiado from "./components/CreateColegiado";
 import parseDate from "../../../../utils/parseData";
 import ModificarColegiado from "./components/ModificarColegiado";
 import { Link, Outlet } from "react-router-dom";
+import axios from "axios";
+
+
 
 const Colegiados = () => {
     const [mostrarInactivos, setMostrarInactivos] = useState(false)
@@ -26,6 +29,38 @@ const Colegiados = () => {
         setPage(currentPage)
         console.log('se hizo peticion de usuarios')
     }
+
+
+    const descargarReporte = async () => {
+        try {
+            const response = await axios.get('/api/colegiados/colegiado/report', {
+                params: {
+                    estado: 'ACTIVO',
+                    telefono: '',
+                    correo:'',
+                    especialidades:'',
+                    estado:'',
+                    orden_inscripcion:'',
+                    orden_renovacion:''
+                },
+                responseType: 'blob', // IMPORTANTE para manejar PDFs correctamente
+            });
+
+            const blob = new Blob([response.data], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'reporte_colegiados.pdf');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (err) {
+            console.error('Error al descargar el PDF:', err);
+        }
+    };
+
+
     useEffect(() => {
         fetchProyectos()
     }, [page, search, mostrarInactivos]);
@@ -33,10 +68,12 @@ const Colegiados = () => {
     return (
         <>
             <H1>Lista de Colegiados</H1>
+
             <ButtonCreate onClick={() => SetMostrarModal(true)}>Crear Colegiado</ButtonCreate>
             <Button className={mostrarInactivos ? "bg-green-300" : "bg-red-300"} onClick={() => setMostrarInactivos(!mostrarInactivos)}>
                 {mostrarInactivos ? "Ver usuarios activos" : "Ver usuarios inactivos"}
             </Button>
+            <Button onClick={descargarReporte}>Generar reporte</Button>
             <InputSearch onChange={(e) => setSearch(e.target.value)} />
             <Tables>
                 <THead th={['carnet', 'nombre', 'apellidos', 'correo', 'telefono', 'especialidades', 'fecha inscripcion', 'fecha renovacion', 'estado', 'Documentos']} />

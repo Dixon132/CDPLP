@@ -19,8 +19,8 @@ export const DashboardLayout= () => {
             <div className="flex flex-col flex-1 overflow-hidden">
                 <HeaderDashboard onMenuClick={toggleSidebar} />
 
-                <main className="flex-1 overflow-y-auto p-4 md:p-6">
-                    <div className="max-w-7xl mx-auto">
+                <main className="flex-1 overflow-y-auto p-4 md:px-10">
+                    <div className="w-auto mx-auto">
                         <Outlet/>
                     </div>
                 </main>

@@ -134,7 +134,7 @@ model pagos_colegiados {
   concepto          String?             @db.VarChar(100)
   fecha_pago        DateTime?           @db.Date
   monto             Decimal?            @db.Decimal(10, 2)
-  estado_pago       String?             @db.VarChar(50)
+  estado_pago       String?             @default("REALIZADO") @db.VarChar(50)
   origen_movimiento origen_movimiento[]
   colegiados        colegiados?         @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }

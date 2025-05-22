@@ -15,6 +15,7 @@ import Documentos from "./pages/Colegiados/Documentos";
 import Pagos from "./pages/Colegiados/Pagos";
 
 
+
 export const dashboardRoutes = {
     path: '/dashboard',
     element: <DashboardLayout/>,
