@@ -19,7 +19,7 @@ const Usuarios = () => {
     const [total, setTotal] = useState(0)
     const [totalPage, setTotalPage] = useState(1)
     const [UsuarioModificando, setUsuarioModificando] = useState(null)
-    
+    console.log('renderizando componente usuarios')
     async function fetchUsuarios() {
         const {data, total, page: currentPage, totalPages} = await getAllActiveUsuarios({page, search, inactivos:mostrarInactivos});
         setUsers(data)
@@ -36,10 +36,10 @@ const Usuarios = () => {
     return (
 <>
         <H1>Lista de usuarios</H1>
-        <ButtonCreate onClick={()=>SetMostrarModal(true)}>Crear Usuario</ButtonCreate>
+        <Button onClose onClick={()=>SetMostrarModal(true)}>Crear Usuario</Button>
         <Button className={mostrarInactivos ? "bg-green-300" : "bg-red-300"} onClick={() => setMostrarInactivos(!mostrarInactivos)}>
     {mostrarInactivos ? "Ver usuarios activos" : "Ver usuarios inactivos"}
-</Button>
+        </Button>
         <InputSearch onChange={(e)=> setSearch(e.target.value)}/>
         <Tables>
             <THead th={['Nombre', 'apellido', 'correo', 'telefono', 'direccion', 'estado']} />

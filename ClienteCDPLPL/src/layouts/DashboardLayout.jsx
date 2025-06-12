@@ -1,34 +1,90 @@
 import React, { useState } from 'react';
-
 import { HeaderDashboard } from '../components/HeaderDashboard';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useAxiosInterceptor } from '../hooks/useAxiosInterceptor';
 import Sidebar from '../features/dashboard/components/Sidebar';
-export const DashboardLayout= () => {
-    
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+import { motion, AnimatePresence } from 'framer-motion';
 
+export const DashboardLayout = () => {
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const location = useLocation();
+    
+    useAxiosInterceptor();
+    
     const toggleSidebar = () => {
         setSidebarCollapsed(!sidebarCollapsed);
     };
 
+    // Variantes de animación para el contenido principal
+    const pageVariants = {
+        initial: {
+            opacity: 0,
+            y: 8
+        },
+        in: {
+            opacity: 1,
+            y: 0
+        },
+        out: {
+            opacity: 0,
+            y: -8
+        }
+    };
+
+    // Configuración de transición
+    const pageTransition = {
+        type: "tween",
+        ease: [0.4, 0, 0.2, 1],
+        duration: 0.2
+    };
+
     return (
-        <div className="flex h-screen bg-gray-50 dark:bg-white">
-            <Sidebar collapsed={sidebarCollapsed} />
+        <div className="flex h-screen bg-gray-50">
+            {/* Sidebar con animación */}
+            <motion.div
+                initial={false}
+                animate={{
+                    width: sidebarCollapsed ? 64 : 256,
+                }}
+                transition={{
+                    duration: 0.3,
+                    ease: "easeInOut"
+                }}
+                className="flex-shrink-0"
+            >
+                <Sidebar 
+                    collapsed={sidebarCollapsed} 
+                    toggleSidebar={toggleSidebar} 
+                />
+            </motion.div>
 
-            <div className="flex flex-col flex-1 overflow-hidden">
-                <HeaderDashboard onMenuClick={toggleSidebar} />
-
-                <main className="flex-1 overflow-y-auto p-4 md:px-10">
-                    <div className="w-auto mx-auto">
-                        <Outlet/>
-                    </div>
+            {/* Contenido principal */}
+            <div className="flex-1 flex flex-col overflow-hidden">
+                {/* Header */}
+                <HeaderDashboard />
+                
+                {/* Contenido con animación */}
+                <main className="flex-1 overflow-hidden relative">
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={location.pathname}
+                            initial="initial"
+                            animate="in"
+                            exit="out"
+                            variants={pageVariants}
+                            transition={pageTransition}
+                            className="h-full overflow-auto p-6"
+                        >
+                            <Outlet />
+                        </motion.div>
+                    </AnimatePresence>
                 </main>
 
-                <footer className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-4 px-6">
-                    <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-                        © 2025 dasboard 
-                    </div>
+                {/* Footer */}
+                <footer className="bg-white border-t px-6 py-3">
+                    <p className="text-sm text-gray-500">
+                        © 2025 dashboard
+                    </p>
                 </footer>
             </div>
         </div>

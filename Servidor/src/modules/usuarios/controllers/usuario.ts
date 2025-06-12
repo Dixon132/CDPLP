@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
+import BadRequestException from "../../../exceptions/bad-request";
+import { ErrorCodes } from "../../../exceptions/root";
 
 export const getUsuarios = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '', inactivos } = req.query
@@ -46,8 +48,8 @@ export const getUsuarioById = async (req: Request, res: Response) => {
         where: {
             id_usuario: +id
         },
-        select:{
-            telefono:true,
+        select: {
+            telefono: true,
             direccion: true
         }
     })
@@ -92,4 +94,24 @@ export const getUsuariosFiltrados = async (req: Request, res: Response) => {
         }
     })
     res.status(200).json(usuario)
+}
+
+export const getUsuariosSimples = async (req: Request, res: Response) => {
+    try {
+
+        const data = await prismaClient.usuarios.findMany({
+            where: {
+                estado: 'ACTIVO'
+            },
+            select: {
+                id_usuario: true,
+                nombre: true,
+                apellido: true,
+            }
+        })
+        res.status(200).json(data)
+    }
+    catch (error) {
+        throw new BadRequestException("Error al obtener usuarios simples", ErrorCodes.UNPROCESSABLE_ENTITY, error);
+    }
 }

@@ -30,7 +30,7 @@ export const TBody = ({ children }) => {
         </tbody>
     )
 }
-export const Td = ({ children, estado }) => {
+export const Td = ({ children, estado, className }) => {
     if (estado) {
         return (
             <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -41,7 +41,7 @@ export const Td = ({ children, estado }) => {
         )
     }
     return (
-        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">{children}</td>
+        <td className={`${className} whitespace-nowrap px-3 py-4 text-sm text-gray-500`}>{children}</td>
     )
 }
 export const H1 = ({ children }) => {

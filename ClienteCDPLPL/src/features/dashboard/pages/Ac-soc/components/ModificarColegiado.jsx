@@ -1,114 +1,174 @@
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import {
+    getConvenios,
+    getActividadSocialById,
+    updateActividadSocial,
+} from "../../../services/ac-sociales";
 
-const ModificarColegiado = ({ id }) => {
+export default function ModificarActividadSocial({ id, onClose, onSuccess }) {
     const {
         register,
         handleSubmit,
+        reset,
+        watch,
         formState: { errors },
-        reset
     } = useForm();
-    const usuarios = [
-  { "id": 1, "nombre": "Juan Pérez" },
-  { "id": 2, "nombre": "Ana Gómez" }
-]
+    const [convenios, setConvenios] = useState([]);
 
-    const onSubmit = (data) => {
-        console.log('Datos enviados:', data);
-        reset(); // Limpia el formulario si deseas
+    // Fecha mínima (hoy)
+    const hoy = new Date().toISOString().split("T")[0];
+
+    // Observar fecha_inicio para comparar en fecha_fin
+    const fechaInicioValue = watch("fecha_inicio");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const actividad = await getActividadSocialById(id);
+            const conveniosData = await getConvenios();
+            setConvenios(conveniosData);
+            reset({
+                ...actividad,
+                fecha_inicio: actividad.fecha_inicio?.split("T")[0],
+                fecha_fin: actividad.fecha_fin?.split("T")[0],
+            });
+        };
+        fetchData();
+    }, [id, reset]);
+
+    const onSubmit = async (data) => {
+        data.id_convenio = data.id_convenio ? parseInt(data.id_convenio) : null;
+        await updateActividadSocial(id, data);
+        alert("Actividad actualizada");
+        if (onSuccess) onSuccess();
+        if (onClose) onClose();
     };
+
     return (
-        <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Formulario de Proyecto</h2>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 max-w-xl mx-auto">
+            {/* Nombre */}
+            <div>
+                <label className="block font-semibold">Nombre</label>
+                <input
+                    {...register("nombre", { required: "Nombre obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
+            </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+            {/* Descripción */}
+            <div>
+                <label className="block font-semibold">Descripción</label>
+                <textarea
+                    {...register("descripcion")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
 
-                {/* Fecha de Fin */}
-                <div>
-                    <label htmlFor="fecha_fin" className="block font-medium text-gray-700 mb-1">Fecha de Fin</label>
-                    <input
-                        id="fecha_fin"
-                        type="date"
-                        {...register('fecha_fin', {
-                            required: 'La fecha es obligatoria', validate: value => {
-                                const seleccionada = new Date(value);
-                                const hoy = new Date();
-                                hoy.setHours(0, 0, 0, 0); // para comparar solo fecha, no hora
-                                return seleccionada > hoy || 'Debe ser una fecha futura';
-                            }
-                        })}
-                        className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.fecha_fin ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                    />
-                    {errors.fecha_fin && <p className="text-red-500 text-sm mt-1">{errors.fecha_fin.message}</p>}
-                </div>
+            {/* Ubicación */}
+            <div>
+                <label className="block font-semibold">Ubicación</label>
+                <input
+                    {...register("ubicacion")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
 
-                {/* Costo */}
-                <div>
-                    <label htmlFor="costo" className="block font-medium text-gray-700 mb-1">Costo</label>
-                    <input
-                        id="costo"
-                        type="number"
-                        step="0.01"
-                        {...register('costo', {
-                            required: 'El costo es obligatorio',
-                            valueAsNumber: true,
-                            min: { value: 0.01, message: 'Debe ser mayor a 0' }
-                        })}
-                        className={`w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.costo ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                    />
-                    {errors.costo && <p className="text-red-500 text-sm mt-1">{errors.costo.message}</p>}
-                </div>
+            {/* Motivo */}
+            <div>
+                <label className="block font-semibold">Motivo</label>
+                <input
+                    {...register("motivo")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
 
-                {/* Estado */}
-                <div>
-                    <label htmlFor="estado" className="block font-medium text-gray-700 mb-1">Estado</label>
-                    <select
-                        id="estado"
-                        {...register('estado', { required: 'Selecciona un estado' })}
-                        className={`w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.estado ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                    >
-                        <option value="">-- Seleccionar --</option>
-                        <option value="ACTIVO">ACTIVO</option>
-                        <option value="INACTIVO">INACTIVO</option>
-                        <option value="SUSPENDIDO">SUSPENDIDO</option>
-                    </select>
-                    {errors.estado && <p className="text-red-500 text-sm mt-1">{errors.estado.message}</p>}
-                </div>
-
-                {/* Responsable */}
-                <div>
-                    <label htmlFor="responsable" className="block font-medium text-gray-700 mb-1">Responsable</label>
-                    <select
-                        id="responsable_id"
-                        {...register('responsable', {
-                            required: 'Selecciona un responsable',
-                            validate: value => Number(value) > 0 || 'Debes seleccionar un usuario'
-                        })}
-                        className={`w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.responsable ? 'border-red-500' : 'border-gray-300'
-                            }`}
-                    >
-                        <option value="">-- Seleccionar responsable --</option>
-                        {usuarios.map(user => (
-                            <option key={user.id} value={user.id}>
-                                {user.nombre}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.responsable && <p className="text-red-500 text-sm mt-1">{errors.responsable.message}</p>}
-
-                </div>
-
-                <button
-                    type="submit"
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition duration-200"
+            {/* Convenio */}
+            <div>
+                <label className="block font-semibold">Convenio</label>
+                <select
+                    {...register("id_convenio")}
+                    className="w-full border px-4 py-2 rounded"
                 >
-                    Enviar
-                </button>
-            </form>
-        </div>
-    );
-};
+                    <option value="">Sin convenio</option>
+                    {convenios.map((c) => (
+                        <option key={c.id_convenio} value={c.id_convenio}>
+                            {c.nombre}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
-export default ModificarColegiado;
+            {/* Fecha Inicio */}
+            <div>
+                <label className="block font-semibold">Fecha Inicio</label>
+                <input
+                    type="date"
+                    min={hoy}
+                    {...register("fecha_inicio", {
+                        required: "Fecha inicio obligatoria",
+                        validate: (value) =>
+                            value >= hoy || "No puedes escoger una fecha pasada",
+                    })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.fecha_inicio && (
+                    <p className="text-red-500">{errors.fecha_inicio.message}</p>
+                )}
+            </div>
+
+            {/* Fecha Fin */}
+            <div>
+                <label className="block font-semibold">Fecha Fin</label>
+                <input
+                    type="date"
+                    min={hoy}
+                    {...register("fecha_fin", {
+                        validate: (value) => {
+                            if (!value) return true;
+                            if (value < hoy) return "No puedes escoger fechas pasadas";
+                            if (fechaInicioValue && value < fechaInicioValue)
+                                return "La fecha fin debe ser igual o posterior a la fecha inicio";
+                            return true;
+                        },
+                    })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.fecha_fin && (
+                    <p className="text-red-500">{errors.fecha_fin.message}</p>
+                )}
+            </div>
+
+            {/* Estado */}
+            <div>
+                <label className="block font-semibold">Estado</label>
+                <select
+                    {...register("estado", { required: "Estado obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                >
+                    <option value="">Seleccione...</option>
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                </select>
+                {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
+            </div>
+
+            {/* Tipo */}
+            <div>
+                <label className="block font-semibold">Tipo</label>
+                <input
+                    {...register("tipo", { required: "Tipo obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.tipo && <p className="text-red-500">{errors.tipo.message}</p>}
+            </div>
+
+            <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+                Guardar cambios
+            </button>
+        </form>
+    );
+}

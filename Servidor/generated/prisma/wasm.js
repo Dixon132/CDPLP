@@ -122,11 +122,29 @@ exports.Prisma.Actividades_institucionalesScalarFieldEnum = {
   nombre: 'nombre',
   descripcion: 'descripcion',
   tipo: 'tipo',
-  fecha_inicio: 'fecha_inicio',
-  fecha_fin: 'fecha_fin',
+  fecha_programada: 'fecha_programada',
   id_responsable: 'id_responsable',
+  archivo: 'archivo',
   costo: 'costo',
   estado: 'estado'
+};
+
+exports.Prisma.Asistencias_actividadScalarFieldEnum = {
+  id_asistencia: 'id_asistencia',
+  id_actividad: 'id_actividad',
+  id_colegiado: 'id_colegiado'
+};
+
+exports.Prisma.Colegiados_registrados_actividad_institucionalScalarFieldEnum = {
+  id_registro: 'id_registro',
+  id_actividad: 'id_actividad',
+  id_colegiado: 'id_colegiado',
+  fecha_registro: 'fecha_registro',
+  estado_registro: 'estado_registro',
+  metodo_pago: 'metodo_pago',
+  id_invitado: 'id_invitado',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.Actividades_socialesScalarFieldEnum = {
@@ -135,21 +153,35 @@ exports.Prisma.Actividades_socialesScalarFieldEnum = {
   descripcion: 'descripcion',
   ubicacion: 'ubicacion',
   motivo: 'motivo',
-  origen_intervencion: 'origen_intervencion',
+  id_convenio: 'id_convenio',
   fecha_inicio: 'fecha_inicio',
   fecha_fin: 'fecha_fin',
-  costo: 'costo',
   estado: 'estado',
-  tipo: 'tipo',
-  id_solicitud: 'id_solicitud',
-  id_responsable: 'id_responsable'
+  tipo: 'tipo'
 };
 
-exports.Prisma.Asistencias_actividadScalarFieldEnum = {
-  id_asistencia: 'id_asistencia',
-  id_actividad: 'id_actividad',
-  id_colegiado: 'id_colegiado',
-  fecha_asistencia: 'fecha_asistencia'
+exports.Prisma.ConvenioScalarFieldEnum = {
+  id_convenio: 'id_convenio',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  fecha_inicio: 'fecha_inicio',
+  fecha_fin: 'fecha_fin',
+  contacto: 'contacto',
+  estado: 'estado'
+};
+
+exports.Prisma.CorrespondenciaScalarFieldEnum = {
+  id_correspondencia: 'id_correspondencia',
+  asunto: 'asunto',
+  contenido: 'contenido',
+  resumen: 'resumen',
+  fecha_envio: 'fecha_envio',
+  fecha_recibido: 'fecha_recibido',
+  estado: 'estado',
+  remitente: 'remitente',
+  id_destinatario: 'id_destinatario',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ColegiadosScalarFieldEnum = {
@@ -168,7 +200,8 @@ exports.Prisma.ColegiadosScalarFieldEnum = {
 exports.Prisma.Colegiados_asignados_socialScalarFieldEnum = {
   id_asignacion: 'id_asignacion',
   id_actividad_social: 'id_actividad_social',
-  id_colegiado: 'id_colegiado'
+  id_colegiado: 'id_colegiado',
+  id_invitado: 'id_invitado'
 };
 
 exports.Prisma.Documentos_colegiadosScalarFieldEnum = {
@@ -181,16 +214,6 @@ exports.Prisma.Documentos_colegiadosScalarFieldEnum = {
   estado: 'estado'
 };
 
-exports.Prisma.Etapas_proyectoScalarFieldEnum = {
-  id_etapa: 'id_etapa',
-  id_proyecto: 'id_proyecto',
-  nombre_etapa: 'nombre_etapa',
-  descripcion: 'descripcion',
-  fecha_inicio: 'fecha_inicio',
-  fecha_fin: 'fecha_fin',
-  estado: 'estado'
-};
-
 exports.Prisma.Movimientos_financierosScalarFieldEnum = {
   id_movimiento: 'id_movimiento',
   id_presupuesto: 'id_presupuesto',
@@ -199,16 +222,15 @@ exports.Prisma.Movimientos_financierosScalarFieldEnum = {
   categoria: 'categoria',
   descripcion: 'descripcion',
   monto: 'monto',
-  id_origen: 'id_origen',
-  id_responsable: 'id_responsable'
+  id_origen: 'id_origen'
 };
 
 exports.Prisma.Origen_movimientoScalarFieldEnum = {
   id_origen: 'id_origen',
+  tipo_origen: 'tipo_origen',
   id_pago_colegiado: 'id_pago_colegiado',
-  id_actividad_social: 'id_actividad_social',
-  id_actividad_institucional: 'id_actividad_institucional',
-  id_recurso_proyecto: 'id_recurso_proyecto'
+  id_registro_actividad_institucional: 'id_registro_actividad_institucional',
+  monto: 'monto'
 };
 
 exports.Prisma.Pagos_colegiadosScalarFieldEnum = {
@@ -230,33 +252,13 @@ exports.Prisma.PresupuestosScalarFieldEnum = {
   estado: 'estado'
 };
 
-exports.Prisma.ProyectosScalarFieldEnum = {
-  id_proyecto: 'id_proyecto',
-  titulo: 'titulo',
+exports.Prisma.AuditoriaScalarFieldEnum = {
+  id_auditoria: 'id_auditoria',
+  id_usuario: 'id_usuario',
+  accion: 'accion',
+  modulo: 'modulo',
   descripcion: 'descripcion',
-  fecha_inicio: 'fecha_inicio',
-  fecha_fin: 'fecha_fin',
-  id_responsable: 'id_responsable',
-  presupuesto: 'presupuesto',
-  estado: 'estado'
-};
-
-exports.Prisma.Recursos_proyectoScalarFieldEnum = {
-  id_recurso: 'id_recurso',
-  id_proyecto: 'id_proyecto',
-  tipo_recurso: 'tipo_recurso',
-  descripcion: 'descripcion',
-  cantidad: 'cantidad',
-  costo: 'costo'
-};
-
-exports.Prisma.ReportesScalarFieldEnum = {
-  id_reporte: 'id_reporte',
-  tipo_reporte: 'tipo_reporte',
-  descripcion: 'descripcion',
-  archivo: 'archivo',
-  fecha_generacion: 'fecha_generacion',
-  id_creador: 'id_creador'
+  fecha: 'fecha'
 };
 
 exports.Prisma.RolesScalarFieldEnum = {
@@ -266,26 +268,6 @@ exports.Prisma.RolesScalarFieldEnum = {
   fecha_fin: 'fecha_fin',
   activo: 'activo',
   rol: 'rol'
-};
-
-exports.Prisma.Solicitudes_actividad_socialScalarFieldEnum = {
-  id_solicitud: 'id_solicitud',
-  solicitante_nombre: 'solicitante_nombre',
-  institucion_origen: 'institucion_origen',
-  contacto: 'contacto',
-  descripcion: 'descripcion',
-  fecha_solicitud: 'fecha_solicitud',
-  estado: 'estado'
-};
-
-exports.Prisma.Tareas_proyectoScalarFieldEnum = {
-  id_tarea: 'id_tarea',
-  id_etapa: 'id_etapa',
-  descripcion: 'descripcion',
-  fecha_asignacion: 'fecha_asignacion',
-  fecha_entrega: 'fecha_entrega',
-  id_responsable: 'id_responsable',
-  estado: 'estado'
 };
 
 exports.Prisma.UsuariosScalarFieldEnum = {
@@ -299,6 +281,15 @@ exports.Prisma.UsuariosScalarFieldEnum = {
   fecha_registro: 'fecha_registro',
   estado: 'estado',
   fecha_actualizacion: 'fecha_actualizacion'
+};
+
+exports.Prisma.InvitadosScalarFieldEnum = {
+  id_invitado: 'id_invitado',
+  nombre: 'nombre',
+  apellido: 'apellido',
+  tipo: 'tipo',
+  correo: 'correo',
+  telefono: 'telefono'
 };
 
 exports.Prisma.SortOrder = {
@@ -327,23 +318,22 @@ exports.RolUsuario = exports.$Enums.RolUsuario = {
 
 exports.Prisma.ModelName = {
   actividades_institucionales: 'actividades_institucionales',
-  actividades_sociales: 'actividades_sociales',
   asistencias_actividad: 'asistencias_actividad',
+  colegiados_registrados_actividad_institucional: 'colegiados_registrados_actividad_institucional',
+  actividades_sociales: 'actividades_sociales',
+  convenio: 'convenio',
+  correspondencia: 'correspondencia',
   colegiados: 'colegiados',
   colegiados_asignados_social: 'colegiados_asignados_social',
   documentos_colegiados: 'documentos_colegiados',
-  etapas_proyecto: 'etapas_proyecto',
   movimientos_financieros: 'movimientos_financieros',
   origen_movimiento: 'origen_movimiento',
   pagos_colegiados: 'pagos_colegiados',
   presupuestos: 'presupuestos',
-  proyectos: 'proyectos',
-  recursos_proyecto: 'recursos_proyecto',
-  reportes: 'reportes',
+  auditoria: 'auditoria',
   roles: 'roles',
-  solicitudes_actividad_social: 'solicitudes_actividad_social',
-  tareas_proyecto: 'tareas_proyecto',
-  usuarios: 'usuarios'
+  usuarios: 'usuarios',
+  invitados: 'invitados'
 };
 
 /**

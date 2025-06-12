@@ -5,7 +5,7 @@ import Usuarios from "./pages/Usuarios/Usuarios";
 import Colegiados from "./pages/Colegiados/Colegiados";
 import Ac_sociales from "./pages/Ac-soc/Ac_sociales";
 import Ac_institucionales from "./pages/Ac-Inst/Ac_institucionales";
-import Proyecto from "./pages/Proyectos/Proyecto";
+
 import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import { RequireRole } from "../../components/RequireRole";
@@ -13,6 +13,10 @@ import NotAuthorized from "./pages/NotAuthorized";
 import Roles from "./pages/Usuarios/Roles";
 import Documentos from "./pages/Colegiados/Documentos";
 import Pagos from "./pages/Colegiados/Pagos";
+import Correspondencia from "./pages/Correspondencia/Correspondencia";
+import Convenios from "./pages/Ac-soc/Convenios";
+import BuzonCorrespondencia from "./pages/Correspondencia/Buzon";
+import Contenido from "./pages/Correspondencia/Contenido";
 
 
 
@@ -57,8 +61,20 @@ export const dashboardRoutes = {
             element: <Ac_institucionales/>
         },
         {
-            path: 'proyectos',
-            element: <Proyecto/>,
+            path: 'correspondencia',
+            element: <Correspondencia/>,
+        },
+        {
+            path: 'buzon/:id',
+            element: <Contenido/>
+        },
+        {
+            path: 'buzon',
+            element: <BuzonCorrespondencia/>
+        },
+        {
+            path: 'convenios',
+            element: <Convenios/>
         },
         {
             path: 'tesoreria',

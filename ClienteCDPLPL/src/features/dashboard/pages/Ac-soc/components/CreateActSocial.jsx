@@ -1,171 +1,149 @@
-import { useMemo } from 'react';
-import { useForm } from 'react-hook-form';
-import Step from '../../../../../components/Step';
+import { useForm } from "react-hook-form";
+import { createActividadSocial, getConvenios } from "../../../services/ac-sociales";
+import { useEffect, useState } from "react";
 
-
-const CreateActSocial = () => {
+export default function CreateActSocial({ onClose, onSuccess }) {
     const {
         register,
         handleSubmit,
-        trigger,
-        watch,
-        formState: { errors }
+        formState: { errors },
     } = useForm();
 
-    // Observa si el usuario elige Solicitud
-    const origenIntervencion = watch('origen_intervencion');
+    const [convenios, setConvenios] = useState([]);
+    const hoy = new Date().toISOString().split('T')[0];
 
-    // Construye pasos dinámicamente
-    const steps = useMemo(() => [
-        <Step key="1">
-            <label>Origen de intervención</label>
-            <select
-                {...register('origen_intervencion', { required: true })}
-                className="border p-2 rounded"
-            >
-                <option value="">Selecciona...</option>
-                <option value="Solicitud">Solicitud</option>
-                <option value="Directa">Directa</option>
-            </select>
-            {errors.origen_intervencion && (
-                <p className="text-red-500">Este campo es obligatorio</p>
-            )}
-        </Step>,
+    useEffect(() => {
+        const fetchConvenios = async () => {
+            const data = await getConvenios();
+            setConvenios(data);
+        };
+        fetchConvenios();
+    }, []);
 
-        // Paso condicional de solicitud
-        ...(origenIntervencion === 'Solicitud'
-            ? [
-                <Step key="2-solicitud">
-                    <h3>Datos de la Solicitud</h3>
-
-                    <label>Solicitante</label>
-                    <input
-                        {...register('solicitante_nombre', { required: true })}
-                        className="border p-2 rounded"
-                    />
-                    {errors.solicitante_nombre && (
-                        <p className="text-red-500">Indica el solicitante</p>
-                    )}
-
-                    <label>Institución Origen</label>
-                    <input
-                        {...register('institucion_origen', { required: true })}
-                        className="border p-2 rounded"
-                    />
-                    {errors.institucion_origen && (
-                        <p className="text-red-500">Indica la institución de origen</p>
-                    )}
-
-                    <label>Contacto</label>
-                    <input
-                        {...register('contacto', { required: true })}
-                        className="border p-2 rounded"
-                    />
-                    {errors.contacto && (
-                        <p className="text-red-500">Indica un contacto</p>
-                    )}
-
-                    <label>Descripción</label>
-                    <textarea
-                        {...register('descripcion_solicitud', { required: true })}
-                        className="border p-2 rounded"
-                    />
-                    {errors.descripcion_solicitud && (
-                        <p className="text-red-500">Describe la solicitud</p>
-                    )}
-
-                </Step>
-            ]
-            : []),
-
-        // Paso de actividad social
-        <Step key="3-actividad">
-            <h3>Datos de la Actividad Social</h3>
-
-            <label>Nombre de la actividad</label>
-            <input
-                {...register('nombre_actividad', { required: true })}
-                className="border p-2 rounded"
-            />
-            {errors.nombre_actividad && (
-                <p className="text-red-500">Nombre obligatorio</p>
-            )}
-
-            <label>Descripción</label>
-            <textarea
-                {...register('descripcion_actividad')}
-                className="border p-2 rounded"
-            />
-
-            <label>Ubicación</label>
-            <input
-                {...register('ubicacion', { required: true })}
-                className="border p-2 rounded"
-            />
-            {errors.ubicacion && (
-                <p className="text-red-500">Ubicación obligatoria</p>
-            )}
-
-            <label>Fecha inicio</label>
-            <input
-                type="date"
-                {...register('fecha_inicio', { required: true })}
-                className="border p-2 rounded"
-            />
-            {errors.fecha_inicio && (
-                <p className="text-red-500">Fecha de inicio obligatoria</p>
-            )}
-
-            <label>Fecha fin</label>
-            <input
-                type="date"
-                {...register('fecha_fin', { required: true })}
-                className="border p-2 rounded"
-            />
-            {errors.fecha_fin && (
-                <p className="text-red-500">Fecha de fin obligatoria</p>
-            )}
-        </Step>,
-
-        // Paso de asignación de colegiados
-        <Step key="4-asignacion">
-            <h3>Asignar Colegiados</h3>
-            <p>Selecciona uno o varios colegiados:</p>
-            {/* Aquí podrías mapear un array de options desde props o API */}
-            <label className="flex items-center gap-2">
-                <input type="checkbox" {...register('colegiados_asignados')} value="1" />
-                Colegiado 1
-            </label>
-            <label className="flex items-center gap-2">
-                <input type="checkbox" {...register('colegiados_asignados')} value="2" />
-                Colegiado 2
-            </label>
-            <label className="flex items-center gap-2">
-                <input type="checkbox" {...register('colegiados_asignados')} value="3" />
-                Colegiado 3
-            </label>
-        </Step>
-    ], [origenIntervencion, errors]);
-
-    // Campos para validación paso a paso
-    const validationFields = useMemo(() => [
-        ['origen_intervencion'],
-        ...(origenIntervencion === 'Solicitud'
-            ? [['solicitante_nombre', 'institucion_origen', 'contacto', 'descripcion_solicitud']]
-            : []),
-        ['nombre_actividad', 'ubicacion', 'fecha_inicio', 'fecha_fin'],
-        ['colegiados_asignados'],
-    ], [origenIntervencion]);
-
-    const onSubmit = data => {
-        // Aquí envías data al backend:
-        // 1) Si origen Solicitud, crea solicitud y toma id
-        // 2) Crea actividad con id_solicitud o null
-        // 3) Crea asignaciones con array data.colegiados_asignados
-        console.log('Datos finales:', data);
+    const onSubmit = async (data) => {
+        console.log("Actividad Social creada:", data);
+        await createActividadSocial(data);
+        alert("Actividad Social creada");
+        if (onSuccess) onSuccess();
+        if (onClose) onClose();
     };
-    console.log(steps)
-    return { steps, handleSubmit, onSubmit, trigger, validationFields };
-};
 
-export default CreateActSocial;
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
+            {/* Nombre */}
+            <div>
+                <label className="block font-semibold">Nombre</label>
+                <input
+                    {...register("nombre", { required: "Nombre obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
+            </div>
+
+            {/* Descripción */}
+            <div>
+                <label className="block font-semibold">Descripción</label>
+                <textarea
+                    {...register("descripcion")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
+
+            {/* Ubicación */}
+            <div>
+                <label className="block font-semibold">Ubicación</label>
+                <input
+                    {...register("ubicacion")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
+
+            {/* Motivo */}
+            <div>
+                <label className="block font-semibold">Motivo</label>
+                <input
+                    {...register("motivo")}
+                    className="w-full border px-4 py-2 rounded"
+                />
+            </div>
+
+            {/* Convenio */}
+            <div>
+                <label className="block font-semibold">Convenio</label>
+                <select
+                    {...register("id_convenio")}
+                    className="w-full border px-4 py-2 rounded"
+                >
+                    <option value="">Sin convenio</option>
+                    {convenios.map((conv) => (
+                        <option key={conv.id_convenio} value={conv.id_convenio}>
+                            {conv.nombre}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            {/* Fecha Inicio */}
+            <div>
+                <label className="block font-semibold">Fecha Inicio</label>
+                <input
+                    type="date"
+                    min={hoy}
+                    {...register("fecha_inicio", {
+                        required: "Fecha de inicio obligatoria",
+                        validate: value =>
+                            value >= hoy || "No puedes escoger una fecha pasada",
+                    })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.fecha_inicio && <p className="text-red-500">{errors.fecha_inicio.message}</p>}
+            </div>
+
+            {/* Fecha Fin */}
+            <div>
+                <label className="block font-semibold">Fecha Fin</label>
+                <input
+                    type="date"
+                    min={hoy}
+                    {...register("fecha_fin", {
+                        validate: value =>
+                            !value || value >= hoy || "No puedes escoger una fecha pasada",
+                    })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.fecha_fin && <p className="text-red-500">{errors.fecha_fin.message}</p>}
+            </div>
+
+            {/* Estado */}
+            <div>
+                <label className="block font-semibold">Estado</label>
+                <select
+                    {...register("estado", { required: "Estado obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                >
+                    <option value="">Seleccione...</option>
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="INACTIVO">INACTIVO</option>
+                </select>
+                {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
+            </div>
+
+            {/* Tipo */}
+            <div>
+                <label className="block font-semibold">Tipo</label>
+                <input
+                    {...register("tipo", { required: "Tipo obligatorio" })}
+                    className="w-full border px-4 py-2 rounded"
+                />
+                {errors.tipo && <p className="text-red-500">{errors.tipo.message}</p>}
+            </div>
+
+            <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+                Crear
+            </button>
+        </form>
+    );
+}

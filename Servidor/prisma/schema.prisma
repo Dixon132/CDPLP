@@ -13,44 +13,81 @@ model actividades_institucionales {
   nombre                String?                 @db.VarChar(150)
   descripcion           String?
   tipo                  String?                 @db.VarChar(50)
-  fecha_inicio          DateTime?               @db.Date
-  fecha_fin             DateTime?               @db.Date
+  fecha_programada         DateTime?               @db.Date
   id_responsable        Int?
+  archivo                String?                 
   costo                 Decimal?                @db.Decimal(10, 2)
   estado                String?                 @db.VarChar(50)
   usuarios              usuarios?               @relation(fields: [id_responsable], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
   asistencias_actividad asistencias_actividad[]
-  origen_movimiento     origen_movimiento[]
-}
-
-model actividades_sociales {
-  id_actividad_social          Int                           @id @default(autoincrement())
-  nombre                       String?                       @db.VarChar(150)
-  descripcion                  String?
-  ubicacion                    String?                       @db.VarChar(200)
-  motivo                       String?
-  origen_intervencion          String?                       @db.VarChar(20)
-  fecha_inicio                 DateTime?                     @db.Date
-  fecha_fin                    DateTime?                     @db.Date
-  costo                        Decimal?                      @db.Decimal(10, 2)
-  estado                       String?                       @db.VarChar(30)
-  tipo                         String?                       @db.VarChar(50)
-  id_solicitud                 Int?
-  id_responsable               Int?
-  usuarios                     usuarios?                     @relation(fields: [id_responsable], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
-  solicitudes_actividad_social solicitudes_actividad_social? @relation(fields: [id_solicitud], references: [id_solicitud], onDelete: NoAction, onUpdate: NoAction)
-  colegiados_asignados_social  colegiados_asignados_social[]
-  origen_movimiento            origen_movimiento[]
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
+  
 }
 
 model asistencias_actividad {
   id_asistencia               Int                          @id @default(autoincrement())
   id_actividad                Int?
   id_colegiado                Int?
-  fecha_asistencia            DateTime?                    @db.Date
   actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
   colegiados                  colegiados?                  @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
+model colegiados_registrados_actividad_institucional {
+  id_registro          Int                           @id @default(autoincrement())
+  id_actividad         Int?
+  id_colegiado         Int?
+  fecha_registro       DateTime?                     @db.Date
+  estado_registro      String?                       @db.VarChar(50)
+  metodo_pago         String?                       @db.VarChar(50)
+  id_invitado        Int?
+  origen_movimiento    origen_movimiento[]
+  invitados            invitados?                   @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
+  actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
+  colegiados           colegiados?                   @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
+  createdAt            DateTime?                     @default(now()) @db.Date
+  updatedAt            DateTime?                     @updatedAt @db.Date
+}
+model actividades_sociales {
+  id_actividad_social          Int                           @id @default(autoincrement())
+  nombre                       String?                       @db.VarChar(150)
+  descripcion                  String?
+  ubicacion                    String?                       @db.VarChar(200)
+  motivo                       String?
+  id_convenio                  Int?
+  fecha_inicio                 DateTime?                     @db.Date
+  fecha_fin                    DateTime?                     @db.Date
+  estado                       String?                       @db.VarChar(30)
+  tipo                         String?                       @db.VarChar(50)
+  convenio                      convenio?                     @relation(fields: [id_convenio], references: [id_convenio], onDelete: NoAction, onUpdate: NoAction)
+  colegiados_asignados_social  colegiados_asignados_social[]
+  
+}
+
+model convenio{
+  id_convenio          Int                     @id @default(autoincrement())
+  nombre               String?                 @db.VarChar(150)
+  descripcion          String?
+  fecha_inicio         DateTime?               @db.Date
+  fecha_fin            DateTime?               @db.Date
+  contacto             String?                 @db.VarChar(100)
+  estado               String?                 @db.VarChar(30)
+  actividades_sociales actividades_sociales[]
+}
+
+model correspondencia {
+  id_correspondencia   Int                     @id @default(autoincrement())  
+  asunto               String?                 @db.VarChar(200)//CARA
+  contenido            String?                      //URL
+  resumen              String?                      //PONER AHORA PERO IA FUTURO
+  fecha_envio          DateTime?               @db.Date
+  fecha_recibido       DateTime?               @db.Date//RECEPCIONAR ESTO
+  estado               String?                 @db.VarChar(50)//CAMBIAR ESTO DINAMICAMENTE
+  remitente            String?                 @db.VarChar(100)
+  id_destinatario      Int?
+  createdAt            DateTime?               @default(now()) @db.Date
+  updatedAt            DateTime?               @updatedAt @db.Date
+  destinatario         usuarios?               @relation("destinatario", fields: [id_destinatario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
+}
+
 
 model colegiados {
   id_colegiado                Int                           @id @default(autoincrement())
@@ -67,12 +104,15 @@ model colegiados {
   colegiados_asignados_social colegiados_asignados_social[]
   documentos_colegiados       documentos_colegiados[]
   pagos_colegiados            pagos_colegiados[]
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
 }
 
 model colegiados_asignados_social {
   id_asignacion        Int                   @id @default(autoincrement())
   id_actividad_social  Int?
   id_colegiado         Int?
+  id_invitado          Int? 
+  invitados            invitados?           @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
   actividades_sociales actividades_sociales? @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
   colegiados           colegiados?           @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -80,7 +120,7 @@ model colegiados_asignados_social {
 model documentos_colegiados {
   id_documento      Int         @id @default(autoincrement())
   id_colegiado      Int?
-  tipo_documento    String?     @db.VarChar(100)
+  tipo_documento    String?
   archivo           String?
   fecha_entrega     DateTime?   @db.Date
   fecha_vencimiento DateTime?   @db.Date
@@ -88,17 +128,6 @@ model documentos_colegiados {
   colegiados        colegiados? @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model etapas_proyecto {
-  id_etapa        Int               @id @default(autoincrement())
-  id_proyecto     Int?
-  nombre_etapa    String?           @db.VarChar(150)
-  descripcion     String?
-  fecha_inicio    DateTime?         @db.Date
-  fecha_fin       DateTime?         @db.Date
-  estado          String?           @db.VarChar(50)
-  proyectos       proyectos?        @relation(fields: [id_proyecto], references: [id_proyecto], onDelete: NoAction, onUpdate: NoAction)
-  tareas_proyecto tareas_proyecto[]
-}
 
 model movimientos_financieros {
   id_movimiento     Int                @id @default(autoincrement())
@@ -108,24 +137,23 @@ model movimientos_financieros {
   categoria         String?            @db.VarChar(40)
   descripcion       String?
   monto             Decimal?           @db.Decimal(12, 2)
-  id_origen         Int?
-  id_responsable    Int?
+  id_origen         Int?  
+  
   origen_movimiento origen_movimiento? @relation(fields: [id_origen], references: [id_origen], onDelete: NoAction, onUpdate: NoAction)
   presupuestos      presupuestos?      @relation(fields: [id_presupuesto], references: [id_presupuesto], onDelete: NoAction, onUpdate: NoAction)
-  usuarios          usuarios?          @relation(fields: [id_responsable], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
+  
 }
 
 model origen_movimiento {
   id_origen                   Int                          @id @default(autoincrement())
+  tipo_origen                 String?                       @db.VarChar(50)
   id_pago_colegiado           Int?
-  id_actividad_social         Int?
-  id_actividad_institucional  Int?
-  id_recurso_proyecto         Int?
+  id_registro_actividad_institucional Int?
+  monto                     Decimal?                     @db.Decimal(12, 2)
   movimientos_financieros     movimientos_financieros[]
-  actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad_institucional], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
-  actividades_sociales        actividades_sociales?        @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional? @relation(fields: [id_registro_actividad_institucional], references: [id_registro], onDelete: NoAction, onUpdate: NoAction)
   pagos_colegiados            pagos_colegiados?            @relation(fields: [id_pago_colegiado], references: [id_pago], onDelete: NoAction, onUpdate: NoAction)
-  recursos_proyecto           recursos_proyecto?           @relation(fields: [id_recurso_proyecto], references: [id_recurso], onDelete: NoAction, onUpdate: NoAction)
+
 }
 
 model pagos_colegiados {
@@ -150,40 +178,29 @@ model presupuestos {
   movimientos_financieros movimientos_financieros[]
 }
 
-model proyectos {
-  id_proyecto       Int                 @id @default(autoincrement())
-  titulo            String?             @db.VarChar(200)
-  descripcion       String?
-  fecha_inicio      DateTime?           @db.Date
-  fecha_fin         DateTime?           @db.Date
-  id_responsable    Int?
-  presupuesto       Decimal?            @db.Decimal(12, 2)
-  estado            String?             @default("EN_PROCESO") @db.VarChar(50)
-  etapas_proyecto   etapas_proyecto[]
-  usuarios          usuarios?           @relation(fields: [id_responsable], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
-  recursos_proyecto recursos_proyecto[]
+
+model auditoria {
+  id_auditoria   Int      @id @default(autoincrement())
+  id_usuario     Int
+  accion         String   // "CREÓ", "ELIMINÓ", "MODIFICÓ", "INICIÓ SESIÓN", etc.
+  modulo         String   // "Pagos", "Actividades", "Usuarios", "Perfil", etc. ✅ Más amigable que 'tabla'
+  descripcion    String   // "El usuario eliminó un pago de 100Bs para el colegiado Juan Pérez"
+  fecha          DateTime @default(now())
+
+  usuario        usuarios @relation(fields: [id_usuario], references: [id_usuario])
 }
 
-model recursos_proyecto {
-  id_recurso        Int                 @id @default(autoincrement())
-  id_proyecto       Int?
-  tipo_recurso      String?             @db.VarChar(50)
-  descripcion       String?
-  cantidad          Int?
-  costo             Decimal?            @db.Decimal(12, 2)
-  origen_movimiento origen_movimiento[]
-  proyectos         proyectos?          @relation(fields: [id_proyecto], references: [id_proyecto], onDelete: NoAction, onUpdate: NoAction)
-}
 
-model reportes {
-  id_reporte       Int       @id @default(autoincrement())
-  tipo_reporte     String?   @db.VarChar(100)
-  descripcion      String?
-  archivo          String?
-  fecha_generacion DateTime? @db.Date
-  id_creador       Int?
-  usuarios         usuarios? @relation(fields: [id_creador], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
-}
+
+
+
+
+
+
+
+
+
+
 
 model roles {
   id_rol       Int         @id @default(autoincrement())
@@ -195,28 +212,6 @@ model roles {
   usuarios     usuarios?   @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model solicitudes_actividad_social {
-  id_solicitud         Int                    @id @default(autoincrement())
-  solicitante_nombre   String?                @db.VarChar(150)
-  institucion_origen   String?                @db.VarChar(150)
-  contacto             String?                @db.VarChar(100)
-  descripcion          String?
-  fecha_solicitud      DateTime?              @db.Date
-  estado               String?                @db.VarChar(30)
-  actividades_sociales actividades_sociales[]
-}
-
-model tareas_proyecto {
-  id_tarea         Int              @id @default(autoincrement())
-  id_etapa         Int?
-  descripcion      String?
-  fecha_asignacion DateTime?        @db.Date
-  fecha_entrega    DateTime?        @db.Date
-  id_responsable   Int?
-  estado           String?          @db.VarChar(50)
-  etapas_proyecto  etapas_proyecto? @relation(fields: [id_etapa], references: [id_etapa], onDelete: NoAction, onUpdate: NoAction)
-  usuarios         usuarios?        @relation(fields: [id_responsable], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
-}
 
 model usuarios {
   id_usuario                  Int                           @id @default(autoincrement())
@@ -230,12 +225,9 @@ model usuarios {
   estado                      String?                       @default("ACTIVO") @db.VarChar(20)
   fecha_actualizacion         DateTime?                     @updatedAt @db.Date
   actividades_institucionales actividades_institucionales[]
-  actividades_sociales        actividades_sociales[]
-  movimientos_financieros     movimientos_financieros[]
-  proyectos                   proyectos[]
-  reportes                    reportes[]
   roles                       roles[]
-  tareas_proyecto             tareas_proyecto[]
+  destinatario                correspondencia[]            @relation("destinatario")
+  auditoria                   auditoria[]
 }
 
 enum RolUsuario {
@@ -246,4 +238,15 @@ enum RolUsuario {
   SECRETARIO
   TESORERO
   NO_DEFINIDO
+}
+
+model invitados {
+  id_invitado  Int    @id @default(autoincrement())
+  nombre       String
+  apellido     String
+  tipo         String?   // estudiante, pasante, invitado externo
+  correo       String?
+  telefono     String?
+  colegiados_asignados_social colegiados_asignados_social[]
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
 }

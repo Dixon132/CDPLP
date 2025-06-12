@@ -1,11 +1,12 @@
-import {Request, Response, Router} from 'express'
+import { Request, Response, Router } from 'express'
 import { authMiddleware } from '../../../middlewares/auth'
-import { getUsuarios, getUsuarioById, updateUsuarioById,desactivarUsuarioById,activarUsuarioById,getUsuariosFiltrados } from '../controllers/usuario'
+import { getUsuarios, getUsuarioById, updateUsuarioById, desactivarUsuarioById, activarUsuarioById, getUsuariosFiltrados, getUsuariosSimples } from '../controllers/usuario'
 import errorHandler from '../../../utils/error-handler'
 
-const usuarioRouter:Router = Router()
+const usuarioRouter: Router = Router()
 
-usuarioRouter.get('/', [authMiddleware],errorHandler(getUsuarios))
+usuarioRouter.get('/', [authMiddleware], errorHandler(getUsuarios))
+usuarioRouter.get('/simple', errorHandler(getUsuariosSimples))
 usuarioRouter.get('/:id', errorHandler(getUsuarioById))
 usuarioRouter.put('/:id', errorHandler(updateUsuarioById))
 usuarioRouter.delete('/:id/desactivar', errorHandler(desactivarUsuarioById))

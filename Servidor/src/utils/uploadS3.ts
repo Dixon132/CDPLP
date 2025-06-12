@@ -23,6 +23,18 @@ export const subirAaws = async (file: Express.Multer.File) => {
     });
 
     await s3.send(comando);
-    return `documentos/${nombreFinal}`; // ✅ solo la key
+    return `documentos/${nombreFinal}`;
 
 };
+export const subirAawsCorrespondencia = async (file: Express.Multer.File) => {
+    const nombreFinal = `${uuidv4()}-${file.originalname}`;
+    const comando = new PutObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME!,
+        Key: `correspondencia/${nombreFinal}`,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+    });
+
+    await s3.send(comando);
+    return `correspondencia/${nombreFinal}`;
+}

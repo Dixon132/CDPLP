@@ -1,12 +1,27 @@
+import React from 'react';
 import { useForm } from 'react-hook-form';
 import {
-    Button, TextField, Box, Typography, Container,
-    MenuItem, Select, FormControl, InputLabel
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Container,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel
 } from '@mui/material';
 import { createColegiado } from '../../../services/colegiados'; // tu función API
 
-const CreateColegiado = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+const CreateColegiado = ({ onSuccess }) => {
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm();
+
+    // Fecha de hoy en formato AAAA-MM-DD
+    const today = new Date().toISOString().split('T')[0];
 
     const estados = [
         { value: 'ACTIVO', label: 'Activo' },
@@ -15,11 +30,11 @@ const CreateColegiado = () => {
 
     const onSubmit = async (data) => {
         try {
-            console.log(data)
+            console.log(data);
             await createColegiado(data);
-            alert("Colegiado creado exitosamente");
+            onSuccess();
         } catch (error) {
-            alert("Error al registrar colegiado");
+            alert('Error al registrar colegiado');
         }
     };
 
@@ -33,7 +48,9 @@ const CreateColegiado = () => {
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <TextField
                             label="Carnet de Identidad"
-                            {...register('carnet_identidad', { required: 'CI es requerido' })}
+                            {...register('carnet_identidad', {
+                                required: 'CI es requerido'
+                            })}
                             error={!!errors.carnet_identidad}
                             helperText={errors.carnet_identidad?.message}
                         />
@@ -81,7 +98,9 @@ const CreateColegiado = () => {
 
                         <TextField
                             label="Especialidades"
-                            {...register('especialidades', { required: 'Campo requerido' })}
+                            {...register('especialidades', {
+                                required: 'Campo requerido'
+                            })}
                             error={!!errors.especialidades}
                             helperText={errors.especialidades?.message}
                         />
@@ -90,7 +109,12 @@ const CreateColegiado = () => {
                             label="Fecha de Inscripción"
                             type="date"
                             InputLabelProps={{ shrink: true }}
-                            {...register('fecha_inscripcion', { required: 'Campo requerido' })}
+                            inputProps={{ max: today }}
+                            {...register('fecha_inscripcion', {
+                                required: 'Campo requerido',
+                                validate: value =>
+                                    value <= today || 'No puede seleccionar una fecha futura'
+                            })}
                             error={!!errors.fecha_inscripcion}
                             helperText={errors.fecha_inscripcion?.message}
                         />
@@ -99,7 +123,12 @@ const CreateColegiado = () => {
                             label="Fecha de Renovación"
                             type="date"
                             InputLabelProps={{ shrink: true }}
-                            {...register('fecha_renovacion', { required: 'Campo requerido' })}
+                            inputProps={{ min: today }}
+                            {...register('fecha_renovacion', {
+                                required: 'Campo requerido',
+                                validate: value =>
+                                    value >= today || 'No puede seleccionar una fecha pasada'
+                            })}
                             error={!!errors.fecha_renovacion}
                             helperText={errors.fecha_renovacion?.message}
                         />

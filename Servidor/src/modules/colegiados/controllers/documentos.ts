@@ -74,3 +74,48 @@ export const getAllDocsById = async (req: Request, res: Response) => {
     })
     res.status(200).json(data)
 }
+
+export const getDocumentoById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const documento = await prismaClient.documentos_colegiados.findMany({
+        where: {
+            id_colegiado: +id,
+            tipo_documento: req.query.tipo_documento as string
+        }
+    });
+    res.status(200).json(documento);
+}
+export const getEspecificDocumentoById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const documento = await prismaClient.documentos_colegiados.findUnique({
+        where: {
+            id_documento: +id
+        }
+    });
+    if (!documento) {
+        return res.status(404).json({ error: "Documento no encontrado" });
+    }
+    res.status(200).json(documento);
+}
+
+
+export const updateDocumento = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { fecha_entrega,estado, fecha_vencimiento } = req.body;
+
+    try {
+        const updatedDoc = await prismaClient.documentos_colegiados.update({
+            where: { id_documento: +id },
+            data: {
+                fecha_entrega: new Date(fecha_entrega),
+                estado: estado,
+                fecha_vencimiento: new Date(fecha_vencimiento),
+            },
+        });
+
+        res.status(200).json(updatedDoc);
+    } catch (error) {
+        console.error("Error actualizando documento:", error);
+        res.status(500).json({ error: "Error al actualizar el documento" });
+    }
+}
