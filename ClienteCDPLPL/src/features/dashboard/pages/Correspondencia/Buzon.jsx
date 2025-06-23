@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Search, Mail, MailOpen, Clock, User, Send, Filter, ChevronRight } from "lucide-react";
 import { getAllBuzon } from "../../services/correspondencia";
+import { Link } from "react-router-dom";
 
 // Componente de búsqueda
 const InputSearch = ({ onChange, value }) => (
-  <div className="relative">
-    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-    <input
-      type="text"
-      placeholder="Buscar en correspondencia..."
-      onChange={onChange}
-      value={value}
-      className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
-    />
-  </div>
+    <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+        <input
+            type="text"
+            placeholder="Buscar en correspondencia..."
+            onChange={onChange}
+            value={value}
+            className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 shadow-sm"
+        />
+    </div>
 );
 
 
@@ -69,7 +70,7 @@ export default function BuzonCorrespondencia() {
                         </div>
                         Buzón de Correspondencia
                     </h1>
-                    
+
                 </div>
 
                 {/* Filtros */}
@@ -145,8 +146,8 @@ export default function BuzonCorrespondencia() {
                                                 {/* Header */}
                                                 <div className="flex items-center gap-3 mb-3">
                                                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isReviewed ? 'bg-gray-100' : 'bg-blue-100'}`}>
-                                                        {isReviewed ? 
-                                                            <MailOpen className="w-5 h-5 text-gray-600" /> : 
+                                                        {isReviewed ?
+                                                            <MailOpen className="w-5 h-5 text-gray-600" /> :
                                                             <Mail className="w-5 h-5 text-blue-600" />
                                                         }
                                                     </div>
@@ -186,17 +187,18 @@ export default function BuzonCorrespondencia() {
                                                             </div>
                                                         )}
                                                     </div>
-                                                    
+
                                                     <div className="flex items-center gap-3">
                                                         <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(item.estado)}`}>
                                                             {item.estado}
                                                         </span>
-                                                        
+
                                                         <button
-                                                            onClick={() => window.location.href = `/dashboard/buzon/${item.id_correspondencia}`}
                                                             className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl font-medium text-sm hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-500/25 hover:scale-105 active:scale-95 transform"
                                                         >
-                                                            {isReviewed ? 'Ver detalles' : 'Revisar'}
+                                                            <Link to={`/dashboard/buzon/${item.id_correspondencia}`}>
+                                                                {isReviewed ? 'Ver detalles' : 'Revisar'}
+                                                            </Link>
                                                             <ChevronRight className="w-4 h-4" />
                                                         </button>
                                                     </div>

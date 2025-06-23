@@ -7,6 +7,8 @@ import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
 import puppeteer from "puppeteer";
 import { Prisma } from "../../../../generated/prisma";
+import registrarAuditoria from "../../Auditorias/services";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 
 const chartCanvas = new ChartJSNodeCanvas({ width: 600, height: 300 });
@@ -27,6 +29,7 @@ export const createColegiado = async (req: Request, res: Response) => {
         estado: validatedColegiado.estado
       }
     })
+    registrarAuditoria(req.user, Acciones.CREO, Modulos.COLEGIADOS, `Se creo el colegiado ${colegiado.nombre} ${colegiado.apellido}`)
     res.status(201).json({ message: 'El colegiado fue resgistrado exitosamente', colegiado })
   } catch {
     throw new BadRequestException('Hubo un error al crear el registro del colegiado', ErrorCodes.INTERNAL_EXCEPTION)

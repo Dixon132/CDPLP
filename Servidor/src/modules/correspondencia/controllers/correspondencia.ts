@@ -260,7 +260,7 @@ export const changeEstadoCorrespondencia = async (req: Request, res: Response) =
 }
 export const listarUsuariosMinimal = async (req: Request, res: Response) => {
     try {
-        // 1) Obtenemos todos los usuarios, pero solo con id_usuario, nombre y apellido
+
         const usuariosRaw = await prismaClient.usuarios.findMany({
             select: {
                 id_usuario: true,
@@ -268,11 +268,11 @@ export const listarUsuariosMinimal = async (req: Request, res: Response) => {
                 apellido: true,
             },
             orderBy: {
-                nombre: "asc", // opcional: orden alfabético por nombre
+                nombre: "asc",
             },
         });
 
-        // 2) Formateamos cada registro en { id, nombreCompleto }
+
         const listaMinimal = usuariosRaw.map((u) => ({
             id: u.id_usuario,
             nombreCompleto: `${u.nombre ?? ""} ${u.apellido ?? ""}`.trim(),

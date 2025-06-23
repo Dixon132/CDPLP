@@ -2,6 +2,10 @@
 import { Request, Response } from "express";
 import puppeteer from "puppeteer";
 import prismaClient from "../../../utils/prismaClient";
+import { registrarMovimientoPagoCurso } from "../../financiero/services/movimiento";
+import { Origen } from "../../../types/movimientos";
+import registrarAuditoria from "../../Auditorias/services";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 /**
  * GET /api/ac-institucionales
@@ -142,6 +146,7 @@ export const createRegistroInst = async (req: Request, res: Response) => {
         fecha_registro,
         estado_registro,
         metodo_pago,
+        presupuesto
     } = req.body;
 
     const reg = await prismaClient.colegiados_registrados_actividad_institucional.create({
@@ -153,12 +158,18 @@ export const createRegistroInst = async (req: Request, res: Response) => {
             estado_registro,
             metodo_pago,
         },
-        include: {
-            colegiados: true,
-            invitados: true,
-        },
     });
-
+    const act = await prismaClient.actividades_institucionales.findFirstOrThrow({
+        where: {
+            id_actividad
+        },
+        select: {
+            costo: true,
+            nombre: true
+        }
+    })
+    await registrarMovimientoPagoCurso(reg.id_registro, Number(act.costo), Origen.CURSO, `Pago de la actividad institucional: ${act.nombre}`, 1)
+    await registrarAuditoria(req.user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro una inscripcion al curso con monto de ${act.costo}`)
     return res.status(201).json(reg);
 };
 
@@ -224,9 +235,9 @@ export const listarActividadesInstMinimal = async (req: Request, res: Response) 
         // Formatear a { id, nombre }
         const minimal = lista.map((a) => ({
             id: a.id_actividad,
-            nombre: a.nombre || "",
+            nombre: a.nombre,
         }));
-        return res.status(200).json(lista);
+        return res.status(200).json(minimal);
     } catch (error) {
         console.error("Error en listarActividadesInstMinimal:", error);
         return res

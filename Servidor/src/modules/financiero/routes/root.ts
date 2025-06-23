@@ -18,9 +18,9 @@ import {
 const tesoreriaRoutes: Router = Router()
 
 //REPORTES
-tesoreriaRoutes.delete("/report", errorHandler(getPresupuestosSummaryReport));
-tesoreriaRoutes.delete("/reportMovimiento", errorHandler(getMovimientosSummaryReport));
-tesoreriaRoutes.delete("/:id/report", errorHandler(getPresupuestoDetailReport));
+tesoreriaRoutes.get("/report", errorHandler(getPresupuestosSummaryReport));
+tesoreriaRoutes.get("/reportMovimiento", errorHandler(getMovimientosSummaryReport));
+tesoreriaRoutes.get("/:id/report", errorHandler(getPresupuestoDetailReport));
 // Rutas de PRESUPUESTOS
 tesoreriaRoutes.get("/presupuestos", errorHandler(getAllPresupuestos));
 tesoreriaRoutes.get("/presupuestos/:id", errorHandler(getPresupuestoById));

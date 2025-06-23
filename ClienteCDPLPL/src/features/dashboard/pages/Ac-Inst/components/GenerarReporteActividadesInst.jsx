@@ -2,8 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { getActividadesInstMinimal,getActividadInstDetailReport,
-    getActividadesInstSummaryReport, } from "../../../services/ac-institucionales";
+import {
+    getActividadesInstMinimal, getActividadInstDetailReport,
+    getActividadesInstSummaryReport,
+} from "../../../services/ac-institucionales";
 
 export default function GenerarReporteActividadesInst({ onClose }) {
     // 1) Controlar cuál “pestaña” está activa: "resumen" o "detalle"
@@ -39,7 +41,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
         };
         fetchInsts();
     }, []);
-
+    console.log(opcionesInst)
     // 5) Función para descargar Resumen entre Fechas
     const onSubmitResumen = async (data) => {
         try {
@@ -107,8 +109,8 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "resumen"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-black hover:bg-gray-300"
                         }`}
                 >
                     Resumen entre Fechas
@@ -119,8 +121,8 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "detalle"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                        ? "bg-blue-600 text-white"
+                        : "bg-gray-200 text-black hover:bg-gray-300"
                         }`}
                 >
                     Detalle por Actividad
@@ -171,13 +173,12 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                             defaultValue=""
                         >
                             <option value="">-- Elige una actividad institucional --</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            {/* {opcionesInst.map((act) => (
+
+                            {opcionesInst.map((act) => (
                                 <option key={act.id} value={act.id}>
                                     {act.nombre}
                                 </option>
-                            ))} */}
+                            ))}
                         </select>
                     </div>
                     <div className="text-center pt-4">

@@ -1,20 +1,20 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getAlldocs, verDocumento } from "../../services/colegiados";
+import { getAlldocs, getColegiadoById, verDocumento } from "../../services/colegiados";
 import { useState } from "react";
 import parseDate from "../../../../utils/parseData";
 import Modal from "../../../../components/Modal";
 import AñadirDocumento from "./components/AñadirDocumento";
 import { Button } from "../../components/Button";
 import VerDetallesDoc from "./components/VerDetallesDoc";
-import { 
-    FileText, 
-    Upload, 
-    Eye, 
-    Calendar, 
-    CheckCircle, 
-    XCircle, 
-    Clock, 
+import {
+    FileText,
+    Upload,
+    Eye,
+    Calendar,
+    CheckCircle,
+    XCircle,
+    Clock,
     AlertCircle,
     Download,
     Plus,
@@ -45,22 +45,26 @@ const Documentos = () => {
     const [tipoDoc, setTipoDoc] = useState('')
     const [modalAñadir, setModalAñadir] = useState(false)
     const [modalDetalles, setModalDetalles] = useState(false);
+    const [col, setCol] = useState([])
 
     const getDocs = async () => {
         try {
             const data = await getAlldocs(id);
             setDocs(data);
+            const colegiado = await getColegiadoById(id)
+            setCol(colegiado)
         } catch (error) {
             console.error("Error al obtener documentos:", error);
         }
     };
+
 
     useEffect(() => {
         getDocs();
     }, [id]);
 
     const getDocumentIcon = (tipo) => {
-        switch(tipo) {
+        switch (tipo) {
             case 'TITULO_PROFESIONAL':
                 return <GraduationCap className="w-5 h-5 text-blue-500" />;
             case 'TITULO_POSTGRADO':
@@ -83,7 +87,7 @@ const Documentos = () => {
     };
 
     const getEstadoIcon = (estado) => {
-        switch(estado) {
+        switch (estado) {
             case 'APROBADO':
                 return <CheckCircle className="w-4 h-4 text-green-500" />;
             case 'RECHAZADO':
@@ -97,7 +101,7 @@ const Documentos = () => {
 
     const getEstadoBadge = (estado) => {
         const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
-        switch(estado) {
+        switch (estado) {
             case 'APROBADO':
                 return `${baseClasses} bg-green-100 text-green-800 border border-green-200`;
             case 'RECHAZADO':
@@ -131,14 +135,14 @@ const Documentos = () => {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-slate-800 mb-1">
-                                Documentos del Colegiado #{id}
+                                Documentos del Colegiado: {`${col.nombre} ${col.apellido}`}
                             </h1>
                             <p className="text-slate-600 text-sm">
                                 {documentosSubidos} de {documentosTotal} documentos completados
                             </p>
                         </div>
                     </div>
-                    
+
                     {/* Progreso */}
                     <div className="hidden md:flex items-center gap-4">
                         <div className="text-center">
@@ -146,7 +150,7 @@ const Documentos = () => {
                             <div className="text-xs text-slate-500">Completado</div>
                         </div>
                         <div className="w-20 h-2 bg-slate-200 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
                                 style={{ width: `${porcentajeCompletado}%` }}
                             ></div>
@@ -161,7 +165,7 @@ const Documentos = () => {
                         <span className="text-sm font-bold text-blue-600">{porcentajeCompletado}%</span>
                     </div>
                     <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                        <div 
+                        <div
                             className="h-full bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500"
                             style={{ width: `${porcentajeCompletado}%` }}
                         ></div>
@@ -177,7 +181,7 @@ const Documentos = () => {
                         Documentos Requeridos
                     </h2>
                 </div>
-                
+
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-gradient-to-r from-slate-50 to-blue-50 border-b border-slate-200/60">
@@ -210,7 +214,7 @@ const Documentos = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        
+
                                         {/* Archivo */}
                                         <td className="px-6 py-4">
                                             {doc?.archivo ? (
@@ -228,7 +232,7 @@ const Documentos = () => {
                                                 </span>
                                             )}
                                         </td>
-                                        
+
                                         {/* Fechas */}
                                         <td className="px-6 py-4">
                                             <div className="space-y-1">
@@ -244,7 +248,7 @@ const Documentos = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        
+
                                         {/* Estado */}
                                         <td className="px-6 py-4">
                                             <span className={getEstadoBadge(doc?.estado || "Pendiente")}>
@@ -252,11 +256,11 @@ const Documentos = () => {
                                                 {doc?.estado || "Pendiente"}
                                             </span>
                                         </td>
-                                        
+
                                         {/* Acciones */}
                                         <td className="px-6 py-4">
                                             {existe ? (
-                                                <button 
+                                                <button
                                                     onClick={() => {
                                                         setModalDetalles(true)
                                                         setTipoDoc(tipo)
@@ -267,7 +271,7 @@ const Documentos = () => {
                                                     Ver detalles
                                                 </button>
                                             ) : (
-                                                <button 
+                                                <button
                                                     onClick={() => {
                                                         setModalAñadir(true)
                                                         setTipoDoc(tipo)
@@ -310,7 +314,7 @@ const Documentos = () => {
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir documento'}>
                 <AñadirDocumento id={id} tipoDoc={tipoDoc} />
             </Modal>
-            
+
             <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title={'Detalles del documento'}>
                 <VerDetallesDoc id={id} tipoDoc={tipoDoc} />
             </Modal>

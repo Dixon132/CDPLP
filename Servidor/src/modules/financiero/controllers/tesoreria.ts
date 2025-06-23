@@ -44,13 +44,26 @@ export const getAllPresupuestos = async (req: Request, res: Response) => {
         // 4) Calculamos saldo_restante
         const resultados = await Promise.all(
             presupuestos.map(async (p) => {
-                const agregacion = await prismaClient.movimientos_financieros.aggregate({
+                // Obtener todos los movimientos financieros del presupuesto
+                const movimientos = await prismaClient.movimientos_financieros.findMany({
                     where: { id_presupuesto: p.id_presupuesto },
-                    _sum: { monto: true },
                 });
-                const sumaMovimientos = agregacion._sum.monto ?? new Prisma.Decimal(0);
+
+                let totalIngresos = new Prisma.Decimal(0);
+                let totalEgresos = new Prisma.Decimal(0);
+
+                movimientos.forEach((mov) => {
+                    const monto = mov.monto ?? new Prisma.Decimal(0);
+                    if (mov.tipo_movimiento === "INGRESO") {
+                        totalIngresos = totalIngresos.add(monto);
+                    } else if (mov.tipo_movimiento === "EGRESO") {
+                        totalEgresos = totalEgresos.add(monto);
+                    }
+                });
+
                 const montoTotal = p.monto_total ?? new Prisma.Decimal(0);
-                const saldoRestante = montoTotal.sub(sumaMovimientos);
+                const saldoRestante = montoTotal.add(totalIngresos).sub(totalEgresos);
+
                 return {
                     ...p,
                     monto_total: p.monto_total,
@@ -58,6 +71,7 @@ export const getAllPresupuestos = async (req: Request, res: Response) => {
                 };
             })
         );
+
 
         return res.status(200).json({
             data: resultados,
@@ -73,31 +87,39 @@ export const getAllPresupuestos = async (req: Request, res: Response) => {
 export const getPresupuestoById = async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
-        // Buscamos el presupuesto
+
+        // Buscar el presupuesto
         const p = await prismaClient.presupuestos.findUniqueOrThrow({
             where: { id_presupuesto: id },
         });
 
-        // Sumar movimientos para saldo_restante
-        const agregacion = await prismaClient.movimientos_financieros.aggregate({
-            where: { id_presupuesto: id },
-            _sum: { monto: true },
-        });
-        const sumaMovimientos = agregacion._sum.monto ?? new Prisma.Decimal(0);
-        const montoTotal = p.monto_total ?? new Prisma.Decimal(0);
-        const saldoRestante = montoTotal.sub(sumaMovimientos);
-
-        // Traer lista de movimientos
+        // Obtener todos los movimientos relacionados
         const movimientos = await prismaClient.movimientos_financieros.findMany({
             where: { id_presupuesto: id },
             orderBy: { fecha_movimiento: "desc" },
         });
 
+        // Calcular saldo restante en base a ingresos y egresos
+        let totalIngresos = new Prisma.Decimal(0);
+        let totalEgresos = new Prisma.Decimal(0);
+
+        movimientos.forEach((mov) => {
+            const monto = mov.monto ?? new Prisma.Decimal(0);
+            if (mov.tipo_movimiento === "INGRESO") {
+                totalIngresos = totalIngresos.add(monto);
+            } else if (mov.tipo_movimiento === "EGRESO") {
+                totalEgresos = totalEgresos.add(monto);
+            }
+        });
+
+        const montoTotal = p.monto_total ?? new Prisma.Decimal(0);
+        const saldoRestante = montoTotal.add(totalIngresos).sub(totalEgresos);
+
         return res.status(200).json({
             ...p,
             monto_total: p.monto_total,
             saldo_restante: saldoRestante,
-            movimientos, // array de movimientos con sus campos
+            movimientos,
         });
     } catch (error) {
         console.error("Error getPresupuestoById:", error);
@@ -269,6 +291,22 @@ export const deleteMovimientoFinanciero = async (req: Request, res: Response) =>
         return res.status(400).json({ message: "Error al eliminar movimiento" });
     }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /////////////
 //////////////
 

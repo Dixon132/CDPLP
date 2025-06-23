@@ -44,6 +44,7 @@ const Sidebar = ({ collapsed }) => {
   } else if (rol === "PRESIDENTE") {
     mainNavItems = [
       { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
+      { title: 'Auditorias', icon: <Home size={20} />, path: '/dashboard/auditorias' },
       { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
       { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
@@ -53,16 +54,40 @@ const Sidebar = ({ collapsed }) => {
     ];
   } else if (rol === "SECRETARIO") {
     mainNavItems = [
-      { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, path: '/dashboard/actividades_sociales' },
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' }
     ];
   } else if (rol === "TESORERO") {
     mainNavItems = [
-      { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
+      { title: 'Buzon', icon: <FolderDot size={20} />, path: '/dashboard/Buzon' },
+    ];
+  }
+  else if (rol === "VICEPRESIDENTE") {
+    mainNavItems = [
+      { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
+      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
+      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
+      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
+    ];
+  }
+  else if (rol === "VOCAL") {
+    mainNavItems = [
+      { title: 'Buzon', icon: <FolderDot size={20} />, path: '/dashboard/Buzon' },
+      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' }
+    ];
+  }
+  else if (rol === "SECRETARIO_GENERAL") {
+    mainNavItems = [
+      { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
+      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
+      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' }
     ];
   }
 
@@ -92,7 +117,7 @@ const Sidebar = ({ collapsed }) => {
     <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-white/95 backdrop-blur-xl border-r border-slate-200/60 transition-all duration-300 ease-in-out flex-shrink-0 h-screen shadow-xl relative`}>
       {/* Gradiente de fondo */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 -z-10" />
-      
+
       {/* Logo Section */}
       <div className="h-16 flex items-center justify-center border-b border-slate-200/60 backdrop-blur-sm bg-white/80">
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start px-4'}`}>
@@ -118,7 +143,7 @@ const Sidebar = ({ collapsed }) => {
               Navegación Principal
             </h3>
           </div>
-          
+
           <ul className="space-y-1">
             {mainNavItems.map((item, index) => {
               const isActive = isActiveRoute(item.path);
@@ -133,8 +158,8 @@ const Sidebar = ({ collapsed }) => {
                         to={item.path}
                         className={`
                           group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200 w-full
-                          ${isActive 
-                            ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25' 
+                          ${isActive
+                            ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
                             : 'text-slate-700 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
                           }
                           ${collapsed ? 'justify-center' : 'justify-between'}
@@ -156,15 +181,15 @@ const Sidebar = ({ collapsed }) => {
                           <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-full shadow-sm" />
                         )}
                       </Link>
-                      
+
                       {/* Botón de flecha separado */}
                       {!collapsed && (
                         <button
                           onClick={(e) => toggleSubmenu(item.title, e)}
                           className={`
                             absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md transition-all duration-200
-                            ${isActive 
-                              ? 'text-white hover:bg-white/20' 
+                            ${isActive
+                              ? 'text-white hover:bg-white/20'
                               : 'text-slate-600 hover:bg-slate-200'
                             }
                           `}
@@ -180,8 +205,8 @@ const Sidebar = ({ collapsed }) => {
                       to={item.path}
                       className={`
                         group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200
-                        ${isActive 
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25' 
+                        ${isActive
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
                           : 'text-slate-700 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
                         }
                         ${collapsed ? 'justify-center' : 'justify-between'}
@@ -211,7 +236,7 @@ const Sidebar = ({ collapsed }) => {
                       <ul className="mt-2 ml-6 space-y-1">
                         {item.subtitles.map((subtitle, i) => (
                           <li key={i}>
-                            <Link 
+                            <Link
                               to={`/dashboard/${subtitle.toLowerCase()}`}
                               className="flex items-center py-2 px-3 rounded-lg text-sm text-slate-600 hover:bg-white/50 hover:text-slate-900 transition-colors duration-200"
                             >
@@ -236,20 +261,20 @@ const Sidebar = ({ collapsed }) => {
               Configuración
             </h3>
           )}
-          
+
           <nav>
             <ul className="space-y-1">
               {secondaryNavItems.map((item, index) => {
                 const isActive = isActiveRoute(item.path);
-                
+
                 return (
                   <li key={index}>
                     <Link
                       to={item.path}
                       className={`
                         group flex items-center py-3 px-3 rounded-xl transition-all duration-200
-                        ${isActive 
-                          ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-lg' 
+                        ${isActive
+                          ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-lg'
                           : 'text-slate-600 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
                         }
                         ${collapsed ? 'justify-center' : ''}

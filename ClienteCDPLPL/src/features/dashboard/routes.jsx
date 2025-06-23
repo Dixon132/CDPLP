@@ -17,80 +17,95 @@ import Correspondencia from "./pages/Correspondencia/Correspondencia";
 import Convenios from "./pages/Ac-soc/Convenios";
 import BuzonCorrespondencia from "./pages/Correspondencia/Buzon";
 import Contenido from "./pages/Correspondencia/Contenido";
+import GestionAsistenciaInst from "./pages/Ac-Inst/components/GestionAsistenciaInst";
+import MovimientosPorPresupuesto from "./pages/Tesoreria/MovimientosPorPresupuesto";
+import Auditorias from "./pages/Auditorias/Auditorias";
 
 
 
 export const dashboardRoutes = {
     path: '/dashboard',
-    element: <DashboardLayout/>,
+    element: <DashboardLayout />,
     children: [
         {
             index: true,
             element: (
                 <RequireRole allowedRoles={['PRESIDENTE']}>
-                    <PrincipalPage/>
+                    <PrincipalPage />
                 </RequireRole>
             )
         },
         {
             path: 'usuarios',
             element: <RequireRole allowedRoles={['PRESIDENTE']}>
-                    <Usuarios/>
-                </RequireRole>
+                <Usuarios />
+            </RequireRole>
         },
         {
             path: 'colegiados',
-            element: <Colegiados/>,
+            element: <Colegiados />,
             children: [
                 {
                     path: 'documentos/:id',
-                    element: <Documentos/>
+                    element: <Documentos />
                 },
                 {
                     path: 'pagos/:id',
-                    element: <Pagos/>
+                    element: <Pagos />
                 }
             ]
         },
         {
             path: 'actividades_sociales',
-            element: <Ac_sociales/>
+            element: <Ac_sociales />
         },
         {
             path: 'actividades_institucionales',
-            element: <Ac_institucionales/>
+            element: <Ac_institucionales />
+        },
+        {
+            path: 'asistencias/:id',
+            element: <GestionAsistenciaInst />
         },
         {
             path: 'correspondencia',
-            element: <Correspondencia/>,
+            element: <Correspondencia />,
         },
         {
             path: 'buzon/:id',
-            element: <Contenido/>
+            element: <Contenido />
         },
         {
             path: 'buzon',
-            element: <BuzonCorrespondencia/>
+            element: <BuzonCorrespondencia />
         },
         {
             path: 'convenios',
-            element: <Convenios/>
+            element: <Convenios />
         },
         {
             path: 'tesoreria',
-            element: <Tesoreria/>,
+            element: <Tesoreria />,
+        },
+        {
+            path: 'tesoreria/movimientos/:id',
+            element: <MovimientosPorPresupuesto />,
         },
         {
             path: 'ajustes',
-            element: <Ajustes/>
+            element: <Ajustes />
         },
         {
             path: 'notAuthorized',
-            element: <NotAuthorized/>
+            element: <NotAuthorized />
         },
         {
             path: 'roles',
-            element: <Roles/>
+            element: <Roles />
+        },
+        {
+            path: 'auditorias',
+            element: <Auditorias />
         }
     ]
 }

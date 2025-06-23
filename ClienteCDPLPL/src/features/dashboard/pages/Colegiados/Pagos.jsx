@@ -3,16 +3,16 @@ import { useParams } from "react-router-dom";
 import { Button } from "../../components/Button";
 import Modal from "../../../../components/Modal";
 import AñadirPago from "./components/AñadirPago";
-import { getAllPagos } from "../../services/colegiados";
+import { getAllPagos, getColegiadoById } from "../../services/colegiados";
 import parseDate from "../../../../utils/parseData";
 import VerDetallesPago from "./components/VerDetallesPago";
-import { 
-    CreditCard, 
-    DollarSign, 
-    Calendar, 
-    CheckCircle, 
-    XCircle, 
-    Clock, 
+import {
+    CreditCard,
+    DollarSign,
+    Calendar,
+    CheckCircle,
+    XCircle,
+    Clock,
     AlertCircle,
     Plus,
     Eye,
@@ -23,24 +23,26 @@ import {
 } from 'lucide-react';
 
 const Pagos = () => {
-    const {id} = useParams()
+    const { id } = useParams()
     const [pagos, setPagos] = useState([])
     const [modalAñadir, setModalAñadir] = useState(false)
     const [modalDetalles, setModalDetalles] = useState(false)
     const [currentId, setCurrentId] = useState(null)
-
-    const getPagos = async()=>{
+    const [col, setCol] = useState([])
+    const getPagos = async () => {
         const data = await getAllPagos(id)
         setPagos(data)
+        const colegiado = await getColegiadoById(id)
+        setCol(colegiado)
+
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getPagos()
-        console.log(pagos)
-    },[id])
+    }, [id])
 
     const getEstadoIcon = (estado) => {
-        switch(estado?.toLowerCase()) {
+        switch (estado?.toLowerCase()) {
             case 'pagado':
             case 'completado':
             case 'aprobado':
@@ -57,7 +59,7 @@ const Pagos = () => {
 
     const getEstadoBadge = (estado) => {
         const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
-        switch(estado?.toLowerCase()) {
+        switch (estado?.toLowerCase()) {
             case 'pagado':
             case 'completado':
             case 'aprobado':
@@ -91,15 +93,15 @@ const Pagos = () => {
                         </div>
                         <div>
                             <h1 className="text-2xl font-bold text-slate-800 mb-1">
-                                Pagos del Colegiado #{id}
+                                Pagos del Colegiado: {`${col.nombre} ${col.apellido}`}
                             </h1>
                             <p className="text-slate-600 text-sm">
                                 {totalPagos} pagos registrados
                             </p>
                         </div>
                     </div>
-                    
-                    <button 
+
+                    <button
                         onClick={() => setModalAñadir(true)}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
                     >
@@ -121,7 +123,7 @@ const Pagos = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-500 rounded-lg">
@@ -133,7 +135,7 @@ const Pagos = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-yellow-500 rounded-lg">
@@ -145,7 +147,7 @@ const Pagos = () => {
                             </div>
                         </div>
                     </div>
-                    
+
                     <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-500 rounded-lg">
@@ -168,14 +170,14 @@ const Pagos = () => {
                         Historial de Pagos
                     </h2>
                 </div>
-                
+
                 {pagos.length === 0 ? (
                     <div className="p-12">
                         <div className="text-center">
                             <Banknote className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                             <p className="text-slate-500 font-medium mb-2">No hay pagos registrados</p>
                             <p className="text-slate-400 text-sm mb-6">Añade el primer pago para comenzar</p>
-                            <button 
+                            <button
                                 onClick={() => setModalAñadir(true)}
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
                             >
@@ -211,7 +213,7 @@ const Pagos = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        
+
                                         {/* Fecha */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2 text-sm text-slate-600">
@@ -219,7 +221,7 @@ const Pagos = () => {
                                                 {parseDate(pago.fecha_pago)}
                                             </div>
                                         </td>
-                                        
+
                                         {/* Monto */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-2">
@@ -229,7 +231,7 @@ const Pagos = () => {
                                                 </span>
                                             </div>
                                         </td>
-                                        
+
                                         {/* Estado */}
                                         <td className="px-6 py-4">
                                             <span className={getEstadoBadge(pago.estado_pago)}>
@@ -237,7 +239,7 @@ const Pagos = () => {
                                                 {pago.estado_pago || "Pendiente"}
                                             </span>
                                         </td>
-                                        
+
                                         {/* Acciones */}
                                         <td className="px-6 py-4">
                                             <button
@@ -259,13 +261,13 @@ const Pagos = () => {
                 )}
             </div>
 
-            {/* Modales */}
+
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir pago'}>
-                <AñadirPago id={id}/>
+                <AñadirPago id={id} />
             </Modal>
-            
+
             <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title={'Detalles del pago'}>
-                <VerDetallesPago id_pago={currentId}/>
+                <VerDetallesPago id_pago={currentId} />
             </Modal>
         </div>
     );

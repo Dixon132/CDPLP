@@ -130,7 +130,7 @@ model documentos_colegiados {
 model movimientos_financieros {
   id_movimiento    Int       @id @default(autoincrement())
   id_presupuesto   Int?
-  fecha_movimiento DateTime? @db.Date
+  fecha_movimiento DateTime? @default(now())
   tipo_movimiento  String?   @db.VarChar(20)
   categoria        String?   @db.VarChar(40)
   descripcion      String?
