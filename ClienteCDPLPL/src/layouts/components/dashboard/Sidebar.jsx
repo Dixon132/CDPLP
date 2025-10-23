@@ -48,6 +48,7 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
+      { title: 'Modelo', icon: <FolderDot size={20} />, path: '/dashboard/modelo' },
     ];
   } else if (rol === "SECRETARIO") {
     mainNavItems = [

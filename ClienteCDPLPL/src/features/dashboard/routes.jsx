@@ -22,6 +22,7 @@ import Auditorias from "./pages/Auditorias/Auditorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
+import MetricsViewer from "./pages/Ia/Modelo";
 
 
 
@@ -187,6 +188,10 @@ export const dashboardRoutes = {
                     <Auditorias />
                 </RequireRole>
             )
+        },
+        {
+            path: 'modelo',
+            element: <MetricsViewer />
         }
     ]
 }
