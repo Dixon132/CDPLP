@@ -201,7 +201,8 @@ exports.Prisma.Colegiados_asignados_socialScalarFieldEnum = {
   id_asignacion: 'id_asignacion',
   id_actividad_social: 'id_actividad_social',
   id_colegiado: 'id_colegiado',
-  id_invitado: 'id_invitado'
+  id_invitado: 'id_invitado',
+  id_pasante: 'id_pasante'
 };
 
 exports.Prisma.Documentos_colegiadosScalarFieldEnum = {
@@ -261,6 +262,19 @@ exports.Prisma.AuditoriaScalarFieldEnum = {
   fecha: 'fecha'
 };
 
+exports.Prisma.PasantesScalarFieldEnum = {
+  id_pasante: 'id_pasante',
+  nombre: 'nombre',
+  apellido: 'apellido',
+  carnet_identidad: 'carnet_identidad',
+  correo: 'correo',
+  telefono: 'telefono',
+  institucion: 'institucion',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  estado: 'estado'
+};
+
 exports.Prisma.RolesScalarFieldEnum = {
   id_rol: 'id_rol',
   id_usuario: 'id_usuario',
@@ -287,7 +301,6 @@ exports.Prisma.InvitadosScalarFieldEnum = {
   id_invitado: 'id_invitado',
   nombre: 'nombre',
   apellido: 'apellido',
-  tipo: 'tipo',
   correo: 'correo',
   telefono: 'telefono'
 };
@@ -331,6 +344,7 @@ exports.Prisma.ModelName = {
   pagos_colegiados: 'pagos_colegiados',
   presupuestos: 'presupuestos',
   auditoria: 'auditoria',
+  pasantes: 'pasantes',
   roles: 'roles',
   usuarios: 'usuarios',
   invitados: 'invitados'

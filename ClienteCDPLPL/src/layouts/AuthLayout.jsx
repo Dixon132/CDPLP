@@ -1,9 +1,7 @@
-import React from 'react';
-import { BarChart2 } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 
 
-export const AuthLayout = ({title, subtitle }) => {
+export const AuthLayout = ({ title, subtitle }) => {
   return (
     <div className="min-h-screen flex">
       {/* Columna izquierda: Imagen o info */}
@@ -22,7 +20,7 @@ export const AuthLayout = ({title, subtitle }) => {
 
       {/* Columna derecha: Formulario */}
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-white">
-        <Outlet/>
+        <Outlet />
       </div>
     </div>
   );

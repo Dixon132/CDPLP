@@ -1,83 +1,127 @@
-import { useForm } from "react-hook-form";
-import Select from "react-select";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import {
+    Box,
+    Button,
+    Typography,
+    Autocomplete,
+    TextField,
+    CircularProgress,
+    Stack,
+} from "@mui/material";
 import { asignarColegiado, getColegiados, getInvitados } from "../../../services/ac-sociales";
 
+export default function AsignarColegiados({ id, onSuccess }) {
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        watch,
+        formState: { errors, isSubmitting },
+    } = useForm();
 
-const AsignarColegiados = ({ id }) => {
-    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
     const [colegiados, setColegiados] = useState([]);
     const [invitados, setInvitados] = useState([]);
 
     const selectedColegiado = watch("id_colegiado");
     const selectedInvitado = watch("id_invitado");
 
+    // Cargar datos de backend
     useEffect(() => {
         const fetchData = async () => {
             const col = await getColegiados();
             const inv = await getInvitados();
-
-            // Transformar a opciones de react-select
-            setColegiados(col.map(c => ({ value: c.id_colegiado, label: `${c.nombre} ${c.apellido}` })));
-            setInvitados(inv.map(i => ({ value: i.id_invitado, label: `${i.nombre} ${i.apellido}` })));
+            setColegiados(col.map(c => ({ id: c.id_colegiado, label: `${c.nombre} ${c.apellido}` })));
+            setInvitados(inv.map(i => ({ id: i.id_invitado, label: `${i.nombre} ${i.apellido}` })));
         };
         fetchData();
     }, []);
 
+    // Envío del formulario
     const onSubmit = async (data) => {
         if (!data.id_colegiado && !data.id_invitado) {
             alert("Debes seleccionar un colegiado o un invitado.");
             return;
         }
-
         if (data.id_colegiado && data.id_invitado) {
-            alert("Solo puedes seleccionar un colegiado o un invitado, no ambos.");
+            alert("Solo puedes seleccionar uno, no ambos.");
             return;
         }
 
         const body = {
             id_actividad_social: id,
-            id_colegiado: data.id_colegiado?.value || null,
-            id_invitado: data.id_invitado?.value || null,
+            id_colegiado: data.id_colegiado?.id || null,
+            id_invitado: data.id_invitado?.id || null,
         };
 
         await asignarColegiado(body);
-        alert("Asignado correctamente");
+        if (onSuccess) onSuccess();
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4 max-w-xl mx-auto">
-            <div>
-                <label className="font-semibold block">Seleccionar Colegiado</label>
-                <Select
-                    options={colegiados}
-                    onChange={(option) => {
-                        setValue("id_colegiado", option);
-                        setValue("id_invitado", null); // resetea invitado si se selecciona colegiado
-                    }}
-                    value={selectedColegiado}
-                    isClearable
-                />
-            </div>
+        <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{
+                maxWidth: 500,
+                mx: "auto",
+                p: 4,
+                display: "flex",
+                flexDirection: "column",
+                gap: 3,
+            }}
+        >
+            <Typography variant="h6" fontWeight={700}>
+                Asignar Colegiado o Invitado
+            </Typography>
 
-            <div>
-                <label className="font-semibold block">Seleccionar Invitado</label>
-                <Select
-                    options={invitados}
-                    onChange={(option) => {
-                        setValue("id_invitado", option);
-                        setValue("id_colegiado", null); // resetea colegiado si se selecciona invitado
-                    }}
-                    value={selectedInvitado}
-                    isClearable
-                />
-            </div>
+            {/* Autocomplete Colegiado */}
+            <Autocomplete
+                options={colegiados}
+                value={selectedColegiado || null}
+                onChange={(_, value) => {
+                    setValue("id_colegiado", value);
+                    if (value) setValue("id_invitado", null);
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Seleccionar Colegiado"
+                        fullWidth
+                    />
+                )}
+            />
 
-            <button type="submit" className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                Asignar
-            </button>
-        </form>
+            {/* Autocomplete Invitado */}
+            <Autocomplete
+                options={invitados}
+                value={selectedInvitado || null}
+                onChange={(_, value) => {
+                    setValue("id_invitado", value);
+                    if (value) setValue("id_colegiado", null);
+                }}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label="Seleccionar Invitado"
+                        fullWidth
+                    />
+                )}
+            />
+
+            <Stack direction="row" spacing={2} justifyContent="flex-end">
+                <Button
+                    type="submit"
+                    variant="contained"
+                    disabled={isSubmitting}
+                    sx={{
+                        textTransform: "none",
+                        fontWeight: 600,
+                    }}
+                >
+                    {isSubmitting ? <CircularProgress size={24} color="inherit" /> : "Asignar"}
+                </Button>
+            </Stack>
+        </Box>
     );
-};
-
-export default AsignarColegiados;
+}

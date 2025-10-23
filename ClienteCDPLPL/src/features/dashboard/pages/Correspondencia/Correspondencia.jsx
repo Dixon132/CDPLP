@@ -1,23 +1,21 @@
 import { useEffect, useState } from 'react';
 import { eliminarCorrespondencia, getAllCorrespondencia, verCorrespondencia } from "../../services/correspondencia";
-import { EmptyTd, H1, InputSearch, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
 import Modal from "../../../../components/Modal";
-import { Button } from "../../components/Button";
 import CrearCorrespondencia from './components/CrearCorrespondencia';
 import EditarCorrespondencia from './components/EditarCorrespondencia';
 import GenerarReporteCorrespondencia from './components/GenerarReporteCorrespondencia';
-import { 
-    Mail, 
-    Search, 
-    Plus, 
-    Eye, 
-    Edit3, 
-    Trash2, 
-    Send, 
-    User, 
-    Calendar, 
-    FileText, 
-    Filter, 
+import {
+    Mail,
+    Search,
+    Plus,
+    Eye,
+    Edit3,
+    Trash2,
+    Send,
+    User,
+    Calendar,
+    FileText,
+    Filter,
     BarChart3,
     MessageSquare,
     Clock,
@@ -50,38 +48,38 @@ const Correspondencia = () => {
     const getEstadoInfo = (estado) => {
         switch (estado) {
             case "RECIBIDO":
-                return { 
-                    color: "bg-emerald-100 text-emerald-800 border-emerald-200", 
+                return {
+                    color: "bg-emerald-100 text-emerald-800 border-emerald-200",
                     icon: <CheckCircle className="w-3 h-3" />,
                     bgGradient: "from-emerald-50 to-green-50"
                 };
             case "VISTO":
-                return { 
-                    color: "bg-blue-100 text-blue-800 border-blue-200", 
+                return {
+                    color: "bg-blue-100 text-blue-800 border-blue-200",
                     icon: <Eye className="w-3 h-3" />,
                     bgGradient: "from-blue-50 to-indigo-50"
                 };
             case "A DISCUCION":
-                return { 
-                    color: "bg-yellow-100 text-yellow-800 border-yellow-200", 
+                return {
+                    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
                     icon: <MessageCircle className="w-3 h-3" />,
                     bgGradient: "from-yellow-50 to-orange-50"
                 };
             case "PENDIENTE":
-                return { 
-                    color: "bg-orange-100 text-orange-800 border-orange-200", 
+                return {
+                    color: "bg-orange-100 text-orange-800 border-orange-200",
                     icon: <Clock className="w-3 h-3" />,
                     bgGradient: "from-orange-50 to-red-50"
                 };
             case "ARREGLADO":
-                return { 
-                    color: "bg-purple-100 text-purple-800 border-purple-200", 
+                return {
+                    color: "bg-purple-100 text-purple-800 border-purple-200",
                     icon: <Zap className="w-3 h-3" />,
                     bgGradient: "from-purple-50 to-pink-50"
                 };
             default:
-                return { 
-                    color: "bg-gray-100 text-gray-800 border-gray-200", 
+                return {
+                    color: "bg-gray-100 text-gray-800 border-gray-200",
                     icon: <AlertCircle className="w-3 h-3" />,
                     bgGradient: "from-gray-50 to-slate-50"
                 };
@@ -102,8 +100,8 @@ const Correspondencia = () => {
         fetchData();
     }, [page, search]);
 
-    const correspondenciaFiltrada = filtroEstado === 'TODOS' 
-        ? correspondencia 
+    const correspondenciaFiltrada = filtroEstado === 'TODOS'
+        ? correspondencia
         : correspondencia.filter(item => item.estado === filtroEstado);
 
     const getEstadisticas = () => {
@@ -146,10 +144,10 @@ const Correspondencia = () => {
                                     <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent mb-2">
                                         Centro de Correspondencia
                                     </h1>
-                                    
+
                                 </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setVistaActual(vistaActual === 'tabla' ? 'cards' : 'tabla')}
@@ -187,7 +185,7 @@ const Correspondencia = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-emerald-50 to-green-100 p-4 rounded-2xl border border-emerald-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-emerald-500 rounded-xl shadow-lg">
@@ -199,7 +197,7 @@ const Correspondencia = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-blue-50 to-cyan-100 p-4 rounded-2xl border border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-blue-500 rounded-xl shadow-lg">
@@ -211,7 +209,7 @@ const Correspondencia = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-orange-50 to-red-100 p-4 rounded-2xl border border-orange-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-orange-500 rounded-xl shadow-lg">
@@ -223,7 +221,7 @@ const Correspondencia = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-purple-50 to-pink-100 p-4 rounded-2xl border border-purple-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-purple-500 rounded-xl shadow-lg">
@@ -249,7 +247,7 @@ const Correspondencia = () => {
                                     className="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur-sm border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 shadow-lg"
                                 />
                             </div>
-                            
+
                             <div className="flex items-center gap-2">
                                 <Filter className="w-4 h-4 text-slate-500" />
                                 <select
@@ -416,10 +414,10 @@ const Correspondencia = () => {
                                             </span>
                                         </div>
                                     </div>
-                                    
+
                                     <h3 className="font-bold text-slate-800 mb-2 line-clamp-2">{item.asunto}</h3>
                                     <p className="text-slate-600 text-sm mb-4 line-clamp-3">{item.resumen}</p>
-                                    
+
                                     <div className="space-y-2 mb-4">
                                         <div className="flex items-center gap-2 text-sm text-slate-600">
                                             <User className="w-4 h-4" />
@@ -434,7 +432,7 @@ const Correspondencia = () => {
                                             <span>{new Date(item.fecha_envio).toLocaleDateString()}</span>
                                         </div>
                                     </div>
-                                    
+
                                     <div className="flex items-center gap-2">
                                         <button
                                             onClick={() => verCorrespondencia(item.id_correspondencia)}
@@ -462,7 +460,7 @@ const Correspondencia = () => {
                                 </div>
                             );
                         })}
-                        
+
                         {!correspondenciaFiltrada.length && (
                             <div className="col-span-full flex flex-col items-center justify-center py-16">
                                 <div className="p-6 bg-violet-100 rounded-full mb-4">
@@ -491,9 +489,9 @@ const Correspondencia = () => {
             <Modal title="Modificar correspondencia" isOpen={mostrarModalModificar} onClose={() => setMostrarModalModificar(false)}>
                 <EditarCorrespondencia id={actualId} onClose={() => { setMostrarModalModificar(false); fetchData(); }} />
             </Modal>
-            
+
             <Modal isOpen={modalReporte} onClose={() => setModalReporte(false)}>
-                <GenerarReporteCorrespondencia/>
+                <GenerarReporteCorrespondencia />
             </Modal>
         </div>
     );

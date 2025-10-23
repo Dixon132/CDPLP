@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Home,
   BarChart2,
@@ -15,23 +15,20 @@ import {
   FolderDot,
   UserCog,
   ChevronRight,
-  ChevronDown
+  Search
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { parseToken } from '../../../utils/parsejwt';
-
 const Sidebar = ({ collapsed }) => {
   const [rol, setRol] = useState('');
   const [mostrarSubmenus, setMostrarSubmenus] = useState({});
   const location = useLocation();
-
   const getRol = () => {
     const token = localStorage.getItem('token');
     if (!token) return <Navigate to="/auth/login" replace />;
     const { rol } = parseToken(token);
     return rol.rol;
   };
-
   useEffect(() => {
     setRol(getRol());
   }, []);
@@ -44,9 +41,9 @@ const Sidebar = ({ collapsed }) => {
   } else if (rol === "PRESIDENTE") {
     mainNavItems = [
       { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
-      { title: 'Auditorias', icon: <Home size={20} />, path: '/dashboard/auditorias' },
+      { title: 'Auditorias', icon: <Search size={20} />, path: '/dashboard/auditorias' },
       { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
-      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
+      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados', subtitles: ['Invitados', `Pasantes`] },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
@@ -114,12 +111,11 @@ const Sidebar = ({ collapsed }) => {
   };
 
   return (
-    <aside className={`${collapsed ? 'w-16' : 'w-64'} bg-white/95 backdrop-blur-xl border-r border-slate-200/60 transition-all duration-300 ease-in-out flex-shrink-0 h-screen shadow-xl relative`}>
+    <aside className={`${collapsed ? 'w-16' : 'w-64'}  rounded-br-4xl  bg-white/90  z-10 transition-all duration-300 ease-in-out flex-shrink-0 h-screen shadow-2xl relative`}>
       {/* Gradiente de fondo */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 -z-10" />
-
+      <div className="absolute inset-0  -z-10" />
       {/* Logo Section */}
-      <div className="h-16 flex items-center justify-center border-b border-slate-200/60 backdrop-blur-sm bg-white/80">
+      <div className="h-16 flex items-center justify-center ">
         <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start px-4'}`}>
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
             <BarChart2 size={20} className="text-white" />
@@ -134,11 +130,10 @@ const Sidebar = ({ collapsed }) => {
           )}
         </div>
       </div>
-
+      {/* Main Navigation */}
       <div className="py-6 px-3">
-        {/* Main Navigation */}
         <nav>
-          <div className={`${collapsed ? 'hidden' : 'block'} mb-6`}>
+          <div className={`${collapsed ? 'hidden' : 'block'} `}>
             <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-3">
               Navegación Principal
             </h3>
@@ -253,7 +248,6 @@ const Sidebar = ({ collapsed }) => {
             })}
           </ul>
         </nav>
-
         {/* Secondary Navigation */}
         <div className="mt-8 pt-6 border-t border-slate-200/60">
           {!collapsed && (
@@ -295,7 +289,6 @@ const Sidebar = ({ collapsed }) => {
           </nav>
         </div>
       </div>
-
       {/* Footer info cuando está expandido */}
       {!collapsed && (
         <div className="absolute bottom-4 left-4 right-4">

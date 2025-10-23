@@ -1,16 +1,6 @@
 // src/pages/dashboard/pages/Ac-institucionales/AcInstitucionales.jsx
 import React, { useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
-import { Button, ButtonCreate } from "../../components/Button";
-import {
-    EmptyTd,
-    H1,
-    Tables,
-    TBody,
-    Td,
-    Tfooter,
-    THead,
-} from "../../components/Tables";
 
 import {
     getAllActividadesInstitucionales,

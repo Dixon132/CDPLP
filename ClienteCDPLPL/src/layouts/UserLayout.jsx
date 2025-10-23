@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { AnimatePresence } from 'framer-motion';
-import Navbar from '../features/users/components/Navbar';
+import Navbar from './components/user/Navbar';
 import Footer from '../features/users/components/Footer';
 
 const UserLayout = () => {

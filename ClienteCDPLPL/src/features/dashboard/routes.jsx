@@ -8,7 +8,6 @@ import Ac_institucionales from "./pages/Ac-Inst/Ac_institucionales";
 
 import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
-import { RequireRole } from "../../components/RequireRole";
 import NotAuthorized from "./pages/NotAuthorized";
 import Roles from "./pages/Usuarios/Roles";
 import Documentos from "./pages/Colegiados/Documentos";
@@ -20,6 +19,9 @@ import Contenido from "./pages/Correspondencia/Contenido";
 import GestionAsistenciaInst from "./pages/Ac-Inst/components/GestionAsistenciaInst";
 import MovimientosPorPresupuesto from "./pages/Tesoreria/MovimientosPorPresupuesto";
 import Auditorias from "./pages/Auditorias/Auditorias";
+import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
+import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
+import Invitados from "./pages/Colegiados/invitados/Invitados";
 
 
 
@@ -30,70 +32,141 @@ export const dashboardRoutes = {
         {
             index: true,
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE']}>
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO_GENERAL']}>
                     <PrincipalPage />
                 </RequireRole>
             )
         },
         {
             path: 'usuarios',
-            element: <RequireRole allowedRoles={['PRESIDENTE']}>
-                <Usuarios />
-            </RequireRole>
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                    <Usuarios />
+                </RequireRole>
+            )
+        },
+        {
+            path: 'invitados',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                    <Invitados />
+                </RequireRole>
+            )
+        },
+        {
+            path: 'pasantes',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                    <Pasantes />
+                </RequireRole>
+            )
         },
         {
             path: 'colegiados',
-            element: <Colegiados />,
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                    <Colegiados />
+                </RequireRole>
+            ),
             children: [
                 {
                     path: 'documentos/:id',
-                    element: <Documentos />
+                    element: (
+                        <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                            < Documentos />
+                        </RequireRole>
+                    )
                 },
                 {
                     path: 'pagos/:id',
-                    element: <Pagos />
+                    element: (
+                        <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                            <Pagos />
+                        </RequireRole>
+                    )
                 }
             ]
         },
         {
             path: 'actividades_sociales',
-            element: <Ac_sociales />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Ac_sociales />
+
+                </RequireRole>
+            )
         },
         {
             path: 'actividades_institucionales',
-            element: <Ac_institucionales />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Ac_institucionales />
+                </RequireRole>)
         },
         {
             path: 'asistencias/:id',
-            element: <GestionAsistenciaInst />
+            element: (
+
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <GestionAsistenciaInst />
+                </RequireRole>
+            )
         },
         {
             path: 'correspondencia',
-            element: <Correspondencia />,
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'SECRETARIO_GENERAL']}>
+                    <Correspondencia />
+                </RequireRole>
+            )
         },
         {
             path: 'buzon/:id',
-            element: <Contenido />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Contenido />
+                </RequireRole>
+            )
         },
         {
             path: 'buzon',
-            element: <BuzonCorrespondencia />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <BuzonCorrespondencia />
+                </RequireRole>
+            )
         },
         {
             path: 'convenios',
-            element: <Convenios />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Convenios />
+                </RequireRole>
+            )
         },
         {
             path: 'tesoreria',
-            element: <Tesoreria />,
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Tesoreria />
+                </RequireRole>
+            )
         },
         {
             path: 'tesoreria/movimientos/:id',
-            element: <MovimientosPorPresupuesto />,
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <MovimientosPorPresupuesto />,
+                </RequireRole>
+            )
         },
         {
             path: 'ajustes',
-            element: <Ajustes />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Ajustes />
+                </RequireRole>
+            )
         },
         {
             path: 'notAuthorized',
@@ -101,11 +174,19 @@ export const dashboardRoutes = {
         },
         {
             path: 'roles',
-            element: <Roles />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Roles />
+                </RequireRole>
+            )
         },
         {
             path: 'auditorias',
-            element: <Auditorias />
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE']}>
+                    <Auditorias />
+                </RequireRole>
+            )
         }
     ]
 }

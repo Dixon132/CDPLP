@@ -1,23 +1,19 @@
-import { Outlet } from "react-router-dom";
+
 import { AuthLayout } from "../../layouts/AuthLayout";
-import { Login } from "./pages/Login";
-import Signup  from "./pages/SignUp";
+import Login from "./pages/Login";
+
 
 export const authRouter = {
     path: '/auth',
-    element: <AuthLayout/>,
-    children:[
+    element: <AuthLayout />,
+    children: [
         {
             index: true,
-            element: <Login/>
+            element: <Login />
         },
         {
             path: 'login',
-            element: <Login/>,
-        },
-        {
-            path: 'signup',
-            element: <Signup/>,
+            element: <Login />,
         }
     ]
 }

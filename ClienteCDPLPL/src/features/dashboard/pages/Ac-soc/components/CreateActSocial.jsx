@@ -1,6 +1,17 @@
 import { useForm } from "react-hook-form";
-import { createActividadSocial, getConvenios } from "../../../services/ac-sociales";
 import { useEffect, useState } from "react";
+import {
+    TextField,
+    Button,
+    MenuItem,
+    Box,
+    Typography,
+    FormControl,
+    InputLabel,
+    Select,
+    Stack,
+} from "@mui/material";
+import { createActividadSocial, getConvenios } from "../../../services/ac-sociales";
 
 export default function CreateActSocial({ onClose, onSuccess }) {
     const {
@@ -10,7 +21,7 @@ export default function CreateActSocial({ onClose, onSuccess }) {
     } = useForm();
 
     const [convenios, setConvenios] = useState([]);
-    const hoy = new Date().toISOString().split('T')[0];
+    const hoy = new Date().toISOString().split("T")[0];
 
     useEffect(() => {
         const fetchConvenios = async () => {
@@ -21,129 +32,136 @@ export default function CreateActSocial({ onClose, onSuccess }) {
     }, []);
 
     const onSubmit = async (data) => {
-        console.log("Actividad Social creada:", data);
-        await createActividadSocial(data);
-        alert("Actividad Social creada");
-        if (onSuccess) onSuccess();
-        if (onClose) onClose();
+        try {
+            await createActividadSocial(data);
+            if (onSuccess) onSuccess();
+            if (onClose) onClose();
+        } catch (error) {
+            alert("Error al crear actividad social");
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
+        <Box
+            component="form"
+            onSubmit={handleSubmit(onSubmit)}
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: 2,
+                p: 3,
+                width: "100%",
+                maxWidth: 600,
+            }}
+        >
+            <Typography variant="h6" fontWeight="bold">
+                Registrar Actividad Social
+            </Typography>
+
             {/* Nombre */}
-            <div>
-                <label className="block font-semibold">Nombre</label>
-                <input
-                    {...register("nombre", { required: "Nombre obligatorio" })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.nombre && <p className="text-red-500">{errors.nombre.message}</p>}
-            </div>
+            <TextField
+                label="Nombre"
+                {...register("nombre", { required: "El nombre es obligatorio" })}
+                error={!!errors.nombre}
+                helperText={errors.nombre?.message}
+            />
 
             {/* Descripción */}
-            <div>
-                <label className="block font-semibold">Descripción</label>
-                <textarea
-                    {...register("descripcion")}
-                    className="w-full border px-4 py-2 rounded"
-                />
-            </div>
+            <TextField
+                label="Descripción"
+                multiline
+                rows={3}
+                {...register("descripcion")}
+            />
 
             {/* Ubicación */}
-            <div>
-                <label className="block font-semibold">Ubicación</label>
-                <input
-                    {...register("ubicacion")}
-                    className="w-full border px-4 py-2 rounded"
-                />
-            </div>
+            <TextField label="Ubicación" {...register("ubicacion")} />
 
             {/* Motivo */}
-            <div>
-                <label className="block font-semibold">Motivo</label>
-                <input
-                    {...register("motivo")}
-                    className="w-full border px-4 py-2 rounded"
-                />
-            </div>
+            <TextField label="Motivo" {...register("motivo")} />
 
             {/* Convenio */}
-            <div>
-                <label className="block font-semibold">Convenio</label>
-                <select
+            <FormControl>
+                <InputLabel>Convenio</InputLabel>
+                <Select
+                    label="Convenio"
+                    defaultValue=""
                     {...register("id_convenio")}
-                    className="w-full border px-4 py-2 rounded"
                 >
-                    <option value="">Sin convenio</option>
+                    <MenuItem value="">Sin convenio</MenuItem>
                     {convenios.map((conv) => (
-                        <option key={conv.id_convenio} value={conv.id_convenio}>
+                        <MenuItem key={conv.id_convenio} value={conv.id_convenio}>
                             {conv.nombre}
-                        </option>
+                        </MenuItem>
                     ))}
-                </select>
-            </div>
+                </Select>
+            </FormControl>
 
-            {/* Fecha Inicio */}
-            <div>
-                <label className="block font-semibold">Fecha Inicio</label>
-                <input
-                    type="date"
-                    min={hoy}
-                    {...register("fecha_inicio", {
-                        required: "Fecha de inicio obligatoria",
-                        validate: value =>
-                            value >= hoy || "No puedes escoger una fecha pasada",
-                    })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.fecha_inicio && <p className="text-red-500">{errors.fecha_inicio.message}</p>}
-            </div>
+            {/* Fecha de inicio */}
+            <TextField
+                label="Fecha de Inicio"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: hoy }}
+                {...register("fecha_inicio", {
+                    required: "Fecha de inicio obligatoria",
+                    validate: (value) =>
+                        value >= hoy || "No puedes seleccionar una fecha pasada",
+                })}
+                error={!!errors.fecha_inicio}
+                helperText={errors.fecha_inicio?.message}
+            />
 
-            {/* Fecha Fin */}
-            <div>
-                <label className="block font-semibold">Fecha Fin</label>
-                <input
-                    type="date"
-                    min={hoy}
-                    {...register("fecha_fin", {
-                        validate: value =>
-                            !value || value >= hoy || "No puedes escoger una fecha pasada",
-                    })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.fecha_fin && <p className="text-red-500">{errors.fecha_fin.message}</p>}
-            </div>
+            {/* Fecha de fin */}
+            <TextField
+                label="Fecha de Fin"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: hoy }}
+                {...register("fecha_fin", {
+                    validate: (value) =>
+                        !value || value >= hoy || "No puedes seleccionar una fecha pasada",
+                })}
+                error={!!errors.fecha_fin}
+                helperText={errors.fecha_fin?.message}
+            />
 
             {/* Estado */}
-            <div>
-                <label className="block font-semibold">Estado</label>
-                <select
+            <FormControl error={!!errors.estado}>
+                <InputLabel>Estado</InputLabel>
+                <Select
+                    label="Estado"
+                    defaultValue=""
                     {...register("estado", { required: "Estado obligatorio" })}
-                    className="w-full border px-4 py-2 rounded"
                 >
-                    <option value="">Seleccione...</option>
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="INACTIVO">INACTIVO</option>
-                </select>
-                {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
-            </div>
+                    <MenuItem value="">Seleccione...</MenuItem>
+                    <MenuItem value="ACTIVO">ACTIVO</MenuItem>
+                    <MenuItem value="INACTIVO">INACTIVO</MenuItem>
+                </Select>
+                {errors.estado && (
+                    <Typography variant="caption" color="error">
+                        {errors.estado.message}
+                    </Typography>
+                )}
+            </FormControl>
 
             {/* Tipo */}
-            <div>
-                <label className="block font-semibold">Tipo</label>
-                <input
-                    {...register("tipo", { required: "Tipo obligatorio" })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.tipo && <p className="text-red-500">{errors.tipo.message}</p>}
-            </div>
+            <TextField
+                label="Tipo"
+                {...register("tipo", { required: "Tipo obligatorio" })}
+                error={!!errors.tipo}
+                helperText={errors.tipo?.message}
+            />
 
-            <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            >
-                Crear
-            </button>
-        </form>
+            {/* Botones */}
+            <Stack direction="row" spacing={2} justifyContent="flex-end" mt={2}>
+                <Button variant="outlined" onClick={onClose}>
+                    Cancelar
+                </Button>
+                <Button type="submit" variant="contained" color="primary">
+                    Crear Actividad
+                </Button>
+            </Stack>
+        </Box>
     );
 }

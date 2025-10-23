@@ -1,5 +1,5 @@
 const Ajustes = () => {
-
+    console.log('Ajustes component rendered');
     return (
         <div>
             Ajustes

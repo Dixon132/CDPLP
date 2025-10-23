@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
 import { gelAllActividadesSociales } from "../../services/ac-sociales";
-import { Button, ButtonCreate } from "../../components/Button";
-import { EmptyTd, H1, InputSearch, Tables, TBody, Td, Tfooter, THead } from "../../components/Tables";
 import parseDate from "../../../../utils/parseData";
 import Modal from "../../../../components/Modal";
 import VerDetallesColegiado from "./components/VerDetallesColegiado";
@@ -10,17 +8,17 @@ import CreateActSocial from "./components/CreateActSocial";
 import GenerarReporteActividadesSociales from "./components/GenerarReporteActividadesSociales";
 
 // Iconos lucide-react
-import { 
-    Calendar, 
-    MapPin, 
-    Users, 
+import {
+    Calendar,
+    MapPin,
+    Users,
     PartyPopper,
-    Search, 
-    Plus, 
-    Eye, 
-    Edit3, 
-    Trash2, 
-    Filter, 
+    Search,
+    Plus,
+    Eye,
+    Edit3,
+    Trash2,
+    Filter,
     BarChart3,
     Sparkles,
     Globe,
@@ -56,7 +54,7 @@ const Ac_sociales = () => {
     const [modalReporte, setModalReporte] = useState(false);
     const [modalVerDetalles, setModalVerDetalles] = useState(false);
     const [modalModificar, setModalModificar] = useState(false);
-    
+
     // Nuevos estados para funcionalidad épica
     const [filtroEstado, setFiltroEstado] = useState('TODOS');
     const [filtroTipo, setFiltroTipo] = useState('TODOS');
@@ -67,40 +65,40 @@ const Ac_sociales = () => {
         switch (estado?.toUpperCase()) {
             case "ACTIVO":
             case "PLANIFICADO":
-                return { 
-                    color: "bg-emerald-100 text-emerald-800 border-emerald-200", 
+                return {
+                    color: "bg-emerald-100 text-emerald-800 border-emerald-200",
                     icon: <CheckCircle className="w-3 h-3" />,
                     bgGradient: "from-emerald-50 to-green-50"
                 };
             case "EN PROGRESO":
             case "EJECUTANDO":
-                return { 
-                    color: "bg-blue-100 text-blue-800 border-blue-200", 
+                return {
+                    color: "bg-blue-100 text-blue-800 border-blue-200",
                     icon: <Activity className="w-3 h-3" />,
                     bgGradient: "from-blue-50 to-indigo-50"
                 };
             case "FINALIZADO":
             case "COMPLETADO":
-                return { 
-                    color: "bg-purple-100 text-purple-800 border-purple-200", 
+                return {
+                    color: "bg-purple-100 text-purple-800 border-purple-200",
                     icon: <Award className="w-3 h-3" />,
                     bgGradient: "from-purple-50 to-pink-50"
                 };
             case "CANCELADO":
-                return { 
-                    color: "bg-red-100 text-red-800 border-red-200", 
+                return {
+                    color: "bg-red-100 text-red-800 border-red-200",
                     icon: <AlertCircle className="w-3 h-3" />,
                     bgGradient: "from-red-50 to-orange-50"
                 };
             case "PENDIENTE":
-                return { 
-                    color: "bg-yellow-100 text-yellow-800 border-yellow-200", 
+                return {
+                    color: "bg-yellow-100 text-yellow-800 border-yellow-200",
                     icon: <Clock className="w-3 h-3" />,
                     bgGradient: "from-yellow-50 to-orange-50"
                 };
             default:
-                return { 
-                    color: "bg-gray-100 text-gray-800 border-gray-200", 
+                return {
+                    color: "bg-gray-100 text-gray-800 border-gray-200",
                     icon: <AlertCircle className="w-3 h-3" />,
                     bgGradient: "from-gray-50 to-slate-50"
                 };
@@ -135,7 +133,7 @@ const Ac_sociales = () => {
 
     // Función fetch mejorada
     async function fetchSociales() {
-        const {data, total, page: currentPage, totalPages} = await gelAllActividadesSociales({page, search});
+        const { data, total, page: currentPage, totalPages } = await gelAllActividadesSociales({ page, search });
         setActSociales(data);
         setTotal(total);
         setTotalPage(totalPages);
@@ -183,12 +181,12 @@ const Ac_sociales = () => {
                                 </div>
                                 <div>
                                     <h1 className="text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
-                                        Centro de Actividades Sociales
+                                        Centro de
                                     </h1>
-                                    
+
                                 </div>
                             </div>
-                            
+
                             <div className="flex items-center gap-3">
                                 <button
                                     onClick={() => setVistaActual(vistaActual === 'tabla' ? 'cards' : 'tabla')}
@@ -226,7 +224,7 @@ const Ac_sociales = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-emerald-50 to-green-100 p-4 rounded-2xl border border-emerald-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-emerald-500 rounded-xl shadow-lg">
@@ -238,7 +236,7 @@ const Ac_sociales = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-blue-50 to-cyan-100 p-4 rounded-2xl border border-blue-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-blue-500 rounded-xl shadow-lg">
@@ -250,7 +248,7 @@ const Ac_sociales = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-purple-50 to-pink-100 p-4 rounded-2xl border border-purple-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-purple-500 rounded-xl shadow-lg">
@@ -262,7 +260,7 @@ const Ac_sociales = () => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-gradient-to-br from-yellow-50 to-orange-100 p-4 rounded-2xl border border-yellow-200/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 bg-yellow-500 rounded-xl shadow-lg">
@@ -288,7 +286,7 @@ const Ac_sociales = () => {
                                     className="w-full pl-10 pr-4 py-3 bg-white/80 backdrop-blur-sm border border-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-pink-500/50 focus:border-pink-500/50 shadow-lg"
                                 />
                             </div>
-                            
+
                             <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-2">
                                     <Filter className="w-4 h-4 text-slate-500" />
@@ -302,7 +300,7 @@ const Ac_sociales = () => {
                                         ))}
                                     </select>
                                 </div>
-                                
+
                                 <div className="flex items-center gap-2">
                                     <Star className="w-4 h-4 text-slate-500" />
                                     <select
@@ -484,7 +482,7 @@ const Ac_sociales = () => {
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         {/* Paginación épica */}
                         {totalPage > 1 && (
                             <div className="bg-gradient-to-r from-pink-50 to-purple-50 px-6 py-4 border-t border-pink-200/60">
@@ -493,7 +491,7 @@ const Ac_sociales = () => {
                                         Mostrando <span className="font-medium">{actividadesFiltradas.length}</span> de <span className="font-medium">{total}</span> actividades
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <button 
+                                        <button
                                             onClick={() => setPage(Math.max(1, page - 1))}
                                             disabled={page === 1}
                                             className="px-3 py-1 bg-white border border-pink-300 rounded-lg text-sm disabled:opacity-50 hover:bg-pink-50 transition-colors"
@@ -503,7 +501,7 @@ const Ac_sociales = () => {
                                         <span className="px-3 py-1 bg-pink-600 text-white rounded-lg text-sm font-medium">
                                             {page} de {totalPage}
                                         </span>
-                                        <button 
+                                        <button
                                             onClick={() => setPage(Math.min(totalPage, page + 1))}
                                             disabled={page === totalPage}
                                             className="px-3 py-1 bg-white border border-pink-300 rounded-lgtext-sm disabled:opacity-50 hover:bg-pink-50 transition-colors"
@@ -540,8 +538,8 @@ const Ac_sociales = () => {
                                 const estadoInfo = getEstadoInfo(item.estado);
                                 const tipoIcon = getTipoIcon(item.tipo);
                                 return (
-                                    <div 
-                                        key={item.id_actividad_social} 
+                                    <div
+                                        key={item.id_actividad_social}
                                         className={`bg-gradient-to-br ${estadoInfo.bgGradient} backdrop-blur-xl rounded-3xl border border-white/60 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 overflow-hidden`}
                                     >
                                         {/* Header de la card */}
@@ -552,7 +550,7 @@ const Ac_sociales = () => {
                                                     {item.estado}
                                                 </span>
                                             </div>
-                                            
+
                                             <div className="flex items-center gap-4 mb-4">
                                                 <div className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-2xl shadow-lg">
                                                     {tipoIcon}
@@ -565,20 +563,20 @@ const Ac_sociales = () => {
                                                     </div>
                                                 </div>
                                             </div>
-                                            
+
                                             <p className="text-slate-600 text-sm mb-4 line-clamp-2">{item.descripcion}</p>
-                                            
+
                                             <div className="space-y-2">
                                                 <div className="flex items-center gap-2 text-sm text-slate-600">
                                                     <MapPin className="w-4 h-4 text-pink-500" />
                                                     <span>{item.ubicacion}</span>
                                                 </div>
-                                                
+
                                                 <div className="flex items-center gap-2 text-sm text-slate-600">
                                                     <FileText className="w-4 h-4 text-blue-500" />
                                                     <span>{item.motivo}</span>
                                                 </div>
-                                                
+
                                                 {item.convenio && (
                                                     <div className="flex items-center gap-2 text-sm text-slate-600">
                                                         <Globe className="w-4 h-4 text-green-500" />
@@ -587,7 +585,7 @@ const Ac_sociales = () => {
                                                 )}
                                             </div>
                                         </div>
-                                        
+
                                         {/* Fechas */}
                                         <div className="px-6 py-3 bg-white/50 backdrop-blur-sm border-t border-white/60">
                                             <div className="flex items-center justify-between text-sm">
@@ -603,7 +601,7 @@ const Ac_sociales = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         {/* Acciones */}
                                         <div className="p-4 bg-white/70 backdrop-blur-sm">
                                             <div className="flex items-center justify-center gap-2">
@@ -639,20 +637,21 @@ const Ac_sociales = () => {
 
 
 
-            <Modal isOpen={mostrarModal} onClose={()=>SetMostrarModal(false)} title="Crear actividad social">
-                <CreateActSocial/>
+            <Modal isOpen={mostrarModal} onClose={() => SetMostrarModal(false)} title="Crear actividad social">
+                <CreateActSocial />
             </Modal>
-            <Modal isOpen={modalVerDetalles} onClose={()=>setModalVerDetalles(false)}>
-                    <VerDetallesColegiado id={currentId} />
+            <Modal isOpen={modalVerDetalles} onClose={() => setModalVerDetalles(false)}>
+                <VerDetallesColegiado id={currentId} />
             </Modal>
 
-            <Modal isOpen={modalModificar} onClose={()=>{setModalModificar(false)
+            <Modal isOpen={modalModificar} onClose={() => {
+                setModalModificar(false)
                 fetchSociales()
             }}>
-                    <ModificarColegiado id={currentId}/>
+                <ModificarColegiado id={currentId} />
             </Modal>
-            <Modal isOpen={modalReporte} onClose={()=>setModalReporte(false)}>
-                <GenerarReporteActividadesSociales/>
+            <Modal isOpen={modalReporte} onClose={() => setModalReporte(false)}>
+                <GenerarReporteActividadesSociales />
             </Modal>
         </div>
     );

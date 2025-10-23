@@ -278,7 +278,6 @@ export const getActividadInstDetailReport = async (req: Request, res: Response) 
                             select: {
                                 nombre: true,
                                 apellido: true,
-                                tipo: true,
                                 correo: true,
                                 telefono: true,
                             },
@@ -339,7 +338,6 @@ export const getActividadInstDetailReport = async (req: Request, res: Response) 
             } else if (r.invitados) {
                 const i = r.invitados;
                 return {
-                    tipo: `Invitado (${i.tipo || ""})`,
                     nombreCompleto: `${i.nombre || ""} ${i.apellido || ""}`.trim(),
                     correo: i.correo || "",
                     telefono: i.telefono || "",

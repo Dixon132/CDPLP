@@ -112,9 +112,11 @@ model colegiados_asignados_social {
   id_actividad_social  Int?
   id_colegiado         Int?
   id_invitado          Int? 
+  id_pasante          Int?
   invitados            invitados?           @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
   actividades_sociales actividades_sociales? @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
   colegiados           colegiados?           @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
+  pasantes             pasantes?            @relation(fields: [id_pasante], references: [id_pasante], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model documentos_colegiados {
@@ -191,7 +193,19 @@ model auditoria {
 }
 
 
-
+model pasantes {
+  id_pasante     Int      @id @default(autoincrement())
+  nombre         String?
+  apellido       String?
+  carnet_identidad String?   @unique @db.VarChar(20)
+  correo         String?
+  telefono       String?
+  institucion    String?
+  createdAt      DateTime @default(now()) @db.Date
+  updatedAt      DateTime @updatedAt @db.Date
+  estado         String?   @db.VarChar(50)
+  olegiados_asignados_social colegiados_asignados_social[]
+}
 
 
 
@@ -244,7 +258,6 @@ model invitados {
   id_invitado  Int    @id @default(autoincrement())
   nombre       String
   apellido     String
-  tipo         String?   // estudiante, pasante, invitado externo
   correo       String?
   telefono     String?
   colegiados_asignados_social colegiados_asignados_social[]

@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { TextField, Button, Box, MenuItem } from "@mui/material";
 import { getColegiadoById, modificarColegiados } from "../../../services/colegiados";
 
 const ModificarColegiado = ({ id, onClose }) => {
@@ -10,192 +11,201 @@ const ModificarColegiado = ({ id, onClose }) => {
         reset,
     } = useForm();
 
-    // Fecha de hoy en formato YYYY-MM-DD
     const today = new Date().toISOString().split("T")[0];
 
-    // Carga datos y formatea fechas para el input[type="date"]
-    const getColegiado = async () => {
-        try {
-            const data = await getColegiadoById(id);
-            const formatted = {
-                ...data,
-                fecha_inscripcion: data.fecha_inscripcion
-                    ? data.fecha_inscripcion.split("T")[0]
-                    : "",
-                fecha_renovacion: data.fecha_renovacion
-                    ? data.fecha_renovacion.split("T")[0]
-                    : "",
-            };
-            reset(formatted);
-        } catch (error) {
-            console.error("Error al obtener el colegiado", error);
-        }
-    };
-
+    // ✅ Carga de datos
     useEffect(() => {
-        getColegiado();
-    }, [id]);
+        const fetchData = async () => {
+            try {
+                const data = await getColegiadoById(id);
+                reset({
+                    carnet_identidad: data.carnet_identidad || "",
+                    nombre: data.nombre || "",
+                    apellido: data.apellido || "",
+                    correo: data.correo || "",
+                    telefono: data.telefono || "",
+                    especialidades: data.especialidades || "",
+                    fecha_inscripcion: data.fecha_inscripcion?.split("T")[0] || "",
+                    fecha_renovacion: data.fecha_renovacion?.split("T")[0] || "",
+                    estado: data.estado || "",
+                });
+            } catch (error) {
+                console.error("Error al obtener el colegiado:", error);
+            }
+        };
+        fetchData();
+    }, [id, reset]);
 
     const onSubmit = async (formData) => {
         try {
             await modificarColegiados(id, formData);
-            onClose();
+            if (onClose) onClose();
         } catch (error) {
-            console.error("Error al modificar el colegiado", error);
+            console.error("Error al modificar:", error);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 p-4">
-            {/* Carnet de Identidad */}
-            <div>
-                <label className="block mb-1">Carnet de Identidad</label>
-                <input
-                    type="text"
-                    {...register("carnet_identidad", { required: "Campo obligatorio" })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.carnet_identidad && (
-                    <p className="text-red-500 mt-1">{errors.carnet_identidad.message}</p>
-                )}
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Box display="flex" flexDirection="column" gap={2}>
+                {/* Carnet Identidad */}
+                <div>
+                    <label className="block mb-1 font-semibold">Carnet de Identidad</label>
+                    <TextField
+                        fullWidth
+                        {...register("carnet_identidad", { required: "Campo obligatorio" })}
+                        error={!!errors.carnet_identidad}
+                        helperText={errors.carnet_identidad?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Nombre */}
-            <div>
-                <label className="block mb-1">Nombre</label>
-                <input
-                    type="text"
-                    {...register("nombre", { required: "Campo obligatorio" })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.nombre && (
-                    <p className="text-red-500 mt-1">{errors.nombre.message}</p>
-                )}
-            </div>
+                {/* Nombre */}
+                <div>
+                    <label className="block mb-1 font-semibold">Nombre</label>
+                    <TextField
+                        fullWidth
+                        {...register("nombre", { required: "Campo obligatorio" })}
+                        error={!!errors.nombre}
+                        helperText={errors.nombre?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Apellido */}
-            <div>
-                <label className="block mb-1">Apellido</label>
-                <input
-                    type="text"
-                    {...register("apellido", { required: "Campo obligatorio" })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.apellido && (
-                    <p className="text-red-500 mt-1">{errors.apellido.message}</p>
-                )}
-            </div>
+                {/* Apellido */}
+                <div>
+                    <label className="block mb-1 font-semibold">Apellido</label>
+                    <TextField
+                        fullWidth
+                        {...register("apellido", { required: "Campo obligatorio" })}
+                        error={!!errors.apellido}
+                        helperText={errors.apellido?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Correo */}
-            <div>
-                <label className="block mb-1">Correo</label>
-                <input
-                    type="email"
-                    {...register("correo", {
-                        required: "Campo obligatorio",
-                        pattern: {
-                            value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-                            message: "Correo inválido",
-                        },
-                    })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.correo && (
-                    <p className="text-red-500 mt-1">{errors.correo.message}</p>
-                )}
-            </div>
+                {/* Correo */}
+                <div>
+                    <label className="block mb-1 font-semibold">Correo Electrónico</label>
+                    <TextField
+                        fullWidth
+                        type="email"
+                        {...register("correo", {
+                            required: "Campo obligatorio",
+                            pattern: {
+                                value: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
+                                message: "Correo inválido",
+                            },
+                        })}
+                        error={!!errors.correo}
+                        helperText={errors.correo?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Teléfono */}
-            <div>
-                <label className="block mb-1">Teléfono</label>
-                <input
-                    type="text"
-                    {...register("telefono", {
-                        required: "Campo obligatorio",
-                        pattern: {
-                            value: /^[0-9]+$/,
-                            message: "Solo números",
-                        },
-                    })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.telefono && (
-                    <p className="text-red-500 mt-1">{errors.telefono.message}</p>
-                )}
-            </div>
+                {/* Teléfono */}
+                <div>
+                    <label className="block mb-1 font-semibold">Teléfono</label>
+                    <TextField
+                        fullWidth
+                        {...register("telefono", {
+                            required: "Campo obligatorio",
+                            pattern: {
+                                value: /^[0-9]+$/,
+                                message: "Solo números",
+                            },
+                        })}
+                        error={!!errors.telefono}
+                        helperText={errors.telefono?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Especialidades */}
-            <div>
-                <label className="block mb-1">Especialidades</label>
-                <input
-                    type="text"
-                    {...register("especialidades", { required: "Campo obligatorio" })}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.especialidades && (
-                    <p className="text-red-500 mt-1">{errors.especialidades.message}</p>
-                )}
-            </div>
+                {/* Especialidades */}
+                <div>
+                    <label className="block mb-1 font-semibold">Especialidades</label>
+                    <TextField
+                        fullWidth
+                        {...register("especialidades", { required: "Campo obligatorio" })}
+                        error={!!errors.especialidades}
+                        helperText={errors.especialidades?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Fecha de Inscripción */}
-            <div>
-                <label className="block mb-1">Fecha de Inscripción</label>
-                <input
-                    type="date"
-                    {...register("fecha_inscripcion", {
-                        required: "Campo obligatorio",
-                        validate: (value) =>
-                            value <= today || "No puede seleccionar una fecha futura",
-                    })}
-                    max={today}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.fecha_inscripcion && (
-                    <p className="text-red-500 mt-1">{errors.fecha_inscripcion.message}</p>
-                )}
-            </div>
+                {/* Fecha Inscripción */}
+                <div>
+                    <label className="block mb-1 font-semibold">Fecha de Inscripción</label>
+                    <TextField
+                        fullWidth
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("fecha_inscripcion", {
+                            required: "Campo obligatorio",
+                            validate: (value) =>
+                                value <= today || "No puede seleccionar una fecha futura",
+                        })}
+                        error={!!errors.fecha_inscripcion}
+                        helperText={errors.fecha_inscripcion?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Fecha de Renovación */}
-            <div>
-                <label className="block mb-1">Fecha de Renovación</label>
-                <input
-                    type="date"
-                    {...register("fecha_renovacion", {
-                        required: "Campo obligatorio",
-                        validate: (value) =>
-                            value >= today || "No puede seleccionar una fecha pasada",
-                    })}
-                    min={today}
-                    className="w-full border p-2 rounded"
-                />
-                {errors.fecha_renovacion && (
-                    <p className="text-red-500 mt-1">{errors.fecha_renovacion.message}</p>
-                )}
-            </div>
+                {/* Fecha Renovación */}
+                <div>
+                    <label className="block mb-1 font-semibold">Fecha de Renovación</label>
+                    <TextField
+                        fullWidth
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("fecha_renovacion", {
+                            required: "Campo obligatorio",
+                            validate: (value) =>
+                                value >= today || "No puede seleccionar una fecha pasada",
+                        })}
+                        error={!!errors.fecha_renovacion}
+                        helperText={errors.fecha_renovacion?.message}
+                        variant="outlined"
+                        size="small"
+                    />
+                </div>
 
-            {/* Estado */}
-            <div>
-                <label className="block mb-1">Estado</label>
-                <select
-                    {...register("estado", { required: "Campo obligatorio" })}
-                    className="w-full border p-2 rounded"
-                >
-                    <option value="">-- Seleccione --</option>
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="INACTIVO">INACTIVO</option>
-                </select>
-                {errors.estado && (
-                    <p className="text-red-500 mt-1">{errors.estado.message}</p>
-                )}
-            </div>
+                {/* Estado */}
+                <div>
+                    <label className="block mb-1 font-semibold">Estado</label>
+                    <TextField
+                        select
+                        fullWidth
+                        defaultValue=""
+                        {...register("estado", { required: "Campo obligatorio" })}
+                        error={!!errors.estado}
+                        helperText={errors.estado?.message}
+                        variant="outlined"
+                        size="small"
+                    >
+                        <MenuItem value="">-- Seleccione --</MenuItem>
+                        <MenuItem value="ACTIVO">ACTIVO</MenuItem>
+                        <MenuItem value="INACTIVO">INACTIVO</MenuItem>
+                    </TextField>
+                </div>
 
-            {/* Botón enviar */}
-            <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold px-4 py-2 rounded"
-            >
-                Guardar cambios
-            </button>
+                {/* Botones */}
+                <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                    <Button variant="outlined" color="secondary" onClick={onClose}>
+                        Cancelar
+                    </Button>
+                    <Button type="submit" variant="contained" color="primary">
+                        Guardar Cambios
+                    </Button>
+                </Box>
+            </Box>
         </form>
     );
 };

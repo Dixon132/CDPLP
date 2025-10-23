@@ -84,6 +84,11 @@ export type presupuestos = $Result.DefaultSelection<Prisma.$presupuestosPayload>
  */
 export type auditoria = $Result.DefaultSelection<Prisma.$auditoriaPayload>
 /**
+ * Model pasantes
+ * 
+ */
+export type pasantes = $Result.DefaultSelection<Prisma.$pasantesPayload>
+/**
  * Model roles
  * 
  */
@@ -385,6 +390,16 @@ export class PrismaClient<
     * ```
     */
   get auditoria(): Prisma.auditoriaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pasantes`: Exposes CRUD operations for the **pasantes** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pasantes
+    * const pasantes = await prisma.pasantes.findMany()
+    * ```
+    */
+  get pasantes(): Prisma.pasantesDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.roles`: Exposes CRUD operations for the **roles** model.
@@ -869,6 +884,7 @@ export namespace Prisma {
     pagos_colegiados: 'pagos_colegiados',
     presupuestos: 'presupuestos',
     auditoria: 'auditoria',
+    pasantes: 'pasantes',
     roles: 'roles',
     usuarios: 'usuarios',
     invitados: 'invitados'
@@ -890,7 +906,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "roles" | "usuarios" | "invitados"
+      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1930,6 +1946,80 @@ export namespace Prisma {
           }
         }
       }
+      pasantes: {
+        payload: Prisma.$pasantesPayload<ExtArgs>
+        fields: Prisma.pasantesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.pasantesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.pasantesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          findFirst: {
+            args: Prisma.pasantesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.pasantesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          findMany: {
+            args: Prisma.pasantesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>[]
+          }
+          create: {
+            args: Prisma.pasantesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          createMany: {
+            args: Prisma.pasantesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.pasantesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>[]
+          }
+          delete: {
+            args: Prisma.pasantesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          update: {
+            args: Prisma.pasantesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          deleteMany: {
+            args: Prisma.pasantesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.pasantesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.pasantesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>[]
+          }
+          upsert: {
+            args: Prisma.pasantesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pasantesPayload>
+          }
+          aggregate: {
+            args: Prisma.PasantesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePasantes>
+          }
+          groupBy: {
+            args: Prisma.pasantesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PasantesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.pasantesCountArgs<ExtArgs>
+            result: $Utils.Optional<PasantesCountAggregateOutputType> | number
+          }
+        }
+      }
       roles: {
         payload: Prisma.$rolesPayload<ExtArgs>
         fields: Prisma.rolesFieldRefs
@@ -2250,6 +2340,7 @@ export namespace Prisma {
     pagos_colegiados?: pagos_colegiadosOmit
     presupuestos?: presupuestosOmit
     auditoria?: auditoriaOmit
+    pasantes?: pasantesOmit
     roles?: rolesOmit
     usuarios?: usuariosOmit
     invitados?: invitadosOmit
@@ -2632,6 +2723,37 @@ export namespace Prisma {
    */
   export type PresupuestosCountOutputTypeCountMovimientos_financierosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: movimientos_financierosWhereInput
+  }
+
+
+  /**
+   * Count Type PasantesCountOutputType
+   */
+
+  export type PasantesCountOutputType = {
+    olegiados_asignados_social: number
+  }
+
+  export type PasantesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    olegiados_asignados_social?: boolean | PasantesCountOutputTypeCountOlegiados_asignados_socialArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PasantesCountOutputType without action
+   */
+  export type PasantesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PasantesCountOutputType
+     */
+    select?: PasantesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PasantesCountOutputType without action
+   */
+  export type PasantesCountOutputTypeCountOlegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: colegiados_asignados_socialWhereInput
   }
 
 
@@ -11176,6 +11298,7 @@ export namespace Prisma {
     id_actividad_social: number | null
     id_colegiado: number | null
     id_invitado: number | null
+    id_pasante: number | null
   }
 
   export type Colegiados_asignados_socialSumAggregateOutputType = {
@@ -11183,6 +11306,7 @@ export namespace Prisma {
     id_actividad_social: number | null
     id_colegiado: number | null
     id_invitado: number | null
+    id_pasante: number | null
   }
 
   export type Colegiados_asignados_socialMinAggregateOutputType = {
@@ -11190,6 +11314,7 @@ export namespace Prisma {
     id_actividad_social: number | null
     id_colegiado: number | null
     id_invitado: number | null
+    id_pasante: number | null
   }
 
   export type Colegiados_asignados_socialMaxAggregateOutputType = {
@@ -11197,6 +11322,7 @@ export namespace Prisma {
     id_actividad_social: number | null
     id_colegiado: number | null
     id_invitado: number | null
+    id_pasante: number | null
   }
 
   export type Colegiados_asignados_socialCountAggregateOutputType = {
@@ -11204,6 +11330,7 @@ export namespace Prisma {
     id_actividad_social: number
     id_colegiado: number
     id_invitado: number
+    id_pasante: number
     _all: number
   }
 
@@ -11213,6 +11340,7 @@ export namespace Prisma {
     id_actividad_social?: true
     id_colegiado?: true
     id_invitado?: true
+    id_pasante?: true
   }
 
   export type Colegiados_asignados_socialSumAggregateInputType = {
@@ -11220,6 +11348,7 @@ export namespace Prisma {
     id_actividad_social?: true
     id_colegiado?: true
     id_invitado?: true
+    id_pasante?: true
   }
 
   export type Colegiados_asignados_socialMinAggregateInputType = {
@@ -11227,6 +11356,7 @@ export namespace Prisma {
     id_actividad_social?: true
     id_colegiado?: true
     id_invitado?: true
+    id_pasante?: true
   }
 
   export type Colegiados_asignados_socialMaxAggregateInputType = {
@@ -11234,6 +11364,7 @@ export namespace Prisma {
     id_actividad_social?: true
     id_colegiado?: true
     id_invitado?: true
+    id_pasante?: true
   }
 
   export type Colegiados_asignados_socialCountAggregateInputType = {
@@ -11241,6 +11372,7 @@ export namespace Prisma {
     id_actividad_social?: true
     id_colegiado?: true
     id_invitado?: true
+    id_pasante?: true
     _all?: true
   }
 
@@ -11335,6 +11467,7 @@ export namespace Prisma {
     id_actividad_social: number | null
     id_colegiado: number | null
     id_invitado: number | null
+    id_pasante: number | null
     _count: Colegiados_asignados_socialCountAggregateOutputType | null
     _avg: Colegiados_asignados_socialAvgAggregateOutputType | null
     _sum: Colegiados_asignados_socialSumAggregateOutputType | null
@@ -11361,9 +11494,11 @@ export namespace Prisma {
     id_actividad_social?: boolean
     id_colegiado?: boolean
     id_invitado?: boolean
+    id_pasante?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_asignados_social"]>
 
   export type colegiados_asignados_socialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11371,9 +11506,11 @@ export namespace Prisma {
     id_actividad_social?: boolean
     id_colegiado?: boolean
     id_invitado?: boolean
+    id_pasante?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_asignados_social"]>
 
   export type colegiados_asignados_socialSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11381,9 +11518,11 @@ export namespace Prisma {
     id_actividad_social?: boolean
     id_colegiado?: boolean
     id_invitado?: boolean
+    id_pasante?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_asignados_social"]>
 
   export type colegiados_asignados_socialSelectScalar = {
@@ -11391,23 +11530,27 @@ export namespace Prisma {
     id_actividad_social?: boolean
     id_colegiado?: boolean
     id_invitado?: boolean
+    id_pasante?: boolean
   }
 
-  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_invitado", ExtArgs["result"]["colegiados_asignados_social"]>
+  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_invitado" | "id_pasante", ExtArgs["result"]["colegiados_asignados_social"]>
   export type colegiados_asignados_socialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }
   export type colegiados_asignados_socialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }
   export type colegiados_asignados_socialIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
+    pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }
 
   export type $colegiados_asignados_socialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11416,12 +11559,14 @@ export namespace Prisma {
       invitados: Prisma.$invitadosPayload<ExtArgs> | null
       actividades_sociales: Prisma.$actividades_socialesPayload<ExtArgs> | null
       colegiados: Prisma.$colegiadosPayload<ExtArgs> | null
+      pasantes: Prisma.$pasantesPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id_asignacion: number
       id_actividad_social: number | null
       id_colegiado: number | null
       id_invitado: number | null
+      id_pasante: number | null
     }, ExtArgs["result"]["colegiados_asignados_social"]>
     composites: {}
   }
@@ -11819,6 +11964,7 @@ export namespace Prisma {
     invitados<T extends colegiados_asignados_social$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     actividades_sociales<T extends colegiados_asignados_social$actividades_socialesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$actividades_socialesArgs<ExtArgs>>): Prisma__actividades_socialesClient<$Result.GetResult<Prisma.$actividades_socialesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     colegiados<T extends colegiados_asignados_social$colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$colegiadosArgs<ExtArgs>>): Prisma__colegiadosClient<$Result.GetResult<Prisma.$colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    pasantes<T extends colegiados_asignados_social$pasantesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$pasantesArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11852,6 +11998,7 @@ export namespace Prisma {
     readonly id_actividad_social: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_colegiado: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_invitado: FieldRef<"colegiados_asignados_social", 'Int'>
+    readonly id_pasante: FieldRef<"colegiados_asignados_social", 'Int'>
   }
     
 
@@ -12302,6 +12449,25 @@ export namespace Prisma {
      */
     include?: colegiadosInclude<ExtArgs> | null
     where?: colegiadosWhereInput
+  }
+
+  /**
+   * colegiados_asignados_social.pasantes
+   */
+  export type colegiados_asignados_social$pasantesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    where?: pasantesWhereInput
   }
 
   /**
@@ -19243,6 +19409,1175 @@ export namespace Prisma {
 
 
   /**
+   * Model pasantes
+   */
+
+  export type AggregatePasantes = {
+    _count: PasantesCountAggregateOutputType | null
+    _avg: PasantesAvgAggregateOutputType | null
+    _sum: PasantesSumAggregateOutputType | null
+    _min: PasantesMinAggregateOutputType | null
+    _max: PasantesMaxAggregateOutputType | null
+  }
+
+  export type PasantesAvgAggregateOutputType = {
+    id_pasante: number | null
+  }
+
+  export type PasantesSumAggregateOutputType = {
+    id_pasante: number | null
+  }
+
+  export type PasantesMinAggregateOutputType = {
+    id_pasante: number | null
+    nombre: string | null
+    apellido: string | null
+    carnet_identidad: string | null
+    correo: string | null
+    telefono: string | null
+    institucion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    estado: string | null
+  }
+
+  export type PasantesMaxAggregateOutputType = {
+    id_pasante: number | null
+    nombre: string | null
+    apellido: string | null
+    carnet_identidad: string | null
+    correo: string | null
+    telefono: string | null
+    institucion: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    estado: string | null
+  }
+
+  export type PasantesCountAggregateOutputType = {
+    id_pasante: number
+    nombre: number
+    apellido: number
+    carnet_identidad: number
+    correo: number
+    telefono: number
+    institucion: number
+    createdAt: number
+    updatedAt: number
+    estado: number
+    _all: number
+  }
+
+
+  export type PasantesAvgAggregateInputType = {
+    id_pasante?: true
+  }
+
+  export type PasantesSumAggregateInputType = {
+    id_pasante?: true
+  }
+
+  export type PasantesMinAggregateInputType = {
+    id_pasante?: true
+    nombre?: true
+    apellido?: true
+    carnet_identidad?: true
+    correo?: true
+    telefono?: true
+    institucion?: true
+    createdAt?: true
+    updatedAt?: true
+    estado?: true
+  }
+
+  export type PasantesMaxAggregateInputType = {
+    id_pasante?: true
+    nombre?: true
+    apellido?: true
+    carnet_identidad?: true
+    correo?: true
+    telefono?: true
+    institucion?: true
+    createdAt?: true
+    updatedAt?: true
+    estado?: true
+  }
+
+  export type PasantesCountAggregateInputType = {
+    id_pasante?: true
+    nombre?: true
+    apellido?: true
+    carnet_identidad?: true
+    correo?: true
+    telefono?: true
+    institucion?: true
+    createdAt?: true
+    updatedAt?: true
+    estado?: true
+    _all?: true
+  }
+
+  export type PasantesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pasantes to aggregate.
+     */
+    where?: pasantesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pasantes to fetch.
+     */
+    orderBy?: pasantesOrderByWithRelationInput | pasantesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: pasantesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pasantes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pasantes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned pasantes
+    **/
+    _count?: true | PasantesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PasantesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PasantesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PasantesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PasantesMaxAggregateInputType
+  }
+
+  export type GetPasantesAggregateType<T extends PasantesAggregateArgs> = {
+        [P in keyof T & keyof AggregatePasantes]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePasantes[P]>
+      : GetScalarType<T[P], AggregatePasantes[P]>
+  }
+
+
+
+
+  export type pasantesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pasantesWhereInput
+    orderBy?: pasantesOrderByWithAggregationInput | pasantesOrderByWithAggregationInput[]
+    by: PasantesScalarFieldEnum[] | PasantesScalarFieldEnum
+    having?: pasantesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PasantesCountAggregateInputType | true
+    _avg?: PasantesAvgAggregateInputType
+    _sum?: PasantesSumAggregateInputType
+    _min?: PasantesMinAggregateInputType
+    _max?: PasantesMaxAggregateInputType
+  }
+
+  export type PasantesGroupByOutputType = {
+    id_pasante: number
+    nombre: string | null
+    apellido: string | null
+    carnet_identidad: string | null
+    correo: string | null
+    telefono: string | null
+    institucion: string | null
+    createdAt: Date
+    updatedAt: Date
+    estado: string | null
+    _count: PasantesCountAggregateOutputType | null
+    _avg: PasantesAvgAggregateOutputType | null
+    _sum: PasantesSumAggregateOutputType | null
+    _min: PasantesMinAggregateOutputType | null
+    _max: PasantesMaxAggregateOutputType | null
+  }
+
+  type GetPasantesGroupByPayload<T extends pasantesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PasantesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PasantesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PasantesGroupByOutputType[P]>
+            : GetScalarType<T[P], PasantesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type pasantesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pasante?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    carnet_identidad?: boolean
+    correo?: boolean
+    telefono?: boolean
+    institucion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    estado?: boolean
+    olegiados_asignados_social?: boolean | pasantes$olegiados_asignados_socialArgs<ExtArgs>
+    _count?: boolean | PasantesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pasantes"]>
+
+  export type pasantesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pasante?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    carnet_identidad?: boolean
+    correo?: boolean
+    telefono?: boolean
+    institucion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    estado?: boolean
+  }, ExtArgs["result"]["pasantes"]>
+
+  export type pasantesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pasante?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    carnet_identidad?: boolean
+    correo?: boolean
+    telefono?: boolean
+    institucion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    estado?: boolean
+  }, ExtArgs["result"]["pasantes"]>
+
+  export type pasantesSelectScalar = {
+    id_pasante?: boolean
+    nombre?: boolean
+    apellido?: boolean
+    carnet_identidad?: boolean
+    correo?: boolean
+    telefono?: boolean
+    institucion?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    estado?: boolean
+  }
+
+  export type pasantesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pasante" | "nombre" | "apellido" | "carnet_identidad" | "correo" | "telefono" | "institucion" | "createdAt" | "updatedAt" | "estado", ExtArgs["result"]["pasantes"]>
+  export type pasantesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    olegiados_asignados_social?: boolean | pasantes$olegiados_asignados_socialArgs<ExtArgs>
+    _count?: boolean | PasantesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type pasantesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type pasantesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $pasantesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "pasantes"
+    objects: {
+      olegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_pasante: number
+      nombre: string | null
+      apellido: string | null
+      carnet_identidad: string | null
+      correo: string | null
+      telefono: string | null
+      institucion: string | null
+      createdAt: Date
+      updatedAt: Date
+      estado: string | null
+    }, ExtArgs["result"]["pasantes"]>
+    composites: {}
+  }
+
+  type pasantesGetPayload<S extends boolean | null | undefined | pasantesDefaultArgs> = $Result.GetResult<Prisma.$pasantesPayload, S>
+
+  type pasantesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<pasantesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PasantesCountAggregateInputType | true
+    }
+
+  export interface pasantesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['pasantes'], meta: { name: 'pasantes' } }
+    /**
+     * Find zero or one Pasantes that matches the filter.
+     * @param {pasantesFindUniqueArgs} args - Arguments to find a Pasantes
+     * @example
+     * // Get one Pasantes
+     * const pasantes = await prisma.pasantes.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends pasantesFindUniqueArgs>(args: SelectSubset<T, pasantesFindUniqueArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Pasantes that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {pasantesFindUniqueOrThrowArgs} args - Arguments to find a Pasantes
+     * @example
+     * // Get one Pasantes
+     * const pasantes = await prisma.pasantes.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends pasantesFindUniqueOrThrowArgs>(args: SelectSubset<T, pasantesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pasantes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesFindFirstArgs} args - Arguments to find a Pasantes
+     * @example
+     * // Get one Pasantes
+     * const pasantes = await prisma.pasantes.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends pasantesFindFirstArgs>(args?: SelectSubset<T, pasantesFindFirstArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pasantes that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesFindFirstOrThrowArgs} args - Arguments to find a Pasantes
+     * @example
+     * // Get one Pasantes
+     * const pasantes = await prisma.pasantes.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends pasantesFindFirstOrThrowArgs>(args?: SelectSubset<T, pasantesFindFirstOrThrowArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Pasantes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pasantes
+     * const pasantes = await prisma.pasantes.findMany()
+     * 
+     * // Get first 10 Pasantes
+     * const pasantes = await prisma.pasantes.findMany({ take: 10 })
+     * 
+     * // Only select the `id_pasante`
+     * const pasantesWithId_pasanteOnly = await prisma.pasantes.findMany({ select: { id_pasante: true } })
+     * 
+     */
+    findMany<T extends pasantesFindManyArgs>(args?: SelectSubset<T, pasantesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Pasantes.
+     * @param {pasantesCreateArgs} args - Arguments to create a Pasantes.
+     * @example
+     * // Create one Pasantes
+     * const Pasantes = await prisma.pasantes.create({
+     *   data: {
+     *     // ... data to create a Pasantes
+     *   }
+     * })
+     * 
+     */
+    create<T extends pasantesCreateArgs>(args: SelectSubset<T, pasantesCreateArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Pasantes.
+     * @param {pasantesCreateManyArgs} args - Arguments to create many Pasantes.
+     * @example
+     * // Create many Pasantes
+     * const pasantes = await prisma.pasantes.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends pasantesCreateManyArgs>(args?: SelectSubset<T, pasantesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Pasantes and returns the data saved in the database.
+     * @param {pasantesCreateManyAndReturnArgs} args - Arguments to create many Pasantes.
+     * @example
+     * // Create many Pasantes
+     * const pasantes = await prisma.pasantes.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Pasantes and only return the `id_pasante`
+     * const pasantesWithId_pasanteOnly = await prisma.pasantes.createManyAndReturn({
+     *   select: { id_pasante: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends pasantesCreateManyAndReturnArgs>(args?: SelectSubset<T, pasantesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Pasantes.
+     * @param {pasantesDeleteArgs} args - Arguments to delete one Pasantes.
+     * @example
+     * // Delete one Pasantes
+     * const Pasantes = await prisma.pasantes.delete({
+     *   where: {
+     *     // ... filter to delete one Pasantes
+     *   }
+     * })
+     * 
+     */
+    delete<T extends pasantesDeleteArgs>(args: SelectSubset<T, pasantesDeleteArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Pasantes.
+     * @param {pasantesUpdateArgs} args - Arguments to update one Pasantes.
+     * @example
+     * // Update one Pasantes
+     * const pasantes = await prisma.pasantes.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends pasantesUpdateArgs>(args: SelectSubset<T, pasantesUpdateArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Pasantes.
+     * @param {pasantesDeleteManyArgs} args - Arguments to filter Pasantes to delete.
+     * @example
+     * // Delete a few Pasantes
+     * const { count } = await prisma.pasantes.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends pasantesDeleteManyArgs>(args?: SelectSubset<T, pasantesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pasantes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pasantes
+     * const pasantes = await prisma.pasantes.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends pasantesUpdateManyArgs>(args: SelectSubset<T, pasantesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pasantes and returns the data updated in the database.
+     * @param {pasantesUpdateManyAndReturnArgs} args - Arguments to update many Pasantes.
+     * @example
+     * // Update many Pasantes
+     * const pasantes = await prisma.pasantes.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Pasantes and only return the `id_pasante`
+     * const pasantesWithId_pasanteOnly = await prisma.pasantes.updateManyAndReturn({
+     *   select: { id_pasante: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends pasantesUpdateManyAndReturnArgs>(args: SelectSubset<T, pasantesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Pasantes.
+     * @param {pasantesUpsertArgs} args - Arguments to update or create a Pasantes.
+     * @example
+     * // Update or create a Pasantes
+     * const pasantes = await prisma.pasantes.upsert({
+     *   create: {
+     *     // ... data to create a Pasantes
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pasantes we want to update
+     *   }
+     * })
+     */
+    upsert<T extends pasantesUpsertArgs>(args: SelectSubset<T, pasantesUpsertArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Pasantes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesCountArgs} args - Arguments to filter Pasantes to count.
+     * @example
+     * // Count the number of Pasantes
+     * const count = await prisma.pasantes.count({
+     *   where: {
+     *     // ... the filter for the Pasantes we want to count
+     *   }
+     * })
+    **/
+    count<T extends pasantesCountArgs>(
+      args?: Subset<T, pasantesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PasantesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pasantes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PasantesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PasantesAggregateArgs>(args: Subset<T, PasantesAggregateArgs>): Prisma.PrismaPromise<GetPasantesAggregateType<T>>
+
+    /**
+     * Group by Pasantes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pasantesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends pasantesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: pasantesGroupByArgs['orderBy'] }
+        : { orderBy?: pasantesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, pasantesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPasantesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the pasantes model
+   */
+  readonly fields: pasantesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for pasantes.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__pasantesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    olegiados_asignados_social<T extends pasantes$olegiados_asignados_socialArgs<ExtArgs> = {}>(args?: Subset<T, pasantes$olegiados_asignados_socialArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the pasantes model
+   */
+  interface pasantesFieldRefs {
+    readonly id_pasante: FieldRef<"pasantes", 'Int'>
+    readonly nombre: FieldRef<"pasantes", 'String'>
+    readonly apellido: FieldRef<"pasantes", 'String'>
+    readonly carnet_identidad: FieldRef<"pasantes", 'String'>
+    readonly correo: FieldRef<"pasantes", 'String'>
+    readonly telefono: FieldRef<"pasantes", 'String'>
+    readonly institucion: FieldRef<"pasantes", 'String'>
+    readonly createdAt: FieldRef<"pasantes", 'DateTime'>
+    readonly updatedAt: FieldRef<"pasantes", 'DateTime'>
+    readonly estado: FieldRef<"pasantes", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * pasantes findUnique
+   */
+  export type pasantesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter, which pasantes to fetch.
+     */
+    where: pasantesWhereUniqueInput
+  }
+
+  /**
+   * pasantes findUniqueOrThrow
+   */
+  export type pasantesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter, which pasantes to fetch.
+     */
+    where: pasantesWhereUniqueInput
+  }
+
+  /**
+   * pasantes findFirst
+   */
+  export type pasantesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter, which pasantes to fetch.
+     */
+    where?: pasantesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pasantes to fetch.
+     */
+    orderBy?: pasantesOrderByWithRelationInput | pasantesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pasantes.
+     */
+    cursor?: pasantesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pasantes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pasantes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pasantes.
+     */
+    distinct?: PasantesScalarFieldEnum | PasantesScalarFieldEnum[]
+  }
+
+  /**
+   * pasantes findFirstOrThrow
+   */
+  export type pasantesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter, which pasantes to fetch.
+     */
+    where?: pasantesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pasantes to fetch.
+     */
+    orderBy?: pasantesOrderByWithRelationInput | pasantesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pasantes.
+     */
+    cursor?: pasantesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pasantes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pasantes.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pasantes.
+     */
+    distinct?: PasantesScalarFieldEnum | PasantesScalarFieldEnum[]
+  }
+
+  /**
+   * pasantes findMany
+   */
+  export type pasantesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter, which pasantes to fetch.
+     */
+    where?: pasantesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pasantes to fetch.
+     */
+    orderBy?: pasantesOrderByWithRelationInput | pasantesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing pasantes.
+     */
+    cursor?: pasantesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pasantes from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pasantes.
+     */
+    skip?: number
+    distinct?: PasantesScalarFieldEnum | PasantesScalarFieldEnum[]
+  }
+
+  /**
+   * pasantes create
+   */
+  export type pasantesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a pasantes.
+     */
+    data: XOR<pasantesCreateInput, pasantesUncheckedCreateInput>
+  }
+
+  /**
+   * pasantes createMany
+   */
+  export type pasantesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many pasantes.
+     */
+    data: pasantesCreateManyInput | pasantesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * pasantes createManyAndReturn
+   */
+  export type pasantesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * The data used to create many pasantes.
+     */
+    data: pasantesCreateManyInput | pasantesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * pasantes update
+   */
+  export type pasantesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a pasantes.
+     */
+    data: XOR<pasantesUpdateInput, pasantesUncheckedUpdateInput>
+    /**
+     * Choose, which pasantes to update.
+     */
+    where: pasantesWhereUniqueInput
+  }
+
+  /**
+   * pasantes updateMany
+   */
+  export type pasantesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update pasantes.
+     */
+    data: XOR<pasantesUpdateManyMutationInput, pasantesUncheckedUpdateManyInput>
+    /**
+     * Filter which pasantes to update
+     */
+    where?: pasantesWhereInput
+    /**
+     * Limit how many pasantes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * pasantes updateManyAndReturn
+   */
+  export type pasantesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * The data used to update pasantes.
+     */
+    data: XOR<pasantesUpdateManyMutationInput, pasantesUncheckedUpdateManyInput>
+    /**
+     * Filter which pasantes to update
+     */
+    where?: pasantesWhereInput
+    /**
+     * Limit how many pasantes to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * pasantes upsert
+   */
+  export type pasantesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the pasantes to update in case it exists.
+     */
+    where: pasantesWhereUniqueInput
+    /**
+     * In case the pasantes found by the `where` argument doesn't exist, create a new pasantes with this data.
+     */
+    create: XOR<pasantesCreateInput, pasantesUncheckedCreateInput>
+    /**
+     * In case the pasantes was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<pasantesUpdateInput, pasantesUncheckedUpdateInput>
+  }
+
+  /**
+   * pasantes delete
+   */
+  export type pasantesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+    /**
+     * Filter which pasantes to delete.
+     */
+    where: pasantesWhereUniqueInput
+  }
+
+  /**
+   * pasantes deleteMany
+   */
+  export type pasantesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pasantes to delete
+     */
+    where?: pasantesWhereInput
+    /**
+     * Limit how many pasantes to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * pasantes.olegiados_asignados_social
+   */
+  export type pasantes$olegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the colegiados_asignados_social
+     */
+    select?: colegiados_asignados_socialSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the colegiados_asignados_social
+     */
+    omit?: colegiados_asignados_socialOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: colegiados_asignados_socialInclude<ExtArgs> | null
+    where?: colegiados_asignados_socialWhereInput
+    orderBy?: colegiados_asignados_socialOrderByWithRelationInput | colegiados_asignados_socialOrderByWithRelationInput[]
+    cursor?: colegiados_asignados_socialWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Colegiados_asignados_socialScalarFieldEnum | Colegiados_asignados_socialScalarFieldEnum[]
+  }
+
+  /**
+   * pasantes without action
+   */
+  export type pasantesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pasantes
+     */
+    select?: pasantesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pasantes
+     */
+    omit?: pasantesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pasantesInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model roles
    */
 
@@ -21647,7 +22982,6 @@ export namespace Prisma {
     id_invitado: number | null
     nombre: string | null
     apellido: string | null
-    tipo: string | null
     correo: string | null
     telefono: string | null
   }
@@ -21656,7 +22990,6 @@ export namespace Prisma {
     id_invitado: number | null
     nombre: string | null
     apellido: string | null
-    tipo: string | null
     correo: string | null
     telefono: string | null
   }
@@ -21665,7 +22998,6 @@ export namespace Prisma {
     id_invitado: number
     nombre: number
     apellido: number
-    tipo: number
     correo: number
     telefono: number
     _all: number
@@ -21684,7 +23016,6 @@ export namespace Prisma {
     id_invitado?: true
     nombre?: true
     apellido?: true
-    tipo?: true
     correo?: true
     telefono?: true
   }
@@ -21693,7 +23024,6 @@ export namespace Prisma {
     id_invitado?: true
     nombre?: true
     apellido?: true
-    tipo?: true
     correo?: true
     telefono?: true
   }
@@ -21702,7 +23032,6 @@ export namespace Prisma {
     id_invitado?: true
     nombre?: true
     apellido?: true
-    tipo?: true
     correo?: true
     telefono?: true
     _all?: true
@@ -21798,7 +23127,6 @@ export namespace Prisma {
     id_invitado: number
     nombre: string
     apellido: string
-    tipo: string | null
     correo: string | null
     telefono: string | null
     _count: InvitadosCountAggregateOutputType | null
@@ -21826,7 +23154,6 @@ export namespace Prisma {
     id_invitado?: boolean
     nombre?: boolean
     apellido?: boolean
-    tipo?: boolean
     correo?: boolean
     telefono?: boolean
     colegiados_asignados_social?: boolean | invitados$colegiados_asignados_socialArgs<ExtArgs>
@@ -21838,7 +23165,6 @@ export namespace Prisma {
     id_invitado?: boolean
     nombre?: boolean
     apellido?: boolean
-    tipo?: boolean
     correo?: boolean
     telefono?: boolean
   }, ExtArgs["result"]["invitados"]>
@@ -21847,7 +23173,6 @@ export namespace Prisma {
     id_invitado?: boolean
     nombre?: boolean
     apellido?: boolean
-    tipo?: boolean
     correo?: boolean
     telefono?: boolean
   }, ExtArgs["result"]["invitados"]>
@@ -21856,12 +23181,11 @@ export namespace Prisma {
     id_invitado?: boolean
     nombre?: boolean
     apellido?: boolean
-    tipo?: boolean
     correo?: boolean
     telefono?: boolean
   }
 
-  export type invitadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_invitado" | "nombre" | "apellido" | "tipo" | "correo" | "telefono", ExtArgs["result"]["invitados"]>
+  export type invitadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_invitado" | "nombre" | "apellido" | "correo" | "telefono", ExtArgs["result"]["invitados"]>
   export type invitadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     colegiados_asignados_social?: boolean | invitados$colegiados_asignados_socialArgs<ExtArgs>
     colegiados_registrados_actividad_institucional?: boolean | invitados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
@@ -21880,7 +23204,6 @@ export namespace Prisma {
       id_invitado: number
       nombre: string
       apellido: string
-      tipo: string | null
       correo: string | null
       telefono: string | null
     }, ExtArgs["result"]["invitados"]>
@@ -22311,7 +23634,6 @@ export namespace Prisma {
     readonly id_invitado: FieldRef<"invitados", 'Int'>
     readonly nombre: FieldRef<"invitados", 'String'>
     readonly apellido: FieldRef<"invitados", 'String'>
-    readonly tipo: FieldRef<"invitados", 'String'>
     readonly correo: FieldRef<"invitados", 'String'>
     readonly telefono: FieldRef<"invitados", 'String'>
   }
@@ -22887,7 +24209,8 @@ export namespace Prisma {
     id_asignacion: 'id_asignacion',
     id_actividad_social: 'id_actividad_social',
     id_colegiado: 'id_colegiado',
-    id_invitado: 'id_invitado'
+    id_invitado: 'id_invitado',
+    id_pasante: 'id_pasante'
   };
 
   export type Colegiados_asignados_socialScalarFieldEnum = (typeof Colegiados_asignados_socialScalarFieldEnum)[keyof typeof Colegiados_asignados_socialScalarFieldEnum]
@@ -22968,6 +24291,22 @@ export namespace Prisma {
   export type AuditoriaScalarFieldEnum = (typeof AuditoriaScalarFieldEnum)[keyof typeof AuditoriaScalarFieldEnum]
 
 
+  export const PasantesScalarFieldEnum: {
+    id_pasante: 'id_pasante',
+    nombre: 'nombre',
+    apellido: 'apellido',
+    carnet_identidad: 'carnet_identidad',
+    correo: 'correo',
+    telefono: 'telefono',
+    institucion: 'institucion',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    estado: 'estado'
+  };
+
+  export type PasantesScalarFieldEnum = (typeof PasantesScalarFieldEnum)[keyof typeof PasantesScalarFieldEnum]
+
+
   export const RolesScalarFieldEnum: {
     id_rol: 'id_rol',
     id_usuario: 'id_usuario',
@@ -23000,7 +24339,6 @@ export namespace Prisma {
     id_invitado: 'id_invitado',
     nombre: 'nombre',
     apellido: 'apellido',
-    tipo: 'tipo',
     correo: 'correo',
     telefono: 'telefono'
   };
@@ -23691,9 +25029,11 @@ export namespace Prisma {
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
   }
 
   export type colegiados_asignados_socialOrderByWithRelationInput = {
@@ -23701,9 +25041,11 @@ export namespace Prisma {
     id_actividad_social?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
     id_invitado?: SortOrderInput | SortOrder
+    id_pasante?: SortOrderInput | SortOrder
     invitados?: invitadosOrderByWithRelationInput
     actividades_sociales?: actividades_socialesOrderByWithRelationInput
     colegiados?: colegiadosOrderByWithRelationInput
+    pasantes?: pasantesOrderByWithRelationInput
   }
 
   export type colegiados_asignados_socialWhereUniqueInput = Prisma.AtLeast<{
@@ -23714,9 +25056,11 @@ export namespace Prisma {
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
   }, "id_asignacion">
 
   export type colegiados_asignados_socialOrderByWithAggregationInput = {
@@ -23724,6 +25068,7 @@ export namespace Prisma {
     id_actividad_social?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
     id_invitado?: SortOrderInput | SortOrder
+    id_pasante?: SortOrderInput | SortOrder
     _count?: colegiados_asignados_socialCountOrderByAggregateInput
     _avg?: colegiados_asignados_socialAvgOrderByAggregateInput
     _max?: colegiados_asignados_socialMaxOrderByAggregateInput
@@ -23739,6 +25084,7 @@ export namespace Prisma {
     id_actividad_social?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
+    id_pasante?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
   }
 
   export type documentos_colegiadosWhereInput = {
@@ -24140,6 +25486,88 @@ export namespace Prisma {
     fecha?: DateTimeWithAggregatesFilter<"auditoria"> | Date | string
   }
 
+  export type pasantesWhereInput = {
+    AND?: pasantesWhereInput | pasantesWhereInput[]
+    OR?: pasantesWhereInput[]
+    NOT?: pasantesWhereInput | pasantesWhereInput[]
+    id_pasante?: IntFilter<"pasantes"> | number
+    nombre?: StringNullableFilter<"pasantes"> | string | null
+    apellido?: StringNullableFilter<"pasantes"> | string | null
+    carnet_identidad?: StringNullableFilter<"pasantes"> | string | null
+    correo?: StringNullableFilter<"pasantes"> | string | null
+    telefono?: StringNullableFilter<"pasantes"> | string | null
+    institucion?: StringNullableFilter<"pasantes"> | string | null
+    createdAt?: DateTimeFilter<"pasantes"> | Date | string
+    updatedAt?: DateTimeFilter<"pasantes"> | Date | string
+    estado?: StringNullableFilter<"pasantes"> | string | null
+    olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+  }
+
+  export type pasantesOrderByWithRelationInput = {
+    id_pasante?: SortOrder
+    nombre?: SortOrderInput | SortOrder
+    apellido?: SortOrderInput | SortOrder
+    carnet_identidad?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    institucion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    estado?: SortOrderInput | SortOrder
+    olegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
+  }
+
+  export type pasantesWhereUniqueInput = Prisma.AtLeast<{
+    id_pasante?: number
+    carnet_identidad?: string
+    AND?: pasantesWhereInput | pasantesWhereInput[]
+    OR?: pasantesWhereInput[]
+    NOT?: pasantesWhereInput | pasantesWhereInput[]
+    nombre?: StringNullableFilter<"pasantes"> | string | null
+    apellido?: StringNullableFilter<"pasantes"> | string | null
+    correo?: StringNullableFilter<"pasantes"> | string | null
+    telefono?: StringNullableFilter<"pasantes"> | string | null
+    institucion?: StringNullableFilter<"pasantes"> | string | null
+    createdAt?: DateTimeFilter<"pasantes"> | Date | string
+    updatedAt?: DateTimeFilter<"pasantes"> | Date | string
+    estado?: StringNullableFilter<"pasantes"> | string | null
+    olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+  }, "id_pasante" | "carnet_identidad">
+
+  export type pasantesOrderByWithAggregationInput = {
+    id_pasante?: SortOrder
+    nombre?: SortOrderInput | SortOrder
+    apellido?: SortOrderInput | SortOrder
+    carnet_identidad?: SortOrderInput | SortOrder
+    correo?: SortOrderInput | SortOrder
+    telefono?: SortOrderInput | SortOrder
+    institucion?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    estado?: SortOrderInput | SortOrder
+    _count?: pasantesCountOrderByAggregateInput
+    _avg?: pasantesAvgOrderByAggregateInput
+    _max?: pasantesMaxOrderByAggregateInput
+    _min?: pasantesMinOrderByAggregateInput
+    _sum?: pasantesSumOrderByAggregateInput
+  }
+
+  export type pasantesScalarWhereWithAggregatesInput = {
+    AND?: pasantesScalarWhereWithAggregatesInput | pasantesScalarWhereWithAggregatesInput[]
+    OR?: pasantesScalarWhereWithAggregatesInput[]
+    NOT?: pasantesScalarWhereWithAggregatesInput | pasantesScalarWhereWithAggregatesInput[]
+    id_pasante?: IntWithAggregatesFilter<"pasantes"> | number
+    nombre?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    apellido?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    carnet_identidad?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    correo?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    telefono?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    institucion?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"pasantes"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"pasantes"> | Date | string
+    estado?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+  }
+
   export type rolesWhereInput = {
     AND?: rolesWhereInput | rolesWhereInput[]
     OR?: rolesWhereInput[]
@@ -24300,7 +25728,6 @@ export namespace Prisma {
     id_invitado?: IntFilter<"invitados"> | number
     nombre?: StringFilter<"invitados"> | string
     apellido?: StringFilter<"invitados"> | string
-    tipo?: StringNullableFilter<"invitados"> | string | null
     correo?: StringNullableFilter<"invitados"> | string | null
     telefono?: StringNullableFilter<"invitados"> | string | null
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
@@ -24311,7 +25738,6 @@ export namespace Prisma {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
-    tipo?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
@@ -24325,7 +25751,6 @@ export namespace Prisma {
     NOT?: invitadosWhereInput | invitadosWhereInput[]
     nombre?: StringFilter<"invitados"> | string
     apellido?: StringFilter<"invitados"> | string
-    tipo?: StringNullableFilter<"invitados"> | string | null
     correo?: StringNullableFilter<"invitados"> | string | null
     telefono?: StringNullableFilter<"invitados"> | string | null
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
@@ -24336,7 +25761,6 @@ export namespace Prisma {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
-    tipo?: SortOrderInput | SortOrder
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     _count?: invitadosCountOrderByAggregateInput
@@ -24353,7 +25777,6 @@ export namespace Prisma {
     id_invitado?: IntWithAggregatesFilter<"invitados"> | number
     nombre?: StringWithAggregatesFilter<"invitados"> | string
     apellido?: StringWithAggregatesFilter<"invitados"> | string
-    tipo?: StringNullableWithAggregatesFilter<"invitados"> | string | null
     correo?: StringNullableWithAggregatesFilter<"invitados"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"invitados"> | string | null
   }
@@ -24934,6 +26357,7 @@ export namespace Prisma {
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateInput = {
@@ -24941,12 +26365,14 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialUpdateInput = {
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateInput = {
@@ -24954,6 +26380,7 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialCreateManyInput = {
@@ -24961,6 +26388,7 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialUpdateManyMutationInput = {
@@ -24972,6 +26400,7 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type documentos_colegiadosCreateInput = {
@@ -25360,6 +26789,98 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type pasantesCreateInput = {
+    nombre?: string | null
+    apellido?: string | null
+    carnet_identidad?: string | null
+    correo?: string | null
+    telefono?: string | null
+    institucion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estado?: string | null
+    olegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutPasantesInput
+  }
+
+  export type pasantesUncheckedCreateInput = {
+    id_pasante?: number
+    nombre?: string | null
+    apellido?: string | null
+    carnet_identidad?: string | null
+    correo?: string | null
+    telefono?: string | null
+    institucion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estado?: string | null
+    olegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutPasantesInput
+  }
+
+  export type pasantesUpdateInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    olegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutPasantesNestedInput
+  }
+
+  export type pasantesUncheckedUpdateInput = {
+    id_pasante?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    olegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesNestedInput
+  }
+
+  export type pasantesCreateManyInput = {
+    id_pasante?: number
+    nombre?: string | null
+    apellido?: string | null
+    carnet_identidad?: string | null
+    correo?: string | null
+    telefono?: string | null
+    institucion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estado?: string | null
+  }
+
+  export type pasantesUpdateManyMutationInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type pasantesUncheckedUpdateManyInput = {
+    id_pasante?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type rolesCreateInput = {
     fecha_inicio?: Date | string | null
     fecha_fin?: Date | string | null
@@ -25526,7 +27047,6 @@ export namespace Prisma {
   export type invitadosCreateInput = {
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutInvitadosInput
@@ -25537,7 +27057,6 @@ export namespace Prisma {
     id_invitado?: number
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutInvitadosInput
@@ -25547,7 +27066,6 @@ export namespace Prisma {
   export type invitadosUpdateInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutInvitadosNestedInput
@@ -25558,7 +27076,6 @@ export namespace Prisma {
     id_invitado?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosNestedInput
@@ -25569,7 +27086,6 @@ export namespace Prisma {
     id_invitado?: number
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
   }
@@ -25577,7 +27093,6 @@ export namespace Prisma {
   export type invitadosUpdateManyMutationInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -25586,7 +27101,6 @@ export namespace Prisma {
     id_invitado?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -26149,11 +27663,17 @@ export namespace Prisma {
     isNot?: actividades_socialesWhereInput | null
   }
 
+  export type PasantesNullableScalarRelationFilter = {
+    is?: pasantesWhereInput | null
+    isNot?: pasantesWhereInput | null
+  }
+
   export type colegiados_asignados_socialCountOrderByAggregateInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
+    id_pasante?: SortOrder
   }
 
   export type colegiados_asignados_socialAvgOrderByAggregateInput = {
@@ -26161,6 +27681,7 @@ export namespace Prisma {
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
+    id_pasante?: SortOrder
   }
 
   export type colegiados_asignados_socialMaxOrderByAggregateInput = {
@@ -26168,6 +27689,7 @@ export namespace Prisma {
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
+    id_pasante?: SortOrder
   }
 
   export type colegiados_asignados_socialMinOrderByAggregateInput = {
@@ -26175,6 +27697,7 @@ export namespace Prisma {
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
+    id_pasante?: SortOrder
   }
 
   export type colegiados_asignados_socialSumOrderByAggregateInput = {
@@ -26182,6 +27705,7 @@ export namespace Prisma {
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
+    id_pasante?: SortOrder
   }
 
   export type documentos_colegiadosCountOrderByAggregateInput = {
@@ -26520,6 +28044,53 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type pasantesCountOrderByAggregateInput = {
+    id_pasante?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    carnet_identidad?: SortOrder
+    correo?: SortOrder
+    telefono?: SortOrder
+    institucion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    estado?: SortOrder
+  }
+
+  export type pasantesAvgOrderByAggregateInput = {
+    id_pasante?: SortOrder
+  }
+
+  export type pasantesMaxOrderByAggregateInput = {
+    id_pasante?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    carnet_identidad?: SortOrder
+    correo?: SortOrder
+    telefono?: SortOrder
+    institucion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    estado?: SortOrder
+  }
+
+  export type pasantesMinOrderByAggregateInput = {
+    id_pasante?: SortOrder
+    nombre?: SortOrder
+    apellido?: SortOrder
+    carnet_identidad?: SortOrder
+    correo?: SortOrder
+    telefono?: SortOrder
+    institucion?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    estado?: SortOrder
+  }
+
+  export type pasantesSumOrderByAggregateInput = {
+    id_pasante?: SortOrder
+  }
+
   export type BoolNullableFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel> | null
     not?: NestedBoolNullableFilter<$PrismaModel> | boolean | null
@@ -26678,7 +28249,6 @@ export namespace Prisma {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
-    tipo?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
   }
@@ -26691,7 +28261,6 @@ export namespace Prisma {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
-    tipo?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
   }
@@ -26700,7 +28269,6 @@ export namespace Prisma {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
-    tipo?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
   }
@@ -27307,6 +28875,12 @@ export namespace Prisma {
     connect?: colegiadosWhereUniqueInput
   }
 
+  export type pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput = {
+    create?: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+    connectOrCreate?: pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput
+    connect?: pasantesWhereUniqueInput
+  }
+
   export type invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput = {
     create?: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
     connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_asignados_socialInput
@@ -27335,6 +28909,16 @@ export namespace Prisma {
     delete?: colegiadosWhereInput | boolean
     connect?: colegiadosWhereUniqueInput
     update?: XOR<XOR<colegiadosUpdateToOneWithWhereWithoutColegiados_asignados_socialInput, colegiadosUpdateWithoutColegiados_asignados_socialInput>, colegiadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput = {
+    create?: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+    connectOrCreate?: pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput
+    upsert?: pasantesUpsertWithoutOlegiados_asignados_socialInput
+    disconnect?: pasantesWhereInput | boolean
+    delete?: pasantesWhereInput | boolean
+    connect?: pasantesWhereUniqueInput
+    update?: XOR<XOR<pasantesUpdateToOneWithWhereWithoutOlegiados_asignados_socialInput, pasantesUpdateWithoutOlegiados_asignados_socialInput>, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
   }
 
   export type colegiadosCreateNestedOneWithoutDocumentos_colegiadosInput = {
@@ -27579,6 +29163,48 @@ export namespace Prisma {
     upsert?: usuariosUpsertWithoutAuditoriaInput
     connect?: usuariosWhereUniqueInput
     update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutAuditoriaInput, usuariosUpdateWithoutAuditoriaInput>, usuariosUncheckedUpdateWithoutAuditoriaInput>
+  }
+
+  export type colegiados_asignados_socialCreateNestedManyWithoutPasantesInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput> | colegiados_asignados_socialCreateWithoutPasantesInput[] | colegiados_asignados_socialUncheckedCreateWithoutPasantesInput[]
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutPasantesInput | colegiados_asignados_socialCreateOrConnectWithoutPasantesInput[]
+    createMany?: colegiados_asignados_socialCreateManyPasantesInputEnvelope
+    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+  }
+
+  export type colegiados_asignados_socialUncheckedCreateNestedManyWithoutPasantesInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput> | colegiados_asignados_socialCreateWithoutPasantesInput[] | colegiados_asignados_socialUncheckedCreateWithoutPasantesInput[]
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutPasantesInput | colegiados_asignados_socialCreateOrConnectWithoutPasantesInput[]
+    createMany?: colegiados_asignados_socialCreateManyPasantesInputEnvelope
+    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+  }
+
+  export type colegiados_asignados_socialUpdateManyWithoutPasantesNestedInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput> | colegiados_asignados_socialCreateWithoutPasantesInput[] | colegiados_asignados_socialUncheckedCreateWithoutPasantesInput[]
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutPasantesInput | colegiados_asignados_socialCreateOrConnectWithoutPasantesInput[]
+    upsert?: colegiados_asignados_socialUpsertWithWhereUniqueWithoutPasantesInput | colegiados_asignados_socialUpsertWithWhereUniqueWithoutPasantesInput[]
+    createMany?: colegiados_asignados_socialCreateManyPasantesInputEnvelope
+    set?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    disconnect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    delete?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    update?: colegiados_asignados_socialUpdateWithWhereUniqueWithoutPasantesInput | colegiados_asignados_socialUpdateWithWhereUniqueWithoutPasantesInput[]
+    updateMany?: colegiados_asignados_socialUpdateManyWithWhereWithoutPasantesInput | colegiados_asignados_socialUpdateManyWithWhereWithoutPasantesInput[]
+    deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
+  }
+
+  export type colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesNestedInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput> | colegiados_asignados_socialCreateWithoutPasantesInput[] | colegiados_asignados_socialUncheckedCreateWithoutPasantesInput[]
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutPasantesInput | colegiados_asignados_socialCreateOrConnectWithoutPasantesInput[]
+    upsert?: colegiados_asignados_socialUpsertWithWhereUniqueWithoutPasantesInput | colegiados_asignados_socialUpsertWithWhereUniqueWithoutPasantesInput[]
+    createMany?: colegiados_asignados_socialCreateManyPasantesInputEnvelope
+    set?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    disconnect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    delete?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+    update?: colegiados_asignados_socialUpdateWithWhereUniqueWithoutPasantesInput | colegiados_asignados_socialUpdateWithWhereUniqueWithoutPasantesInput[]
+    updateMany?: colegiados_asignados_socialUpdateManyWithWhereWithoutPasantesInput | colegiados_asignados_socialUpdateManyWithWhereWithoutPasantesInput[]
+    deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
   }
 
   export type usuariosCreateNestedOneWithoutRolesInput = {
@@ -28464,7 +30090,6 @@ export namespace Prisma {
   export type invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput = {
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutInvitadosInput
@@ -28474,7 +30099,6 @@ export namespace Prisma {
     id_invitado?: number
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutInvitadosInput
@@ -28594,7 +30218,6 @@ export namespace Prisma {
   export type invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutInvitadosNestedInput
@@ -28604,7 +30227,6 @@ export namespace Prisma {
     id_invitado?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosNestedInput
@@ -28717,12 +30339,14 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateWithoutActividades_socialesInput = {
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutActividades_socialesInput = {
     id_asignacion?: number
     id_colegiado?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutActividades_socialesInput = {
@@ -28789,6 +30413,7 @@ export namespace Prisma {
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
   }
 
   export type actividades_socialesCreateWithoutConvenioInput = {
@@ -28958,12 +30583,14 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateWithoutColegiadosInput = {
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutColegiadosInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutColegiadosInput = {
@@ -29171,7 +30798,6 @@ export namespace Prisma {
   export type invitadosCreateWithoutColegiados_asignados_socialInput = {
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput
@@ -29181,7 +30807,6 @@ export namespace Prisma {
     id_invitado?: number
     nombre: string
     apellido: string
-    tipo?: string | null
     correo?: string | null
     telefono?: string | null
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput
@@ -29260,6 +30885,36 @@ export namespace Prisma {
     create: XOR<colegiadosCreateWithoutColegiados_asignados_socialInput, colegiadosUncheckedCreateWithoutColegiados_asignados_socialInput>
   }
 
+  export type pasantesCreateWithoutOlegiados_asignados_socialInput = {
+    nombre?: string | null
+    apellido?: string | null
+    carnet_identidad?: string | null
+    correo?: string | null
+    telefono?: string | null
+    institucion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estado?: string | null
+  }
+
+  export type pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput = {
+    id_pasante?: number
+    nombre?: string | null
+    apellido?: string | null
+    carnet_identidad?: string | null
+    correo?: string | null
+    telefono?: string | null
+    institucion?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    estado?: string | null
+  }
+
+  export type pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput = {
+    where: pasantesWhereUniqueInput
+    create: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+  }
+
   export type invitadosUpsertWithoutColegiados_asignados_socialInput = {
     update: XOR<invitadosUpdateWithoutColegiados_asignados_socialInput, invitadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
     create: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
@@ -29274,7 +30929,6 @@ export namespace Prisma {
   export type invitadosUpdateWithoutColegiados_asignados_socialInput = {
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput
@@ -29284,7 +30938,6 @@ export namespace Prisma {
     id_invitado?: IntFieldUpdateOperationsInput | number
     nombre?: StringFieldUpdateOperationsInput | string
     apellido?: StringFieldUpdateOperationsInput | string
-    tipo?: NullableStringFieldUpdateOperationsInput | string | null
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput
@@ -29368,6 +31021,42 @@ export namespace Prisma {
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
+  }
+
+  export type pasantesUpsertWithoutOlegiados_asignados_socialInput = {
+    update: XOR<pasantesUpdateWithoutOlegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
+    create: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+    where?: pasantesWhereInput
+  }
+
+  export type pasantesUpdateToOneWithWhereWithoutOlegiados_asignados_socialInput = {
+    where?: pasantesWhereInput
+    data: XOR<pasantesUpdateWithoutOlegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
+  }
+
+  export type pasantesUpdateWithoutOlegiados_asignados_socialInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput = {
+    id_pasante?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    institucion?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiadosCreateWithoutDocumentos_colegiadosInput = {
@@ -29969,6 +31658,45 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
   }
 
+  export type colegiados_asignados_socialCreateWithoutPasantesInput = {
+    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
+    colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+  }
+
+  export type colegiados_asignados_socialUncheckedCreateWithoutPasantesInput = {
+    id_asignacion?: number
+    id_actividad_social?: number | null
+    id_colegiado?: number | null
+    id_invitado?: number | null
+  }
+
+  export type colegiados_asignados_socialCreateOrConnectWithoutPasantesInput = {
+    where: colegiados_asignados_socialWhereUniqueInput
+    create: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput>
+  }
+
+  export type colegiados_asignados_socialCreateManyPasantesInputEnvelope = {
+    data: colegiados_asignados_socialCreateManyPasantesInput | colegiados_asignados_socialCreateManyPasantesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type colegiados_asignados_socialUpsertWithWhereUniqueWithoutPasantesInput = {
+    where: colegiados_asignados_socialWhereUniqueInput
+    update: XOR<colegiados_asignados_socialUpdateWithoutPasantesInput, colegiados_asignados_socialUncheckedUpdateWithoutPasantesInput>
+    create: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput>
+  }
+
+  export type colegiados_asignados_socialUpdateWithWhereUniqueWithoutPasantesInput = {
+    where: colegiados_asignados_socialWhereUniqueInput
+    data: XOR<colegiados_asignados_socialUpdateWithoutPasantesInput, colegiados_asignados_socialUncheckedUpdateWithoutPasantesInput>
+  }
+
+  export type colegiados_asignados_socialUpdateManyWithWhereWithoutPasantesInput = {
+    where: colegiados_asignados_socialScalarWhereInput
+    data: XOR<colegiados_asignados_socialUpdateManyMutationInput, colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesInput>
+  }
+
   export type usuariosCreateWithoutRolesInput = {
     nombre?: string | null
     apellido?: string | null
@@ -30290,12 +32018,14 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateWithoutInvitadosInput = {
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput = {
@@ -30470,23 +32200,27 @@ export namespace Prisma {
     id_asignacion?: number
     id_colegiado?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutActividades_socialesInput = {
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutActividades_socialesInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutActividades_socialesInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type actividades_socialesCreateManyConvenioInput = {
@@ -30547,6 +32281,7 @@ export namespace Prisma {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_invitado?: number | null
+    id_pasante?: number | null
   }
 
   export type documentos_colegiadosCreateManyColegiadosInput = {
@@ -30594,18 +32329,21 @@ export namespace Prisma {
   export type colegiados_asignados_socialUpdateWithoutColegiadosInput = {
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutColegiadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type documentos_colegiadosUpdateWithoutColegiadosInput = {
@@ -30800,6 +32538,33 @@ export namespace Prisma {
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
+  export type colegiados_asignados_socialCreateManyPasantesInput = {
+    id_asignacion?: number
+    id_actividad_social?: number | null
+    id_colegiado?: number | null
+    id_invitado?: number | null
+  }
+
+  export type colegiados_asignados_socialUpdateWithoutPasantesInput = {
+    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+  }
+
+  export type colegiados_asignados_socialUncheckedUpdateWithoutPasantesInput = {
+    id_asignacion?: IntFieldUpdateOperationsInput | number
+    id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
+    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesInput = {
+    id_asignacion?: IntFieldUpdateOperationsInput | number
+    id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
+    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
   export type actividades_institucionalesCreateManyUsuariosInput = {
     id_actividad?: number
     nombre?: string | null
@@ -30964,6 +32729,7 @@ export namespace Prisma {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
+    id_pasante?: number | null
   }
 
   export type colegiados_registrados_actividad_institucionalCreateManyInvitadosInput = {
@@ -30980,18 +32746,21 @@ export namespace Prisma {
   export type colegiados_asignados_socialUpdateWithoutInvitadosInput = {
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutInvitadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpdateWithoutInvitadosInput = {

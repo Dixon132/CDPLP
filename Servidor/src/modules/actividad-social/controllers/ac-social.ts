@@ -214,7 +214,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
                             select: { nombre: true, apellido: true, correo: true, telefono: true, especialidades: true, estado: true },
                         },
                         invitados: {
-                            select: { nombre: true, apellido: true, tipo: true, correo: true, telefono: true },
+                            select: { nombre: true, apellido: true, correo: true, telefono: true },
                         },
                     },
                 },
@@ -259,7 +259,6 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
       <table>
         <thead>
           <tr>
-            <th>Tipo</th>
             <th>Nombre Completo</th>
             <th>Correo</th>
             <th>Teléfono</th>
@@ -287,7 +286,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
                     const i = a.invitados;
                     return `
                 <tr>
-                  <td>Invitado (${i.tipo ?? ""})</td>
+
                   <td>${i.nombre ?? ""} ${i.apellido ?? ""}</td>
                   <td>${i.correo ?? ""}</td>
                   <td>${i.telefono ?? ""}</td>

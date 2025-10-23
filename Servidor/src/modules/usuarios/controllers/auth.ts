@@ -62,7 +62,10 @@ export const login = async (req: Request, res: Response) => {
             id_usuario: user.id_usuario
         },
         select: {
-            rol: true
+            rol: true,
+            fecha_fin: true,
+            fecha_inicio: true,
+            activo: true
         }
 
     })

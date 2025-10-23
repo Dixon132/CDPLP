@@ -354,37 +354,7 @@ export default function MovimientosPorPresupuesto() {
                 )}
             </Modal>
 
-            <style jsx>{`
-                @keyframes float {
-                    0%, 100% { transform: translateY(0px) rotate(0deg); }
-                    33% { transform: translateY(-30px) rotate(120deg); }
-                    66% { transform: translateY(-20px) rotate(240deg); }
-                }
-                @keyframes float-delayed {
-                    0%, 100% { transform: translateY(0px) rotate(0deg); }
-                    33% { transform: translateY(-20px) rotate(-120deg); }
-                    66% { transform: translateY(-30px) rotate(-240deg); }
-                }
-                @keyframes float-slow {
-                    0%, 100% { transform: translateY(0px) rotate(0deg); }
-                    50% { transform: translateY(-40px) rotate(180deg); }
-                }
-                .animate-float {
-                    animation: float 20s ease-in-out infinite;
-                }
-                .animate-float-delayed {
-                    animation: float-delayed 25s ease-in-out infinite;
-                }
-                .animate-float-slow {
-                    animation: float-slow 30s ease-in-out infinite;
-                }
-                .animation-delay-2000 {
-                    animation-delay: 2s;
-                }
-                .animation-delay-4000 {
-                    animation-delay: 4s;
-                }
-            `}</style>
+
         </div>
     );
 }
