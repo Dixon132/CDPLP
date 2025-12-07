@@ -1,8 +1,14 @@
-import { useEffect, useState } from 'react';
-import { getAllRoles, estadoRol } from "../../services/roles";
+import { useEffect, useState } from "react";
+import {
+    getAllRoles,
+    estadoRol,
+} from "../../services/roles";
 import Modal from "../../../../components/Modal";
-import AsignarRol from "./Components/AsignarRol";
 import Table from "../../components/Table";
+import Header from "../../components/Header";
+import Alerts from "../../components/Alerts";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import AsignarRol from "./Components/AsignarRol";
 
 import {
     Shield,
@@ -18,18 +24,25 @@ import {
     CheckCircle,
     XCircle,
     Settings,
-} from 'lucide-react';
+} from "lucide-react";
 
 const Roles = () => {
     const [roles, setRoles] = useState([]);
     const [mostrarModal, setMostrarModal] = useState(false);
     const [currentId, setCurrentId] = useState(null);
 
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMessage, setAlertMessage] = useState("");
+
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [rolSeleccionado, setRolSeleccionado] = useState(null);
 
     const fetchRoles = async () => {
         const { data, total, totalPages, page: currentPage } = await getAllRoles({
@@ -47,13 +60,58 @@ const Roles = () => {
         fetchRoles();
     }, [page, search, mostrarInactivos]);
 
+    const handleSuccess = (msg = "Operación exitosa") => {
+        setAlertType("success");
+        setAlertMessage(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
+    const handleError = (msg = "Ocurrió un error. Inténtalo de nuevo.") => {
+        setAlertType("error");
+        setAlertMessage(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
+    const confirmarCambioEstado = (id) => {
+        setRolSeleccionado(id);
+        setShowConfirm(true);
+    };
+
+    const handleCambioEstado = async () => {
+        try {
+            await estadoRol(
+                rolSeleccionado,
+                mostrarInactivos ? "ACTIVO" : "INACTIVO"
+            );
+            handleSuccess(
+                mostrarInactivos
+                    ? "Rol activado correctamente."
+                    : "Rol desactivado correctamente."
+            );
+            fetchRoles();
+        } catch (error) {
+            handleError("Error al actualizar el estado del rol.");
+        } finally {
+            setShowConfirm(false);
+            setRolSeleccionado(null);
+        }
+    };
+
+    // ==== ESTILOS Y BADGES ====
+
     const getEstadoBadge = (activo) =>
         activo
             ? "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"
             : "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200";
 
     const getEstadoIcon = (activo) =>
-        activo ? <CheckCircle className="w-4 h-4" /> : <XCircle className="w-4 h-4" />;
+        activo ? (
+            <CheckCircle className="w-4 h-4" />
+        ) : (
+            <XCircle className="w-4 h-4" />
+        );
 
     const getRolIcon = (rol) => {
         switch (rol?.toLowerCase()) {
@@ -70,7 +128,8 @@ const Roles = () => {
     };
 
     const getRolBadge = (rol) => {
-        const base = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+        const base =
+            "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
         switch (rol?.toLowerCase()) {
             case "admin":
             case "administrador":
@@ -84,47 +143,33 @@ const Roles = () => {
 
     return (
         <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-indigo-50/30 to-cyan-50/20 min-h-screen">
-            {/* HEADER */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="p-3 bg-gradient-to-br from-indigo-500 to-cyan-600 rounded-xl shadow-lg">
-                            <Shield className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-800">Gestión de Roles</h1>
-                            <p className="text-slate-600 text-sm">
-                                {total} roles {mostrarInactivos ? "inactivos" : "activos"} registrados
-                            </p>
-                        </div>
-                    </div>
+            {/* HEADER REUTILIZABLE */}
+            <Header
+                title="Gestión de Roles"
+                icon={<Shield />}
+                stats={[
+                    {
+                        label: "Total de Roles",
+                        value: total,
+                        color: "blue",
+                    },
+                ]}
+                searchPlaceholder="Buscar roles o usuarios..."
+                onSearch={(value) => {
+                    setSearch(value);
+                    setPage(1);
+                }}
+                buttons={[
+                    {
+                        label: mostrarInactivos ? "Ver Activos" : "Ver Inactivos",
+                        icon: mostrarInactivos ? <Eye /> : <EyeOff />,
+                        onClick: () => setMostrarInactivos(!mostrarInactivos),
+                        color: mostrarInactivos ? "green" : "red",
+                    },
+                ]}
+            />
 
-                    <button
-                        onClick={() => setMostrarInactivos(!mostrarInactivos)}
-                        className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-medium transition-all duration-200 hover:scale-105 ${mostrarInactivos
-                            ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-                            : "bg-gradient-to-r from-red-500 to-rose-600 text-white"
-                            }`}
-                    >
-                        {mostrarInactivos ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                        {mostrarInactivos ? "Ver Activos" : "Ver Inactivos"}
-                    </button>
-                </div>
-
-                {/* BUSCADOR */}
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar roles o usuarios..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full pl-10 pr-4 py-3 bg-white/70 border border-slate-200/60 rounded-xl focus:ring-2 focus:ring-indigo-500/20"
-                    />
-                </div>
-            </div>
-
-            {/* ✅ TABLA REUTILIZANDO <Table /> */}
+            {/* TABLA REUTILIZABLE */}
             <Table
                 columns={[
                     {
@@ -136,7 +181,9 @@ const Roles = () => {
                                     {r.usuarios?.nombre?.[0]?.toUpperCase() || "U"}
                                 </div>
                                 <div>
-                                    <p className="font-semibold">{r.usuarios?.nombre} {r.usuarios?.apellido}</p>
+                                    <p className="font-semibold text-slate-800">
+                                        {r.usuarios?.nombre} {r.usuarios?.apellido}
+                                    </p>
                                     <p className="text-xs text-slate-500">ID: {r.id_rol}</p>
                                 </div>
                             </div>
@@ -157,10 +204,14 @@ const Roles = () => {
                         render: (r) => (
                             <div className="text-sm">
                                 <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" /> {new Date(r.fecha_inicio).toLocaleDateString()}
+                                    <Calendar className="w-4 h-4" />{" "}
+                                    {new Date(r.fecha_inicio).toLocaleDateString()}
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" /> {r.fecha_fin ? new Date(r.fecha_fin).toLocaleDateString() : "—"}
+                                    <Calendar className="w-4 h-4" />{" "}
+                                    {r.fecha_fin
+                                        ? new Date(r.fecha_fin).toLocaleDateString()
+                                        : "—"}
                                 </div>
                             </div>
                         ),
@@ -180,7 +231,8 @@ const Roles = () => {
                     {
                         label: "Editar",
                         icon: Edit3,
-                        className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                        className:
+                            "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
                         onClick: (r) => {
                             setCurrentId(r.id_rol);
                             setMostrarModal(true);
@@ -192,10 +244,7 @@ const Roles = () => {
                         className: mostrarInactivos
                             ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
                             : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200",
-                        onClick: async (r) => {
-                            await estadoRol(r.id_rol, mostrarInactivos ? "ACTIVO" : "INACTIVO");
-                            fetchRoles();
-                        },
+                        onClick: (r) => confirmarCambioEstado(r.id_rol),
                     },
                 ]}
                 pagination={{
@@ -206,14 +255,39 @@ const Roles = () => {
                 }}
             />
 
-            {/* MODAL Editar */}
+            {/* MODAL DE ASIGNACIÓN */}
             <Modal
                 isOpen={mostrarModal}
                 title="Asignar / Modificar Rol"
                 onClose={() => setMostrarModal(false)}
             >
-                <AsignarRol id={currentId} onClose={() => setMostrarModal(false)} />
+                <AsignarRol
+                    id={currentId}
+                    onClose={() => {
+                        setMostrarModal(false);
+                        handleSuccess()
+                        fetchRoles();
+                    }}
+                />
             </Modal>
+
+            {/* CONFIRMACIÓN */}
+            <ConfirmDialog
+                isOpen={showConfirm}
+                message={`¿Seguro que deseas ${mostrarInactivos ? "activar" : "desactivar"
+                    } este rol?`}
+                onConfirm={handleCambioEstado}
+                onClose={() => setShowConfirm(false)}
+                confirmText={mostrarInactivos ? "Activar" : "Desactivar"}
+            />
+
+            {/* ALERTAS */}
+            <Alerts
+                type={alertType}
+                message={alertMessage}
+                show={alert}
+                onClose={() => setAlert(false)}
+            />
         </div>
     );
 };

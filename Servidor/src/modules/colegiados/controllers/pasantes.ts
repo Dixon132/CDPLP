@@ -46,6 +46,7 @@ export const getPasantes = async (req: Request, res: Response) => {
 }
 export const createPasante = async (req: Request, res: Response) => {
     const { nombre, apellido, carnet_identidad, correo, telefono, institucion } = req.body;
+
     try {
         const pasante = await prismaClient.pasantes.create({
             data: {
@@ -54,7 +55,8 @@ export const createPasante = async (req: Request, res: Response) => {
                 carnet_identidad,
                 correo,
                 telefono,
-                institucion
+                institucion,
+                estado: "ACTIVO",
             }
         })
         res.status(201).json({ message: 'Pasante creado exitosamente', pasante })
@@ -70,6 +72,23 @@ export const getPasanteById = async (req: Request, res: Response) => {
         }
     });
     res.status(200).json(pasante);
+}
+export const updateEstadoById = async (req: Request, res: Response) => {
+    const id = req.params.id
+    const { estado } = req.body
+    try {
+        await prismaClient.pasantes.update({
+            where: {
+                id_pasante: +id
+            },
+            data: {
+                estado
+            }
+        })
+        res.status(200).json({ message: 'Estado del pasante actualizado' })
+    } catch (e) {
+
+    }
 }
 export const updatePasanteById = async (req: Request, res: Response) => {
     const id = req.params.id

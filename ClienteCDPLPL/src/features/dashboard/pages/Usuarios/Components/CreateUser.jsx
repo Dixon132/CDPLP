@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { Button, TextField, Box, Typography, Container, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
 import { createUsuario } from '../../../services/usuarios';
 
-const CreateUser = () => {
+const CreateUser = ({ onSuccess }) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
     const roles = [
@@ -16,6 +16,7 @@ const CreateUser = () => {
 
     const onSubmit = (data) => {
         const user = createUsuario(data)
+        onSuccess()
         reset()
     };
 
@@ -33,18 +34,18 @@ const CreateUser = () => {
                             error={!!errors.nombre}
                             helperText={errors.nombre?.message}
                         />
-                        
+
                         <TextField
                             label="Apellido"
                             {...register('apellido', { required: 'El apellido es requerido' })}
                             error={!!errors.apellido}
                             helperText={errors.apellido?.message}
                         />
-                        
+
                         <TextField
                             label="Correo electrónico"
                             type="email"
-                            {...register('correo', { 
+                            {...register('correo', {
                                 required: 'El correo es requerido',
                                 pattern: {
                                     value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
@@ -54,11 +55,11 @@ const CreateUser = () => {
                             error={!!errors.correo}
                             helperText={errors.correo?.message}
                         />
-                        
+
                         <TextField
                             label="Contraseña"
                             type="password"
-                            {...register('contraseña', { 
+                            {...register('contraseña', {
                                 required: 'La contraseña es requerida',
                                 minLength: {
                                     value: 8,
@@ -68,10 +69,10 @@ const CreateUser = () => {
                             error={!!errors.contraseña}
                             helperText={errors.contraseña?.message}
                         />
-                        
+
                         <TextField
                             label="Teléfono"
-                            {...register('telefono', { 
+                            {...register('telefono', {
                                 required: 'El teléfono es requerido',
                                 pattern: {
                                     value: /^[0-9]+$/,
@@ -81,7 +82,7 @@ const CreateUser = () => {
                             error={!!errors.telefono}
                             helperText={errors.telefono?.message}
                         />
-                        
+
                         <TextField
                             label="Dirección"
                             {...register('direccion', { required: 'La dirección es requerida' })}
@@ -89,11 +90,11 @@ const CreateUser = () => {
                             helperText={errors.direccion?.message}
                         />
 
-                        
 
-                        <Button 
-                            type="submit" 
-                            variant="contained" 
+
+                        <Button
+                            type="submit"
+                            variant="contained"
                             color="primary"
                             sx={{ mt: 2 }}
                         >

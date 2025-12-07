@@ -19611,8 +19611,8 @@ export namespace Prisma {
     correo: string | null
     telefono: string | null
     institucion: string | null
-    createdAt: Date
-    updatedAt: Date
+    createdAt: Date | null
+    updatedAt: Date | null
     estado: string | null
     _count: PasantesCountAggregateOutputType | null
     _avg: PasantesAvgAggregateOutputType | null
@@ -19710,8 +19710,8 @@ export namespace Prisma {
       correo: string | null
       telefono: string | null
       institucion: string | null
-      createdAt: Date
-      updatedAt: Date
+      createdAt: Date | null
+      updatedAt: Date | null
       estado: string | null
     }, ExtArgs["result"]["pasantes"]>
     composites: {}
@@ -20365,7 +20365,7 @@ export namespace Prisma {
     /**
      * The data needed to create a pasantes.
      */
-    data: XOR<pasantesCreateInput, pasantesUncheckedCreateInput>
+    data?: XOR<pasantesCreateInput, pasantesUncheckedCreateInput>
   }
 
   /**
@@ -25497,8 +25497,8 @@ export namespace Prisma {
     correo?: StringNullableFilter<"pasantes"> | string | null
     telefono?: StringNullableFilter<"pasantes"> | string | null
     institucion?: StringNullableFilter<"pasantes"> | string | null
-    createdAt?: DateTimeFilter<"pasantes"> | Date | string
-    updatedAt?: DateTimeFilter<"pasantes"> | Date | string
+    createdAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     estado?: StringNullableFilter<"pasantes"> | string | null
     olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }
@@ -25511,8 +25511,8 @@ export namespace Prisma {
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     institucion?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     olegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
   }
@@ -25528,8 +25528,8 @@ export namespace Prisma {
     correo?: StringNullableFilter<"pasantes"> | string | null
     telefono?: StringNullableFilter<"pasantes"> | string | null
     institucion?: StringNullableFilter<"pasantes"> | string | null
-    createdAt?: DateTimeFilter<"pasantes"> | Date | string
-    updatedAt?: DateTimeFilter<"pasantes"> | Date | string
+    createdAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
+    updatedAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     estado?: StringNullableFilter<"pasantes"> | string | null
     olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }, "id_pasante" | "carnet_identidad">
@@ -25542,8 +25542,8 @@ export namespace Prisma {
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
     institucion?: SortOrderInput | SortOrder
-    createdAt?: SortOrder
-    updatedAt?: SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     _count?: pasantesCountOrderByAggregateInput
     _avg?: pasantesAvgOrderByAggregateInput
@@ -25563,8 +25563,8 @@ export namespace Prisma {
     correo?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
     institucion?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
-    createdAt?: DateTimeWithAggregatesFilter<"pasantes"> | Date | string
-    updatedAt?: DateTimeWithAggregatesFilter<"pasantes"> | Date | string
+    createdAt?: DateTimeNullableWithAggregatesFilter<"pasantes"> | Date | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"pasantes"> | Date | string | null
     estado?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
   }
 
@@ -26796,8 +26796,8 @@ export namespace Prisma {
     correo?: string | null
     telefono?: string | null
     institucion?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
     estado?: string | null
     olegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutPasantesInput
   }
@@ -26810,8 +26810,8 @@ export namespace Prisma {
     correo?: string | null
     telefono?: string | null
     institucion?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
     estado?: string | null
     olegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutPasantesInput
   }
@@ -26823,8 +26823,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     olegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutPasantesNestedInput
   }
@@ -26837,8 +26837,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     olegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesNestedInput
   }
@@ -26851,8 +26851,8 @@ export namespace Prisma {
     correo?: string | null
     telefono?: string | null
     institucion?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
     estado?: string | null
   }
 
@@ -26863,8 +26863,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -26876,8 +26876,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -30892,8 +30892,8 @@ export namespace Prisma {
     correo?: string | null
     telefono?: string | null
     institucion?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
     estado?: string | null
   }
 
@@ -30905,8 +30905,8 @@ export namespace Prisma {
     correo?: string | null
     telefono?: string | null
     institucion?: string | null
-    createdAt?: Date | string
-    updatedAt?: Date | string
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
     estado?: string | null
   }
 
@@ -31041,8 +31041,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
@@ -31054,8 +31054,8 @@ export namespace Prisma {
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
     institucion?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 

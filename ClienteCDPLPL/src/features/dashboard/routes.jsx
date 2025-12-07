@@ -23,6 +23,7 @@ import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
 import MetricsViewer from "./pages/Ia/Modelo";
+import VerDetallesColegiado from "./pages/Ac-soc/components/VerDetallesColegiado";
 
 
 
@@ -95,6 +96,12 @@ export const dashboardRoutes = {
                     <Ac_sociales />
 
                 </RequireRole>
+            )
+        },
+        {
+            path: 'actividades_sociales/detalles/:id',
+            element: (
+                <VerDetallesColegiado />
             )
         },
         {

@@ -15,7 +15,7 @@ const ConfirmDialog = ({
 
     useEffect(() => {
         if (isOpen) {
-            setCountdown(5);
+            setCountdown(2);
             setCanConfirm(false);
 
             const timer = setInterval(() => {
@@ -62,8 +62,8 @@ const ConfirmDialog = ({
                         onClick={canConfirm ? onConfirm : null}
                         disabled={!canConfirm}
                         className={`px-4 py-2 rounded-lg font-medium transition-all duration-150 ${canConfirm
-                                ? "bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-                                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                            ? "bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+                            : "bg-gray-300 text-gray-600 cursor-not-allowed"
                             }`}
                     >
                         {canConfirm ? confirmText : `Espera ${countdown}s`}

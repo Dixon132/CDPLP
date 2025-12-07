@@ -49,29 +49,29 @@ export const getRoles = async (req: Request, res: Response) => {
     })
 }
 
-export const createRole = async (req: Request, res: Response)=>{
-    const {id_usuario, rol, fecha_inicio, fecha_fin} = req.body
+export const createRole = async (req: Request, res: Response) => {
+    const { id_usuario, rol, fecha_inicio, fecha_fin } = req.body
     const role = await prismaClient.roles.create({
-        data: {id_usuario, rol, fecha_inicio, fecha_fin}
+        data: { id_usuario, rol, fecha_inicio, fecha_fin }
     })
     res.status(200).json(role)
 }
-export const updateRoleById = async (req: Request, res: Response)=>{
+export const updateRoleById = async (req: Request, res: Response) => {
     const id = req.params.id
-    const {estado} = req.body
-    
+    const { estado } = req.body
+
     const rol = await prismaClient.roles.update({
-        where:{
+        where: {
             id_rol: +id
         },
         data: {
-            activo: estado==="ACTIVO" ? true : false 
+            activo: estado === "ACTIVO" ? true : false
         }
     })
     res.status(200).json(rol)
 }
 
-export const updateRol = async (req: Request, res: Response)=>{
+export const updateRol = async (req: Request, res: Response) => {
     const id = req.params.id
     const {
         fecha_inicio,
@@ -79,13 +79,23 @@ export const updateRol = async (req: Request, res: Response)=>{
         rol
     } = req.body
     const data = await prismaClient.roles.update({
-        where:{
+        where: {
             id_rol: +id
         },
-        data:{
+        data: {
             fecha_fin: new Date(fecha_fin),
             fecha_inicio: new Date(fecha_inicio),
             rol
+        }
+    })
+    res.status(200).json(data)
+}
+export const getRolById = async (req: Request, res: Response) => {
+    const id = req.params.id
+
+    const data = await prismaClient.roles.findFirstOrThrow({
+        where: {
+            id_rol: +id
         }
     })
     res.status(200).json(data)

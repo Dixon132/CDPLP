@@ -8,11 +8,9 @@ export const getAllActiveUsuarios = async({page = 1, limit = 15, search = '', in
 }
 export const desactivarUsuarios = async(id)=>{
     const request = await axios.delete(`/api/usuarios/usuario/${id}/desactivar`)
-    return alert('exito')
 }
 export const ActivarUsuarios = async(id)=>{
     const request = await axios.post(`/api/usuarios/usuario/${id}/activar`)
-    return alert('exito')
 }
 export const createUsuario = async(data)=>{
     const res =await axios.post('/api/usuarios/auth/signup',data)
@@ -25,3 +23,4 @@ export const getUserById = async(id)=>{
     const res =await axios.get(`/api/usuarios/usuario/${id}`)
     return res.data
 }
+

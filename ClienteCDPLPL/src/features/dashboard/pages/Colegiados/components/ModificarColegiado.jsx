@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem } from "@mui/material";
 import { getColegiadoById, modificarColegiados } from "../../../services/colegiados";
 
@@ -7,8 +7,9 @@ const ModificarColegiado = ({ id, onClose }) => {
     const {
         register,
         handleSubmit,
+        control,
         formState: { errors },
-        reset,
+        reset
     } = useForm();
 
     const today = new Date().toISOString().split("T")[0];
@@ -158,43 +159,8 @@ const ModificarColegiado = ({ id, onClose }) => {
                     />
                 </div>
 
-                {/* Fecha Renovación */}
-                <div>
-                    <label className="block mb-1 font-semibold">Fecha de Renovación</label>
-                    <TextField
-                        fullWidth
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        {...register("fecha_renovacion", {
-                            required: "Campo obligatorio",
-                            validate: (value) =>
-                                value >= today || "No puede seleccionar una fecha pasada",
-                        })}
-                        error={!!errors.fecha_renovacion}
-                        helperText={errors.fecha_renovacion?.message}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
 
-                {/* Estado */}
-                <div>
-                    <label className="block mb-1 font-semibold">Estado</label>
-                    <TextField
-                        select
-                        fullWidth
-                        defaultValue=""
-                        {...register("estado", { required: "Campo obligatorio" })}
-                        error={!!errors.estado}
-                        helperText={errors.estado?.message}
-                        variant="outlined"
-                        size="small"
-                    >
-                        <MenuItem value="">-- Seleccione --</MenuItem>
-                        <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                        <MenuItem value="INACTIVO">INACTIVO</MenuItem>
-                    </TextField>
-                </div>
+
 
                 {/* Botones */}
                 <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>

@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import Header from "../../components/Header";
 import { getEstadoBadge, getEstadoIcon } from "../../hooks/estados";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const Colegiados = () => {
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
@@ -28,9 +29,15 @@ const Colegiados = () => {
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const [colegiadoSeleccionado, setColegiadoSeleccionado] = useState(null);
-    const [alert, setAlert] = useState(false);
 
-    async function fetchProyectos() {
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMessage, setAlertMessage] = useState("");
+
+    const [showDesacConfirm, setshowDesacConfirm] = useState(false);
+    const [ToDelete, setToDelete] = useState(null);
+
+    async function fetchColegiados() {
         const { data, total, page: currentPage, totalPages } =
             await getAllColegiados({ page, search, inactivos: mostrarInactivos });
         setColegiados(data);
@@ -39,15 +46,39 @@ const Colegiados = () => {
         setPage(currentPage);
     }
 
-    const handleSuccess = () => {
+    const handleSuccess = (message = 'Operación realizada con exito') => {
+        setAlertType('success')
+        setAlertMessage(message);
         setAlert(true);
         setTimeout(() => setAlert(false), 3000);
     };
+    const handleError = (message = 'Ocurrió un error. Inténtalo de nuevo.') => {
+        setAlertType("error");
+        setAlertMessage(message);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    }
 
     useEffect(() => {
-        fetchProyectos();
+        fetchColegiados();
     }, [page, search, mostrarInactivos]);
 
+    const confirmarDesactivar = (id) => {
+        setToDelete(id);
+        setshowDesacConfirm(true);
+    }
+    const handleEstado = () => {
+        try {
+            updateEstadoColegiado(ToDelete, mostrarInactivos ? "ACTIVO" : "INACTIVO")
+            handleSuccess(mostrarInactivos ? 'Colegiado activado exitosamente!' : 'Colegiado desactivado exitosamente!');
+            fetchColegiados()
+        } catch (e) {
+            handleError(mostrarInactivos ? 'Error al activar colegiado' : 'Error al desactivar colegiado');
+        } finally {
+            setshowDesacConfirm(false);
+            setToDelete(null);
+        }
+    }
 
     return (
         <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen">
@@ -61,7 +92,7 @@ const Colegiados = () => {
 
                 ]}
                 searchPlaceholder="Buscar colegiados..."
-                onSearch={(value) => { setSearch(value); setPage(1); }}
+                onSearch={(value) => { setSearch(value); }}
                 buttons={[
                     {
                         label: "Añadir colegiado",
@@ -192,11 +223,7 @@ const Colegiados = () => {
                             ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200"
                             : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
                         onClick: (item) => {
-                            updateEstadoColegiado(item.id_colegiado, mostrarInactivos ? "ACTIVO" : "INACTIVO")
-                                .then(() => {
-                                    handleSuccess();
-                                    fetchProyectos();
-                                });
+                            confirmarDesactivar(item.id_colegiado)
                         }
                     }
                 ]}
@@ -218,6 +245,7 @@ const Colegiados = () => {
                     id={colegiadoSeleccionado}
                     onClose={() => {
                         setMostrarModal2(false);
+                        handleSuccess();
                         fetchProyectos();
                     }}
                 />
@@ -227,9 +255,17 @@ const Colegiados = () => {
                 <GenerarReporteColegios />
             </Modal>
 
+            <ConfirmDialog
+                isOpen={showDesacConfirm}
+                message={`¿Estás seguro de que deseas ${mostrarInactivos ? 'activar' : 'desactivar'} este colegiado?`}
+                onConfirm={handleEstado}
+                onClose={() => setshowDesacConfirm(false)}
+                confirmText={mostrarInactivos ? "Activar" : "Desactivar"}
+            />
+
             <Alerts
-                type="success"
-                message="Operación realizada con éxito."
+                type={alertType}
+                message={alertMessage}
                 show={alert}
                 onClose={() => setAlert(false)}
             />

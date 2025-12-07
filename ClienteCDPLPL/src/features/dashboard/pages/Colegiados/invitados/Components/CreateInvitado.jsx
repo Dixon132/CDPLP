@@ -27,7 +27,7 @@ const CreateInvitado = ({ onSuccess, onClose }) => {
             if (onClose) onClose();
         } catch (err) {
             console.error(err);
-            alert("❌ Error al crear el invitado");
+            alert("Error al crear el invitado");
         }
     };
 

@@ -201,8 +201,8 @@ model pasantes {
   correo         String?
   telefono       String?
   institucion    String?
-  createdAt      DateTime @default(now()) @db.Date
-  updatedAt      DateTime @updatedAt @db.Date
+  createdAt      DateTime? @default(now()) @db.Date
+  updatedAt      DateTime? @updatedAt @db.Date
   estado         String?   @db.VarChar(50)
   olegiados_asignados_social colegiados_asignados_social[]
 }

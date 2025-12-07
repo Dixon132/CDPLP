@@ -9,17 +9,14 @@ export const getAllColegiados = async ({ page = 1, limit = 15, search = '', inac
 }
 export const createColegiado = async (data) => {
     const res = await axios.post('/api/colegiados/colegiado/', data)
-    return console.log(res)
 }
 export const updateEstadoColegiado = async (id, estado) => {
     const res = await axios.put(`/api/colegiados/colegiado/${id}`, {
         estado
     })
-    return alert('success')
 }
 export const modificarColegiados = async (id, data) => {
     const res = await axios.put(`/api/colegiados/colegiado/update/${id}`, data)
-    return alert('exito modfiicado')
 }
 export const getColegiadoById = async (id) => {
     const res = await axios(`/api/colegiados/colegiado/getOne/${id}`)

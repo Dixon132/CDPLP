@@ -7,7 +7,8 @@ import ModificarPasante from "./Components/ModificarPasante";
 import GenerarReportePasantes from "./components/GenerarReporte";
 import parseDate from "../../../../../utils/parseData";
 import Alerts from "../../../components/Alerts";
-import { Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import { getEstadoBadge, getEstadoIcon } from "../../../hooks/estados";
 
 import {
     Briefcase,
@@ -17,11 +18,9 @@ import {
     Building2, Calendar,
     Edit3, UserCheck, UserX,
     Download,
-    CheckCircle, XCircle, Clock
+    Trash2
 } from 'lucide-react';
-import { set } from "react-hook-form";
 import Header from "../../../components/Header";
-import { color } from "@mui/system";
 import ConfirmDialog from "../../../components/ConfirmDialog";
 
 const Pasantes = () => {
@@ -44,6 +43,7 @@ const Pasantes = () => {
     const [pasanteToDelete, setPasanteToDelete] = useState(null);
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
 
+    const [showDesacConfirm, setshowDesacConfirm] = useState(false);
 
     async function fetchPasantes() {
         const { data, total, page: currentPage, totalPages } = await getAllPasantes({
@@ -59,11 +59,12 @@ const Pasantes = () => {
         fetchPasantes();
     }, [page, search, mostrarInactivos]);
 
+    //EVENTOS DE ALERTAS
     const handleSuccess = (message = 'Operación realizada con éxito ') => {
         setAlertType("success");
         setAlertMessage(message);
         setAlert(true);
-        setTimeout(() => setAlert(false), 3000); ç
+        setTimeout(() => setAlert(false), 3000);
     };
 
     const handleError = (message = 'Ocurrió un error. Inténtalo de nuevo.') => {
@@ -72,10 +73,30 @@ const Pasantes = () => {
         setAlert(true);
         setTimeout(() => setAlert(false), 3000);
     }
+
+    const confirmarDesactivar = (id) => {
+        setPasanteToDelete(id);
+        setshowDesacConfirm(true);
+    }
+
     const confirmDelete = (id) => {
         setPasanteToDelete(id);
         setShowDeleteConfirm(true);
     }
+
+    const handleDesactivar = async () => {
+        try {
+            await updateEstadoPasante(pasanteToDelete, mostrarInactivos ? "ACTIVO" : "INACTIVO");
+            handleSuccess(mostrarInactivos ? 'Pasante activado exitosamente!' : 'Pasante desactivado exitosamente!');
+            fetchPasantes();
+        } catch (e) {
+            handleError(mostrarInactivos ? 'Error al activar pasante' : 'Error al desactivar pasante');
+        } finally {
+            setshowDesacConfirm(false);
+            setPasanteToDelete(null);
+        }
+    }
+
     const handleDelete = async () => {
         try {
             await deletePasante(pasanteToDelete);
@@ -89,6 +110,60 @@ const Pasantes = () => {
         }
     }
 
+    // Definir acciones según el estado de mostrarInactivos
+    const getActions = () => {
+        if (mostrarInactivos) {
+            // Si estamos viendo inactivos: Editar, Activar, Eliminar
+            return [
+                {
+                    label: "Editar",
+                    icon: Edit3,
+                    className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                    onClick: (item) => {
+                        setPasanteSeleccionado(item.id_pasante);
+                        setMostrarModal2(true);
+                    }
+                },
+                {
+                    label: "Activar",
+                    icon: UserCheck,
+                    className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
+                    onClick: (item) => {
+                        confirmarDesactivar(item.id_pasante);
+                    }
+                },
+                {
+                    label: "Eliminar",
+                    icon: Trash2,
+                    className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
+                    onClick: (item) => {
+                        confirmDelete(item.id_pasante);
+                    }
+                }
+            ];
+        } else {
+            // Si estamos viendo activos: Editar, Desactivar
+            return [
+                {
+                    label: "Editar",
+                    icon: Edit3,
+                    className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                    onClick: (item) => {
+                        setPasanteSeleccionado(item.id_pasante);
+                        setMostrarModal2(true);
+                    }
+                },
+                {
+                    label: "Desactivar",
+                    icon: UserX,
+                    className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
+                    onClick: (item) => {
+                        confirmarDesactivar(item.id_pasante);
+                    }
+                }
+            ];
+        }
+    };
 
     return (
         <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/20 min-h-screen">
@@ -108,7 +183,7 @@ const Pasantes = () => {
                         color: "purple",
                     },
                     {
-                        label: 'Ver inactivos',
+                        label: mostrarInactivos ? 'Ver activos' : 'Ver inactivos',
                         icon: mostrarInactivos ? <Eye /> : <EyeOff />,
                         onClick: () => setMostrarInactivos(!mostrarInactivos),
                         color: mostrarInactivos ? "green" : "red",
@@ -194,42 +269,30 @@ const Pasantes = () => {
                         )
                     },
                 ]}
-                actions={[
-                    {
-                        label: "Editar",
-                        icon: Edit3,
-                        className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                        onClick: (item) => {
-                            setPasanteSeleccionado(item.id_pasante);
-                            setMostrarModal2(true);
-                        }
-                    },
-                    {
-                        label: mostrarInactivos ? "Activar" : "Desactivar",
-                        icon: mostrarInactivos ? UserCheck : UserX,
-                        className: mostrarInactivos
-                            ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200"
-                            : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
-                        onClick: (item) => {
-                            updateEstadoPasante(item.id_pasante, mostrarInactivos ? "ACTIVO" : "INACTIVO")
-                                .then(() => {
-                                    handleSuccess();
-                                    fetchPasantes();
-                                });
-                        }
-                    }
-                ]}
+                actions={getActions()}
             />
 
             {/*  Modales */}
 
+            {/*  MODALES DE CONFIRMACION */}
+
+            <ConfirmDialog
+                isOpen={showDesacConfirm}
+                message={`¿Estás seguro de que deseas ${mostrarInactivos ? 'activar' : 'desactivar'} este pasante?`}
+                onConfirm={handleDesactivar}
+                onClose={() => setshowDesacConfirm(false)}
+                confirmText={mostrarInactivos ? "Activar" : "Desactivar"}
+            />
+
             <ConfirmDialog
                 isOpen={showDeleteConfirm}
-                message="¿Estás seguro de que deseas desactivar este pasante?"
+                message="¿Estás seguro de que deseas eliminar permanentemente este pasante? Esta acción no se puede deshacer."
                 onConfirm={handleDelete}
                 onClose={() => setShowDeleteConfirm(false)}
-                confirmText="Desactivar"
+                confirmText="Eliminar"
             />
+
+            {/*  MODALES DE ACCIONES */}
 
             <Modal isOpen={mostrarModal} title="Crear Pasante" onClose={() => setMostrarModal(false)}>
                 <CreatePasante
@@ -246,14 +309,18 @@ const Pasantes = () => {
                     id={pasanteSeleccionado}
                     onClose={() => {
                         setMostrarModal2(false);
+                        handleSuccess()
                         fetchPasantes();
                     }}
                 />
             </Modal>
 
+            {/* MODAL DE REPORTES */}
             <Modal isOpen={modalReporte} title="Generar Reporte" onClose={() => setModalReporte(false)}>
                 <GenerarReportePasantes />
             </Modal>
+
+            {/* MODAL DE ALERTAS */}
 
             <Alerts
                 type={alertType}
@@ -262,7 +329,6 @@ const Pasantes = () => {
                 onClose={() => setAlert(false)}
             />
 
-            <Outlet />
         </div>
     );
 };
