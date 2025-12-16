@@ -1,0 +1,12 @@
+python -m venv .venv
+.venv\Scripts\activate
+pip install --upgrade pip
+pip install -r requirements.txt
+
+
+
+cd D:\VisualProyects\RealProyects\CDPLP\ModeloIa
+.venv\Scripts\activate
+set PYTHONPATH=src
+python -c "import emociones_ciudad; print('OK')"
+python -m emociones_ciudad.ml.model_train

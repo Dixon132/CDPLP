@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { 
-  ArrowLeft, 
-  Mail, 
-  User, 
-  Calendar, 
-  Clock, 
-  FileText, 
-  AlertCircle, 
-  CheckCircle, 
-  MessageSquare, 
+import {
+  ArrowLeft,
+  Mail,
+  User,
+  Calendar,
+  Clock,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  MessageSquare,
   Settings,
   X,
   Eye,
@@ -16,7 +16,7 @@ import {
   Pause,
   CheckCircle2
 } from "lucide-react";
-import {Link, useParams} from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import {
   cambiarEstadoCorrespondencia,
   getContenidoBuzon,
@@ -30,7 +30,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div 
+      <div
         className="bg-white rounded-2xl shadow-2xl max-w-md w-full transform transition-all duration-300"
         style={{
           animation: isOpen ? 'modalSlideIn 0.3s ease-out' : 'modalSlideOut 0.3s ease-in'
@@ -55,7 +55,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 
 const Contenido = () => {
   // Simulamos useParams para la demo
-   const { id } = useParams();
+  const { id } = useParams();
   const navigate = (direction) => {
     console.log(`Navegando: ${direction}`);
   };
@@ -80,32 +80,32 @@ const Contenido = () => {
   const getStatusConfig = (estado) => {
     switch (estado) {
       case 'A REVISAR':
-        return { 
-          color: 'bg-red-50 text-red-700 border-red-200', 
+        return {
+          color: 'bg-red-50 text-red-700 border-red-200',
           icon: AlertCircle,
           bgColor: 'bg-red-100'
         };
       case 'PENDIENTE':
-        return { 
-          color: 'bg-yellow-50 text-yellow-700 border-yellow-200', 
+        return {
+          color: 'bg-yellow-50 text-yellow-700 border-yellow-200',
           icon: Clock,
           bgColor: 'bg-yellow-100'
         };
       case 'A DISCUCION':
-        return { 
-          color: 'bg-blue-50 text-blue-700 border-blue-200', 
+        return {
+          color: 'bg-blue-50 text-blue-700 border-blue-200',
           icon: MessageSquare,
           bgColor: 'bg-blue-100'
         };
       case 'ARREGLADO':
-        return { 
-          color: 'bg-green-50 text-green-700 border-green-200', 
+        return {
+          color: 'bg-green-50 text-green-700 border-green-200',
           icon: CheckCircle,
           bgColor: 'bg-green-100'
         };
       default:
-        return { 
-          color: 'bg-gray-50 text-gray-700 border-gray-200', 
+        return {
+          color: 'bg-gray-50 text-gray-700 border-gray-200',
           icon: FileText,
           bgColor: 'bg-gray-100'
         };
@@ -143,7 +143,7 @@ const Contenido = () => {
             <button
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors duration-200 mb-4 hover:bg-white/50 px-3 py-2 rounded-xl"
             >
-              
+
               <Link to={'/dashboard/buzon'}><ArrowLeft className="w-9 h-5" />Volver</Link>
             </button>
           </div>
@@ -231,12 +231,12 @@ const Contenido = () => {
                     <p className="text-gray-900 font-semibold">
                       {data.fecha_recibido
                         ? new Date(data.fecha_recibido).toLocaleString('es-ES', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })
                         : "No recibido"}
                     </p>
                   </div>
@@ -289,7 +289,7 @@ const Contenido = () => {
       <Modal isOpen={modalOpen} onClose={() => setModalOpen(false)} title="Cambiar estado de correspondencia">
         <div className="space-y-3">
           <p className="text-gray-600 mb-4">Selecciona el nuevo estado para esta correspondencia:</p>
-          
+
           <button
             onClick={() => handleCambiarEstado('A DISCUCION')}
             className="w-full flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] transform"
