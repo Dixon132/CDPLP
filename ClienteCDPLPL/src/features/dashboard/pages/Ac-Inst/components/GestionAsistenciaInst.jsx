@@ -22,11 +22,25 @@ import {
     Search,
     Filter,
     Download,
-    FileText
+    FileText,
+    Award
 } from 'lucide-react';
+
 import { Link, useParams } from "react-router-dom";
+import Alerts from "../../../components/Alerts";
 
 export default function GestionAsistenciaInst() {
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMessage, setAlertMessage] = useState("");
+
+    const showError = (msg) => {
+        setAlertType("error");
+        setAlertMessage(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
     const [registros, setRegistros] = useState([]);     // Inscritos (colegiados + invitados)
     const [asistencias, setAsistencias] = useState([]); // Colegiados que asistieron
     const [loading, setLoading] = useState(true);
@@ -196,6 +210,7 @@ export default function GestionAsistenciaInst() {
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Colegiado</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Estado Registro</th>
                                     <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Asistencia</th>
+                                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Certificado</th>
                                     <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Acciones</th>
                                 </tr>
                             </thead>
@@ -250,6 +265,29 @@ export default function GestionAsistenciaInst() {
                                             </td>
 
                                             {/* Acciones */}
+                                            <td className="px-6 py-4 text-center">
+                                                <button
+                                                    onClick={() => {
+                                                        const token = localStorage.getItem("token");
+                                                        fetch(`/api/ac-institucionales/registro/${reg.id_registro}/certificado`, {
+                                                            headers: { Authorization: `Bearer ${token}` }
+                                                        })
+                                                            .then(r => r.blob())
+                                                            .then(blob => {
+                                                                const url = URL.createObjectURL(blob);
+                                                                window.open(url, "_blank");
+                                                            })
+                                                            .catch(() => showError("Error al generar el certificado"));
+                                                    }}
+                                                    className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium text-xs shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-200 hover:scale-105"
+                                                    title="Descargar certificado de participación"
+                                                >
+                                                    <Award className="w-3.5 h-3.5" />
+                                                    Certificado
+                                                </button>
+                                            </td>
+
+                                            {/* Toggle Asistencia */}
                                             <td className="px-6 py-4 text-center">
                                                 <button
                                                     onClick={() => toggleAsistencia(reg.id_colegiado)}
@@ -341,11 +379,11 @@ export default function GestionAsistenciaInst() {
                 >
                     <XCircle className="w-4 h-4" />
                     <Link to={`/dashboard/actividades_institucionales`}>
-
                         Cerrar Gestión
                     </Link>
                 </button>
             </div>
+            <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 }

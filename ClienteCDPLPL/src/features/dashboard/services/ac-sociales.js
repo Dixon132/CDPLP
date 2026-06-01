@@ -1,4 +1,5 @@
 import axios from "axios"
+import { Axis3D } from "lucide-react";
 
 export const gelAllActividadesSociales = async ({ page, search }) => {
     const res = await axios('/api/ac-sociales/ac-social/', {
@@ -24,7 +25,9 @@ export const updateActividadSocial = async (id, data) => {
     const res = await axios.put(`/api/ac-sociales/ac-social/update/${id}`, data);
     return res.data;
 }
+//////////
 export const deleteActividadSocial = async(id)=>{
+    const res = await axios.delete(`/api/ac-sociales/ac-social/${id}`);
     console.log('elimino', id)
 }
 //ASIGNAR COLEGIADO
@@ -34,7 +37,6 @@ export const getColegiados = async () => {
     return res.data;
 }
 export const asignarColegiado = async (data) => {
-    console.log(data)
     const res = await axios.post('/api/ac-sociales/ac-social/asignarColegiado', data);
     return res.data;
 }
@@ -75,3 +77,12 @@ export const getActividadesSocialesSummaryReport = async (params) => {
     });
     return res.data;
 };
+
+export const getPasantes = async ()=>{
+    const res = await axios.get("/api/colegiados/pasantes/")
+    return res.data.data
+}
+export const asignarPasante = async (data)=>{
+    const res = await axios.post('/api/ac-sociales/ac-social/asignarPasante', data)
+    return res.data
+}

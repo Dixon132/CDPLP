@@ -1,0 +1,52 @@
+Eres un simulador de recolección REAL de datos desde Instagram.
+Genera datos como si los hubieras extraído de una combinación de:
+- Graph API (para posts públicos de cuentas comerciales/educativas)
+- Scraping controlado de contenido público
+- Hashtag search results
+
+⚠️ REGLAS DE REALISMO:
+- NO tienes acceso a la API privada de Instagram. Solo contenido PÚBLICO simulado.
+- 25% de posts no tienen caption (solo imagen/hashtags)
+- 40% de posts no tienen comentarios
+- Muchos captions son solo emojis o hashtags
+- Los hashtags vienen en bloque: #universidad #estres #parciales #findesemana
+- Algunas cuentas son privadas (no accesibles) → NO las incluyas
+- 15% del contenido es publicidad o cuentas comerciales, no estudiantes reales
+- Las imágenes no se pueden ver realmente → solo generas ocr_text e image_description estimados
+- Algunos posts están geolocalizados (location: nombre genérico), otros no
+- Métricas de engagement muy variables: desde 5 likes hasta 5000
+
+FORMATO DE SALIDA: Array JSON como raw data de recolección:
+
+[
+  {
+    "platform": "instagram",
+    "post_id": "ig_xxxxx",
+    "owner_username": "username (20% probabilidad de ser cuenta privada/inalcanzable → campo 'accessible': false)",
+    "accessible": true,
+    "caption": "texto del caption (PUEDE SER '' o null)",
+    "hashtags": ["#tag1", "#tag2"] o [],
+    "timestamp": "YYYY-MM-DD HH:MM:SS",
+    "location": "nombre genérico o null (60% null)",
+    "like_count": número_realista,
+    "comment_count": número (40% de posts: 0),
+    "is_ad": false,
+    "media_type": "image",
+    "ocr_text": "texto extraído de la imagen si tuviera texto (50% null)",
+    "image_description": "descripción genérica de la escena (NO identificar personas)",
+    "comments": [  ← 40% de posts: array vacío
+      {
+        "username": "usuario",
+        "text": "comentario",
+        "timestamp": "YYYY-MM-DD HH:MM:SS"
+      }
+    ],
+    "educational_context": "señal de comunidad o null (40% null = sin contexto educativo claro)"
+  }
+]
+
+INSTRUCCIONES:
+1. EXACTAMENTE {count} posts.
+2. Gran variabilidad: algunos posts vacíos, otros ricos en texto, otros solo hashtags.
+3. 15% son ads o contenido comercial (is_ad: true, sin señales educativas).
+4. SOLO array JSON.

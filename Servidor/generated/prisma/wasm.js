@@ -157,7 +157,10 @@ exports.Prisma.Actividades_socialesScalarFieldEnum = {
   fecha_inicio: 'fecha_inicio',
   fecha_fin: 'fecha_fin',
   estado: 'estado',
-  tipo: 'tipo'
+  tipo: 'tipo',
+  latitud: 'latitud',
+  longitud: 'longitud',
+  radio_metros: 'radio_metros'
 };
 
 exports.Prisma.ConvenioScalarFieldEnum = {
@@ -194,7 +197,8 @@ exports.Prisma.ColegiadosScalarFieldEnum = {
   especialidades: 'especialidades',
   fecha_inscripcion: 'fecha_inscripcion',
   fecha_renovacion: 'fecha_renovacion',
-  estado: 'estado'
+  estado: 'estado',
+  pin_acceso: 'pin_acceso'
 };
 
 exports.Prisma.Colegiados_asignados_socialScalarFieldEnum = {
@@ -202,7 +206,18 @@ exports.Prisma.Colegiados_asignados_socialScalarFieldEnum = {
   id_actividad_social: 'id_actividad_social',
   id_colegiado: 'id_colegiado',
   id_invitado: 'id_invitado',
-  id_pasante: 'id_pasante'
+  id_pasante: 'id_pasante',
+  total_horas: 'total_horas',
+  horas_meta: 'horas_meta'
+};
+
+exports.Prisma.Asistencia_social_diariaScalarFieldEnum = {
+  id_asistencia_diaria: 'id_asistencia_diaria',
+  id_asignacion: 'id_asignacion',
+  fecha_marcaje: 'fecha_marcaje',
+  hora_entrada: 'hora_entrada',
+  hora_salida: 'hora_salida',
+  horas_ganadas: 'horas_ganadas'
 };
 
 exports.Prisma.Documentos_colegiadosScalarFieldEnum = {
@@ -272,7 +287,8 @@ exports.Prisma.PasantesScalarFieldEnum = {
   institucion: 'institucion',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  estado: 'estado'
+  estado: 'estado',
+  pin_acceso: 'pin_acceso'
 };
 
 exports.Prisma.RolesScalarFieldEnum = {
@@ -338,6 +354,7 @@ exports.Prisma.ModelName = {
   correspondencia: 'correspondencia',
   colegiados: 'colegiados',
   colegiados_asignados_social: 'colegiados_asignados_social',
+  asistencia_social_diaria: 'asistencia_social_diaria',
   documentos_colegiados: 'documentos_colegiados',
   movimientos_financieros: 'movimientos_financieros',
   origen_movimiento: 'origen_movimiento',

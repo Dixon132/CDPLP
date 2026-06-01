@@ -1,0 +1,101 @@
+[
+  {
+    "id": "inst_001",
+    "name": "Universidad Nacional",
+    "acronym": "UNAL",
+    "type": "publica",
+    "latitude": -16.5,
+    "longitude": -68.15,
+    "address": "Av. Universitaria #100, La Paz",
+    "faculties": [
+      "Ingeniería",
+      "Medicina",
+      "Derecho",
+      "Ciencias",
+      "Economía"
+    ],
+    "active": true,
+    "created_at": "2026-05-31T14:32:18.955132"
+  },
+  {
+    "id": "inst_002",
+    "name": "Universidad Tecnológica",
+    "acronym": "UTEC",
+    "type": "publica",
+    "latitude": -16.51,
+    "longitude": -68.13,
+    "address": "Calle Tecnología #200, La Paz",
+    "faculties": [
+      "Ingeniería de Sistemas",
+      "Industrial",
+      "Civil",
+      "Electrónica"
+    ],
+    "active": true,
+    "created_at": "2026-05-31T14:32:18.955139"
+  },
+  {
+    "id": "inst_003",
+    "name": "Universidad del Valle",
+    "acronym": "UNIVALLE",
+    "type": "privada",
+    "latitude": -16.52,
+    "longitude": -68.11,
+    "address": "Zona Sur, Calle Valle #300, La Paz",
+    "faculties": [
+      "Administración",
+      "Marketing",
+      "Contaduría",
+      "Derecho"
+    ],
+    "active": true,
+    "created_at": "2026-05-31T14:32:18.955142"
+  },
+  {
+    "id": "inst_004",
+    "name": "Instituto Superior Tecnológico",
+    "acronym": "IST",
+    "type": "tecnico",
+    "latitude": -16.53,
+    "longitude": -68.09,
+    "address": "Av. Técnica #400, El Alto",
+    "faculties": [
+      "Electrónica",
+      "Mecánica",
+      "Informática",
+      "Redes"
+    ],
+    "active": true,
+    "created_at": "2026-05-31T14:32:18.955144"
+  },
+  {
+    "id": "inst_005",
+    "name": "Universidad Católica",
+    "acronym": "UCAT",
+    "type": "privada",
+    "latitude": -16.505,
+    "longitude": -68.12,
+    "address": "Campus San Miguel, La Paz",
+    "faculties": [
+      "Teología",
+      "Filosofía",
+      "Educación",
+      "Psicología"
+    ],
+    "active": true,
+    "created_at": "2026-05-31T14:32:18.955146",
+    "updated_at": "2026-05-31T14:35:41.545369"
+  },
+  {
+    "name": "Unifranz",
+    "acronym": "UNIFRANZ",
+    "type": "privada",
+    "latitude": -16.506643986642068,
+    "longitude": -68.1336557865143,
+    "address": "Landaeta",
+    "faculties": [],
+    "id": "inst_9b3adae7",
+    "created_at": "2026-05-31T14:35:27.173778",
+    "active": true
+  }
+]

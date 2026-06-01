@@ -45,7 +45,7 @@ export default function BuzonCorrespondencia() {
         { label: "TODOS", icon: Mail, color: "gray" },
         { label: "A REVISAR", icon: Mail, color: "red" },
         { label: "PENDIENTE", icon: Clock, color: "yellow" },
-        { label: "A DISCUCION", icon: Send, color: "blue" },
+        { label: "A DISCUSIÓN", icon: Send, color: "blue" },
         { label: "ARREGLADO", icon: MailOpen, color: "green" }
     ];
 
@@ -53,7 +53,7 @@ export default function BuzonCorrespondencia() {
         switch (estado) {
             case 'A REVISAR': return 'bg-red-50 text-red-700 border-red-200';
             case 'PENDIENTE': return 'bg-yellow-50 text-yellow-700 border-yellow-200';
-            case 'A DISCUCION': return 'bg-blue-50 text-blue-700 border-blue-200';
+            case 'A DISCUSIÓN': return 'bg-blue-50 text-blue-700 border-blue-200';
             case 'ARREGLADO': return 'bg-green-50 text-green-700 border-green-200';
             default: return 'bg-gray-50 text-gray-700 border-gray-200';
         }

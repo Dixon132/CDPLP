@@ -57,6 +57,9 @@ model actividades_sociales {
   fecha_fin                    DateTime?                     @db.Date
   estado                       String?                       @db.VarChar(30)
   tipo                         String?                       @db.VarChar(50)
+  latitud                      Float?
+  longitud                     Float?
+  radio_metros                 Int?                          @default(100)
   convenio                      convenio?                     @relation(fields: [id_convenio], references: [id_convenio], onDelete: NoAction, onUpdate: NoAction)
   colegiados_asignados_social  colegiados_asignados_social[]
   
@@ -100,6 +103,7 @@ model colegiados {
   fecha_inscripcion           DateTime?                     @db.Date
   fecha_renovacion            DateTime?                     @db.Date
   estado                      String?                       @db.VarChar(20)
+  pin_acceso                  String?
   asistencias_actividad       asistencias_actividad[]
   colegiados_asignados_social colegiados_asignados_social[]
   documentos_colegiados       documentos_colegiados[]
@@ -113,10 +117,24 @@ model colegiados_asignados_social {
   id_colegiado         Int?
   id_invitado          Int? 
   id_pasante          Int?
+  total_horas          Float?
+  horas_meta           Float?
   invitados            invitados?           @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
   actividades_sociales actividades_sociales? @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
   colegiados           colegiados?           @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
   pasantes             pasantes?            @relation(fields: [id_pasante], references: [id_pasante], onDelete: NoAction, onUpdate: NoAction)
+  asistencia_social_diaria asistencia_social_diaria[]
+}
+
+model asistencia_social_diaria {
+  id_asistencia_diaria Int       @id @default(autoincrement())
+  id_asignacion        Int
+  fecha_marcaje        DateTime  @db.Date
+  hora_entrada         DateTime?
+  hora_salida          DateTime?
+  horas_ganadas        Float?    @default(0)
+
+  colegiados_asignados_social colegiados_asignados_social @relation(fields: [id_asignacion], references: [id_asignacion], onDelete: Cascade)
 }
 
 model documentos_colegiados {
@@ -204,7 +222,8 @@ model pasantes {
   createdAt      DateTime? @default(now()) @db.Date
   updatedAt      DateTime? @updatedAt @db.Date
   estado         String?   @db.VarChar(50)
-  olegiados_asignados_social colegiados_asignados_social[]
+  pin_acceso     String?
+  colegiados_asignados_social colegiados_asignados_social[]
 }
 
 

@@ -1,0 +1,53 @@
+Eres un simulador de recolección REAL de datos desde TikTok.
+Genera datos como si los hubieras extraído de una combinación de:
+- TikTok Research API (acceso limitado, solo metadatos públicos)
+- Scraping simulado de la sección de comentarios de videos públicos
+
+⚠️ REGLAS DE REALISMO:
+- TikTok es MUY restrictivo con su API → muchos datos vienen incompletos
+- 35% de videos: solo tienes caption + métricas, SIN transcripción de audio
+- 50% de comentarios son solo emojis o frases de 1-3 palabras
+- Mucho contenido es trending/memes, NO necesariamente educativo (40%)
+- Los captions son cortos (10-50 palabras) y llenos de hashtags
+- NO tienes acceso a datos del creador (solo username)
+- Algunos videos están en inglés o portugués
+- El texto en pantalla (OCR) es común pero no siempre está disponible
+- Las descripciones de escena son genéricas (NO identificar personas)
+
+FORMATO DE SALIDA:
+
+[
+  {
+    "platform": "tiktok",
+    "video_id": "tt_xxxxx",
+    "author_username": "username",
+    "caption": "caption corto con hashtags (puede ser solo hashtags)",
+    "hashtags": ["#fyp", "#universidad", ...],
+    "create_time": timestamp_unix,
+    "statistics": {
+      "play_count": número,
+      "like_count": número,
+      "comment_count": número (35% de videos: 0),
+      "share_count": número
+    },
+    "music_title": "nombre de canción o 'original sound'",
+    "ocr_text": "texto en pantalla si lo tuviera (60% null)",
+    "scene_description": "descripción NO biométrica de la escena",
+    "hashtag_challenge": "nombre del challenge si aplica o null",
+    "comments": [  ← 35% vacíos
+      {
+        "username": "usuario",
+        "text": "comentario (MUY corto, frecuentemente solo emojis)",
+        "likes": número,
+        "timestamp": "YYYY-MM-DD HH:MM:SS",
+        "reply_count": número (casi siempre 0)
+      }
+    ],
+    "educational_context": "señal o null (45% null)"
+  }
+]
+
+INSTRUCCIONES:
+1. EXACTAMENTE {count} videos.
+2. 40% contenido de tendencias/memes sin relación educativa.
+3. SOLO array JSON.

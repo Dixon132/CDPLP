@@ -1,0 +1,29 @@
+{
+  "community_baselines": {
+    "universidad_nacional": {
+      "avg_risk": 0.4667,
+      "dominant_emotion": "estres_academico",
+      "weeks_tracked": 4
+    }
+  },
+  "topic_history": {
+    "estres_academico": {
+      "total": 4,
+      "weeks": 4,
+      "avg_per_week": 1.0
+    },
+    "soledad_aislamiento": {
+      "total": 4,
+      "weeks": 4,
+      "avg_per_week": 1.0
+    },
+    "examenes": {
+      "total": 4,
+      "weeks": 4,
+      "avg_per_week": 1.0
+    }
+  },
+  "last_updated": "2026-05-31T14:08:43.860703",
+  "total_weeks_learned": 4,
+  "total_records_seen": 12
+}

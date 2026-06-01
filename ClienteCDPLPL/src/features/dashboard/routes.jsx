@@ -22,8 +22,9 @@ import Auditorias from "./pages/Auditorias/Auditorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
-import MetricsViewer from "./pages/Ia/Modelo";
-import VerDetallesColegiado from "./pages/Ac-soc/components/VerDetallesColegiado";
+import IRECDashboard from "./pages/Ia/IREC";
+import { VerDetallesActividad } from "./pages/Ac-soc/components/VerDetallesActividad";
+import { Perfil } from "./pages/Ac-soc/components/Perfil";
 
 
 
@@ -101,7 +102,14 @@ export const dashboardRoutes = {
         {
             path: 'actividades_sociales/detalles/:id',
             element: (
-                <VerDetallesColegiado />
+                <VerDetallesActividad />
+            )
+        },
+        ////////////////AQUIIIIIIIIIII////////////////////////
+        {
+            path: 'actividades_sociales/perfil/:id',
+            element: (
+                <Perfil />
             )
         },
         {
@@ -198,7 +206,7 @@ export const dashboardRoutes = {
         },
         {
             path: 'modelo',
-            element: <MetricsViewer />
+            element: <IRECDashboard />
         }
     ]
 }

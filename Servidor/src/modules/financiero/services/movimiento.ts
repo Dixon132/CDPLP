@@ -152,3 +152,37 @@ export const deleteMovimientoPagoCurso = async (id: number) => {
         console.log('error al eliminar el pago del curso')
     }
 }
+
+/**
+ * Registra un EGRESO de reversión cuando un pago es ANULADO.
+ * El INGRESO original NO se borra — queda como trazabilidad de que el dinero entró y luego se revirtió.
+ */
+export const registrarAnulacionPago = async (id_pago: number, monto: number) => {
+    try {
+        await prismaClient.$transaction(async (tx) => {
+            // Buscar el origen del movimiento original
+            const origen = await tx.origen_movimiento.findFirstOrThrow({
+                where: { id_pago_colegiado: id_pago }
+            })
+
+            // Buscar el movimiento de INGRESO original para saber a qué presupuesto pertenece
+            const movIngreso = await tx.movimientos_financieros.findFirstOrThrow({
+                where: { id_origen: origen.id_origen }
+            })
+
+            // Crear nuevo registro de EGRESO (reversión) vinculado al mismo origen
+            await tx.movimientos_financieros.create({
+                data: {
+                    id_presupuesto: movIngreso.id_presupuesto,
+                    tipo_movimiento: 'EGRESO',
+                    categoria: 'Anulación de Colegiatura',
+                    descripcion: `Reversión por anulación de pago (ID: ${id_pago})`,
+                    monto,
+                    id_origen: origen.id_origen,
+                },
+            })
+        })
+    } catch (e) {
+        console.log('error al registrar la anulación del pago:', e)
+    }
+}

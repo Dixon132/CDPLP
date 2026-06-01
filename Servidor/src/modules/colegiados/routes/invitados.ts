@@ -5,11 +5,11 @@ import { createInvitado, deleteInvitadoById, getInvitadoById, getInvitados, getI
 
 const invitadosRouter: Router = Router()
 
-invitadosRouter.get('/', [authMiddleware], errorHandler(getInvitados))
-invitadosRouter.post('/', [authMiddleware], errorHandler(createInvitado))
-invitadosRouter.get('/:id', [authMiddleware], errorHandler(getInvitadoById))
-invitadosRouter.put('/:id', [authMiddleware], errorHandler(updateInvitadoById))
-invitadosRouter.delete('/:id', [authMiddleware], errorHandler(deleteInvitadoById))
+invitadosRouter.get('/', errorHandler(getInvitados))
+invitadosRouter.post('/', errorHandler(createInvitado))
+invitadosRouter.get('/:id', errorHandler(getInvitadoById))
+invitadosRouter.put('/:id', errorHandler(updateInvitadoById))
+invitadosRouter.delete('/:id', errorHandler(deleteInvitadoById))
 invitadosRouter.get('/simple/:id', [authMiddleware], errorHandler(getInvitadosSimple))
 invitadosRouter.get('/reportSummary', [authMiddleware], errorHandler(getInvitadosReportSummary))
 invitadosRouter.get('/report/:id', [authMiddleware], errorHandler(getInvitadosReportDetail))

@@ -6,8 +6,27 @@ import {
     getActividadesInstMinimal, getActividadInstDetailReport,
     getActividadesInstSummaryReport,
 } from "../../../services/ac-institucionales";
+import Alerts from "../../../components/Alerts";
 
 export default function GenerarReporteActividadesInst({ onClose }) {
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMessage, setAlertMessage] = useState("");
+
+    const showSuccess = (msg) => {
+        setAlertType("success");
+        setAlertMessage(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
+    const showError = (msg) => {
+        setAlertType("error");
+        setAlertMessage(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
     // 1) Controlar cuál “pestaña” está activa: "resumen" o "detalle"
     const [tipoReporte, setTipoReporte] = useState("resumen");
 
@@ -62,14 +81,14 @@ export default function GenerarReporteActividadesInst({ onClose }) {
             // reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
         } catch (err) {
             console.error("Error generando resumen actividades inst:", err);
-            alert("Hubo un error generando el resumen de actividades institucionales.");
+            showError("Hubo un error generando el resumen de actividades institucionales.");
         }
     };
 
     // 6) Función para descargar Detalle de 1 Actividad
     const onSubmitDetalle = async (data) => {
         if (!data.id_actividad) {
-            alert("Debes seleccionar una actividad institucional.");
+            showError("Debes seleccionar una actividad institucional.");
             return;
         }
         try {
@@ -91,7 +110,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
             // Opcional: reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
         } catch (err) {
             console.error("Error generando detalle actividad inst:", err);
-            alert("Hubo un error generando el reporte detallado de actividad institucional.");
+            showError("Hubo un error generando el reporte detallado de actividad institucional.");
         }
     };
 
@@ -201,6 +220,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                     Cerrar
                 </button>
             </div>
+            <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 }

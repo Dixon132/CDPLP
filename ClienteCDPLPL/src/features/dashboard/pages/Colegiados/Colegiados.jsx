@@ -234,8 +234,8 @@ const Colegiados = () => {
                 <CreateColegiado
                     onSuccess={() => {
                         SetMostrarModal(false);
-                        handleSuccess();
-                        fetchProyectos();
+                        handleSuccess('Colegiado registrado exitosamente');
+                        fetchColegiados();
                     }}
                 />
             </Modal>
@@ -245,8 +245,8 @@ const Colegiados = () => {
                     id={colegiadoSeleccionado}
                     onClose={() => {
                         setMostrarModal2(false);
-                        handleSuccess();
-                        fetchProyectos();
+                        handleSuccess('Colegiado modificado exitosamente');
+                        fetchColegiados();
                     }}
                 />
             </Modal>

@@ -70,6 +70,9 @@ export const getAllDocsById = async (req: Request, res: Response) => {
     const data = await prismaClient.documentos_colegiados.findMany({
         where: {
             id_colegiado: +id
+        },
+        orderBy: {
+            fecha_entrega: 'desc'  // el más reciente primero
         }
     })
     res.status(200).json(data)

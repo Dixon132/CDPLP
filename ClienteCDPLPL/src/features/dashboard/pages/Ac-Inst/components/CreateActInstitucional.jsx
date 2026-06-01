@@ -1,9 +1,27 @@
 // src/pages/dashboard/pages/Ac-institucionales/CreateActInstitucional.jsx
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createActividadInstitucional } from "../../../services/ac-institucionales";
+import Alerts from "../../../components/Alerts";
 
 export default function CreateActInstitucional({ onClose, onSuccess }) {
+  const [alert, setAlert] = useState(false);
+  const [alertType, setAlertType] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const showSuccess = (msg) => {
+    setAlertType("success");
+    setAlertMessage(msg);
+    setAlert(true);
+    setTimeout(() => setAlert(false), 3000);
+  };
+
+  const showError = (msg) => {
+    setAlertType("error");
+    setAlertMessage(msg);
+    setAlert(true);
+    setTimeout(() => setAlert(false), 3000);
+  };
   const {
     register,
     handleSubmit,
@@ -27,17 +45,18 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
 
     try {
       await createActividadInstitucional(payload);
-      alert("Actividad institucional creada correctamente");
+      showSuccess("Actividad institucional creada correctamente");
       reset();
       if (onSuccess) onSuccess();
-      if (onClose) onClose();
+      setTimeout(() => { if (onClose) onClose(); }, 1500);
     } catch (err) {
       console.error(err);
-      alert("Error al crear actividad institucional");
+      showError("Error al crear actividad institucional");
     }
   };
 
   return (
+    <>
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 p-4 max-w-lg mx-auto"
@@ -108,8 +127,10 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
         type="submit"
         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
       >
-        Crear
-      </button>
+          Crear Actividad
+        </button>
     </form>
+    <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
+    </>
   );
 }

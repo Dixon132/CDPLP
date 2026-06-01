@@ -40,6 +40,7 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
   const [invitados, setInvitados] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   // Observamos estas dos para resetear mutuamente
   const selectedColegiado = watch("id_colegiado");
@@ -75,36 +76,62 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
   const onSubmit = async (data) => {
     // Validaciones básicas:
     if (!data.id_colegiado && !data.id_invitado) {
-      alert("Debes seleccionar un colegiado o un invitado.");
+      setErrorMsg("Debes seleccionar un colegiado o un invitado.");
       return;
     }
     if (data.id_colegiado && data.id_invitado) {
-      alert("Solo puedes registrar un colegiado o un invitado, no ambos.");
+      setErrorMsg("Solo puedes registrar un colegiado o un invitado, no ambos.");
       return;
     }
 
     setLoading(true);
+    setErrorMsg("");
 
     // Construir payload para el backend
     const payload = {
       id_actividad: id,
       id_colegiado: data.id_colegiado ? data.id_colegiado.value : null,
       id_invitado: data.id_invitado ? data.id_invitado.value : null,
-      fecha_registro: new Date(), // o déjalo que el backend lo complete con now()
+      fecha_registro: new Date(),
       estado_registro: "REGISTRADO",
       metodo_pago: data.metodo_pago || "EFECTIVO",
     };
 
     try {
-      await registerColegiadoInstitucional(payload);
+      const res = await fetch("/api/ac-institucionales/registrarColegiado", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.status === 409) {
+        const body = await res.json();
+        setErrorMsg(body.error || "Esta persona ya está registrada en la actividad.");
+        setLoading(false);
+        return;
+      }
+
+      if (!res.ok) {
+        setErrorMsg("Error al registrar. Intenta nuevamente.");
+        setLoading(false);
+        return;
+      }
+
       setShowSuccess(true);
+      // Notificar al padre para refrescar la lista SIN cerrar el modal
+      if (onSuccess) onSuccess();
       setTimeout(() => {
-        if (onSuccess) onSuccess();
-        if (onClose) onClose();
-      }, 2000);
+        setShowSuccess(false);
+        // Limpiar selección
+        setValue("id_colegiado", null);
+        setValue("id_invitado", null);
+      }, 2500);
     } catch (err) {
       console.error(err);
-      alert("Error al registrar colegiado/invitado");
+      setErrorMsg("Error de conexión al servidor.");
     } finally {
       setLoading(false);
     }
@@ -345,6 +372,22 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
               )}
             </div>
           </div>
+
+          {/* Banner de Error */}
+          {errorMsg && (
+            <div className="flex items-center gap-3 p-4 bg-red-500/20 border border-red-400/40 rounded-2xl text-red-200">
+              <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+              <p className="text-sm font-medium">{errorMsg}</p>
+            </div>
+          )}
+
+          {/* Toast de Éxito inline */}
+          {showSuccess && (
+            <div className="flex items-center gap-3 p-4 bg-green-500/20 border border-green-400/40 rounded-2xl text-green-200">
+              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <p className="text-sm font-medium">¡Registro agregado! Puedes seguir registrando.</p>
+            </div>
+          )}
 
           {/* Submit Button */}
           <div className="flex justify-center pt-4">

@@ -9,9 +9,9 @@ import {
     CircularProgress,
     Stack,
 } from "@mui/material";
-import { asignarColegiado, getColegiados, getInvitados } from "../../../services/ac-sociales";
+import { asignarColegiado, getColegiados } from "../../../services/ac-sociales";
 
-export default function AsignarColegiados({ id, onSuccess }) {
+export default function AsignarColegiados({ id, onSuccess, asignados }) {
     const {
         register,
         handleSubmit,
@@ -21,37 +21,38 @@ export default function AsignarColegiados({ id, onSuccess }) {
     } = useForm();
 
     const [colegiados, setColegiados] = useState([]);
-    const [invitados, setInvitados] = useState([]);
 
     const selectedColegiado = watch("id_colegiado");
-    const selectedInvitado = watch("id_invitado");
 
     // Cargar datos de backend
     useEffect(() => {
         const fetchData = async () => {
             const col = await getColegiados();
-            const inv = await getInvitados();
             setColegiados(col.map(c => ({ id: c.id_colegiado, label: `${c.nombre} ${c.apellido}` })));
-            setInvitados(inv.map(i => ({ id: i.id_invitado, label: `${i.nombre} ${i.apellido}` })));
         };
         fetchData();
     }, []);
 
     // Envío del formulario
-    const onSubmit = async (data) => {
-        if (!data.id_colegiado && !data.id_invitado) {
-            alert("Debes seleccionar un colegiado o un invitado.");
+    const onSubmit = async (formData) => {
+        if (!formData.id_colegiado) {
+            alert("Debes seleccionar un colegiado");
             return;
         }
-        if (data.id_colegiado && data.id_invitado) {
-            alert("Solo puedes seleccionar uno, no ambos.");
+
+        // 🔥 VALIDACIÓN DE DUPLICADO
+        const yaExiste = asignados.some(
+            item => item.id_colegiado === formData.id_colegiado.id
+        );
+
+        if (yaExiste) {
+            alert("Este colegiado ya está asignado a la actividad");
             return;
         }
 
         const body = {
             id_actividad_social: id,
-            id_colegiado: data.id_colegiado?.id || null,
-            id_invitado: data.id_invitado?.id || null,
+            id_colegiado: formData.id_colegiado.id,
         };
 
         await asignarColegiado(body);
@@ -72,7 +73,7 @@ export default function AsignarColegiados({ id, onSuccess }) {
             }}
         >
             <Typography variant="h6" fontWeight={700}>
-                Asignar Colegiado o Invitado
+                Asignar Colegiado
             </Typography>
 
             {/* Autocomplete Colegiado */}
@@ -81,7 +82,6 @@ export default function AsignarColegiados({ id, onSuccess }) {
                 value={selectedColegiado || null}
                 onChange={(_, value) => {
                     setValue("id_colegiado", value);
-                    if (value) setValue("id_invitado", null);
                 }}
                 renderInput={(params) => (
                     <TextField
@@ -92,22 +92,7 @@ export default function AsignarColegiados({ id, onSuccess }) {
                 )}
             />
 
-            {/* Autocomplete Invitado */}
-            <Autocomplete
-                options={invitados}
-                value={selectedInvitado || null}
-                onChange={(_, value) => {
-                    setValue("id_invitado", value);
-                    if (value) setValue("id_colegiado", null);
-                }}
-                renderInput={(params) => (
-                    <TextField
-                        {...params}
-                        label="Seleccionar Invitado"
-                        fullWidth
-                    />
-                )}
-            />
+
 
             <Stack direction="row" spacing={2} justifyContent="flex-end">
                 <Button

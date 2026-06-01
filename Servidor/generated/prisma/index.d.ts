@@ -54,6 +54,11 @@ export type colegiados = $Result.DefaultSelection<Prisma.$colegiadosPayload>
  */
 export type colegiados_asignados_social = $Result.DefaultSelection<Prisma.$colegiados_asignados_socialPayload>
 /**
+ * Model asistencia_social_diaria
+ * 
+ */
+export type asistencia_social_diaria = $Result.DefaultSelection<Prisma.$asistencia_social_diariaPayload>
+/**
  * Model documentos_colegiados
  * 
  */
@@ -330,6 +335,16 @@ export class PrismaClient<
     * ```
     */
   get colegiados_asignados_social(): Prisma.colegiados_asignados_socialDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.asistencia_social_diaria`: Exposes CRUD operations for the **asistencia_social_diaria** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Asistencia_social_diarias
+    * const asistencia_social_diarias = await prisma.asistencia_social_diaria.findMany()
+    * ```
+    */
+  get asistencia_social_diaria(): Prisma.asistencia_social_diariaDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.documentos_colegiados`: Exposes CRUD operations for the **documentos_colegiados** model.
@@ -878,6 +893,7 @@ export namespace Prisma {
     correspondencia: 'correspondencia',
     colegiados: 'colegiados',
     colegiados_asignados_social: 'colegiados_asignados_social',
+    asistencia_social_diaria: 'asistencia_social_diaria',
     documentos_colegiados: 'documentos_colegiados',
     movimientos_financieros: 'movimientos_financieros',
     origen_movimiento: 'origen_movimiento',
@@ -906,7 +922,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados"
+      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1499,6 +1515,80 @@ export namespace Prisma {
           count: {
             args: Prisma.colegiados_asignados_socialCountArgs<ExtArgs>
             result: $Utils.Optional<Colegiados_asignados_socialCountAggregateOutputType> | number
+          }
+        }
+      }
+      asistencia_social_diaria: {
+        payload: Prisma.$asistencia_social_diariaPayload<ExtArgs>
+        fields: Prisma.asistencia_social_diariaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.asistencia_social_diariaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.asistencia_social_diariaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          findFirst: {
+            args: Prisma.asistencia_social_diariaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.asistencia_social_diariaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          findMany: {
+            args: Prisma.asistencia_social_diariaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>[]
+          }
+          create: {
+            args: Prisma.asistencia_social_diariaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          createMany: {
+            args: Prisma.asistencia_social_diariaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.asistencia_social_diariaCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>[]
+          }
+          delete: {
+            args: Prisma.asistencia_social_diariaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          update: {
+            args: Prisma.asistencia_social_diariaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          deleteMany: {
+            args: Prisma.asistencia_social_diariaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.asistencia_social_diariaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.asistencia_social_diariaUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>[]
+          }
+          upsert: {
+            args: Prisma.asistencia_social_diariaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$asistencia_social_diariaPayload>
+          }
+          aggregate: {
+            args: Prisma.Asistencia_social_diariaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAsistencia_social_diaria>
+          }
+          groupBy: {
+            args: Prisma.asistencia_social_diariaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Asistencia_social_diariaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.asistencia_social_diariaCountArgs<ExtArgs>
+            result: $Utils.Optional<Asistencia_social_diariaCountAggregateOutputType> | number
           }
         }
       }
@@ -2334,6 +2424,7 @@ export namespace Prisma {
     correspondencia?: correspondenciaOmit
     colegiados?: colegiadosOmit
     colegiados_asignados_social?: colegiados_asignados_socialOmit
+    asistencia_social_diaria?: asistencia_social_diariaOmit
     documentos_colegiados?: documentos_colegiadosOmit
     movimientos_financieros?: movimientos_financierosOmit
     origen_movimiento?: origen_movimientoOmit
@@ -2634,6 +2725,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type Colegiados_asignados_socialCountOutputType
+   */
+
+  export type Colegiados_asignados_socialCountOutputType = {
+    asistencia_social_diaria: number
+  }
+
+  export type Colegiados_asignados_socialCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    asistencia_social_diaria?: boolean | Colegiados_asignados_socialCountOutputTypeCountAsistencia_social_diariaArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Colegiados_asignados_socialCountOutputType without action
+   */
+  export type Colegiados_asignados_socialCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Colegiados_asignados_socialCountOutputType
+     */
+    select?: Colegiados_asignados_socialCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Colegiados_asignados_socialCountOutputType without action
+   */
+  export type Colegiados_asignados_socialCountOutputTypeCountAsistencia_social_diariaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: asistencia_social_diariaWhereInput
+  }
+
+
+  /**
    * Count Type Origen_movimientoCountOutputType
    */
 
@@ -2731,11 +2853,11 @@ export namespace Prisma {
    */
 
   export type PasantesCountOutputType = {
-    olegiados_asignados_social: number
+    colegiados_asignados_social: number
   }
 
   export type PasantesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    olegiados_asignados_social?: boolean | PasantesCountOutputTypeCountOlegiados_asignados_socialArgs
+    colegiados_asignados_social?: boolean | PasantesCountOutputTypeCountColegiados_asignados_socialArgs
   }
 
   // Custom InputTypes
@@ -2752,7 +2874,7 @@ export namespace Prisma {
   /**
    * PasantesCountOutputType without action
    */
-  export type PasantesCountOutputTypeCountOlegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type PasantesCountOutputTypeCountColegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: colegiados_asignados_socialWhereInput
   }
 
@@ -6482,11 +6604,17 @@ export namespace Prisma {
   export type Actividades_socialesAvgAggregateOutputType = {
     id_actividad_social: number | null
     id_convenio: number | null
+    latitud: number | null
+    longitud: number | null
+    radio_metros: number | null
   }
 
   export type Actividades_socialesSumAggregateOutputType = {
     id_actividad_social: number | null
     id_convenio: number | null
+    latitud: number | null
+    longitud: number | null
+    radio_metros: number | null
   }
 
   export type Actividades_socialesMinAggregateOutputType = {
@@ -6500,6 +6628,9 @@ export namespace Prisma {
     fecha_fin: Date | null
     estado: string | null
     tipo: string | null
+    latitud: number | null
+    longitud: number | null
+    radio_metros: number | null
   }
 
   export type Actividades_socialesMaxAggregateOutputType = {
@@ -6513,6 +6644,9 @@ export namespace Prisma {
     fecha_fin: Date | null
     estado: string | null
     tipo: string | null
+    latitud: number | null
+    longitud: number | null
+    radio_metros: number | null
   }
 
   export type Actividades_socialesCountAggregateOutputType = {
@@ -6526,6 +6660,9 @@ export namespace Prisma {
     fecha_fin: number
     estado: number
     tipo: number
+    latitud: number
+    longitud: number
+    radio_metros: number
     _all: number
   }
 
@@ -6533,11 +6670,17 @@ export namespace Prisma {
   export type Actividades_socialesAvgAggregateInputType = {
     id_actividad_social?: true
     id_convenio?: true
+    latitud?: true
+    longitud?: true
+    radio_metros?: true
   }
 
   export type Actividades_socialesSumAggregateInputType = {
     id_actividad_social?: true
     id_convenio?: true
+    latitud?: true
+    longitud?: true
+    radio_metros?: true
   }
 
   export type Actividades_socialesMinAggregateInputType = {
@@ -6551,6 +6694,9 @@ export namespace Prisma {
     fecha_fin?: true
     estado?: true
     tipo?: true
+    latitud?: true
+    longitud?: true
+    radio_metros?: true
   }
 
   export type Actividades_socialesMaxAggregateInputType = {
@@ -6564,6 +6710,9 @@ export namespace Prisma {
     fecha_fin?: true
     estado?: true
     tipo?: true
+    latitud?: true
+    longitud?: true
+    radio_metros?: true
   }
 
   export type Actividades_socialesCountAggregateInputType = {
@@ -6577,6 +6726,9 @@ export namespace Prisma {
     fecha_fin?: true
     estado?: true
     tipo?: true
+    latitud?: true
+    longitud?: true
+    radio_metros?: true
     _all?: true
   }
 
@@ -6677,6 +6829,9 @@ export namespace Prisma {
     fecha_fin: Date | null
     estado: string | null
     tipo: string | null
+    latitud: number | null
+    longitud: number | null
+    radio_metros: number | null
     _count: Actividades_socialesCountAggregateOutputType | null
     _avg: Actividades_socialesAvgAggregateOutputType | null
     _sum: Actividades_socialesSumAggregateOutputType | null
@@ -6709,6 +6864,9 @@ export namespace Prisma {
     fecha_fin?: boolean
     estado?: boolean
     tipo?: boolean
+    latitud?: boolean
+    longitud?: boolean
+    radio_metros?: boolean
     convenio?: boolean | actividades_sociales$convenioArgs<ExtArgs>
     colegiados_asignados_social?: boolean | actividades_sociales$colegiados_asignados_socialArgs<ExtArgs>
     _count?: boolean | Actividades_socialesCountOutputTypeDefaultArgs<ExtArgs>
@@ -6725,6 +6883,9 @@ export namespace Prisma {
     fecha_fin?: boolean
     estado?: boolean
     tipo?: boolean
+    latitud?: boolean
+    longitud?: boolean
+    radio_metros?: boolean
     convenio?: boolean | actividades_sociales$convenioArgs<ExtArgs>
   }, ExtArgs["result"]["actividades_sociales"]>
 
@@ -6739,6 +6900,9 @@ export namespace Prisma {
     fecha_fin?: boolean
     estado?: boolean
     tipo?: boolean
+    latitud?: boolean
+    longitud?: boolean
+    radio_metros?: boolean
     convenio?: boolean | actividades_sociales$convenioArgs<ExtArgs>
   }, ExtArgs["result"]["actividades_sociales"]>
 
@@ -6753,9 +6917,12 @@ export namespace Prisma {
     fecha_fin?: boolean
     estado?: boolean
     tipo?: boolean
+    latitud?: boolean
+    longitud?: boolean
+    radio_metros?: boolean
   }
 
-  export type actividades_socialesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_actividad_social" | "nombre" | "descripcion" | "ubicacion" | "motivo" | "id_convenio" | "fecha_inicio" | "fecha_fin" | "estado" | "tipo", ExtArgs["result"]["actividades_sociales"]>
+  export type actividades_socialesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_actividad_social" | "nombre" | "descripcion" | "ubicacion" | "motivo" | "id_convenio" | "fecha_inicio" | "fecha_fin" | "estado" | "tipo" | "latitud" | "longitud" | "radio_metros", ExtArgs["result"]["actividades_sociales"]>
   export type actividades_socialesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     convenio?: boolean | actividades_sociales$convenioArgs<ExtArgs>
     colegiados_asignados_social?: boolean | actividades_sociales$colegiados_asignados_socialArgs<ExtArgs>
@@ -6785,6 +6952,9 @@ export namespace Prisma {
       fecha_fin: Date | null
       estado: string | null
       tipo: string | null
+      latitud: number | null
+      longitud: number | null
+      radio_metros: number | null
     }, ExtArgs["result"]["actividades_sociales"]>
     composites: {}
   }
@@ -7220,6 +7390,9 @@ export namespace Prisma {
     readonly fecha_fin: FieldRef<"actividades_sociales", 'DateTime'>
     readonly estado: FieldRef<"actividades_sociales", 'String'>
     readonly tipo: FieldRef<"actividades_sociales", 'String'>
+    readonly latitud: FieldRef<"actividades_sociales", 'Float'>
+    readonly longitud: FieldRef<"actividades_sociales", 'Float'>
+    readonly radio_metros: FieldRef<"actividades_sociales", 'Int'>
   }
     
 
@@ -10031,6 +10204,7 @@ export namespace Prisma {
     fecha_inscripcion: Date | null
     fecha_renovacion: Date | null
     estado: string | null
+    pin_acceso: string | null
   }
 
   export type ColegiadosMaxAggregateOutputType = {
@@ -10044,6 +10218,7 @@ export namespace Prisma {
     fecha_inscripcion: Date | null
     fecha_renovacion: Date | null
     estado: string | null
+    pin_acceso: string | null
   }
 
   export type ColegiadosCountAggregateOutputType = {
@@ -10057,6 +10232,7 @@ export namespace Prisma {
     fecha_inscripcion: number
     fecha_renovacion: number
     estado: number
+    pin_acceso: number
     _all: number
   }
 
@@ -10080,6 +10256,7 @@ export namespace Prisma {
     fecha_inscripcion?: true
     fecha_renovacion?: true
     estado?: true
+    pin_acceso?: true
   }
 
   export type ColegiadosMaxAggregateInputType = {
@@ -10093,6 +10270,7 @@ export namespace Prisma {
     fecha_inscripcion?: true
     fecha_renovacion?: true
     estado?: true
+    pin_acceso?: true
   }
 
   export type ColegiadosCountAggregateInputType = {
@@ -10106,6 +10284,7 @@ export namespace Prisma {
     fecha_inscripcion?: true
     fecha_renovacion?: true
     estado?: true
+    pin_acceso?: true
     _all?: true
   }
 
@@ -10206,6 +10385,7 @@ export namespace Prisma {
     fecha_inscripcion: Date | null
     fecha_renovacion: Date | null
     estado: string | null
+    pin_acceso: string | null
     _count: ColegiadosCountAggregateOutputType | null
     _avg: ColegiadosAvgAggregateOutputType | null
     _sum: ColegiadosSumAggregateOutputType | null
@@ -10238,6 +10418,7 @@ export namespace Prisma {
     fecha_inscripcion?: boolean
     fecha_renovacion?: boolean
     estado?: boolean
+    pin_acceso?: boolean
     asistencias_actividad?: boolean | colegiados$asistencias_actividadArgs<ExtArgs>
     colegiados_asignados_social?: boolean | colegiados$colegiados_asignados_socialArgs<ExtArgs>
     documentos_colegiados?: boolean | colegiados$documentos_colegiadosArgs<ExtArgs>
@@ -10257,6 +10438,7 @@ export namespace Prisma {
     fecha_inscripcion?: boolean
     fecha_renovacion?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }, ExtArgs["result"]["colegiados"]>
 
   export type colegiadosSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -10270,6 +10452,7 @@ export namespace Prisma {
     fecha_inscripcion?: boolean
     fecha_renovacion?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }, ExtArgs["result"]["colegiados"]>
 
   export type colegiadosSelectScalar = {
@@ -10283,9 +10466,10 @@ export namespace Prisma {
     fecha_inscripcion?: boolean
     fecha_renovacion?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }
 
-  export type colegiadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_colegiado" | "carnet_identidad" | "nombre" | "apellido" | "correo" | "telefono" | "especialidades" | "fecha_inscripcion" | "fecha_renovacion" | "estado", ExtArgs["result"]["colegiados"]>
+  export type colegiadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_colegiado" | "carnet_identidad" | "nombre" | "apellido" | "correo" | "telefono" | "especialidades" | "fecha_inscripcion" | "fecha_renovacion" | "estado" | "pin_acceso", ExtArgs["result"]["colegiados"]>
   export type colegiadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asistencias_actividad?: boolean | colegiados$asistencias_actividadArgs<ExtArgs>
     colegiados_asignados_social?: boolean | colegiados$colegiados_asignados_socialArgs<ExtArgs>
@@ -10317,6 +10501,7 @@ export namespace Prisma {
       fecha_inscripcion: Date | null
       fecha_renovacion: Date | null
       estado: string | null
+      pin_acceso: string | null
     }, ExtArgs["result"]["colegiados"]>
     composites: {}
   }
@@ -10755,6 +10940,7 @@ export namespace Prisma {
     readonly fecha_inscripcion: FieldRef<"colegiados", 'DateTime'>
     readonly fecha_renovacion: FieldRef<"colegiados", 'DateTime'>
     readonly estado: FieldRef<"colegiados", 'String'>
+    readonly pin_acceso: FieldRef<"colegiados", 'String'>
   }
     
 
@@ -11299,6 +11485,8 @@ export namespace Prisma {
     id_colegiado: number | null
     id_invitado: number | null
     id_pasante: number | null
+    total_horas: number | null
+    horas_meta: number | null
   }
 
   export type Colegiados_asignados_socialSumAggregateOutputType = {
@@ -11307,6 +11495,8 @@ export namespace Prisma {
     id_colegiado: number | null
     id_invitado: number | null
     id_pasante: number | null
+    total_horas: number | null
+    horas_meta: number | null
   }
 
   export type Colegiados_asignados_socialMinAggregateOutputType = {
@@ -11315,6 +11505,8 @@ export namespace Prisma {
     id_colegiado: number | null
     id_invitado: number | null
     id_pasante: number | null
+    total_horas: number | null
+    horas_meta: number | null
   }
 
   export type Colegiados_asignados_socialMaxAggregateOutputType = {
@@ -11323,6 +11515,8 @@ export namespace Prisma {
     id_colegiado: number | null
     id_invitado: number | null
     id_pasante: number | null
+    total_horas: number | null
+    horas_meta: number | null
   }
 
   export type Colegiados_asignados_socialCountAggregateOutputType = {
@@ -11331,6 +11525,8 @@ export namespace Prisma {
     id_colegiado: number
     id_invitado: number
     id_pasante: number
+    total_horas: number
+    horas_meta: number
     _all: number
   }
 
@@ -11341,6 +11537,8 @@ export namespace Prisma {
     id_colegiado?: true
     id_invitado?: true
     id_pasante?: true
+    total_horas?: true
+    horas_meta?: true
   }
 
   export type Colegiados_asignados_socialSumAggregateInputType = {
@@ -11349,6 +11547,8 @@ export namespace Prisma {
     id_colegiado?: true
     id_invitado?: true
     id_pasante?: true
+    total_horas?: true
+    horas_meta?: true
   }
 
   export type Colegiados_asignados_socialMinAggregateInputType = {
@@ -11357,6 +11557,8 @@ export namespace Prisma {
     id_colegiado?: true
     id_invitado?: true
     id_pasante?: true
+    total_horas?: true
+    horas_meta?: true
   }
 
   export type Colegiados_asignados_socialMaxAggregateInputType = {
@@ -11365,6 +11567,8 @@ export namespace Prisma {
     id_colegiado?: true
     id_invitado?: true
     id_pasante?: true
+    total_horas?: true
+    horas_meta?: true
   }
 
   export type Colegiados_asignados_socialCountAggregateInputType = {
@@ -11373,6 +11577,8 @@ export namespace Prisma {
     id_colegiado?: true
     id_invitado?: true
     id_pasante?: true
+    total_horas?: true
+    horas_meta?: true
     _all?: true
   }
 
@@ -11468,6 +11674,8 @@ export namespace Prisma {
     id_colegiado: number | null
     id_invitado: number | null
     id_pasante: number | null
+    total_horas: number | null
+    horas_meta: number | null
     _count: Colegiados_asignados_socialCountAggregateOutputType | null
     _avg: Colegiados_asignados_socialAvgAggregateOutputType | null
     _sum: Colegiados_asignados_socialSumAggregateOutputType | null
@@ -11495,10 +11703,14 @@ export namespace Prisma {
     id_colegiado?: boolean
     id_invitado?: boolean
     id_pasante?: boolean
+    total_horas?: boolean
+    horas_meta?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
+    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
+    _count?: boolean | Colegiados_asignados_socialCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_asignados_social"]>
 
   export type colegiados_asignados_socialSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -11507,6 +11719,8 @@ export namespace Prisma {
     id_colegiado?: boolean
     id_invitado?: boolean
     id_pasante?: boolean
+    total_horas?: boolean
+    horas_meta?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
@@ -11519,6 +11733,8 @@ export namespace Prisma {
     id_colegiado?: boolean
     id_invitado?: boolean
     id_pasante?: boolean
+    total_horas?: boolean
+    horas_meta?: boolean
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
@@ -11531,14 +11747,18 @@ export namespace Prisma {
     id_colegiado?: boolean
     id_invitado?: boolean
     id_pasante?: boolean
+    total_horas?: boolean
+    horas_meta?: boolean
   }
 
-  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_invitado" | "id_pasante", ExtArgs["result"]["colegiados_asignados_social"]>
+  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_invitado" | "id_pasante" | "total_horas" | "horas_meta", ExtArgs["result"]["colegiados_asignados_social"]>
   export type colegiados_asignados_socialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
+    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
+    _count?: boolean | Colegiados_asignados_socialCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type colegiados_asignados_socialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
@@ -11560,6 +11780,7 @@ export namespace Prisma {
       actividades_sociales: Prisma.$actividades_socialesPayload<ExtArgs> | null
       colegiados: Prisma.$colegiadosPayload<ExtArgs> | null
       pasantes: Prisma.$pasantesPayload<ExtArgs> | null
+      asistencia_social_diaria: Prisma.$asistencia_social_diariaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_asignacion: number
@@ -11567,6 +11788,8 @@ export namespace Prisma {
       id_colegiado: number | null
       id_invitado: number | null
       id_pasante: number | null
+      total_horas: number | null
+      horas_meta: number | null
     }, ExtArgs["result"]["colegiados_asignados_social"]>
     composites: {}
   }
@@ -11965,6 +12188,7 @@ export namespace Prisma {
     actividades_sociales<T extends colegiados_asignados_social$actividades_socialesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$actividades_socialesArgs<ExtArgs>>): Prisma__actividades_socialesClient<$Result.GetResult<Prisma.$actividades_socialesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     colegiados<T extends colegiados_asignados_social$colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$colegiadosArgs<ExtArgs>>): Prisma__colegiadosClient<$Result.GetResult<Prisma.$colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pasantes<T extends colegiados_asignados_social$pasantesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$pasantesArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    asistencia_social_diaria<T extends colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11999,6 +12223,8 @@ export namespace Prisma {
     readonly id_colegiado: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_invitado: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_pasante: FieldRef<"colegiados_asignados_social", 'Int'>
+    readonly total_horas: FieldRef<"colegiados_asignados_social", 'Float'>
+    readonly horas_meta: FieldRef<"colegiados_asignados_social", 'Float'>
   }
     
 
@@ -12471,6 +12697,30 @@ export namespace Prisma {
   }
 
   /**
+   * colegiados_asignados_social.asistencia_social_diaria
+   */
+  export type colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    where?: asistencia_social_diariaWhereInput
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
+  }
+
+  /**
    * colegiados_asignados_social without action
    */
   export type colegiados_asignados_socialDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -12486,6 +12736,1119 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: colegiados_asignados_socialInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model asistencia_social_diaria
+   */
+
+  export type AggregateAsistencia_social_diaria = {
+    _count: Asistencia_social_diariaCountAggregateOutputType | null
+    _avg: Asistencia_social_diariaAvgAggregateOutputType | null
+    _sum: Asistencia_social_diariaSumAggregateOutputType | null
+    _min: Asistencia_social_diariaMinAggregateOutputType | null
+    _max: Asistencia_social_diariaMaxAggregateOutputType | null
+  }
+
+  export type Asistencia_social_diariaAvgAggregateOutputType = {
+    id_asistencia_diaria: number | null
+    id_asignacion: number | null
+    horas_ganadas: number | null
+  }
+
+  export type Asistencia_social_diariaSumAggregateOutputType = {
+    id_asistencia_diaria: number | null
+    id_asignacion: number | null
+    horas_ganadas: number | null
+  }
+
+  export type Asistencia_social_diariaMinAggregateOutputType = {
+    id_asistencia_diaria: number | null
+    id_asignacion: number | null
+    fecha_marcaje: Date | null
+    hora_entrada: Date | null
+    hora_salida: Date | null
+    horas_ganadas: number | null
+  }
+
+  export type Asistencia_social_diariaMaxAggregateOutputType = {
+    id_asistencia_diaria: number | null
+    id_asignacion: number | null
+    fecha_marcaje: Date | null
+    hora_entrada: Date | null
+    hora_salida: Date | null
+    horas_ganadas: number | null
+  }
+
+  export type Asistencia_social_diariaCountAggregateOutputType = {
+    id_asistencia_diaria: number
+    id_asignacion: number
+    fecha_marcaje: number
+    hora_entrada: number
+    hora_salida: number
+    horas_ganadas: number
+    _all: number
+  }
+
+
+  export type Asistencia_social_diariaAvgAggregateInputType = {
+    id_asistencia_diaria?: true
+    id_asignacion?: true
+    horas_ganadas?: true
+  }
+
+  export type Asistencia_social_diariaSumAggregateInputType = {
+    id_asistencia_diaria?: true
+    id_asignacion?: true
+    horas_ganadas?: true
+  }
+
+  export type Asistencia_social_diariaMinAggregateInputType = {
+    id_asistencia_diaria?: true
+    id_asignacion?: true
+    fecha_marcaje?: true
+    hora_entrada?: true
+    hora_salida?: true
+    horas_ganadas?: true
+  }
+
+  export type Asistencia_social_diariaMaxAggregateInputType = {
+    id_asistencia_diaria?: true
+    id_asignacion?: true
+    fecha_marcaje?: true
+    hora_entrada?: true
+    hora_salida?: true
+    horas_ganadas?: true
+  }
+
+  export type Asistencia_social_diariaCountAggregateInputType = {
+    id_asistencia_diaria?: true
+    id_asignacion?: true
+    fecha_marcaje?: true
+    hora_entrada?: true
+    hora_salida?: true
+    horas_ganadas?: true
+    _all?: true
+  }
+
+  export type Asistencia_social_diariaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which asistencia_social_diaria to aggregate.
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of asistencia_social_diarias to fetch.
+     */
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` asistencia_social_diarias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` asistencia_social_diarias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned asistencia_social_diarias
+    **/
+    _count?: true | Asistencia_social_diariaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Asistencia_social_diariaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Asistencia_social_diariaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Asistencia_social_diariaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Asistencia_social_diariaMaxAggregateInputType
+  }
+
+  export type GetAsistencia_social_diariaAggregateType<T extends Asistencia_social_diariaAggregateArgs> = {
+        [P in keyof T & keyof AggregateAsistencia_social_diaria]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAsistencia_social_diaria[P]>
+      : GetScalarType<T[P], AggregateAsistencia_social_diaria[P]>
+  }
+
+
+
+
+  export type asistencia_social_diariaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: asistencia_social_diariaWhereInput
+    orderBy?: asistencia_social_diariaOrderByWithAggregationInput | asistencia_social_diariaOrderByWithAggregationInput[]
+    by: Asistencia_social_diariaScalarFieldEnum[] | Asistencia_social_diariaScalarFieldEnum
+    having?: asistencia_social_diariaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Asistencia_social_diariaCountAggregateInputType | true
+    _avg?: Asistencia_social_diariaAvgAggregateInputType
+    _sum?: Asistencia_social_diariaSumAggregateInputType
+    _min?: Asistencia_social_diariaMinAggregateInputType
+    _max?: Asistencia_social_diariaMaxAggregateInputType
+  }
+
+  export type Asistencia_social_diariaGroupByOutputType = {
+    id_asistencia_diaria: number
+    id_asignacion: number
+    fecha_marcaje: Date
+    hora_entrada: Date | null
+    hora_salida: Date | null
+    horas_ganadas: number | null
+    _count: Asistencia_social_diariaCountAggregateOutputType | null
+    _avg: Asistencia_social_diariaAvgAggregateOutputType | null
+    _sum: Asistencia_social_diariaSumAggregateOutputType | null
+    _min: Asistencia_social_diariaMinAggregateOutputType | null
+    _max: Asistencia_social_diariaMaxAggregateOutputType | null
+  }
+
+  type GetAsistencia_social_diariaGroupByPayload<T extends asistencia_social_diariaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Asistencia_social_diariaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Asistencia_social_diariaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Asistencia_social_diariaGroupByOutputType[P]>
+            : GetScalarType<T[P], Asistencia_social_diariaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type asistencia_social_diariaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_asistencia_diaria?: boolean
+    id_asignacion?: boolean
+    fecha_marcaje?: boolean
+    hora_entrada?: boolean
+    hora_salida?: boolean
+    horas_ganadas?: boolean
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["asistencia_social_diaria"]>
+
+  export type asistencia_social_diariaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_asistencia_diaria?: boolean
+    id_asignacion?: boolean
+    fecha_marcaje?: boolean
+    hora_entrada?: boolean
+    hora_salida?: boolean
+    horas_ganadas?: boolean
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["asistencia_social_diaria"]>
+
+  export type asistencia_social_diariaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_asistencia_diaria?: boolean
+    id_asignacion?: boolean
+    fecha_marcaje?: boolean
+    hora_entrada?: boolean
+    hora_salida?: boolean
+    horas_ganadas?: boolean
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["asistencia_social_diaria"]>
+
+  export type asistencia_social_diariaSelectScalar = {
+    id_asistencia_diaria?: boolean
+    id_asignacion?: boolean
+    fecha_marcaje?: boolean
+    hora_entrada?: boolean
+    hora_salida?: boolean
+    horas_ganadas?: boolean
+  }
+
+  export type asistencia_social_diariaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asistencia_diaria" | "id_asignacion" | "fecha_marcaje" | "hora_entrada" | "hora_salida" | "horas_ganadas", ExtArgs["result"]["asistencia_social_diaria"]>
+  export type asistencia_social_diariaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }
+  export type asistencia_social_diariaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }
+  export type asistencia_social_diariaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    colegiados_asignados_social?: boolean | colegiados_asignados_socialDefaultArgs<ExtArgs>
+  }
+
+  export type $asistencia_social_diariaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "asistencia_social_diaria"
+    objects: {
+      colegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_asistencia_diaria: number
+      id_asignacion: number
+      fecha_marcaje: Date
+      hora_entrada: Date | null
+      hora_salida: Date | null
+      horas_ganadas: number | null
+    }, ExtArgs["result"]["asistencia_social_diaria"]>
+    composites: {}
+  }
+
+  type asistencia_social_diariaGetPayload<S extends boolean | null | undefined | asistencia_social_diariaDefaultArgs> = $Result.GetResult<Prisma.$asistencia_social_diariaPayload, S>
+
+  type asistencia_social_diariaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<asistencia_social_diariaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Asistencia_social_diariaCountAggregateInputType | true
+    }
+
+  export interface asistencia_social_diariaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['asistencia_social_diaria'], meta: { name: 'asistencia_social_diaria' } }
+    /**
+     * Find zero or one Asistencia_social_diaria that matches the filter.
+     * @param {asistencia_social_diariaFindUniqueArgs} args - Arguments to find a Asistencia_social_diaria
+     * @example
+     * // Get one Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends asistencia_social_diariaFindUniqueArgs>(args: SelectSubset<T, asistencia_social_diariaFindUniqueArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Asistencia_social_diaria that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {asistencia_social_diariaFindUniqueOrThrowArgs} args - Arguments to find a Asistencia_social_diaria
+     * @example
+     * // Get one Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends asistencia_social_diariaFindUniqueOrThrowArgs>(args: SelectSubset<T, asistencia_social_diariaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Asistencia_social_diaria that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaFindFirstArgs} args - Arguments to find a Asistencia_social_diaria
+     * @example
+     * // Get one Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends asistencia_social_diariaFindFirstArgs>(args?: SelectSubset<T, asistencia_social_diariaFindFirstArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Asistencia_social_diaria that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaFindFirstOrThrowArgs} args - Arguments to find a Asistencia_social_diaria
+     * @example
+     * // Get one Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends asistencia_social_diariaFindFirstOrThrowArgs>(args?: SelectSubset<T, asistencia_social_diariaFindFirstOrThrowArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Asistencia_social_diarias that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Asistencia_social_diarias
+     * const asistencia_social_diarias = await prisma.asistencia_social_diaria.findMany()
+     * 
+     * // Get first 10 Asistencia_social_diarias
+     * const asistencia_social_diarias = await prisma.asistencia_social_diaria.findMany({ take: 10 })
+     * 
+     * // Only select the `id_asistencia_diaria`
+     * const asistencia_social_diariaWithId_asistencia_diariaOnly = await prisma.asistencia_social_diaria.findMany({ select: { id_asistencia_diaria: true } })
+     * 
+     */
+    findMany<T extends asistencia_social_diariaFindManyArgs>(args?: SelectSubset<T, asistencia_social_diariaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Asistencia_social_diaria.
+     * @param {asistencia_social_diariaCreateArgs} args - Arguments to create a Asistencia_social_diaria.
+     * @example
+     * // Create one Asistencia_social_diaria
+     * const Asistencia_social_diaria = await prisma.asistencia_social_diaria.create({
+     *   data: {
+     *     // ... data to create a Asistencia_social_diaria
+     *   }
+     * })
+     * 
+     */
+    create<T extends asistencia_social_diariaCreateArgs>(args: SelectSubset<T, asistencia_social_diariaCreateArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Asistencia_social_diarias.
+     * @param {asistencia_social_diariaCreateManyArgs} args - Arguments to create many Asistencia_social_diarias.
+     * @example
+     * // Create many Asistencia_social_diarias
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends asistencia_social_diariaCreateManyArgs>(args?: SelectSubset<T, asistencia_social_diariaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Asistencia_social_diarias and returns the data saved in the database.
+     * @param {asistencia_social_diariaCreateManyAndReturnArgs} args - Arguments to create many Asistencia_social_diarias.
+     * @example
+     * // Create many Asistencia_social_diarias
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Asistencia_social_diarias and only return the `id_asistencia_diaria`
+     * const asistencia_social_diariaWithId_asistencia_diariaOnly = await prisma.asistencia_social_diaria.createManyAndReturn({
+     *   select: { id_asistencia_diaria: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends asistencia_social_diariaCreateManyAndReturnArgs>(args?: SelectSubset<T, asistencia_social_diariaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Asistencia_social_diaria.
+     * @param {asistencia_social_diariaDeleteArgs} args - Arguments to delete one Asistencia_social_diaria.
+     * @example
+     * // Delete one Asistencia_social_diaria
+     * const Asistencia_social_diaria = await prisma.asistencia_social_diaria.delete({
+     *   where: {
+     *     // ... filter to delete one Asistencia_social_diaria
+     *   }
+     * })
+     * 
+     */
+    delete<T extends asistencia_social_diariaDeleteArgs>(args: SelectSubset<T, asistencia_social_diariaDeleteArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Asistencia_social_diaria.
+     * @param {asistencia_social_diariaUpdateArgs} args - Arguments to update one Asistencia_social_diaria.
+     * @example
+     * // Update one Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends asistencia_social_diariaUpdateArgs>(args: SelectSubset<T, asistencia_social_diariaUpdateArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Asistencia_social_diarias.
+     * @param {asistencia_social_diariaDeleteManyArgs} args - Arguments to filter Asistencia_social_diarias to delete.
+     * @example
+     * // Delete a few Asistencia_social_diarias
+     * const { count } = await prisma.asistencia_social_diaria.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends asistencia_social_diariaDeleteManyArgs>(args?: SelectSubset<T, asistencia_social_diariaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Asistencia_social_diarias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Asistencia_social_diarias
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends asistencia_social_diariaUpdateManyArgs>(args: SelectSubset<T, asistencia_social_diariaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Asistencia_social_diarias and returns the data updated in the database.
+     * @param {asistencia_social_diariaUpdateManyAndReturnArgs} args - Arguments to update many Asistencia_social_diarias.
+     * @example
+     * // Update many Asistencia_social_diarias
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Asistencia_social_diarias and only return the `id_asistencia_diaria`
+     * const asistencia_social_diariaWithId_asistencia_diariaOnly = await prisma.asistencia_social_diaria.updateManyAndReturn({
+     *   select: { id_asistencia_diaria: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends asistencia_social_diariaUpdateManyAndReturnArgs>(args: SelectSubset<T, asistencia_social_diariaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Asistencia_social_diaria.
+     * @param {asistencia_social_diariaUpsertArgs} args - Arguments to update or create a Asistencia_social_diaria.
+     * @example
+     * // Update or create a Asistencia_social_diaria
+     * const asistencia_social_diaria = await prisma.asistencia_social_diaria.upsert({
+     *   create: {
+     *     // ... data to create a Asistencia_social_diaria
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Asistencia_social_diaria we want to update
+     *   }
+     * })
+     */
+    upsert<T extends asistencia_social_diariaUpsertArgs>(args: SelectSubset<T, asistencia_social_diariaUpsertArgs<ExtArgs>>): Prisma__asistencia_social_diariaClient<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Asistencia_social_diarias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaCountArgs} args - Arguments to filter Asistencia_social_diarias to count.
+     * @example
+     * // Count the number of Asistencia_social_diarias
+     * const count = await prisma.asistencia_social_diaria.count({
+     *   where: {
+     *     // ... the filter for the Asistencia_social_diarias we want to count
+     *   }
+     * })
+    **/
+    count<T extends asistencia_social_diariaCountArgs>(
+      args?: Subset<T, asistencia_social_diariaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Asistencia_social_diariaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Asistencia_social_diaria.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Asistencia_social_diariaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Asistencia_social_diariaAggregateArgs>(args: Subset<T, Asistencia_social_diariaAggregateArgs>): Prisma.PrismaPromise<GetAsistencia_social_diariaAggregateType<T>>
+
+    /**
+     * Group by Asistencia_social_diaria.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {asistencia_social_diariaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends asistencia_social_diariaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: asistencia_social_diariaGroupByArgs['orderBy'] }
+        : { orderBy?: asistencia_social_diariaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, asistencia_social_diariaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAsistencia_social_diariaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the asistencia_social_diaria model
+   */
+  readonly fields: asistencia_social_diariaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for asistencia_social_diaria.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__asistencia_social_diariaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    colegiados_asignados_social<T extends colegiados_asignados_socialDefaultArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_socialDefaultArgs<ExtArgs>>): Prisma__colegiados_asignados_socialClient<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the asistencia_social_diaria model
+   */
+  interface asistencia_social_diariaFieldRefs {
+    readonly id_asistencia_diaria: FieldRef<"asistencia_social_diaria", 'Int'>
+    readonly id_asignacion: FieldRef<"asistencia_social_diaria", 'Int'>
+    readonly fecha_marcaje: FieldRef<"asistencia_social_diaria", 'DateTime'>
+    readonly hora_entrada: FieldRef<"asistencia_social_diaria", 'DateTime'>
+    readonly hora_salida: FieldRef<"asistencia_social_diaria", 'DateTime'>
+    readonly horas_ganadas: FieldRef<"asistencia_social_diaria", 'Float'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * asistencia_social_diaria findUnique
+   */
+  export type asistencia_social_diariaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter, which asistencia_social_diaria to fetch.
+     */
+    where: asistencia_social_diariaWhereUniqueInput
+  }
+
+  /**
+   * asistencia_social_diaria findUniqueOrThrow
+   */
+  export type asistencia_social_diariaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter, which asistencia_social_diaria to fetch.
+     */
+    where: asistencia_social_diariaWhereUniqueInput
+  }
+
+  /**
+   * asistencia_social_diaria findFirst
+   */
+  export type asistencia_social_diariaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter, which asistencia_social_diaria to fetch.
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of asistencia_social_diarias to fetch.
+     */
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for asistencia_social_diarias.
+     */
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` asistencia_social_diarias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` asistencia_social_diarias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of asistencia_social_diarias.
+     */
+    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
+  }
+
+  /**
+   * asistencia_social_diaria findFirstOrThrow
+   */
+  export type asistencia_social_diariaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter, which asistencia_social_diaria to fetch.
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of asistencia_social_diarias to fetch.
+     */
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for asistencia_social_diarias.
+     */
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` asistencia_social_diarias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` asistencia_social_diarias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of asistencia_social_diarias.
+     */
+    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
+  }
+
+  /**
+   * asistencia_social_diaria findMany
+   */
+  export type asistencia_social_diariaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter, which asistencia_social_diarias to fetch.
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of asistencia_social_diarias to fetch.
+     */
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing asistencia_social_diarias.
+     */
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` asistencia_social_diarias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` asistencia_social_diarias.
+     */
+    skip?: number
+    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
+  }
+
+  /**
+   * asistencia_social_diaria create
+   */
+  export type asistencia_social_diariaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a asistencia_social_diaria.
+     */
+    data: XOR<asistencia_social_diariaCreateInput, asistencia_social_diariaUncheckedCreateInput>
+  }
+
+  /**
+   * asistencia_social_diaria createMany
+   */
+  export type asistencia_social_diariaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many asistencia_social_diarias.
+     */
+    data: asistencia_social_diariaCreateManyInput | asistencia_social_diariaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * asistencia_social_diaria createManyAndReturn
+   */
+  export type asistencia_social_diariaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * The data used to create many asistencia_social_diarias.
+     */
+    data: asistencia_social_diariaCreateManyInput | asistencia_social_diariaCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * asistencia_social_diaria update
+   */
+  export type asistencia_social_diariaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a asistencia_social_diaria.
+     */
+    data: XOR<asistencia_social_diariaUpdateInput, asistencia_social_diariaUncheckedUpdateInput>
+    /**
+     * Choose, which asistencia_social_diaria to update.
+     */
+    where: asistencia_social_diariaWhereUniqueInput
+  }
+
+  /**
+   * asistencia_social_diaria updateMany
+   */
+  export type asistencia_social_diariaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update asistencia_social_diarias.
+     */
+    data: XOR<asistencia_social_diariaUpdateManyMutationInput, asistencia_social_diariaUncheckedUpdateManyInput>
+    /**
+     * Filter which asistencia_social_diarias to update
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * Limit how many asistencia_social_diarias to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * asistencia_social_diaria updateManyAndReturn
+   */
+  export type asistencia_social_diariaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * The data used to update asistencia_social_diarias.
+     */
+    data: XOR<asistencia_social_diariaUpdateManyMutationInput, asistencia_social_diariaUncheckedUpdateManyInput>
+    /**
+     * Filter which asistencia_social_diarias to update
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * Limit how many asistencia_social_diarias to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * asistencia_social_diaria upsert
+   */
+  export type asistencia_social_diariaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the asistencia_social_diaria to update in case it exists.
+     */
+    where: asistencia_social_diariaWhereUniqueInput
+    /**
+     * In case the asistencia_social_diaria found by the `where` argument doesn't exist, create a new asistencia_social_diaria with this data.
+     */
+    create: XOR<asistencia_social_diariaCreateInput, asistencia_social_diariaUncheckedCreateInput>
+    /**
+     * In case the asistencia_social_diaria was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<asistencia_social_diariaUpdateInput, asistencia_social_diariaUncheckedUpdateInput>
+  }
+
+  /**
+   * asistencia_social_diaria delete
+   */
+  export type asistencia_social_diariaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    /**
+     * Filter which asistencia_social_diaria to delete.
+     */
+    where: asistencia_social_diariaWhereUniqueInput
+  }
+
+  /**
+   * asistencia_social_diaria deleteMany
+   */
+  export type asistencia_social_diariaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which asistencia_social_diarias to delete
+     */
+    where?: asistencia_social_diariaWhereInput
+    /**
+     * Limit how many asistencia_social_diarias to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * asistencia_social_diaria without action
+   */
+  export type asistencia_social_diariaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the asistencia_social_diaria
+     */
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the asistencia_social_diaria
+     */
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
   }
 
 
@@ -19439,6 +20802,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     estado: string | null
+    pin_acceso: string | null
   }
 
   export type PasantesMaxAggregateOutputType = {
@@ -19452,6 +20816,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     estado: string | null
+    pin_acceso: string | null
   }
 
   export type PasantesCountAggregateOutputType = {
@@ -19465,6 +20830,7 @@ export namespace Prisma {
     createdAt: number
     updatedAt: number
     estado: number
+    pin_acceso: number
     _all: number
   }
 
@@ -19488,6 +20854,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     estado?: true
+    pin_acceso?: true
   }
 
   export type PasantesMaxAggregateInputType = {
@@ -19501,6 +20868,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     estado?: true
+    pin_acceso?: true
   }
 
   export type PasantesCountAggregateInputType = {
@@ -19514,6 +20882,7 @@ export namespace Prisma {
     createdAt?: true
     updatedAt?: true
     estado?: true
+    pin_acceso?: true
     _all?: true
   }
 
@@ -19614,6 +20983,7 @@ export namespace Prisma {
     createdAt: Date | null
     updatedAt: Date | null
     estado: string | null
+    pin_acceso: string | null
     _count: PasantesCountAggregateOutputType | null
     _avg: PasantesAvgAggregateOutputType | null
     _sum: PasantesSumAggregateOutputType | null
@@ -19646,7 +21016,8 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     estado?: boolean
-    olegiados_asignados_social?: boolean | pasantes$olegiados_asignados_socialArgs<ExtArgs>
+    pin_acceso?: boolean
+    colegiados_asignados_social?: boolean | pasantes$colegiados_asignados_socialArgs<ExtArgs>
     _count?: boolean | PasantesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pasantes"]>
 
@@ -19661,6 +21032,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }, ExtArgs["result"]["pasantes"]>
 
   export type pasantesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -19674,6 +21046,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }, ExtArgs["result"]["pasantes"]>
 
   export type pasantesSelectScalar = {
@@ -19687,11 +21060,12 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     estado?: boolean
+    pin_acceso?: boolean
   }
 
-  export type pasantesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pasante" | "nombre" | "apellido" | "carnet_identidad" | "correo" | "telefono" | "institucion" | "createdAt" | "updatedAt" | "estado", ExtArgs["result"]["pasantes"]>
+  export type pasantesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pasante" | "nombre" | "apellido" | "carnet_identidad" | "correo" | "telefono" | "institucion" | "createdAt" | "updatedAt" | "estado" | "pin_acceso", ExtArgs["result"]["pasantes"]>
   export type pasantesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    olegiados_asignados_social?: boolean | pasantes$olegiados_asignados_socialArgs<ExtArgs>
+    colegiados_asignados_social?: boolean | pasantes$colegiados_asignados_socialArgs<ExtArgs>
     _count?: boolean | PasantesCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type pasantesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -19700,7 +21074,7 @@ export namespace Prisma {
   export type $pasantesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "pasantes"
     objects: {
-      olegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>[]
+      colegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_pasante: number
@@ -19713,6 +21087,7 @@ export namespace Prisma {
       createdAt: Date | null
       updatedAt: Date | null
       estado: string | null
+      pin_acceso: string | null
     }, ExtArgs["result"]["pasantes"]>
     composites: {}
   }
@@ -20107,7 +21482,7 @@ export namespace Prisma {
    */
   export interface Prisma__pasantesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    olegiados_asignados_social<T extends pasantes$olegiados_asignados_socialArgs<ExtArgs> = {}>(args?: Subset<T, pasantes$olegiados_asignados_socialArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    colegiados_asignados_social<T extends pasantes$colegiados_asignados_socialArgs<ExtArgs> = {}>(args?: Subset<T, pasantes$colegiados_asignados_socialArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -20147,6 +21522,7 @@ export namespace Prisma {
     readonly createdAt: FieldRef<"pasantes", 'DateTime'>
     readonly updatedAt: FieldRef<"pasantes", 'DateTime'>
     readonly estado: FieldRef<"pasantes", 'String'>
+    readonly pin_acceso: FieldRef<"pasantes", 'String'>
   }
     
 
@@ -20535,9 +21911,9 @@ export namespace Prisma {
   }
 
   /**
-   * pasantes.olegiados_asignados_social
+   * pasantes.colegiados_asignados_social
    */
-  export type pasantes$olegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type pasantes$colegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the colegiados_asignados_social
      */
@@ -24153,7 +25529,10 @@ export namespace Prisma {
     fecha_inicio: 'fecha_inicio',
     fecha_fin: 'fecha_fin',
     estado: 'estado',
-    tipo: 'tipo'
+    tipo: 'tipo',
+    latitud: 'latitud',
+    longitud: 'longitud',
+    radio_metros: 'radio_metros'
   };
 
   export type Actividades_socialesScalarFieldEnum = (typeof Actividades_socialesScalarFieldEnum)[keyof typeof Actividades_socialesScalarFieldEnum]
@@ -24199,7 +25578,8 @@ export namespace Prisma {
     especialidades: 'especialidades',
     fecha_inscripcion: 'fecha_inscripcion',
     fecha_renovacion: 'fecha_renovacion',
-    estado: 'estado'
+    estado: 'estado',
+    pin_acceso: 'pin_acceso'
   };
 
   export type ColegiadosScalarFieldEnum = (typeof ColegiadosScalarFieldEnum)[keyof typeof ColegiadosScalarFieldEnum]
@@ -24210,10 +25590,24 @@ export namespace Prisma {
     id_actividad_social: 'id_actividad_social',
     id_colegiado: 'id_colegiado',
     id_invitado: 'id_invitado',
-    id_pasante: 'id_pasante'
+    id_pasante: 'id_pasante',
+    total_horas: 'total_horas',
+    horas_meta: 'horas_meta'
   };
 
   export type Colegiados_asignados_socialScalarFieldEnum = (typeof Colegiados_asignados_socialScalarFieldEnum)[keyof typeof Colegiados_asignados_socialScalarFieldEnum]
+
+
+  export const Asistencia_social_diariaScalarFieldEnum: {
+    id_asistencia_diaria: 'id_asistencia_diaria',
+    id_asignacion: 'id_asignacion',
+    fecha_marcaje: 'fecha_marcaje',
+    hora_entrada: 'hora_entrada',
+    hora_salida: 'hora_salida',
+    horas_ganadas: 'horas_ganadas'
+  };
+
+  export type Asistencia_social_diariaScalarFieldEnum = (typeof Asistencia_social_diariaScalarFieldEnum)[keyof typeof Asistencia_social_diariaScalarFieldEnum]
 
 
   export const Documentos_colegiadosScalarFieldEnum: {
@@ -24301,7 +25695,8 @@ export namespace Prisma {
     institucion: 'institucion',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
-    estado: 'estado'
+    estado: 'estado',
+    pin_acceso: 'pin_acceso'
   };
 
   export type PasantesScalarFieldEnum = (typeof PasantesScalarFieldEnum)[keyof typeof PasantesScalarFieldEnum]
@@ -24432,6 +25827,20 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Float'
+   */
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+  /**
+   * Reference to a field of type 'Float[]'
+   */
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
@@ -24449,20 +25858,6 @@ export namespace Prisma {
    * Reference to a field of type 'RolUsuario[]'
    */
   export type ListEnumRolUsuarioFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RolUsuario[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float'
-   */
-  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
-    
-
-
-  /**
-   * Reference to a field of type 'Float[]'
-   */
-  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
   /**
    * Deep Input Types
@@ -24702,6 +26097,9 @@ export namespace Prisma {
     fecha_fin?: DateTimeNullableFilter<"actividades_sociales"> | Date | string | null
     estado?: StringNullableFilter<"actividades_sociales"> | string | null
     tipo?: StringNullableFilter<"actividades_sociales"> | string | null
+    latitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    longitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    radio_metros?: IntNullableFilter<"actividades_sociales"> | number | null
     convenio?: XOR<ConvenioNullableScalarRelationFilter, convenioWhereInput> | null
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }
@@ -24717,6 +26115,9 @@ export namespace Prisma {
     fecha_fin?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     tipo?: SortOrderInput | SortOrder
+    latitud?: SortOrderInput | SortOrder
+    longitud?: SortOrderInput | SortOrder
+    radio_metros?: SortOrderInput | SortOrder
     convenio?: convenioOrderByWithRelationInput
     colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
   }
@@ -24735,6 +26136,9 @@ export namespace Prisma {
     fecha_fin?: DateTimeNullableFilter<"actividades_sociales"> | Date | string | null
     estado?: StringNullableFilter<"actividades_sociales"> | string | null
     tipo?: StringNullableFilter<"actividades_sociales"> | string | null
+    latitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    longitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    radio_metros?: IntNullableFilter<"actividades_sociales"> | number | null
     convenio?: XOR<ConvenioNullableScalarRelationFilter, convenioWhereInput> | null
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }, "id_actividad_social">
@@ -24750,6 +26154,9 @@ export namespace Prisma {
     fecha_fin?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
     tipo?: SortOrderInput | SortOrder
+    latitud?: SortOrderInput | SortOrder
+    longitud?: SortOrderInput | SortOrder
+    radio_metros?: SortOrderInput | SortOrder
     _count?: actividades_socialesCountOrderByAggregateInput
     _avg?: actividades_socialesAvgOrderByAggregateInput
     _max?: actividades_socialesMaxOrderByAggregateInput
@@ -24771,6 +26178,9 @@ export namespace Prisma {
     fecha_fin?: DateTimeNullableWithAggregatesFilter<"actividades_sociales"> | Date | string | null
     estado?: StringNullableWithAggregatesFilter<"actividades_sociales"> | string | null
     tipo?: StringNullableWithAggregatesFilter<"actividades_sociales"> | string | null
+    latitud?: FloatNullableWithAggregatesFilter<"actividades_sociales"> | number | null
+    longitud?: FloatNullableWithAggregatesFilter<"actividades_sociales"> | number | null
+    radio_metros?: IntNullableWithAggregatesFilter<"actividades_sociales"> | number | null
   }
 
   export type convenioWhereInput = {
@@ -24941,6 +26351,7 @@ export namespace Prisma {
     fecha_inscripcion?: DateTimeNullableFilter<"colegiados"> | Date | string | null
     fecha_renovacion?: DateTimeNullableFilter<"colegiados"> | Date | string | null
     estado?: StringNullableFilter<"colegiados"> | string | null
+    pin_acceso?: StringNullableFilter<"colegiados"> | string | null
     asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
     documentos_colegiados?: Documentos_colegiadosListRelationFilter
@@ -24959,6 +26370,7 @@ export namespace Prisma {
     fecha_inscripcion?: SortOrderInput | SortOrder
     fecha_renovacion?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
+    pin_acceso?: SortOrderInput | SortOrder
     asistencias_actividad?: asistencias_actividadOrderByRelationAggregateInput
     colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
     documentos_colegiados?: documentos_colegiadosOrderByRelationAggregateInput
@@ -24980,6 +26392,7 @@ export namespace Prisma {
     fecha_inscripcion?: DateTimeNullableFilter<"colegiados"> | Date | string | null
     fecha_renovacion?: DateTimeNullableFilter<"colegiados"> | Date | string | null
     estado?: StringNullableFilter<"colegiados"> | string | null
+    pin_acceso?: StringNullableFilter<"colegiados"> | string | null
     asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
     documentos_colegiados?: Documentos_colegiadosListRelationFilter
@@ -24998,6 +26411,7 @@ export namespace Prisma {
     fecha_inscripcion?: SortOrderInput | SortOrder
     fecha_renovacion?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
+    pin_acceso?: SortOrderInput | SortOrder
     _count?: colegiadosCountOrderByAggregateInput
     _avg?: colegiadosAvgOrderByAggregateInput
     _max?: colegiadosMaxOrderByAggregateInput
@@ -25019,6 +26433,7 @@ export namespace Prisma {
     fecha_inscripcion?: DateTimeNullableWithAggregatesFilter<"colegiados"> | Date | string | null
     fecha_renovacion?: DateTimeNullableWithAggregatesFilter<"colegiados"> | Date | string | null
     estado?: StringNullableWithAggregatesFilter<"colegiados"> | string | null
+    pin_acceso?: StringNullableWithAggregatesFilter<"colegiados"> | string | null
   }
 
   export type colegiados_asignados_socialWhereInput = {
@@ -25030,10 +26445,13 @@ export namespace Prisma {
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
+    horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
     invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
     pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
+    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
   }
 
   export type colegiados_asignados_socialOrderByWithRelationInput = {
@@ -25042,10 +26460,13 @@ export namespace Prisma {
     id_colegiado?: SortOrderInput | SortOrder
     id_invitado?: SortOrderInput | SortOrder
     id_pasante?: SortOrderInput | SortOrder
+    total_horas?: SortOrderInput | SortOrder
+    horas_meta?: SortOrderInput | SortOrder
     invitados?: invitadosOrderByWithRelationInput
     actividades_sociales?: actividades_socialesOrderByWithRelationInput
     colegiados?: colegiadosOrderByWithRelationInput
     pasantes?: pasantesOrderByWithRelationInput
+    asistencia_social_diaria?: asistencia_social_diariaOrderByRelationAggregateInput
   }
 
   export type colegiados_asignados_socialWhereUniqueInput = Prisma.AtLeast<{
@@ -25057,10 +26478,13 @@ export namespace Prisma {
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
+    horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
     invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
     pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
+    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
   }, "id_asignacion">
 
   export type colegiados_asignados_socialOrderByWithAggregationInput = {
@@ -25069,6 +26493,8 @@ export namespace Prisma {
     id_colegiado?: SortOrderInput | SortOrder
     id_invitado?: SortOrderInput | SortOrder
     id_pasante?: SortOrderInput | SortOrder
+    total_horas?: SortOrderInput | SortOrder
+    horas_meta?: SortOrderInput | SortOrder
     _count?: colegiados_asignados_socialCountOrderByAggregateInput
     _avg?: colegiados_asignados_socialAvgOrderByAggregateInput
     _max?: colegiados_asignados_socialMaxOrderByAggregateInput
@@ -25085,6 +26511,70 @@ export namespace Prisma {
     id_colegiado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
+    total_horas?: FloatNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
+    horas_meta?: FloatNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
+  }
+
+  export type asistencia_social_diariaWhereInput = {
+    AND?: asistencia_social_diariaWhereInput | asistencia_social_diariaWhereInput[]
+    OR?: asistencia_social_diariaWhereInput[]
+    NOT?: asistencia_social_diariaWhereInput | asistencia_social_diariaWhereInput[]
+    id_asistencia_diaria?: IntFilter<"asistencia_social_diaria"> | number
+    id_asignacion?: IntFilter<"asistencia_social_diaria"> | number
+    fecha_marcaje?: DateTimeFilter<"asistencia_social_diaria"> | Date | string
+    hora_entrada?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    hora_salida?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    horas_ganadas?: FloatNullableFilter<"asistencia_social_diaria"> | number | null
+    colegiados_asignados_social?: XOR<Colegiados_asignados_socialScalarRelationFilter, colegiados_asignados_socialWhereInput>
+  }
+
+  export type asistencia_social_diariaOrderByWithRelationInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    fecha_marcaje?: SortOrder
+    hora_entrada?: SortOrderInput | SortOrder
+    hora_salida?: SortOrderInput | SortOrder
+    horas_ganadas?: SortOrderInput | SortOrder
+    colegiados_asignados_social?: colegiados_asignados_socialOrderByWithRelationInput
+  }
+
+  export type asistencia_social_diariaWhereUniqueInput = Prisma.AtLeast<{
+    id_asistencia_diaria?: number
+    AND?: asistencia_social_diariaWhereInput | asistencia_social_diariaWhereInput[]
+    OR?: asistencia_social_diariaWhereInput[]
+    NOT?: asistencia_social_diariaWhereInput | asistencia_social_diariaWhereInput[]
+    id_asignacion?: IntFilter<"asistencia_social_diaria"> | number
+    fecha_marcaje?: DateTimeFilter<"asistencia_social_diaria"> | Date | string
+    hora_entrada?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    hora_salida?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    horas_ganadas?: FloatNullableFilter<"asistencia_social_diaria"> | number | null
+    colegiados_asignados_social?: XOR<Colegiados_asignados_socialScalarRelationFilter, colegiados_asignados_socialWhereInput>
+  }, "id_asistencia_diaria">
+
+  export type asistencia_social_diariaOrderByWithAggregationInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    fecha_marcaje?: SortOrder
+    hora_entrada?: SortOrderInput | SortOrder
+    hora_salida?: SortOrderInput | SortOrder
+    horas_ganadas?: SortOrderInput | SortOrder
+    _count?: asistencia_social_diariaCountOrderByAggregateInput
+    _avg?: asistencia_social_diariaAvgOrderByAggregateInput
+    _max?: asistencia_social_diariaMaxOrderByAggregateInput
+    _min?: asistencia_social_diariaMinOrderByAggregateInput
+    _sum?: asistencia_social_diariaSumOrderByAggregateInput
+  }
+
+  export type asistencia_social_diariaScalarWhereWithAggregatesInput = {
+    AND?: asistencia_social_diariaScalarWhereWithAggregatesInput | asistencia_social_diariaScalarWhereWithAggregatesInput[]
+    OR?: asistencia_social_diariaScalarWhereWithAggregatesInput[]
+    NOT?: asistencia_social_diariaScalarWhereWithAggregatesInput | asistencia_social_diariaScalarWhereWithAggregatesInput[]
+    id_asistencia_diaria?: IntWithAggregatesFilter<"asistencia_social_diaria"> | number
+    id_asignacion?: IntWithAggregatesFilter<"asistencia_social_diaria"> | number
+    fecha_marcaje?: DateTimeWithAggregatesFilter<"asistencia_social_diaria"> | Date | string
+    hora_entrada?: DateTimeNullableWithAggregatesFilter<"asistencia_social_diaria"> | Date | string | null
+    hora_salida?: DateTimeNullableWithAggregatesFilter<"asistencia_social_diaria"> | Date | string | null
+    horas_ganadas?: FloatNullableWithAggregatesFilter<"asistencia_social_diaria"> | number | null
   }
 
   export type documentos_colegiadosWhereInput = {
@@ -25500,7 +26990,8 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     estado?: StringNullableFilter<"pasantes"> | string | null
-    olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    pin_acceso?: StringNullableFilter<"pasantes"> | string | null
+    colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }
 
   export type pasantesOrderByWithRelationInput = {
@@ -25514,7 +27005,8 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
-    olegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
+    pin_acceso?: SortOrderInput | SortOrder
+    colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
   }
 
   export type pasantesWhereUniqueInput = Prisma.AtLeast<{
@@ -25531,7 +27023,8 @@ export namespace Prisma {
     createdAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"pasantes"> | Date | string | null
     estado?: StringNullableFilter<"pasantes"> | string | null
-    olegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    pin_acceso?: StringNullableFilter<"pasantes"> | string | null
+    colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
   }, "id_pasante" | "carnet_identidad">
 
   export type pasantesOrderByWithAggregationInput = {
@@ -25545,6 +27038,7 @@ export namespace Prisma {
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
     estado?: SortOrderInput | SortOrder
+    pin_acceso?: SortOrderInput | SortOrder
     _count?: pasantesCountOrderByAggregateInput
     _avg?: pasantesAvgOrderByAggregateInput
     _max?: pasantesMaxOrderByAggregateInput
@@ -25566,6 +27060,7 @@ export namespace Prisma {
     createdAt?: DateTimeNullableWithAggregatesFilter<"pasantes"> | Date | string | null
     updatedAt?: DateTimeNullableWithAggregatesFilter<"pasantes"> | Date | string | null
     estado?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
+    pin_acceso?: StringNullableWithAggregatesFilter<"pasantes"> | string | null
   }
 
   export type rolesWhereInput = {
@@ -25998,6 +27493,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
     convenio?: convenioCreateNestedOneWithoutActividades_socialesInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutActividades_socialesInput
   }
@@ -26013,6 +27511,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutActividades_socialesInput
   }
 
@@ -26025,6 +27526,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
     convenio?: convenioUpdateOneWithoutActividades_socialesNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutActividades_socialesNestedInput
   }
@@ -26040,6 +27544,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutActividades_socialesNestedInput
   }
 
@@ -26054,6 +27561,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
   }
 
   export type actividades_socialesUpdateManyMutationInput = {
@@ -26065,6 +27575,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type actividades_socialesUncheckedUpdateManyInput = {
@@ -26078,6 +27591,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type convenioCreateInput = {
@@ -26255,6 +27771,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -26273,6 +27790,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -26290,6 +27808,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -26308,6 +27827,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
@@ -26326,6 +27846,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
   }
 
   export type colegiadosUpdateManyMutationInput = {
@@ -26338,6 +27859,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiadosUncheckedUpdateManyInput = {
@@ -26351,13 +27873,17 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiados_asignados_socialCreateInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
-    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateInput = {
@@ -26366,13 +27892,19 @@ export namespace Prisma {
     id_colegiado?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUpdateInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
-    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateInput = {
@@ -26381,6 +27913,9 @@ export namespace Prisma {
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialCreateManyInput = {
@@ -26389,10 +27924,13 @@ export namespace Prisma {
     id_colegiado?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
   }
 
   export type colegiados_asignados_socialUpdateManyMutationInput = {
-
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyInput = {
@@ -26401,6 +27939,67 @@ export namespace Prisma {
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencia_social_diariaCreateInput = {
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+    colegiados_asignados_social: colegiados_asignados_socialCreateNestedOneWithoutAsistencia_social_diariaInput
+  }
+
+  export type asistencia_social_diariaUncheckedCreateInput = {
+    id_asistencia_diaria?: number
+    id_asignacion: number
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+  }
+
+  export type asistencia_social_diariaUpdateInput = {
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
+    colegiados_asignados_social?: colegiados_asignados_socialUpdateOneRequiredWithoutAsistencia_social_diariaNestedInput
+  }
+
+  export type asistencia_social_diariaUncheckedUpdateInput = {
+    id_asistencia_diaria?: IntFieldUpdateOperationsInput | number
+    id_asignacion?: IntFieldUpdateOperationsInput | number
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencia_social_diariaCreateManyInput = {
+    id_asistencia_diaria?: number
+    id_asignacion: number
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+  }
+
+  export type asistencia_social_diariaUpdateManyMutationInput = {
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencia_social_diariaUncheckedUpdateManyInput = {
+    id_asistencia_diaria?: IntFieldUpdateOperationsInput | number
+    id_asignacion?: IntFieldUpdateOperationsInput | number
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type documentos_colegiadosCreateInput = {
@@ -26799,7 +28398,8 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     estado?: string | null
-    olegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutPasantesInput
+    pin_acceso?: string | null
+    colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutPasantesInput
   }
 
   export type pasantesUncheckedCreateInput = {
@@ -26813,7 +28413,8 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     estado?: string | null
-    olegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutPasantesInput
+    pin_acceso?: string | null
+    colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutPasantesInput
   }
 
   export type pasantesUpdateInput = {
@@ -26826,7 +28427,8 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
-    olegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutPasantesNestedInput
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
+    colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutPasantesNestedInput
   }
 
   export type pasantesUncheckedUpdateInput = {
@@ -26840,7 +28442,8 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
-    olegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesNestedInput
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
+    colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesNestedInput
   }
 
   export type pasantesCreateManyInput = {
@@ -26854,6 +28457,7 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
   }
 
   export type pasantesUpdateManyMutationInput = {
@@ -26866,6 +28470,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type pasantesUncheckedUpdateManyInput = {
@@ -26879,6 +28484,7 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type rolesCreateInput = {
@@ -27427,6 +29033,17 @@ export namespace Prisma {
     id_invitado?: SortOrder
   }
 
+  export type FloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type ConvenioNullableScalarRelationFilter = {
     is?: convenioWhereInput | null
     isNot?: convenioWhereInput | null
@@ -27453,11 +29070,17 @@ export namespace Prisma {
     fecha_fin?: SortOrder
     estado?: SortOrder
     tipo?: SortOrder
+    latitud?: SortOrder
+    longitud?: SortOrder
+    radio_metros?: SortOrder
   }
 
   export type actividades_socialesAvgOrderByAggregateInput = {
     id_actividad_social?: SortOrder
     id_convenio?: SortOrder
+    latitud?: SortOrder
+    longitud?: SortOrder
+    radio_metros?: SortOrder
   }
 
   export type actividades_socialesMaxOrderByAggregateInput = {
@@ -27471,6 +29094,9 @@ export namespace Prisma {
     fecha_fin?: SortOrder
     estado?: SortOrder
     tipo?: SortOrder
+    latitud?: SortOrder
+    longitud?: SortOrder
+    radio_metros?: SortOrder
   }
 
   export type actividades_socialesMinOrderByAggregateInput = {
@@ -27484,11 +29110,33 @@ export namespace Prisma {
     fecha_fin?: SortOrder
     estado?: SortOrder
     tipo?: SortOrder
+    latitud?: SortOrder
+    longitud?: SortOrder
+    radio_metros?: SortOrder
   }
 
   export type actividades_socialesSumOrderByAggregateInput = {
     id_actividad_social?: SortOrder
     id_convenio?: SortOrder
+    latitud?: SortOrder
+    longitud?: SortOrder
+    radio_metros?: SortOrder
+  }
+
+  export type FloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
   }
 
   export type Actividades_socialesListRelationFilter = {
@@ -27622,6 +29270,7 @@ export namespace Prisma {
     fecha_inscripcion?: SortOrder
     fecha_renovacion?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type colegiadosAvgOrderByAggregateInput = {
@@ -27639,6 +29288,7 @@ export namespace Prisma {
     fecha_inscripcion?: SortOrder
     fecha_renovacion?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type colegiadosMinOrderByAggregateInput = {
@@ -27652,6 +29302,7 @@ export namespace Prisma {
     fecha_inscripcion?: SortOrder
     fecha_renovacion?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type colegiadosSumOrderByAggregateInput = {
@@ -27668,12 +29319,24 @@ export namespace Prisma {
     isNot?: pasantesWhereInput | null
   }
 
+  export type Asistencia_social_diariaListRelationFilter = {
+    every?: asistencia_social_diariaWhereInput
+    some?: asistencia_social_diariaWhereInput
+    none?: asistencia_social_diariaWhereInput
+  }
+
+  export type asistencia_social_diariaOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type colegiados_asignados_socialCountOrderByAggregateInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
     id_pasante?: SortOrder
+    total_horas?: SortOrder
+    horas_meta?: SortOrder
   }
 
   export type colegiados_asignados_socialAvgOrderByAggregateInput = {
@@ -27682,6 +29345,8 @@ export namespace Prisma {
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
     id_pasante?: SortOrder
+    total_horas?: SortOrder
+    horas_meta?: SortOrder
   }
 
   export type colegiados_asignados_socialMaxOrderByAggregateInput = {
@@ -27690,6 +29355,8 @@ export namespace Prisma {
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
     id_pasante?: SortOrder
+    total_horas?: SortOrder
+    horas_meta?: SortOrder
   }
 
   export type colegiados_asignados_socialMinOrderByAggregateInput = {
@@ -27698,6 +29365,8 @@ export namespace Prisma {
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
     id_pasante?: SortOrder
+    total_horas?: SortOrder
+    horas_meta?: SortOrder
   }
 
   export type colegiados_asignados_socialSumOrderByAggregateInput = {
@@ -27706,6 +29375,77 @@ export namespace Prisma {
     id_colegiado?: SortOrder
     id_invitado?: SortOrder
     id_pasante?: SortOrder
+    total_horas?: SortOrder
+    horas_meta?: SortOrder
+  }
+
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type Colegiados_asignados_socialScalarRelationFilter = {
+    is?: colegiados_asignados_socialWhereInput
+    isNot?: colegiados_asignados_socialWhereInput
+  }
+
+  export type asistencia_social_diariaCountOrderByAggregateInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    fecha_marcaje?: SortOrder
+    hora_entrada?: SortOrder
+    hora_salida?: SortOrder
+    horas_ganadas?: SortOrder
+  }
+
+  export type asistencia_social_diariaAvgOrderByAggregateInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    horas_ganadas?: SortOrder
+  }
+
+  export type asistencia_social_diariaMaxOrderByAggregateInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    fecha_marcaje?: SortOrder
+    hora_entrada?: SortOrder
+    hora_salida?: SortOrder
+    horas_ganadas?: SortOrder
+  }
+
+  export type asistencia_social_diariaMinOrderByAggregateInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    fecha_marcaje?: SortOrder
+    hora_entrada?: SortOrder
+    hora_salida?: SortOrder
+    horas_ganadas?: SortOrder
+  }
+
+  export type asistencia_social_diariaSumOrderByAggregateInput = {
+    id_asistencia_diaria?: SortOrder
+    id_asignacion?: SortOrder
+    horas_ganadas?: SortOrder
+  }
+
+  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type documentos_colegiadosCountOrderByAggregateInput = {
@@ -27959,17 +29699,6 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
-  }
-
   export type UsuariosScalarRelationFilter = {
     is?: usuariosWhereInput
     isNot?: usuariosWhereInput
@@ -28030,20 +29759,6 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
-  export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
-  }
-
   export type pasantesCountOrderByAggregateInput = {
     id_pasante?: SortOrder
     nombre?: SortOrder
@@ -28055,6 +29770,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type pasantesAvgOrderByAggregateInput = {
@@ -28072,6 +29788,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type pasantesMinOrderByAggregateInput = {
@@ -28085,6 +29802,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     estado?: SortOrder
+    pin_acceso?: SortOrder
   }
 
   export type pasantesSumOrderByAggregateInput = {
@@ -28551,6 +30269,14 @@ export namespace Prisma {
     connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
   }
 
+  export type NullableFloatFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type convenioUpdateOneWithoutActividades_socialesNestedInput = {
     create?: XOR<convenioCreateWithoutActividades_socialesInput, convenioUncheckedCreateWithoutActividades_socialesInput>
     connectOrCreate?: convenioCreateOrConnectWithoutActividades_socialesInput
@@ -28875,10 +30601,24 @@ export namespace Prisma {
     connect?: colegiadosWhereUniqueInput
   }
 
-  export type pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput = {
-    create?: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
-    connectOrCreate?: pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput
+  export type pasantesCreateNestedOneWithoutColegiados_asignados_socialInput = {
+    create?: XOR<pasantesCreateWithoutColegiados_asignados_socialInput, pasantesUncheckedCreateWithoutColegiados_asignados_socialInput>
+    connectOrCreate?: pasantesCreateOrConnectWithoutColegiados_asignados_socialInput
     connect?: pasantesWhereUniqueInput
+  }
+
+  export type asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+  }
+
+  export type asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
   }
 
   export type invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput = {
@@ -28911,14 +30651,60 @@ export namespace Prisma {
     update?: XOR<XOR<colegiadosUpdateToOneWithWhereWithoutColegiados_asignados_socialInput, colegiadosUpdateWithoutColegiados_asignados_socialInput>, colegiadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
   }
 
-  export type pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput = {
-    create?: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
-    connectOrCreate?: pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput
-    upsert?: pasantesUpsertWithoutOlegiados_asignados_socialInput
+  export type pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput = {
+    create?: XOR<pasantesCreateWithoutColegiados_asignados_socialInput, pasantesUncheckedCreateWithoutColegiados_asignados_socialInput>
+    connectOrCreate?: pasantesCreateOrConnectWithoutColegiados_asignados_socialInput
+    upsert?: pasantesUpsertWithoutColegiados_asignados_socialInput
     disconnect?: pasantesWhereInput | boolean
     delete?: pasantesWhereInput | boolean
     connect?: pasantesWhereUniqueInput
-    update?: XOR<XOR<pasantesUpdateToOneWithWhereWithoutOlegiados_asignados_socialInput, pasantesUpdateWithoutOlegiados_asignados_socialInput>, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
+    update?: XOR<XOR<pasantesUpdateToOneWithWhereWithoutColegiados_asignados_socialInput, pasantesUpdateWithoutColegiados_asignados_socialInput>, pasantesUncheckedUpdateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    upsert?: asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    set?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    disconnect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    delete?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    update?: asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    updateMany?: asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput[]
+    deleteMany?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+  }
+
+  export type asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    upsert?: asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    set?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    disconnect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    delete?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    update?: asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    updateMany?: asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput[]
+    deleteMany?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+  }
+
+  export type colegiados_asignados_socialCreateNestedOneWithoutAsistencia_social_diariaInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedCreateWithoutAsistencia_social_diariaInput>
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutAsistencia_social_diariaInput
+    connect?: colegiados_asignados_socialWhereUniqueInput
+  }
+
+  export type DateTimeFieldUpdateOperationsInput = {
+    set?: Date | string
+  }
+
+  export type colegiados_asignados_socialUpdateOneRequiredWithoutAsistencia_social_diariaNestedInput = {
+    create?: XOR<colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedCreateWithoutAsistencia_social_diariaInput>
+    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutAsistencia_social_diariaInput
+    upsert?: colegiados_asignados_socialUpsertWithoutAsistencia_social_diariaInput
+    connect?: colegiados_asignados_socialWhereUniqueInput
+    update?: XOR<XOR<colegiados_asignados_socialUpdateToOneWithWhereWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUpdateWithoutAsistencia_social_diariaInput>, colegiados_asignados_socialUncheckedUpdateWithoutAsistencia_social_diariaInput>
   }
 
   export type colegiadosCreateNestedOneWithoutDocumentos_colegiadosInput = {
@@ -29151,10 +30937,6 @@ export namespace Prisma {
 
   export type StringFieldUpdateOperationsInput = {
     set?: string
-  }
-
-  export type DateTimeFieldUpdateOperationsInput = {
-    set?: Date | string
   }
 
   export type usuariosUpdateOneRequiredWithoutAuditoriaNestedInput = {
@@ -29642,6 +31424,47 @@ export namespace Prisma {
     _max?: NestedDecimalNullableFilter<$PrismaModel>
   }
 
+  export type NestedFloatNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedFloatNullableFilter<$PrismaModel>
+    _min?: NestedFloatNullableFilter<$PrismaModel>
+    _max?: NestedFloatNullableFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedDateTimeFilter<$PrismaModel>
+    _max?: NestedDateTimeFilter<$PrismaModel>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29654,17 +31477,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
@@ -29682,20 +31494,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedStringFilter<$PrismaModel>
     _max?: NestedStringFilter<$PrismaModel>
-  }
-
-  export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeWithAggregatesFilter<$PrismaModel> | Date | string
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedDateTimeFilter<$PrismaModel>
-    _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
   export type NestedBoolNullableFilter<$PrismaModel = never> = {
@@ -29954,6 +31752,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -29971,6 +31770,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -30039,6 +31839,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -30056,6 +31857,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
@@ -30149,6 +31951,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -30166,6 +31969,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -30289,6 +32093,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -30306,6 +32111,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
@@ -30337,9 +32143,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialCreateWithoutActividades_socialesInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
-    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutActividades_socialesInput = {
@@ -30347,6 +32156,9 @@ export namespace Prisma {
     id_colegiado?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutActividades_socialesInput = {
@@ -30414,6 +32226,8 @@ export namespace Prisma {
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
+    total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
+    horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
   }
 
   export type actividades_socialesCreateWithoutConvenioInput = {
@@ -30425,6 +32239,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutActividades_socialesInput
   }
 
@@ -30438,6 +32255,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutActividades_socialesInput
   }
 
@@ -30481,6 +32301,9 @@ export namespace Prisma {
     fecha_fin?: DateTimeNullableFilter<"actividades_sociales"> | Date | string | null
     estado?: StringNullableFilter<"actividades_sociales"> | string | null
     tipo?: StringNullableFilter<"actividades_sociales"> | string | null
+    latitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    longitud?: FloatNullableFilter<"actividades_sociales"> | number | null
+    radio_metros?: IntNullableFilter<"actividades_sociales"> | number | null
   }
 
   export type usuariosCreateWithoutDestinatarioInput = {
@@ -30581,9 +32404,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialCreateWithoutColegiadosInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
-    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutColegiadosInput = {
@@ -30591,6 +32417,9 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutColegiadosInput = {
@@ -30826,6 +32655,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
     convenio?: convenioCreateNestedOneWithoutActividades_socialesInput
   }
 
@@ -30840,6 +32672,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
   }
 
   export type actividades_socialesCreateOrConnectWithoutColegiados_asignados_socialInput = {
@@ -30857,6 +32692,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -30874,6 +32710,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -30885,7 +32722,7 @@ export namespace Prisma {
     create: XOR<colegiadosCreateWithoutColegiados_asignados_socialInput, colegiadosUncheckedCreateWithoutColegiados_asignados_socialInput>
   }
 
-  export type pasantesCreateWithoutOlegiados_asignados_socialInput = {
+  export type pasantesCreateWithoutColegiados_asignados_socialInput = {
     nombre?: string | null
     apellido?: string | null
     carnet_identidad?: string | null
@@ -30895,9 +32732,10 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
   }
 
-  export type pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput = {
+  export type pasantesUncheckedCreateWithoutColegiados_asignados_socialInput = {
     id_pasante?: number
     nombre?: string | null
     apellido?: string | null
@@ -30908,11 +32746,37 @@ export namespace Prisma {
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
   }
 
-  export type pasantesCreateOrConnectWithoutOlegiados_asignados_socialInput = {
+  export type pasantesCreateOrConnectWithoutColegiados_asignados_socialInput = {
     where: pasantesWhereUniqueInput
-    create: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+    create: XOR<pasantesCreateWithoutColegiados_asignados_socialInput, pasantesUncheckedCreateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput = {
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+  }
+
+  export type asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput = {
+    id_asistencia_diaria?: number
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+  }
+
+  export type asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaWhereUniqueInput
+    create: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope = {
+    data: asistencia_social_diariaCreateManyColegiados_asignados_socialInput | asistencia_social_diariaCreateManyColegiados_asignados_socialInput[]
+    skipDuplicates?: boolean
   }
 
   export type invitadosUpsertWithoutColegiados_asignados_socialInput = {
@@ -30963,6 +32827,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
     convenio?: convenioUpdateOneWithoutActividades_socialesNestedInput
   }
 
@@ -30977,6 +32844,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiadosUpsertWithoutColegiados_asignados_socialInput = {
@@ -31000,6 +32870,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -31017,24 +32888,25 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
-  export type pasantesUpsertWithoutOlegiados_asignados_socialInput = {
-    update: XOR<pasantesUpdateWithoutOlegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
-    create: XOR<pasantesCreateWithoutOlegiados_asignados_socialInput, pasantesUncheckedCreateWithoutOlegiados_asignados_socialInput>
+  export type pasantesUpsertWithoutColegiados_asignados_socialInput = {
+    update: XOR<pasantesUpdateWithoutColegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutColegiados_asignados_socialInput>
+    create: XOR<pasantesCreateWithoutColegiados_asignados_socialInput, pasantesUncheckedCreateWithoutColegiados_asignados_socialInput>
     where?: pasantesWhereInput
   }
 
-  export type pasantesUpdateToOneWithWhereWithoutOlegiados_asignados_socialInput = {
+  export type pasantesUpdateToOneWithWhereWithoutColegiados_asignados_socialInput = {
     where?: pasantesWhereInput
-    data: XOR<pasantesUpdateWithoutOlegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput>
+    data: XOR<pasantesUpdateWithoutColegiados_asignados_socialInput, pasantesUncheckedUpdateWithoutColegiados_asignados_socialInput>
   }
 
-  export type pasantesUpdateWithoutOlegiados_asignados_socialInput = {
+  export type pasantesUpdateWithoutColegiados_asignados_socialInput = {
     nombre?: NullableStringFieldUpdateOperationsInput | string | null
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
     carnet_identidad?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31044,9 +32916,10 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type pasantesUncheckedUpdateWithoutOlegiados_asignados_socialInput = {
+  export type pasantesUncheckedUpdateWithoutColegiados_asignados_socialInput = {
     id_pasante?: IntFieldUpdateOperationsInput | number
     nombre?: NullableStringFieldUpdateOperationsInput | string | null
     apellido?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31057,6 +32930,89 @@ export namespace Prisma {
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaWhereUniqueInput
+    update: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
+    create: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaWhereUniqueInput
+    data: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaScalarWhereInput
+    data: XOR<asistencia_social_diariaUpdateManyMutationInput, asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialInput>
+  }
+
+  export type asistencia_social_diariaScalarWhereInput = {
+    AND?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+    OR?: asistencia_social_diariaScalarWhereInput[]
+    NOT?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+    id_asistencia_diaria?: IntFilter<"asistencia_social_diaria"> | number
+    id_asignacion?: IntFilter<"asistencia_social_diaria"> | number
+    fecha_marcaje?: DateTimeFilter<"asistencia_social_diaria"> | Date | string
+    hora_entrada?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    hora_salida?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    horas_ganadas?: FloatNullableFilter<"asistencia_social_diaria"> | number | null
+  }
+
+  export type colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
+    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
+    colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
+  }
+
+  export type colegiados_asignados_socialUncheckedCreateWithoutAsistencia_social_diariaInput = {
+    id_asignacion?: number
+    id_actividad_social?: number | null
+    id_colegiado?: number | null
+    id_invitado?: number | null
+    id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+  }
+
+  export type colegiados_asignados_socialCreateOrConnectWithoutAsistencia_social_diariaInput = {
+    where: colegiados_asignados_socialWhereUniqueInput
+    create: XOR<colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedCreateWithoutAsistencia_social_diariaInput>
+  }
+
+  export type colegiados_asignados_socialUpsertWithoutAsistencia_social_diariaInput = {
+    update: XOR<colegiados_asignados_socialUpdateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedUpdateWithoutAsistencia_social_diariaInput>
+    create: XOR<colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedCreateWithoutAsistencia_social_diariaInput>
+    where?: colegiados_asignados_socialWhereInput
+  }
+
+  export type colegiados_asignados_socialUpdateToOneWithWhereWithoutAsistencia_social_diariaInput = {
+    where?: colegiados_asignados_socialWhereInput
+    data: XOR<colegiados_asignados_socialUpdateWithoutAsistencia_social_diariaInput, colegiados_asignados_socialUncheckedUpdateWithoutAsistencia_social_diariaInput>
+  }
+
+  export type colegiados_asignados_socialUpdateWithoutAsistencia_social_diariaInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
+  }
+
+  export type colegiados_asignados_socialUncheckedUpdateWithoutAsistencia_social_diariaInput = {
+    id_asignacion?: IntFieldUpdateOperationsInput | number
+    id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
+    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type colegiadosCreateWithoutDocumentos_colegiadosInput = {
@@ -31069,6 +33025,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -31086,6 +33043,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -31118,6 +33076,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -31135,6 +33094,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
@@ -31447,6 +33407,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
@@ -31464,6 +33425,7 @@ export namespace Prisma {
     fecha_inscripcion?: Date | string | null
     fecha_renovacion?: Date | string | null
     estado?: string | null
+    pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
@@ -31512,6 +33474,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
@@ -31529,6 +33492,7 @@ export namespace Prisma {
     fecha_inscripcion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     fecha_renovacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
+    pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
@@ -31659,9 +33623,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialCreateWithoutPasantesInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
     invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutPasantesInput = {
@@ -31669,6 +33636,9 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_invitado?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutPasantesInput = {
@@ -32016,9 +33986,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialCreateWithoutInvitadosInput = {
+    total_horas?: number | null
+    horas_meta?: number | null
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
-    pasantes?: pasantesCreateNestedOneWithoutOlegiados_asignados_socialInput
+    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput = {
@@ -32026,6 +33999,9 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput = {
@@ -32201,12 +34177,17 @@ export namespace Prisma {
     id_colegiado?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutActividades_socialesInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
-    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutActividades_socialesInput = {
@@ -32214,6 +34195,9 @@ export namespace Prisma {
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutActividades_socialesInput = {
@@ -32221,6 +34205,8 @@ export namespace Prisma {
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type actividades_socialesCreateManyConvenioInput = {
@@ -32233,6 +34219,9 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     estado?: string | null
     tipo?: string | null
+    latitud?: number | null
+    longitud?: number | null
+    radio_metros?: number | null
   }
 
   export type actividades_socialesUpdateWithoutConvenioInput = {
@@ -32244,6 +34233,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutActividades_socialesNestedInput
   }
 
@@ -32257,6 +34249,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutActividades_socialesNestedInput
   }
 
@@ -32270,6 +34265,9 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     tipo?: NullableStringFieldUpdateOperationsInput | string | null
+    latitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    longitud?: NullableFloatFieldUpdateOperationsInput | number | null
+    radio_metros?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type asistencias_actividadCreateManyColegiadosInput = {
@@ -32282,6 +34280,8 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_invitado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
   }
 
   export type documentos_colegiadosCreateManyColegiadosInput = {
@@ -32327,9 +34327,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialUpdateWithoutColegiadosInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutColegiadosInput = {
@@ -32337,6 +34340,9 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosInput = {
@@ -32344,6 +34350,8 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type documentos_colegiadosUpdateWithoutColegiadosInput = {
@@ -32429,6 +34437,37 @@ export namespace Prisma {
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type asistencia_social_diariaCreateManyColegiados_asignados_socialInput = {
+    id_asistencia_diaria?: number
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
+  }
+
+  export type asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput = {
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput = {
+    id_asistencia_diaria?: IntFieldUpdateOperationsInput | number
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialInput = {
+    id_asistencia_diaria?: IntFieldUpdateOperationsInput | number
+    fecha_marcaje?: DateTimeFieldUpdateOperationsInput | Date | string
+    hora_entrada?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    hora_salida?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    horas_ganadas?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type movimientos_financierosCreateManyOrigen_movimientoInput = {
@@ -32543,12 +34582,17 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_invitado?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutPasantesInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
     invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutPasantesInput = {
@@ -32556,6 +34600,9 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutPasantesInput = {
@@ -32563,6 +34610,8 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type actividades_institucionalesCreateManyUsuariosInput = {
@@ -32730,6 +34779,8 @@ export namespace Prisma {
     id_actividad_social?: number | null
     id_colegiado?: number | null
     id_pasante?: number | null
+    total_horas?: number | null
+    horas_meta?: number | null
   }
 
   export type colegiados_registrados_actividad_institucionalCreateManyInvitadosInput = {
@@ -32744,9 +34795,12 @@ export namespace Prisma {
   }
 
   export type colegiados_asignados_socialUpdateWithoutInvitadosInput = {
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
-    pasantes?: pasantesUpdateOneWithoutOlegiados_asignados_socialNestedInput
+    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutInvitadosInput = {
@@ -32754,6 +34808,9 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosInput = {
@@ -32761,6 +34818,8 @@ export namespace Prisma {
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
+    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
+    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpdateWithoutInvitadosInput = {

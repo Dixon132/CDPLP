@@ -12,14 +12,13 @@ import {
     Calendar,
     CheckCircle,
     XCircle,
-    Clock,
     AlertCircle,
     Plus,
-    Eye,
-    Edit,
+    Ban,
     Receipt,
     TrendingUp,
-    Banknote
+    Banknote,
+    Eye
 } from 'lucide-react';
 
 const Pagos = () => {
@@ -42,45 +41,38 @@ const Pagos = () => {
     }, [id])
 
     const getEstadoIcon = (estado) => {
-        switch (estado?.toLowerCase()) {
-            case 'pagado':
-            case 'completado':
-            case 'aprobado':
+        switch (estado?.toUpperCase()) {
+            case 'REALIZADO':
                 return <CheckCircle className="w-4 h-4 text-green-500" />;
-            case 'rechazado':
-            case 'cancelado':
-                return <XCircle className="w-4 h-4 text-red-500" />;
-            case 'pendiente':
-                return <Clock className="w-4 h-4 text-yellow-500" />;
+            case 'ANULADO':
+                return <Ban className="w-4 h-4 text-red-500" />;
             default:
-                return <AlertCircle className="w-4 h-4 text-gray-500" />;
+                return <AlertCircle className="w-4 h-4 text-gray-400" />;
         }
     };
 
     const getEstadoBadge = (estado) => {
-        const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
-        switch (estado?.toLowerCase()) {
-            case 'pagado':
-            case 'completado':
-            case 'aprobado':
-                return `${baseClasses} bg-green-100 text-green-800 border border-green-200`;
-            case 'rechazado':
-            case 'cancelado':
-                return `${baseClasses} bg-red-100 text-red-800 border border-red-200`;
-            case 'pendiente':
-                return `${baseClasses} bg-yellow-100 text-yellow-800 border border-yellow-200`;
+        const base = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+        switch (estado?.toUpperCase()) {
+            case 'REALIZADO':
+                return `${base} bg-emerald-100 text-emerald-800 border border-emerald-200`;
+            case 'ANULADO':
+                return `${base} bg-red-100 text-red-700 border border-red-200 line-through`;
             default:
-                return `${baseClasses} bg-gray-100 text-gray-800 border border-gray-200`;
+                return `${base} bg-gray-100 text-gray-600 border border-gray-200`;
         }
     };
 
+    // Solo suma pagos REALIZADOS
     const calcularTotalPagos = () => {
-        return pagos.reduce((total, pago) => total + (parseFloat(pago.monto) || 0), 0);
+        return pagos
+            .filter(p => p.estado_pago?.toUpperCase() === 'REALIZADO')
+            .reduce((total, pago) => total + (parseFloat(pago.monto) || 0), 0);
     };
 
-    const pagosPagados = pagos.filter(pago => pago.estado_pago?.toLowerCase() === 'pagado').length;
-    const pagosPendientes = pagos.filter(pago => pago.estado_pago?.toLowerCase() === 'pendiente').length;
-    const totalPagos = pagos.length;
+    const pagosRealizados = pagos.filter(p => p.estado_pago?.toUpperCase() === 'REALIZADO').length;
+    const pagosAnulados  = pagos.filter(p => p.estado_pago?.toUpperCase() === 'ANULADO').length;
+    const totalPagos     = pagos.length;
 
     return (
         <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-green-50/20 min-h-screen">
@@ -130,20 +122,20 @@ const Pagos = () => {
                                 <CheckCircle className="w-4 h-4 text-white" />
                             </div>
                             <div>
-                                <p className="text-xs text-green-600 font-medium">Pagados</p>
-                                <p className="text-lg font-bold text-green-700">{pagosPagados}</p>
+                                <p className="text-xs text-green-600 font-medium">Realizados</p>
+                                <p className="text-lg font-bold text-green-700">{pagosRealizados}</p>
                             </div>
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200/60">
+                    <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border border-red-200/60">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-yellow-500 rounded-lg">
-                                <Clock className="w-4 h-4 text-white" />
+                            <div className="p-2 bg-red-500 rounded-lg">
+                                <Ban className="w-4 h-4 text-white" />
                             </div>
                             <div>
-                                <p className="text-xs text-yellow-600 font-medium">Pendientes</p>
-                                <p className="text-lg font-bold text-yellow-700">{pagosPendientes}</p>
+                                <p className="text-xs text-red-600 font-medium">Anulados</p>
+                                <p className="text-lg font-bold text-red-700">{pagosAnulados}</p>
                             </div>
                         </div>
                     </div>
@@ -154,7 +146,7 @@ const Pagos = () => {
                                 <TrendingUp className="w-4 h-4 text-white" />
                             </div>
                             <div>
-                                <p className="text-xs text-purple-600 font-medium">Total Bs.</p>
+                                <p className="text-xs text-purple-600 font-medium">Total efectivo Bs.</p>
                                 <p className="text-lg font-bold text-purple-700">{calcularTotalPagos().toFixed(2)}</p>
                             </div>
                         </div>
@@ -247,10 +239,10 @@ const Pagos = () => {
                                                     setCurrentId(pago.id_pago);
                                                     setModalDetalles(true);
                                                 }}
-                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-orange-100 text-orange-700 rounded-lg text-sm font-medium hover:bg-orange-200 transition-colors duration-150"
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition-colors duration-150"
                                             >
-                                                <Edit className="w-3 h-3" />
-                                                Modificar
+                                                <Eye className="w-3 h-3" />
+                                                {pago.estado_pago === 'ANULADO' ? 'Ver detalle' : 'Ver / Anular'}
                                             </button>
                                         </td>
                                     </tr>

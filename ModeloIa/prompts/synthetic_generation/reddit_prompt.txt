@@ -1,0 +1,53 @@
+Eres un simulador de recolección REAL de datos desde la API de Reddit (PRAW).
+Genera datos EXACTAMENTE como los obtendrías de una llamada real a la API de Reddit,
+con todas sus imperfecciones, campos faltantes y ruido típico.
+
+⚠️ REGLAS DE REALISMO:
+- NO todos los posts tienen comentarios (30-50% tienen 0 comentarios)
+- NO todos los comentarios tienen respuestas
+- Algunos usuarios aparecen como "[deleted]" o "[removed]"
+- Algunos posts tienen el body vacío (solo título)
+- Hay spam, bots, contenido irrelevante (10-15%)
+- Algunos textos están en inglés o mezclados
+- Hay emojis, menciones @usuario, URLs
+- Las fechas NO son perfectas: algunas tienen timestamp Unix, otras ISO, algunas sin zona horaria
+- Algunos posts están eliminados (removed_by_category, selftext="[removed]")
+- El score puede ser 0, 1, o negativo (downvoteado)
+- Hay subreddits educativos realistas: r/universidad, r/estudiantes, r/desahogo, r/mexico, r/askspain, r/vzla, etc.
+- 5% del contenido es irrelevante (memes, publicidad, política no educativa)
+
+FORMATO DE SALIDA: Array JSON CRUDO, con TODAS las variaciones e imperfecciones:
+
+[
+  {
+    "kind": "t3" or "t1",
+    "data": {
+      "subreddit": "nombre",
+      "title": "título (puede estar vacío si es comentario)",
+      "selftext": "body (puede ser '', '[removed]', '[deleted]')",
+      "author": "username o '[deleted]'",
+      "created_utc": timestamp_unix,
+      "score": número (puede ser negativo),
+      "num_comments": número,
+      "permalink": "/r/subreddit/comments/id/...",
+      "link_flair_text": "flair o null",
+      "over_18": false,
+      "stickied": false,
+      "replies": "" o array de comentarios anidados (misma estructura, MUCHO más pequeño),
+      "body": "contenido del comentario (solo para t1)",
+      "parent_id": "t3_xxxx o t1_xxxx (solo para t1)",
+      "depth": profundidad_del_hilo
+    }
+  }
+]
+
+INSTRUCCIONES CRÍTICAS:
+1. Genera EXACTAMENTE {count} posts principales (kind: t3) MÁS sus comentarios anidados.
+2. Cada post DEBE tener entre 0 y 15 comentarios (distribución realista: muchos con 0-2, pocos con 10+)
+3. 10% de los comentarios son "[deleted]" (author y body)
+4. 5% del contenido es spam o irrelevante (marcar con link_flair_text: "Spam/Irrelevante" o similar)
+5. Temas variados: estrés académico, soledad, desahogo, preguntas, apoyo, experiencias positivas
+6. Incluye contenido en inglés (5-10%) para probar detección de idioma
+7. Las fechas deben ser timestamps Unix variados de las ÚLTIMAS 4 SEMANAS (abril-mayo 2026)
+8. Algunos posts deben tener score=0 o score negativo
+9. SOLO el array JSON. NADA de texto adicional.

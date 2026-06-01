@@ -16,6 +16,9 @@ const chartCanvas = new ChartJSNodeCanvas({ width: 600, height: 300 });
 export const createColegiado = async (req: Request, res: Response) => {
   const validatedColegiado = colegiadoSchema.parse(req.body)
   try {
+    // Generar PIN de 4 dígitos
+    const pinPlano = String(Math.floor(1000 + Math.random() * 9000));
+
     const colegiado = await prismaClient.colegiados.create({
       data: {
         carnet_identidad: validatedColegiado.carnet_identidad,
@@ -26,11 +29,14 @@ export const createColegiado = async (req: Request, res: Response) => {
         especialidades: validatedColegiado.especialidades,
         fecha_inscripcion: validatedColegiado.fecha_inscripcion,
         fecha_renovacion: validatedColegiado.fecha_renovacion,
-        estado: validatedColegiado.estado
+        estado: validatedColegiado.estado,
+        pin_acceso: pinPlano
       }
     })
-    registrarAuditoria(req.user, Acciones.CREO, Modulos.COLEGIADOS, `Se creo el colegiado ${colegiado.nombre} ${colegiado.apellido}`)
-    res.status(201).json({ message: 'El colegiado fue resgistrado exitosamente', colegiado })
+    // @ts-ignore
+    await registrarAuditoria(req.user?.id_usuario, Acciones.CREO, Modulos.COLEGIADOS, `Se creo el colegiado ${colegiado.nombre} ${colegiado.apellido}`)
+    // ⚠️ pin_temporal solo se devuelve ESTA vez — guárdalo y comunícaselo al colegiado
+    res.status(201).json({ message: 'El colegiado fue registrado exitosamente', colegiado, pin_temporal: pinPlano })
   } catch {
     throw new BadRequestException('Hubo un error al crear el registro del colegiado', ErrorCodes.INTERNAL_EXCEPTION)
   }

@@ -91,7 +91,7 @@ const Contenido = () => {
           icon: Clock,
           bgColor: 'bg-yellow-100'
         };
-      case 'A DISCUCION':
+      case 'A DISCUSIÓN':
         return {
           color: 'bg-blue-50 text-blue-700 border-blue-200',
           icon: MessageSquare,
@@ -291,7 +291,7 @@ const Contenido = () => {
           <p className="text-gray-600 mb-4">Selecciona el nuevo estado para esta correspondencia:</p>
 
           <button
-            onClick={() => handleCambiarEstado('A DISCUCION')}
+            onClick={() => handleCambiarEstado('A DISCUSIÓN')}
             className="w-full flex items-center gap-3 p-4 bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] transform"
           >
             <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">

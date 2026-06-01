@@ -1,7 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { TextField, Button, Box, MenuItem } from "@mui/material";
-import { Trash2 } from "lucide-react";
+import { TextField, Button, Box, MenuItem, Slider, Typography } from "@mui/material";
+import { Trash2, MapPin } from "lucide-react";
+import { MapContainer, TileLayer, Marker, Circle, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 import {
     getConvenios,
     getActividadSocialById,
@@ -9,6 +12,23 @@ import {
     deleteActividadSocial,
 } from "../../../services/ac-sociales";
 import ConfirmDialog from "../../../components/ConfirmDialog";
+
+// Fix icono leaflet en Vite/React
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+});
+
+function MapClickHandler({ onLocationSelect }) {
+    useMapEvents({
+        click(e) {
+            onLocationSelect(e.latlng.lat, e.latlng.lng);
+        },
+    });
+    return null;
+}
 
 const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
     const {
@@ -20,18 +40,18 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
         setValue,
         watch,
     } = useForm({
-        defaultValues: {
-            estado: "",
-            tipo: "",
-        },
+        defaultValues: { estado: "", tipo: "", radio_metros: 100 },
     });
 
     const [convenios, setConvenios] = useState([]);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+    const [markerPos, setMarkerPos] = useState(null);
     const today = new Date().toISOString().split("T")[0];
     const fechaInicioValue = watch("fecha_inicio");
+    const radioValue = watch("radio_metros") || 100;
+    const latValue = watch("latitud");
+    const lngValue = watch("longitud");
 
-    // ✅ Carga inicial de datos
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -49,12 +69,18 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                     fecha_fin: actividad.fecha_fin?.split("T")[0] || "",
                     estado: actividad.estado?.toUpperCase() || "",
                     tipo: actividad.tipo?.toUpperCase() || "",
+                    latitud: actividad.latitud ?? null,
+                    longitud: actividad.longitud ?? null,
+                    radio_metros: actividad.radio_metros ?? 100,
                 });
 
-                // 🔧 Normalizamos los valores de los selects
                 setValue("estado", actividad.estado?.toUpperCase() || "");
                 setValue("tipo", actividad.tipo?.toUpperCase() || "");
                 setValue("id_convenio", actividad.id_convenio || "");
+
+                if (actividad.latitud && actividad.longitud) {
+                    setMarkerPos({ lat: actividad.latitud, lng: actividad.longitud });
+                }
             } catch (error) {
                 console.error("Error al cargar la actividad social:", error);
             }
@@ -63,12 +89,15 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
         if (id) fetchData();
     }, [id, reset, setValue]);
 
-    // ✅ Enviar cambios
+    const handleLocationSelect = (lat, lng) => {
+        setMarkerPos({ lat, lng });
+        setValue("latitud", lat);
+        setValue("longitud", lng);
+    };
+
     const onSubmit = async (formData) => {
         try {
-            formData.id_convenio = formData.id_convenio
-                ? parseInt(formData.id_convenio)
-                : null;
+            formData.id_convenio = formData.id_convenio ? parseInt(formData.id_convenio) : null;
             await updateActividadSocial(id, formData);
             if (onClose) onClose();
         } catch (error) {
@@ -76,18 +105,22 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
         }
     };
 
-    // ✅ Eliminar actividad
     const handleDelete = async () => {
         try {
             await deleteActividadSocial(id);
             setShowDeleteConfirm(false);
-            if (onDelete) onDelete(); // Callback para actualizar la lista
-            if (onClose) onClose(); // Cerrar el modal
+            if (onDelete) onDelete();
+            if (onClose) onClose();
         } catch (error) {
             console.error("Error al eliminar la actividad:", error);
             setShowDeleteConfirm(false);
         }
     };
+
+    // Centro del mapa: coordenadas actuales o Santa Cruz de la Sierra por defecto
+    const mapCenter = markerPos
+        ? [markerPos.lat, markerPos.lng]
+        : [-17.78, -63.18];
 
     return (
         <>
@@ -109,14 +142,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                     {/* Descripción */}
                     <div>
                         <label className="block mb-1 font-semibold">Descripción</label>
-                        <TextField
-                            fullWidth
-                            multiline
-                            rows={3}
-                            {...register("descripcion")}
-                            variant="outlined"
-                            size="small"
-                        />
+                        <TextField fullWidth multiline rows={3} {...register("descripcion")} variant="outlined" size="small" />
                     </div>
 
                     {/* Ubicación */}
@@ -153,44 +179,30 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                             control={control}
                             defaultValue=""
                             render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    select
-                                    fullWidth
-                                    variant="outlined"
-                                    size="small"
-                                >
+                                <TextField {...field} select fullWidth variant="outlined" size="small">
                                     <MenuItem value="">Sin convenio</MenuItem>
                                     {convenios.map((c) => (
-                                        <MenuItem key={c.id_convenio} value={c.id_convenio}>
-                                            {c.nombre}
-                                        </MenuItem>
+                                        <MenuItem key={c.id_convenio} value={c.id_convenio}>{c.nombre}</MenuItem>
                                     ))}
                                 </TextField>
                             )}
                         />
                     </div>
 
-                    {/* Fecha de Inicio */}
+                    {/* Fechas */}
                     <div>
                         <label className="block mb-1 font-semibold">Fecha de Inicio</label>
                         <TextField
                             fullWidth
                             type="date"
                             InputLabelProps={{ shrink: true }}
-                            {...register("fecha_inicio", {
-                                required: "Campo obligatorio",
-                                validate: (value) =>
-                                    value >= today || "No puedes elegir una fecha pasada",
-                            })}
+                            {...register("fecha_inicio", { required: "Campo obligatorio" })}
                             error={!!errors.fecha_inicio}
                             helperText={errors.fecha_inicio?.message}
                             variant="outlined"
                             size="small"
                         />
                     </div>
-
-                    {/* Fecha de Fin */}
                     <div>
                         <label className="block mb-1 font-semibold">Fecha de Fin</label>
                         <TextField
@@ -200,9 +212,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                             {...register("fecha_fin", {
                                 validate: (value) => {
                                     if (!value) return true;
-                                    if (value < today) return "No puedes elegir una fecha pasada";
-                                    if (fechaInicioValue && value < fechaInicioValue)
-                                        return "Debe ser posterior a la fecha de inicio";
+                                    if (fechaInicioValue && value < fechaInicioValue) return "Debe ser posterior a la fecha de inicio";
                                     return true;
                                 },
                             })}
@@ -221,15 +231,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                             control={control}
                             rules={{ required: "Campo obligatorio" }}
                             render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    select
-                                    fullWidth
-                                    variant="outlined"
-                                    size="small"
-                                    error={!!errors.estado}
-                                    helperText={errors.estado?.message}
-                                >
+                                <TextField {...field} select fullWidth variant="outlined" size="small" error={!!errors.estado} helperText={errors.estado?.message}>
                                     <MenuItem value="">Seleccione...</MenuItem>
                                     <MenuItem value="ACTIVO">ACTIVO</MenuItem>
                                     <MenuItem value="EN PROGRESO">EN PROGRESO</MenuItem>
@@ -248,15 +250,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                             control={control}
                             rules={{ required: "Campo obligatorio" }}
                             render={({ field }) => (
-                                <TextField
-                                    {...field}
-                                    select
-                                    fullWidth
-                                    variant="outlined"
-                                    size="small"
-                                    error={!!errors.tipo}
-                                    helperText={errors.tipo?.message}
-                                >
+                                <TextField {...field} select fullWidth variant="outlined" size="small" error={!!errors.tipo} helperText={errors.tipo?.message}>
                                     <MenuItem value="">Seleccione...</MenuItem>
                                     <MenuItem value="CULTURAL">CULTURAL</MenuItem>
                                     <MenuItem value="DEPORTIVA">DEPORTIVA</MenuItem>
@@ -269,9 +263,75 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                         />
                     </div>
 
+                    {/* ─── Sección Geolocalización ─── */}
+                    <Box>
+                        <Typography variant="subtitle1" fontWeight="bold" sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}>
+                            <MapPin size={16} /> Ubicación GPS del convenio
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: "block" }}>
+                            Haz clic en el mapa o arrastra el marcador para ajustar la ubicación.
+                        </Typography>
+
+                        <Box sx={{ height: 280, borderRadius: 2, overflow: "hidden", border: "1px solid #ddd", mb: 1.5 }}>
+                            <MapContainer center={mapCenter} zoom={14} style={{ height: "100%", width: "100%" }} key={mapCenter.join(",")}>
+                                <TileLayer
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                                />
+                                <MapClickHandler onLocationSelect={handleLocationSelect} />
+                                {markerPos && (
+                                    <>
+                                        <Marker
+                                            position={[markerPos.lat, markerPos.lng]}
+                                            draggable
+                                            eventHandlers={{
+                                                dragend(e) {
+                                                    const { lat, lng } = e.target.getLatLng();
+                                                    handleLocationSelect(lat, lng);
+                                                }
+                                            }}
+                                        />
+                                        <Circle
+                                            center={[markerPos.lat, markerPos.lng]}
+                                            radius={Number(radioValue)}
+                                            pathOptions={{ color: "#7c3aed", fillColor: "#7c3aed", fillOpacity: 0.15 }}
+                                        />
+                                    </>
+                                )}
+                            </MapContainer>
+                        </Box>
+
+                        <input type="hidden" {...register("latitud")} />
+                        <input type="hidden" {...register("longitud")} />
+
+                        {latValue && lngValue && (
+                            <Typography variant="caption" color="success.main" sx={{ mb: 1, display: "block" }}>
+                                📍 Lat: {Number(latValue).toFixed(6)}, Lng: {Number(lngValue).toFixed(6)}
+                            </Typography>
+                        )}
+
+                        <Typography variant="body2" sx={{ mb: 0.5 }}>
+                            Radio de asistencia: <strong>{radioValue} metros</strong>
+                        </Typography>
+                        <Controller
+                            name="radio_metros"
+                            control={control}
+                            render={({ field }) => (
+                                <Slider
+                                    {...field}
+                                    min={50}
+                                    max={5000}
+                                    step={50}
+                                    valueLabelDisplay="auto"
+                                    valueLabelFormat={(v) => `${v}m`}
+                                    sx={{ color: "#7c3aed" }}
+                                />
+                            )}
+                        />
+                    </Box>
+
                     {/* Botones */}
                     <Box display="flex" justifyContent="space-between" gap={2} mt={2}>
-                        {/* Botón Eliminar a la izquierda */}
                         <Button
                             variant="outlined"
                             color="error"
@@ -280,21 +340,14 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                         >
                             Eliminar
                         </Button>
-
-                        {/* Botones Cancelar y Guardar a la derecha */}
                         <Box display="flex" gap={2}>
-                            <Button variant="outlined" color="secondary" onClick={onClose}>
-                                Cancelar
-                            </Button>
-                            <Button type="submit" variant="contained" color="primary">
-                                Guardar Cambios
-                            </Button>
+                            <Button variant="outlined" color="secondary" onClick={onClose}>Cancelar</Button>
+                            <Button type="submit" variant="contained" color="primary">Guardar Cambios</Button>
                         </Box>
                     </Box>
                 </Box>
             </form>
 
-            {/* Modal de Confirmación para Eliminar */}
             <ConfirmDialog
                 isOpen={showDeleteConfirm}
                 message="¿Estás seguro de que deseas eliminar permanentemente esta actividad social? Esta acción no se puede deshacer."

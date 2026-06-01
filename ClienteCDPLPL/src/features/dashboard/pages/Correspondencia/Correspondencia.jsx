@@ -59,7 +59,7 @@ const Correspondencia = () => {
                     icon: <Eye className="w-3 h-3" />,
                     bgGradient: "from-blue-50 to-indigo-50"
                 };
-            case "A DISCUCION":
+            case "A DISCUSIÓN":
                 return {
                     color: "bg-yellow-100 text-yellow-800 border-yellow-200",
                     icon: <MessageCircle className="w-3 h-3" />,
@@ -86,7 +86,7 @@ const Correspondencia = () => {
         }
     };
 
-    const estadosDisponibles = ["TODOS", "RECIBIDO", "VISTO", "A DISCUCION", "PENDIENTE", "ARREGLADO"];
+    const estadosDisponibles = ["TODOS", "RECIBIDO", "VISTO", "A DISCUSIÓN", "PENDIENTE", "ARREGLADO"];
 
     const fetchData = async () => {
         const { data, total, page: currentPage, totalPages } = await getAllCorrespondencia({ page, search });

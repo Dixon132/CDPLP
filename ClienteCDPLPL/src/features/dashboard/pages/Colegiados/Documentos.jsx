@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getAlldocs, getColegiadoById, verDocumento } from "../../services/colegiados";
-import { useState } from "react";
+import { getAlldocs, getColegiadoById, verDocumento, modificarColegiados } from "../../services/colegiados";
 import parseDate from "../../../../utils/parseData";
 import Modal from "../../../../components/Modal";
 import AñadirDocumento from "./components/AñadirDocumento";
@@ -25,7 +24,10 @@ import {
     Camera,
     CreditCard,
     Award,
-    FileCheck
+    FileCheck,
+    X,
+    Loader2,
+    Tag
 } from 'lucide-react';
 
 const TIPO_DOCUMENTOS = [
@@ -45,7 +47,13 @@ const Documentos = () => {
     const [tipoDoc, setTipoDoc] = useState('')
     const [modalAñadir, setModalAñadir] = useState(false)
     const [modalDetalles, setModalDetalles] = useState(false);
-    const [col, setCol] = useState([])
+    const [col, setCol] = useState({})
+
+    // Estado para especialidades
+    const [especialidades, setEspecialidades] = useState([]);
+    const [nuevaEsp, setNuevaEsp] = useState('');
+    const [guardandoEsp, setGuardandoEsp] = useState(false);
+    const [errorEsp, setErrorEsp] = useState('');
 
     const getDocs = async () => {
         try {
@@ -53,11 +61,45 @@ const Documentos = () => {
             setDocs(data);
             const colegiado = await getColegiadoById(id)
             setCol(colegiado)
+            // Parsear especialidades del string separado por comas
+            const esps = colegiado?.especialidades
+                ? colegiado.especialidades.split(',').map(e => e.trim()).filter(Boolean)
+                : [];
+            setEspecialidades(esps);
         } catch (error) {
             console.error("Error al obtener documentos:", error);
         }
     };
 
+    const guardarEspecialidades = async (nuevaLista) => {
+        setGuardandoEsp(true);
+        setErrorEsp('');
+        try {
+            await modificarColegiados(id, { especialidades: nuevaLista.join(', ') });
+            setEspecialidades(nuevaLista);
+        } catch {
+            setErrorEsp('No se pudo guardar. Inténtalo de nuevo.');
+        } finally {
+            setGuardandoEsp(false);
+        }
+    };
+
+    const agregarEspecialidad = async () => {
+        const trimmed = nuevaEsp.trim();
+        if (!trimmed) return;
+        if (especialidades.map(e => e.toLowerCase()).includes(trimmed.toLowerCase())) {
+            setErrorEsp('Esa especialidad ya existe.');
+            return;
+        }
+        const nueva = [...especialidades, trimmed];
+        setNuevaEsp('');
+        await guardarEspecialidades(nueva);
+    };
+
+    const eliminarEspecialidad = async (index) => {
+        const nueva = especialidades.filter((_, i) => i !== index);
+        await guardarEspecialidades(nueva);
+    };
 
     useEffect(() => {
         getDocs();
@@ -120,9 +162,11 @@ const Documentos = () => {
             .join(' ');
     };
 
-    const documentosSubidos = docs.length;
+    // Porcentaje correcto: tipos distintos subidos / total de tipos definidos
+    const tiposSubidos = new Set(docs.map(d => d.tipo_documento)).size;
     const documentosTotal = TIPO_DOCUMENTOS.length;
-    const porcentajeCompletado = Math.round((documentosSubidos / documentosTotal) * 100);
+    const porcentajeCompletado = Math.min(100, Math.round((tiposSubidos / documentosTotal) * 100));
+    const documentosSubidos = tiposSubidos; // para el texto informativo
 
     return (
         <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen">
@@ -293,20 +337,68 @@ const Documentos = () => {
 
             {/* Sección de especialidades */}
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200/60">
+                <div className="bg-gradient-to-r from-slate-50 to-purple-50 px-6 py-4 border-b border-slate-200/60">
                     <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <GraduationCap className="w-5 h-5 text-purple-500" />
                         Especialidades
                     </h2>
                 </div>
-                <div className="p-6">
-                    <div className="flex items-center justify-center py-12">
-                        <div className="text-center">
-                            <GraduationCap className="w-16 h-16 text-slate-300 mx-auto mb-4" />
-                            <p className="text-slate-500 font-medium">Información de especialidades</p>
-                            <p className="text-slate-400 text-sm">Esta sección se encuentra en desarrollo</p>
-                        </div>
+                <div className="p-6 space-y-4">
+                    {/* Chips de especialidades existentes */}
+                    <div className="flex flex-wrap gap-2 min-h-[40px]">
+                        {especialidades.length === 0 ? (
+                            <p className="text-slate-400 text-sm italic">Sin especialidades registradas.</p>
+                        ) : (
+                            especialidades.map((esp, i) => (
+                                <span
+                                    key={i}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border border-purple-200 rounded-full text-sm font-medium"
+                                >
+                                    <Tag className="w-3 h-3" />
+                                    {esp}
+                                    <button
+                                        onClick={() => eliminarEspecialidad(i)}
+                                        disabled={guardandoEsp}
+                                        className="ml-1 text-purple-500 hover:text-red-600 transition-colors disabled:opacity-40"
+                                        title="Eliminar especialidad"
+                                    >
+                                        <X className="w-3 h-3" />
+                                    </button>
+                                </span>
+                            ))
+                        )}
+                        {guardandoEsp && (
+                            <span className="inline-flex items-center gap-1.5 text-slate-400 text-sm">
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                                Guardando...
+                            </span>
+                        )}
                     </div>
+
+                    {/* Input para agregar nueva especialidad */}
+                    <div className="flex gap-2">
+                        <input
+                            type="text"
+                            value={nuevaEsp}
+                            onChange={(e) => { setNuevaEsp(e.target.value); setErrorEsp(''); }}
+                            onKeyDown={(e) => e.key === 'Enter' && agregarEspecialidad()}
+                            placeholder="Ej: Derecho Civil, Notarial..."
+                            disabled={guardandoEsp}
+                            className="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent disabled:opacity-50 transition-all"
+                        />
+                        <button
+                            onClick={agregarEspecialidad}
+                            disabled={!nuevaEsp.trim() || guardandoEsp}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg text-sm font-medium hover:shadow-md hover:shadow-purple-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Agregar
+                        </button>
+                    </div>
+
+                    {errorEsp && (
+                        <p className="text-red-500 text-xs">{errorEsp}</p>
+                    )}
                 </div>
             </div>
 

@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
-import { registrarMovimientoPagoColegiatura } from "../../financiero/services/movimiento";
+import { registrarMovimientoPagoColegiatura, registrarAnulacionPago } from "../../financiero/services/movimiento";
 import { Origen } from "../../../types/movimientos";
 import registrarAuditoria from "../../Auditorias/services";
 import { Acciones, Modulos } from "../../../types/auditoria";
+
+const ESTADOS_PAGO_VALIDOS = ["REALIZADO", "ANULADO"] as const;
+type EstadoPago = typeof ESTADOS_PAGO_VALIDOS[number];
 
 export const getPagos = async (req: Request, res: Response) => {
     const id = req.params.id
@@ -48,18 +51,42 @@ export const createPago = async (req: Request, res: Response) => {
 }
 export const updatePago = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const { concepto, fecha_pago, monto, estado_pago } = req.body;
+    const { estado_pago } = req.body;
+
+    // Solo se permite cambiar el estado (no el monto ni concepto de un pago ya registrado)
+    if (!ESTADOS_PAGO_VALIDOS.includes(estado_pago as EstadoPago)) {
+        return res.status(400).json({
+            error: `Estado inválido. Solo se permite: ${ESTADOS_PAGO_VALIDOS.join(", ")}`
+        });
+    }
 
     try {
+        // Obtener el pago actual para verificar estado y obtener datos
+        const pagoActual = await prismaClient.pagos_colegiados.findUniqueOrThrow({
+            where: { id_pago: +id },
+            include: { colegiados: { select: { nombre: true, apellido: true } } }
+        });
+
+        if (pagoActual.estado_pago === "ANULADO") {
+            return res.status(409).json({ error: "Este pago ya fue anulado y no puede modificarse" });
+        }
+
         const updatedPago = await prismaClient.pagos_colegiados.update({
             where: { id_pago: +id },
-            data: {
-                concepto,
-                fecha_pago: new Date(fecha_pago),
-                monto,
-                estado_pago
-            },
+            data: { estado_pago },
         });
+
+        // Si se anula, registrar EGRESO de reversión en tesorería
+        if (estado_pago === "ANULADO") {
+            await registrarAnulacionPago(+id, Number(pagoActual.monto));
+            const nombre = `${pagoActual.colegiados?.nombre || ''} ${pagoActual.colegiados?.apellido || ''}`.trim();
+            await registrarAuditoria(
+                req.user,
+                Acciones.MODIFICO,
+                Modulos.FINANCIERO,
+                `Se anuló el pago de ${nombre} por monto de ${pagoActual.monto}Bs — se generó reversión en tesorería`
+            );
+        }
 
         res.status(200).json(updatedPago);
     } catch (error) {

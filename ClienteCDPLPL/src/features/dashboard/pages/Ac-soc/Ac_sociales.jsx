@@ -7,7 +7,7 @@ import Table from "../../components/Table";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import CreateActSocial from "./components/CreateActSocial";
-import VerDetallesColegiado from "./components/VerDetallesColegiado";
+
 import ModificarActividadSocial from "./components/ModificarActividadSocial";
 import GenerarReporteActividadesSociales from "./components/GenerarReporteActividadesSociales";
 import {
@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { getEstadoBadge, getEstadoIcon, getTipoIcon } from "../../hooks/estados";
 import { set } from "react-hook-form";
+import { VerDetallesActividad } from "./components/VerDetallesActividad";
 
 const Ac_sociales = () => {
     // Estados principales
@@ -325,7 +326,7 @@ const Ac_sociales = () => {
                 title="Detalles de Actividad"
                 onClose={() => setShowVer(false)}
             >
-                <VerDetallesColegiado id={currentId} />
+                <VerDetallesActividad id={currentId} />
             </Modal>
 
             <Modal

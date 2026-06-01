@@ -154,7 +154,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
                     <option value="">Selecciona...</option>
                     <option value="RECIBIDO">RECIBIDO</option>
                     <option value="VISTO">VISTO</option>
-                    <option value="A DISCUCION">A DISCUCION</option>
+                    <option value="A DISCUSIÓN">A DISCUSIÓN</option>
                     <option value="PENDIENTE">PENDIENTE</option>
                     <option value="ARREGLADO">ARREGLADO</option>
                 </select>

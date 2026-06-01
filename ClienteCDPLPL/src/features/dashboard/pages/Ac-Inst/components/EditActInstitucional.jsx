@@ -1,12 +1,31 @@
 // src/pages/dashboard/pages/Ac-institucionales/EditActInstitucional.jsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import Alerts from "../../../components/Alerts";
 import {
   getActividadInstitucionalById,
   updateActividadInstitucional,
 } from "../../../services/ac-institucionales";
 
 export default function EditActInstitucional({ id, onClose, onSuccess }) {
+  const [alert, setAlert] = useState(false);
+  const [alertType, setAlertType] = useState("success");
+  const [alertMessage, setAlertMessage] = useState("");
+
+  const showSuccess = (msg) => {
+    setAlertType("success");
+    setAlertMessage(msg);
+    setAlert(true);
+    setTimeout(() => setAlert(false), 3000);
+  };
+
+  const showError = (msg) => {
+    setAlertType("error");
+    setAlertMessage(msg);
+    setAlert(true);
+    setTimeout(() => setAlert(false), 3000);
+  };
+
   const {
     register,
     handleSubmit,
@@ -46,16 +65,17 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
 
     try {
       await updateActividadInstitucional(id, payload);
-      alert("Actividad institucional actualizada correctamente");
+      showSuccess("Actividad institucional actualizada correctamente");
       if (onSuccess) onSuccess();
-      if (onClose) onClose();
+      setTimeout(() => { if (onClose) onClose(); }, 1500);
     } catch (err) {
       console.error(err);
-      alert("Error al actualizar actividad institucional");
+      showError("Error al actualizar actividad institucional");
     }
   };
 
   return (
+    <>
     <form
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-4 p-4 max-w-lg mx-auto"
@@ -126,8 +146,10 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
         type="submit"
         className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
       >
-        Guardar cambios
-      </button>
+          Guardar Cambios
+        </button>
     </form>
+    <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
+    </>
   );
 }

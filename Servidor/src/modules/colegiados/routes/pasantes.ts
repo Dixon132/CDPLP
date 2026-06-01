@@ -7,7 +7,7 @@ import { createPasante, deletePasanteById, getPasanteById, getPasantes, getPasan
 const pasantesRouter: Router = Router()
 
 pasantesRouter.get('/', [authMiddleware], errorHandler(getPasantes))
-pasantesRouter.post('/', [authMiddleware], errorHandler(createPasante))
+pasantesRouter.post('/', errorHandler(createPasante))
 pasantesRouter.get('/:id', [authMiddleware], errorHandler(getPasanteById))
 pasantesRouter.put('/estado/:id', [authMiddleware], errorHandler(updateEstadoById))
 pasantesRouter.put('/:id', [authMiddleware], errorHandler(updatePasanteById))

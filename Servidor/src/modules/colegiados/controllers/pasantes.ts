@@ -3,6 +3,7 @@ import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
 
+
 export const getPasantes = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '', inactivos } = req.query;
     const skip: number = (Number(page) - 1) * Number(limit);
@@ -48,6 +49,9 @@ export const createPasante = async (req: Request, res: Response) => {
     const { nombre, apellido, carnet_identidad, correo, telefono, institucion } = req.body;
 
     try {
+        // Generar PIN de 4 dígitos
+        const pinPlano = String(Math.floor(1000 + Math.random() * 9000));
+
         const pasante = await prismaClient.pasantes.create({
             data: {
                 nombre,
@@ -57,9 +61,11 @@ export const createPasante = async (req: Request, res: Response) => {
                 telefono,
                 institucion,
                 estado: "ACTIVO",
+                pin_acceso: pinPlano
             }
         })
-        res.status(201).json({ message: 'Pasante creado exitosamente', pasante })
+        // ⚠️ pin_temporal solo se devuelve ESTA vez
+        res.status(201).json({ message: 'Pasante creado exitosamente', pasante, pin_temporal: pinPlano })
     } catch (error) {
         throw new BadRequestException('Error al crear pasante', ErrorCodes.INTERNAL_EXCEPTION)
     }

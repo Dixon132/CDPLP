@@ -3,6 +3,20 @@ import prismaClient from "../../../utils/prismaClient";
 import puppeteer from "puppeteer";
 import { actividadSocialSchema } from "../schemas/ac-social";
 
+// Haversine: calcula distancia en metros entre dos puntos GPS
+function haversineDistancia(lat1: number, lng1: number, lat2: number, lng2: number): number {
+    const R = 6371000; // radio Tierra en metros
+    const toRad = (deg: number) => (deg * Math.PI) / 180;
+    const dLat = toRad(lat2 - lat1);
+    const dLng = toRad(lng2 - lng1);
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 export const getActividadesSociales = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '' } = req.query;
     const skip: number = (Number(page) - 1) * Number(limit);
@@ -57,6 +71,16 @@ export const getActividadSocialById = async (req: Request, res: Response) => {
     })
     res.status(200).json(actividad)
 }
+export const deleteActividadSocialById = async (req: Request, res: Response) => {
+
+    const id = req.params.id
+    await prismaClient.actividades_sociales.delete({
+        where: {
+            id_actividad_social: +id
+        }
+    })
+    res.status(200)
+}
 export const updateEstadoById = async (req: Request, res: Response) => {
     const id = req.params.id
     const { estado } = req.body
@@ -80,7 +104,10 @@ export const createActividadSocial = async (req: Request, res: Response) => {
         fecha_inicio,
         fecha_fin,
         estado,
-        tipo
+        tipo,
+        latitud,
+        longitud,
+        radio_metros
     } = req.body;
 
     const actividad = await prismaClient.actividades_sociales.create({
@@ -93,7 +120,10 @@ export const createActividadSocial = async (req: Request, res: Response) => {
             fecha_inicio: new Date(fecha_inicio),
             fecha_fin: new Date(fecha_fin),
             estado,
-            tipo
+            tipo,
+            latitud: latitud !== undefined ? Number(latitud) : null,
+            longitud: longitud !== undefined ? Number(longitud) : null,
+            radio_metros: radio_metros !== undefined ? Number(radio_metros) : 100
         }
     });
     res.status(200).json(actividad)
@@ -108,13 +138,17 @@ export const getActividadSocialesById = async (req: Request, res: Response) => {
     try {
         const actividad = await prismaClient.actividades_sociales.findUnique({
             where: { id_actividad_social: id },
-            include: {                         // responsable     // solicitud
-                colegiados_asignados_social: {          // array de colegiados
+            include: {
+                colegiados_asignados_social: {
                     include: {
-                        colegiados: true
+                        colegiados: true,
+                        pasantes: true,
+                        asistencia_social_diaria: {
+                            orderBy: { fecha_marcaje: 'desc' }
+                        }
                     }
                 },
-                convenio: true, // Incluye el convenio relacionado
+                convenio: true,
             }
         });
 
@@ -126,6 +160,40 @@ export const getActividadSocialesById = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error fetching actividad:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+export const getAsignacionesByUser = async (req: Request, res: Response) => {
+    const { rol, id } = req.params;
+    if (!rol || isNaN(Number(id))) {
+        return res.status(400).json({ error: "Rol e ID son requeridos y el ID debe ser numérico" });
+    }
+
+    try {
+        const isColegiado = rol.toLowerCase() === 'colegiado';
+        const asignaciones = await prismaClient.colegiados_asignados_social.findMany({
+            where: isColegiado
+                ? { id_colegiado: Number(id) }
+                : { id_pasante: Number(id) },
+            include: {
+                actividades_sociales: true,
+                asistencia_social_diaria: {
+                    orderBy: { fecha_marcaje: 'desc' },
+                    take: 5
+                }
+            },
+            orderBy: {
+                actividades_sociales: {
+                    fecha_inicio: 'desc'
+                }
+            }
+        });
+
+        // Retornar solo las que tengan la actividad asociada (no nula)
+        res.status(200).json(asignaciones.filter(a => a.actividades_sociales !== null));
+    } catch (error) {
+        console.error("Error en getAsignacionesByUser:", error);
+        res.status(500).json({ error: "Error interno del servidor al obtener asignaciones" });
     }
 };
 
@@ -150,7 +218,23 @@ export const asignarColegiado = async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error interno del servidor' });
     }
 }
+export const asignarPasante = async (req: Request, res: Response) => {
+    const { id_actividad_social, id_pasante } = req.body
+    try {
+        const actividad = await prismaClient.colegiados_asignados_social.create({
+            data: {
+                id_actividad_social: +id_actividad_social,
+                id_pasante: +id_pasante
+            }
+        });
 
+        res.status(200).json(actividad);
+    } catch (error) {
+        console.error('Error al asignar pasante:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+
+}
 export const updateActividadSocial = async (req: Request, res: Response) => {
     const { id } = req.params;
     const {
@@ -162,7 +246,10 @@ export const updateActividadSocial = async (req: Request, res: Response) => {
         fecha_inicio,
         fecha_fin,
         estado,
-        tipo
+        tipo,
+        latitud,
+        longitud,
+        radio_metros
     } = req.body;
 
     try {
@@ -170,14 +257,16 @@ export const updateActividadSocial = async (req: Request, res: Response) => {
             nombre,
             descripcion,
             ubicacion,
-            id_convenio: +id_convenio,
+            id_convenio: id_convenio ? Number(id_convenio) : null,
             motivo,
-            fecha_inicio: new Date(fecha_inicio),
-            fecha_fin: new Date(fecha_fin),
+            fecha_inicio: fecha_inicio ? new Date(fecha_inicio) : undefined,
+            fecha_fin: fecha_fin ? new Date(fecha_fin) : undefined,
             estado,
-            tipo
+            tipo,
+            latitud: (latitud !== undefined && latitud !== null && latitud !== '') ? Number(latitud) : null,
+            longitud: (longitud !== undefined && longitud !== null && longitud !== '') ? Number(longitud) : null,
+            radio_metros: radio_metros ? Number(radio_metros) : 100
         };
-
 
         const actividadSocialActualizada = await prismaClient.actividades_sociales.update({
             where: { id_actividad_social: +id },
@@ -564,5 +653,214 @@ export const listarActividadesSocialesMinimal = async (req: Request, res: Respon
         return res
             .status(500)
             .json({ message: "Error al obtener lista mínima de actividades sociales." });
+    }
+};
+
+// ─── MARCAJE DE HORAS ─────────────────────────────────────────────────────────
+
+/**
+ * GET /api/ac-sociales/asignacion/:id
+ * Devuelve la asignación completa con datos de horas y del asignado.
+ */
+export const getAsignacionById = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    try {
+        const asignacion = await prismaClient.colegiados_asignados_social.findUnique({
+            where: { id_asignacion: id },
+            include: {
+                colegiados: { select: { nombre: true, apellido: true, correo: true, carnet_identidad: true, pin_acceso: true, especialidades: true, fecha_inscripcion: true, fecha_renovacion: true, estado: true, telefono: true } },
+                pasantes: { select: { nombre: true, apellido: true, correo: true, carnet_identidad: true, pin_acceso: true, institucion: true, estado: true, telefono: true } },
+                actividades_sociales: {
+                    select: {
+                        nombre: true, ubicacion: true, estado: true,
+                        latitud: true, longitud: true, radio_metros: true,
+                        fecha_inicio: true, fecha_fin: true
+                    }
+                },
+                asistencia_social_diaria: {
+                    orderBy: { fecha_marcaje: 'desc' }
+                }
+            }
+        });
+        if (!asignacion) return res.status(404).json({ error: "Asignación no encontrada" });
+        res.json(asignacion);
+    } catch (error) {
+        console.error("Error en getAsignacionById:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+/**
+ * PATCH /api/ac-sociales/asignacion/:id/entrada
+ * Body: { latitud: number, longitud: number }
+ */
+export const marcarEntrada = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    const { latitud, longitud } = req.body;
+    if (latitud === undefined || longitud === undefined) {
+        return res.status(400).json({ error: "Se requiere latitud y longitud" });
+    }
+
+    try {
+        const asignacion = await prismaClient.colegiados_asignados_social.findUnique({
+            where: { id_asignacion: id },
+            include: { actividades_sociales: true }
+        });
+        if (!asignacion) return res.status(404).json({ error: "Asignación no encontrada" });
+
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        const manana = new Date(hoy);
+        manana.setDate(hoy.getDate() + 1);
+
+        const registroDiario = await prismaClient.asistencia_social_diaria.findFirst({
+            where: {
+                id_asignacion: id,
+                fecha_marcaje: { gte: hoy, lt: manana }
+            }
+        });
+
+        if (registroDiario?.hora_entrada && !registroDiario?.hora_salida) {
+            return res.status(409).json({ error: "Ya marcó entrada hoy y no ha marcado salida" });
+        }
+        if (registroDiario?.hora_salida) {
+            return res.status(409).json({ error: "Ya completó su turno de hoy" });
+        }
+
+        const act = asignacion.actividades_sociales;
+        if (act?.latitud && act?.longitud) {
+            const dist = haversineDistancia(
+                Number(latitud), Number(longitud),
+                act.latitud, act.longitud
+            );
+            const radio = act.radio_metros ?? 100;
+            if (dist > radio) {
+                return res.status(403).json({
+                    error: "Fuera del radio permitido",
+                    distancia_metros: Math.round(dist),
+                    radio_metros: radio
+                });
+            }
+        }
+
+        const newRegistro = await prismaClient.asistencia_social_diaria.create({
+            data: {
+                id_asignacion: id,
+                fecha_marcaje: new Date(),
+                hora_entrada: new Date(),
+            }
+        });
+        res.status(200).json({ message: "Entrada marcada correctamente", asignacion: newRegistro });
+    } catch (error) {
+        console.error("Error en marcarEntrada:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+/**
+ * PATCH /api/ac-sociales/asignacion/:id/salida
+ * Body: { latitud: number, longitud: number }
+ */
+export const marcarSalida = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    const { latitud, longitud } = req.body;
+    if (latitud === undefined || longitud === undefined) {
+        return res.status(400).json({ error: "Se requiere latitud y longitud" });
+    }
+
+    try {
+        const asignacion = await prismaClient.colegiados_asignados_social.findUnique({
+            where: { id_asignacion: id },
+            include: { actividades_sociales: true }
+        });
+        if (!asignacion) return res.status(404).json({ error: "Asignación no encontrada" });
+
+        const registroAbierto = await prismaClient.asistencia_social_diaria.findFirst({
+            where: {
+                id_asignacion: id,
+                hora_entrada: { not: null },
+                hora_salida: null
+            },
+            orderBy: {
+                hora_entrada: 'desc'
+            }
+        });
+
+        if (!registroAbierto || !registroAbierto.hora_entrada) {
+            return res.status(400).json({ error: "No hay una entrada abierta pendiente de salida" });
+        }
+
+        const act = asignacion.actividades_sociales;
+        if (act?.latitud && act?.longitud) {
+            const dist = haversineDistancia(
+                Number(latitud), Number(longitud),
+                act.latitud, act.longitud
+            );
+            const radio = act.radio_metros ?? 100;
+            if (dist > radio) {
+                return res.status(403).json({
+                    error: "Fuera del radio permitido",
+                    distancia_metros: Math.round(dist),
+                    radio_metros: radio
+                });
+            }
+        }
+
+        const ahora = new Date();
+        const horasGanadas = (ahora.getTime() - registroAbierto.hora_entrada.getTime()) / 3_600_000;
+
+        await prismaClient.$transaction(async (tx) => {
+            await tx.asistencia_social_diaria.update({
+                where: { id_asistencia_diaria: registroAbierto.id_asistencia_diaria },
+                data: {
+                    hora_salida: ahora,
+                    horas_ganadas: horasGanadas
+                }
+            });
+
+            await tx.colegiados_asignados_social.update({
+                where: { id_asignacion: id },
+                data: {
+                    total_horas: { increment: horasGanadas }
+                }
+            });
+        });
+
+        res.status(200).json({ message: "Salida marcada correctamente" });
+    } catch (error) {
+        console.error("Error en marcarSalida:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+/**
+ * PATCH /api/ac-sociales/asignacion/:id/meta
+ * Body: { horas_meta: number }
+ * Auth: Admin
+ */
+export const updateMetaAsignacion = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    const { horas_meta } = req.body;
+    if (horas_meta === undefined || isNaN(Number(horas_meta))) {
+        return res.status(400).json({ error: "horas_meta debe ser un número" });
+    }
+
+    try {
+        const updated = await prismaClient.colegiados_asignados_social.update({
+            where: { id_asignacion: id },
+            data: { horas_meta: Number(horas_meta) }
+        });
+        res.status(200).json({ message: "Meta de horas actualizada", asignacion: updated });
+    } catch (error) {
+        console.error("Error en updateMetaAsignacion:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
     }
 };
