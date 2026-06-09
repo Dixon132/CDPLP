@@ -15,7 +15,8 @@ import {
   FolderDot,
   UserCog,
   ChevronRight,
-  Search
+  Search,
+  Activity
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { parseToken } from '../../../utils/parsejwt';
@@ -48,7 +49,8 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
-      { title: 'IREC IA', icon: <FolderDot size={20} />, path: '/dashboard/modelo' },
+      // Módulo IREC anterior retirado del dashboard del colegio (Req. 1.3, 1.4, tarea 26.12).
+      // La fuente del módulo IREC permanece en disco; solo se desconecta de la navegación.
     ];
   } else if (rol === "SECRETARIO") {
     mainNavItems = [
@@ -86,6 +88,17 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' }
+    ];
+  }
+
+  // Punto de acceso a la Plataforma_GDS (Gemelo Digital Social).
+  // Disponible para cualquier usuario autenticado con un rol definido; al
+  // navegar a `/gds` se monta el `GdsLayout` propio de la plataforma, que es
+  // independiente del `DashboardLayout` del colegio (Req. 1.1, 1.2).
+  if (rol && rol !== 'NO_DEFINIDO') {
+    mainNavItems = [
+      ...mainNavItems,
+      { title: 'Plataforma_GDS', icon: <Activity size={20} />, path: '/gds' },
     ];
   }
 

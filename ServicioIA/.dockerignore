@@ -1,0 +1,14 @@
+.venv
+__pycache__
+**/__pycache__
+*.pyc
+.pytest_cache
+.hypothesis
+.env
+.env.*
+!.env.example
+.git
+.gitignore
+.model_cache
+models
+requirements-dev.txt

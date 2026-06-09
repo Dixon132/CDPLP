@@ -1,0 +1,26 @@
+# Servicio_IA (FastAPI) — dependencias de ejecución
+# Framework HTTP / ASGI
+fastapi>=0.110,<1.0
+uvicorn[standard]>=0.29,<1.0
+pydantic>=2.5,<3.0
+pydantic-settings>=2.1,<3.0
+
+# Modelos / NLP / visión
+transformers>=4.40
+sentence-transformers>=2.6
+spacy>=3.7
+nltk>=3.8
+
+# ML / numérico
+scikit-learn>=1.4
+torch>=2.2
+numpy>=1.26
+pandas>=2.2
+
+# Persistencia vectorial (pgvector) + driver PostgreSQL
+pgvector>=0.2.5
+psycopg[binary]>=3.1
+
+# Observabilidad: captura de errores (Sentry). Guardada por SENTRY_DSN (no-op sin DSN).
+sentry-sdk>=2.0,<3.0
+

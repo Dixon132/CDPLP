@@ -1,0 +1,163 @@
+# CI — Plataforma_GDS (tres componentes)
+#
+# Ejecuta la suite de pruebas de cada componente como evidencia técnica
+# (Req. 26.1, 26.2, 41.5). Un incremento se considera completo solo si su
+# suite pasa:
+#   - ServidorGDS  : jest --runInBand (+ Supertest + PBT con fast-check)
+#   - ClienteCDPLPL: vitest run
+#   - ServicioIA   : pytest (+ Hypothesis con dobles de modelos)
+#
+# Comandos no interactivos (sin watch ni servidores de larga ejecución).
+
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master, develop]
+  workflow_dispatch:
+
+# Evita ejecuciones redundantes sobre la misma rama/PR.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Backend NestJS — Jest/Supertest/PBT.
+  # Levanta PostgreSQL+pgvector y Redis por si las pruebas de integración los
+  # necesitan; las pruebas unitarias/PBT son deterministas y usan dobles.
+  # ---------------------------------------------------------------------------
+  servidor-gds:
+    name: ServidorGDS (Jest + Supertest + PBT)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ServidorGDS
+
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: gds
+          POSTGRES_PASSWORD: gds
+          POSTGRES_DB: gds_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U gds -d gds_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql://gds:gds@localhost:5432/gds_test?schema=public
+      REDIS_URL: redis://localhost:6379
+      JWT_SECRET: ci-test-secret
+      SERVICIO_IA_URL: http://localhost:8000
+      PORT: "3001"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ServidorGDS/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run test suite (Jest + Supertest + PBT)
+        run: npm test
+
+  # ---------------------------------------------------------------------------
+  # Frontend React/Vite — Vitest (Playwright opcional si está configurado).
+  # No requiere servicios en vivo.
+  # ---------------------------------------------------------------------------
+  cliente-cdplpl:
+    name: ClienteCDPLPL (Vitest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ClienteCDPLPL
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ClienteCDPLPL/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests (Vitest)
+        run: npm test
+
+      # Playwright es opcional: solo se ejecuta si existe su configuración.
+      - name: Run E2E tests (Playwright, opcional)
+        run: |
+          if ls playwright.config.* >/dev/null 2>&1; then
+            echo "Playwright config detectada — ejecutando E2E."
+            npx playwright install --with-deps
+            npx playwright test
+          else
+            echo "Sin configuración de Playwright — se omite el paso E2E."
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Servicio_IA Python/FastAPI — pytest (+ Hypothesis).
+  # Usa dobles de modelos: no descarga pesos, no usa GPU ni BD en vivo.
+  # ---------------------------------------------------------------------------
+  servicio-ia:
+    name: ServicioIA (pytest)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ServicioIA
+
+    env:
+      HYPOTHESIS_PROFILE: ci
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ServicioIA/requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run test suite (pytest + Hypothesis)
+        run: pytest

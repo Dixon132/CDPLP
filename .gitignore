@@ -1,0 +1,37 @@
+# ===========================================================================
+# .gitignore raiz del monorepo Plataforma_GDS / CDPLP
+# Cada subproyecto tiene ademas su propio .gitignore.
+# ===========================================================================
+
+# Variables de entorno (NUNCA commitear secretos reales; usar los .env.example)
+.env
+**/.env
+!**/.env.example
+
+# Dependencias
+**/node_modules/
+**/.venv/
+**/venv/
+**/env/
+
+# Builds / salidas
+**/dist/
+**/build/
+**/generated/
+*.tsbuildinfo
+
+# Cache de Python
+**/__pycache__/
+*.py[cod]
+**/.pytest_cache/
+**/.hypothesis/
+**/.model_cache/
+**/.model_cache_test/
+
+# Logs
+*.log
+logs/
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db

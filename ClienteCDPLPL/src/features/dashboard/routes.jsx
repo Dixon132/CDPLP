@@ -22,7 +22,9 @@ import Auditorias from "./pages/Auditorias/Auditorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
-import IRECDashboard from "./pages/Ia/IREC";
+// Módulo IREC anterior retirado del dashboard del colegio (Req. 1.3, 1.4, tarea 26.12).
+// El componente fuente `./pages/Ia/IREC` permanece en disco; solo se desconecta de las rutas.
+// import IRECDashboard from "./pages/Ia/IREC";
 import { VerDetallesActividad } from "./pages/Ac-soc/components/VerDetallesActividad";
 import { Perfil } from "./pages/Ac-soc/components/Perfil";
 
@@ -204,9 +206,8 @@ export const dashboardRoutes = {
                 </RequireRole>
             )
         },
-        {
-            path: 'modelo',
-            element: <IRECDashboard />
-        }
+        // Ruta 'modelo' (IRECDashboard) del módulo IREC anterior retirada del
+        // dashboard del colegio (Req. 1.3, 1.4, tarea 26.12). Reversible: la fuente
+        // del componente sigue en disco; solo se desconectó de las rutas.
     ]
 }

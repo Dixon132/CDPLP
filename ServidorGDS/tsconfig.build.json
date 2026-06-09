@@ -1,0 +1,33 @@
+{
+  // Compilacion de la aplicacion NestJS (nest build).
+  // Excluye pruebas y el codigo de dominio TS heredado (Express) que las tareas
+  // 3.x reposicionaran como fallback determinista dentro de los modulos NestJS;
+  // hasta entonces ese codigo no forma parte del grafo de build de la app.
+  "extends": "./tsconfig.json",
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/__tests__/**",
+    "**/pbt/**",
+    "src/config",
+    "src/middlewares",
+    "src/utils",
+    "src/routes",
+    "src/modules/adquisicion",
+    "src/modules/analisis",
+    "src/modules/auth",
+    "src/modules/ciclo",
+    "src/modules/contracts",
+    "src/modules/escenarios",
+    "src/modules/evidencias",
+    "src/modules/instituciones",
+    "src/modules/memoria",
+    "src/modules/ml",
+    "src/modules/pipeline",
+    "src/modules/reportes",
+    "src/modules/ws"
+  ]
+}

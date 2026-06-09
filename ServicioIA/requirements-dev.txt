@@ -1,0 +1,6 @@
+# Dependencias de desarrollo / pruebas del Servicio_IA
+-r requirements.txt
+
+pytest>=8.0
+hypothesis>=6.100
+httpx>=0.27

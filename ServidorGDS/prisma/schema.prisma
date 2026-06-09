@@ -1,0 +1,654 @@
+// ===========================================================================
+// Esquema Prisma del servicio autónomo ServidorGDS (Plataforma_GDS).
+//
+// Apunta a la base de datos PostgreSQL DEDICADA e INDEPENDIENTE del servicio
+// vía su propio `DATABASE_URL`. NUNCA referencia ni accede a la base de datos
+// del colegio (aislamiento total por separación física - Req. 25.1, 25.3).
+//
+// El prefijo `gds_` (vía @@map) es OPCIONAL: se conserva por claridad, no por
+// aislamiento (el aislamiento lo da la base de datos dedicada).
+//
+// Política de borrado (Req. 25.4, 25.6, 25.7, 28.9):
+//  - Cascada dentro del subgrafo cuya raíz es `gds_analisis`.
+//  - FK RESTRICTIVA de `gds_comunidad_digital` -> `gds_institucion` (Req. 7.6).
+// ===========================================================================
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  // Extensiones nativas de PostgreSQL gestionadas por Prisma sobre la BD DEDICADA.
+  // `vector` (pgvector) habilita la Memoria_Semantica vectorial (Req. 25.1, 36.1).
+  extensions = [vector]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  // Necesario para declarar `extensions` en el datasource (Prisma 5.x).
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+// ---------------------------------------------------------------------------
+// Institución (geolocalizada). Borrado RESTRINGIDO si está referenciada.
+// ---------------------------------------------------------------------------
+model Institucion {
+  id          String  @id @default(cuid())
+  nombre      String
+  categoria   String
+  latitud     Float
+  longitud    Float
+  radioMetros Int     @map("radio_metros")
+  logoUrl     String? @map("logo_url")
+  descripcion String?
+
+  // Referencias entrantes (todas RESTRICT: no se borra si está referenciada)
+  comunidades Comunidad[]
+  ciclos      CicloSemanal[]
+  evidences   Evidence[]
+  reportes    Reporte[]
+  embeddings  Embedding[]
+
+  @@map("gds_institucion")
+}
+
+// ---------------------------------------------------------------------------
+// Biblioteca de escenarios reutilizables (predefinidos / personalizados).
+// Independiente: los Análisis guardan una COPIA INMUTABLE de su contenido.
+// ---------------------------------------------------------------------------
+model Scenario {
+  id                          String  @id @default(cuid())
+  nombre                      String
+  descripcion                 String
+  contexto                    String
+  intensidad                  String
+  duracionEsperada            Int     @map("duracion_esperada")
+  eventosDetonantes           Json    @map("eventos_detonantes")
+  actoresInvolucrados         Json    @map("actores_involucrados")
+  categoria                   String
+  tags                        Json
+  configuracionComportamiento Json    @map("configuracion_comportamiento")
+  parametros                  Json
+  version                     Int     @default(1)
+  esPredefinido               Boolean @default(false) @map("es_predefinido")
+
+  analisis Analisis[]
+
+  @@map("gds_scenarios")
+}
+
+// ---------------------------------------------------------------------------
+// Análisis: raíz del subgrafo en cascada. Copia inmutable del escenario.
+// ---------------------------------------------------------------------------
+model Analisis {
+  id                       String  @id @default(cuid())
+  nombre                   String
+  escenario                String // copia inmutable del contenido del escenario
+  escenarioEsPersonalizado Boolean @default(false) @map("escenario_es_personalizado")
+  escenarioId              String? @map("escenario_id")
+  escenarioVersion         Int?    @map("escenario_version")
+  semanasTotales           Int     @map("semanas_totales")
+  radioAnalisis            Int     @map("radio_analisis")
+  saltAnon                 String  @map("salt_anon")
+  modoEjecucion            String  @map("modo_ejecucion")
+  intervaloTiempoRealMs    Int?    @map("intervalo_tiempo_real_ms")
+  estadoEjecucion          String  @map("estado_ejecucion")
+  estado                   String
+
+  // Trazabilidad al escenario de origen (NO acopla: es copia inmutable).
+  // SetNull para no borrar análisis al borrar el escenario de la biblioteca.
+  scenario Scenario? @relation(fields: [escenarioId], references: [id], onDelete: SetNull)
+
+  // Subgrafo en cascada
+  comunidades          Comunidad[]
+  ciclos               CicloSemanal[]
+  patrones             Patron[]
+  reportes             Reporte[]
+  calibraciones        Calibracion[]
+  evidences            Evidence[]
+  embeddings           Embedding[]
+  tendenciasHistoricas TendenciaHistorica[]
+  eventosHistoricos    EventoHistorico[]
+  memoriasSemanal      MemoriaSemanal[]
+  memoriasMensual      MemoriaMensual[]
+  memoriasTrimestral   MemoriaTrimestral[]
+  memoriasSemestral    MemoriaSemestral[]
+  memoriasGlobal       MemoriaGlobal[]
+
+  @@index([escenarioId])
+  @@map("gds_analisis")
+}
+
+// ---------------------------------------------------------------------------
+// Comunidad por (analisis, institucion) con su Zona_Geografica.
+// FK a Analisis (CASCADE) y a Institucion (RESTRICT). Único (analisis, instit).
+// ---------------------------------------------------------------------------
+model Comunidad {
+  id              String @id @default(cuid())
+  analisisId      String @map("analisis_id")
+  institucionId   String @map("institucion_id")
+  zonaLatitud     Float  @map("zona_latitud")
+  zonaLongitud    Float  @map("zona_longitud")
+  zonaRadioMetros Int    @map("zona_radio_metros")
+
+  analisis    Analisis    @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  institucion Institucion @relation(fields: [institucionId], references: [id], onDelete: Restrict)
+
+  usuarios  UsuarioSintetico[]
+  scores    ScoreAsociacion[]
+  patrones  Patron[]
+  evidences Evidence[]
+
+  embeddings           Embedding[]
+  tendenciasHistoricas TendenciaHistorica[]
+  eventosHistoricos    EventoHistorico[]
+
+  memoriasSemanal    MemoriaSemanal[]
+  memoriasMensual    MemoriaMensual[]
+  memoriasTrimestral MemoriaTrimestral[]
+  memoriasSemestral  MemoriaSemestral[]
+
+  @@unique([analisisId, institucionId])
+  @@index([institucionId])
+  @@map("gds_comunidad_digital")
+}
+
+// ---------------------------------------------------------------------------
+// Estado de la semana N. Único (analisis, institucion, numero_semana).
+// ---------------------------------------------------------------------------
+model CicloSemanal {
+  id                String    @id @default(cuid())
+  analisisId        String    @map("analisis_id")
+  institucionId     String    @map("institucion_id")
+  numeroSemana      Int       @map("numero_semana")
+  estado            String
+  etapasCompletadas String    @map("etapas_completadas")
+  bloqueadoEn       DateTime? @map("bloqueado_en")
+
+  analisis    Analisis    @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  institucion Institucion @relation(fields: [institucionId], references: [id], onDelete: Restrict)
+
+  generacion Generacion?
+  resultados ResultadoAnalisis[]
+  logs       LogGeneracion[]
+
+  @@unique([analisisId, institucionId, numeroSemana])
+  @@index([institucionId])
+  @@map("gds_ciclo_semanal")
+}
+
+// ---------------------------------------------------------------------------
+// Generación: Contrato_Normalizado crudo (1–1 con ciclo semanal).
+// ---------------------------------------------------------------------------
+model Generacion {
+  id                  String @id @default(cuid())
+  cicloId             String @unique @map("ciclo_id")
+  contratoNormalizado Json   @map("contrato_normalizado")
+  version             String
+  estadoGeneracion    String @map("estado_generacion")
+
+  ciclo CicloSemanal @relation(fields: [cicloId], references: [id], onDelete: Cascade)
+
+  @@map("gds_generacion")
+}
+
+// ---------------------------------------------------------------------------
+// Usuario sintético persistente con perfil e historial.
+// ---------------------------------------------------------------------------
+model UsuarioSintetico {
+  id                 String @id @default(cuid())
+  comunidadId        String @map("comunidad_id")
+  seudonimo          String
+  perfilConductual   String @map("perfil_conductual")
+  frecuencia         Float
+  estiloEscritura    String @map("estilo_escritura")
+  intereses          String
+  nivelParticipacion String @map("nivel_participacion")
+
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  historial HistorialUsuario[]
+  scores    ScoreAsociacion[]
+
+  @@index([comunidadId])
+  @@map("gds_usuario_sintetico")
+}
+
+// ---------------------------------------------------------------------------
+// Historial acumulado de actividad por semana.
+// ---------------------------------------------------------------------------
+model HistorialUsuario {
+  id           String @id @default(cuid())
+  usuarioId    String @map("usuario_id")
+  numeroSemana Int    @map("numero_semana")
+  actividad    Json
+
+  usuario UsuarioSintetico @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@map("gds_historial_usuario")
+}
+
+// ---------------------------------------------------------------------------
+// Score de asociación [0,1] por (usuario, comunidad, semana).
+// ---------------------------------------------------------------------------
+model ScoreAsociacion {
+  id           String @id @default(cuid())
+  usuarioId    String @map("usuario_id")
+  comunidadId  String @map("comunidad_id")
+  numeroSemana Int    @map("numero_semana")
+  score        Float
+
+  usuario   UsuarioSintetico @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  comunidad Comunidad        @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId])
+  @@index([comunidadId])
+  @@map("gds_score_asociacion")
+}
+
+// ---------------------------------------------------------------------------
+// Resultado del pipeline por semana (cascade desde ciclo semanal).
+// ---------------------------------------------------------------------------
+model ResultadoAnalisis {
+  id            String   @id @default(cuid())
+  cicloId       String   @map("ciclo_id")
+  datosNlp      Json?    @map("datos_nlp")
+  datosVision   Json?    @map("datos_vision")
+  datosTemporal Json?    @map("datos_temporal")
+  creadoEn      DateTime @default(now()) @map("creado_en")
+
+  ciclo CicloSemanal @relation(fields: [cicloId], references: [id], onDelete: Cascade)
+
+  dimensiones DimensionRiesgo[]
+  evidences   Evidence[]
+  embeddings  Embedding[]
+
+  @@index([cicloId])
+  @@map("gds_resultado_analisis")
+}
+
+// ---------------------------------------------------------------------------
+// Una fila por dimensión del índice de riesgo (dimensiones configurables).
+// ---------------------------------------------------------------------------
+model DimensionRiesgo {
+  id               String @id @default(cuid())
+  resultadoId      String @map("resultado_id")
+  nombre           String
+  valor            Float
+  minimo           Float
+  maximo           Float
+  scoreCalibradoMl Float? @map("score_calibrado_ml")
+
+  resultado ResultadoAnalisis @relation(fields: [resultadoId], references: [id], onDelete: Cascade)
+
+  explicaciones Explicacion[]
+
+  @@index([resultadoId])
+  @@map("gds_dimension_riesgo")
+}
+
+// ---------------------------------------------------------------------------
+// Explicación en lenguaje natural de cada variación de dimensión.
+// ---------------------------------------------------------------------------
+model Explicacion {
+  id             String  @id @default(cuid())
+  dimensionId    String  @map("dimension_id")
+  que            String
+  porQue         String  @map("por_que")
+  cuandoEmpezo   String? @map("cuando_empezo")
+  comoEvoluciono String? @map("como_evoluciono")
+
+  dimension DimensionRiesgo @relation(fields: [dimensionId], references: [id], onDelete: Cascade)
+
+  @@index([dimensionId])
+  @@map("gds_explicacion")
+}
+
+// ---------------------------------------------------------------------------
+// Sistema de evidencias: trazabilidad conclusión -> evidencia -> dato original.
+// FK a resultado/analisis/comunidad (CASCADE) e institucion (RESTRICT).
+// ---------------------------------------------------------------------------
+model Evidence {
+  id                     String  @id @default(cuid())
+  resultadoId            String  @map("resultado_id")
+  analisisId             String  @map("analisis_id")
+  comunidadId            String  @map("comunidad_id")
+  institucionId          String  @map("institucion_id")
+  numeroSemana           Int     @map("numero_semana")
+  refContenido           String  @map("ref_contenido")
+  contributividad        String
+  tipo                   String
+  contenido              String
+  publicacionesAsociadas Json    @map("publicaciones_asociadas")
+  comentariosAsociados   Json    @map("comentarios_asociados")
+  eventosAsociados       Json    @map("eventos_asociados")
+  semanasInvolucradas    Json    @map("semanas_involucradas")
+  indicadoresUtilizados  Json    @map("indicadores_utilizados")
+  explicacionIa          String? @map("explicacion_ia")
+  metricasUtilizadas     Json    @map("metricas_utilizadas")
+  variacionPct           Float?  @map("variacion_pct")
+  conteo                 Int?
+
+  resultado   ResultadoAnalisis @relation(fields: [resultadoId], references: [id], onDelete: Cascade)
+  analisis    Analisis          @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad   Comunidad         @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+  institucion Institucion       @relation(fields: [institucionId], references: [id], onDelete: Restrict)
+
+  refs EvidenceRef[]
+
+  @@index([resultadoId])
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@index([institucionId])
+  @@map("gds_evidences")
+}
+
+// ---------------------------------------------------------------------------
+// Enlace POR ID entre una conclusión/dimensión/explicación/patrón y su
+// evidencia (desacople). `origen_*` es una referencia lógica polimórfica.
+// ---------------------------------------------------------------------------
+model EvidenceRef {
+  id          String @id @default(cuid())
+  origenTipo  String @map("origen_tipo")
+  origenId    String @map("origen_id")
+  evidenciaId String @map("evidencia_id")
+
+  evidencia Evidence @relation(fields: [evidenciaId], references: [id], onDelete: Cascade)
+
+  @@index([evidenciaId])
+  @@index([origenTipo, origenId])
+  @@map("gds_evidence_ref")
+}
+
+// ---------------------------------------------------------------------------
+// Patrones/tendencias anclados a la Zona_Geografica de su comunidad.
+// ---------------------------------------------------------------------------
+model Patron {
+  id              String @id @default(cuid())
+  analisisId      String @map("analisis_id")
+  comunidadId     String @map("comunidad_id")
+  zonaLatitud     Float  @map("zona_latitud")
+  zonaLongitud    Float  @map("zona_longitud")
+  zonaRadioMetros Int    @map("zona_radio_metros")
+  tipo            String
+  descripcion     String
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_patron")
+}
+
+// ---------------------------------------------------------------------------
+// Registro de calibración de la Capa_ML (Corpus_Longitudinal).
+// ---------------------------------------------------------------------------
+model Calibracion {
+  id           String   @id @default(cuid())
+  analisisId   String   @map("analisis_id")
+  version      String
+  artefactoRef String   @map("artefacto_ref")
+  metricas     Json
+  calibradoEn  DateTime @default(now()) @map("calibrado_en")
+
+  analisis Analisis @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+
+  @@index([analisisId])
+  @@map("gds_calibracion")
+}
+
+// ---------------------------------------------------------------------------
+// Reportes por horizonte. FK a análisis (CASCADE) y opcional institución.
+// ---------------------------------------------------------------------------
+model Reporte {
+  id            String   @id @default(cuid())
+  analisisId    String   @map("analisis_id")
+  institucionId String?  @map("institucion_id")
+  horizonte     String
+  contenido     Json
+  generadoEn    DateTime @default(now()) @map("generado_en")
+
+  analisis    Analisis     @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  institucion Institucion? @relation(fields: [institucionId], references: [id], onDelete: Restrict)
+
+  @@index([analisisId])
+  @@index([institucionId])
+  @@map("gds_reporte")
+}
+
+// ---------------------------------------------------------------------------
+// Registro de TODOS los fallos de generación/validación (cascade desde ciclo).
+// ---------------------------------------------------------------------------
+model LogGeneracion {
+  id       String   @id @default(cuid())
+  cicloId  String   @map("ciclo_id")
+  nivel    String
+  mensaje  String
+  detalle  Json?
+  creadoEn DateTime @default(now()) @map("creado_en")
+
+  ciclo CicloSemanal @relation(fields: [cicloId], references: [id], onDelete: Cascade)
+
+  @@index([cicloId])
+  @@map("gds_log_generacion")
+}
+
+// ---------------------------------------------------------------------------
+// Memoria jerárquica (5 niveles). Escenario preservado en todos los niveles.
+// ---------------------------------------------------------------------------
+model MemoriaSemanal {
+  id                 String @id @default(cuid())
+  analisisId         String @map("analisis_id")
+  comunidadId        String @map("comunidad_id")
+  numeroSemana       Int    @map("numero_semana")
+  escenario          String
+  resumen            String
+  eventosRelevantes  Json   @map("eventos_relevantes")
+  cambiosImportantes Json   @map("cambios_importantes")
+  anomalias          Json
+  tendencias         Json
+  tokensAprox        Int    @map("tokens_aprox")
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@unique([analisisId, comunidadId, numeroSemana])
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_memoria_semanal")
+}
+
+model MemoriaMensual {
+  id                 String @id @default(cuid())
+  analisisId         String @map("analisis_id")
+  comunidadId        String @map("comunidad_id")
+  numeroMes          Int    @map("numero_mes")
+  escenario          String
+  resumen            String
+  eventosRelevantes  Json   @map("eventos_relevantes")
+  cambiosImportantes Json   @map("cambios_importantes")
+  anomalias          Json
+  tendencias         Json
+  tokensAprox        Int    @map("tokens_aprox")
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@unique([analisisId, comunidadId, numeroMes])
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_memoria_mensual")
+}
+
+model MemoriaTrimestral {
+  id                 String @id @default(cuid())
+  analisisId         String @map("analisis_id")
+  comunidadId        String @map("comunidad_id")
+  numeroTrimestre    Int    @map("numero_trimestre")
+  escenario          String
+  resumen            String
+  eventosRelevantes  Json   @map("eventos_relevantes")
+  cambiosImportantes Json   @map("cambios_importantes")
+  anomalias          Json
+  tendencias         Json
+  tokensAprox        Int    @map("tokens_aprox")
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@unique([analisisId, comunidadId, numeroTrimestre])
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_memoria_trimestral")
+}
+
+model MemoriaSemestral {
+  id                 String @id @default(cuid())
+  analisisId         String @map("analisis_id")
+  comunidadId        String @map("comunidad_id")
+  numeroSemestre     Int    @map("numero_semestre")
+  escenario          String
+  resumen            String
+  eventosRelevantes  Json   @map("eventos_relevantes")
+  cambiosImportantes Json   @map("cambios_importantes")
+  anomalias          Json
+  tendencias         Json
+  tokensAprox        Int    @map("tokens_aprox")
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@unique([analisisId, comunidadId, numeroSemestre])
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_memoria_semestral")
+}
+
+model MemoriaGlobal {
+  id                 String @id @default(cuid())
+  analisisId         String @map("analisis_id")
+  escenario          String
+  resumen            String
+  eventosRelevantes  Json   @map("eventos_relevantes")
+  cambiosImportantes Json   @map("cambios_importantes")
+  anomalias          Json
+  tendencias         Json
+  tokensAprox        Int    @map("tokens_aprox")
+
+  analisis Analisis @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+
+  @@unique([analisisId])
+  @@index([analisisId])
+  @@map("gds_memoria_global")
+}
+
+// ---------------------------------------------------------------------------
+// Memoria_Semantica vectorial (embeddings en pgvector). Un vector por
+// fragmento de contenido analizado, con `modelo`, `dim` y referencias
+// trazables a semana/comunidad/institución/análisis y al resultado de origen
+// (Req. 36.1, 36.5). El corpus SE ACUMULA: nunca se borran vectores previos
+// salvo por la cascada al eliminar el Analisis raíz (Req. 36.2, 25.4).
+//
+// La columna `vector` usa el tipo nativo `vector` de pgvector (sin soporte
+// escalar nativo en Prisma -> Unsupported). Se fija a dimensión 1024 para
+// permitir el índice aproximado (`ivfflat`/`hnsw`), alineada con el modelo
+// primario de la Memoria_Semantica (`BAAI/bge-m3`, 1024 dims). El índice
+// vectorial se crea por SQL nativo en la migración (Prisma no lo emite).
+// ---------------------------------------------------------------------------
+model Embedding {
+  id            String @id @default(cuid())
+  analisisId    String @map("analisis_id")
+  comunidadId   String @map("comunidad_id")
+  institucionId String @map("institucion_id")
+  resultadoId   String @map("resultado_id")
+  numeroSemana  Int    @map("numero_semana")
+  refContenido  String @map("ref_contenido")
+  modelo        String
+  dim           Int
+
+  // Vector pgvector; gestionado por SQL nativo (Embeddings_Search).
+  vector Unsupported("vector(1024)")
+
+  analisis    Analisis          @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad   Comunidad         @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+  institucion Institucion       @relation(fields: [institucionId], references: [id], onDelete: Restrict)
+  resultado   ResultadoAnalisis @relation(fields: [resultadoId], references: [id], onDelete: Cascade)
+
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@index([institucionId])
+  @@index([resultadoId])
+  @@map("gds_embedding")
+}
+
+// ---------------------------------------------------------------------------
+// Memoria histórica de TENDENCIAS detectadas por semana, ancladas a la
+// Zona_Geografica de su comunidad (Req. 39.1–39.3). Cascade desde análisis.
+// ---------------------------------------------------------------------------
+model TendenciaHistorica {
+  id              String @id @default(cuid())
+  analisisId      String @map("analisis_id")
+  comunidadId     String @map("comunidad_id")
+  numeroSemana    Int    @map("numero_semana")
+  dimension       String
+  direccion       String
+  magnitud        Float
+  zonaLatitud     Float  @map("zona_latitud")
+  zonaLongitud    Float  @map("zona_longitud")
+  zonaRadioMetros Int    @map("zona_radio_metros")
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_tendencia_historica")
+}
+
+// ---------------------------------------------------------------------------
+// Memoria histórica de EVENTOS detectados por semana, trazable a su
+// semana/comunidad de origen (Req. 39.1, 39.3). Cascade desde análisis.
+// ---------------------------------------------------------------------------
+model EventoHistorico {
+  id           String @id @default(cuid())
+  analisisId   String @map("analisis_id")
+  comunidadId  String @map("comunidad_id")
+  numeroSemana Int    @map("numero_semana")
+  tipo         String
+  descripcion  String
+
+  analisis  Analisis  @relation(fields: [analisisId], references: [id], onDelete: Cascade)
+  comunidad Comunidad @relation(fields: [comunidadId], references: [id], onDelete: Cascade)
+
+  @@index([analisisId])
+  @@index([comunidadId])
+  @@map("gds_evento_historico")
+}
+
+// ---------------------------------------------------------------------------
+// Usuarios/roles de la PLATAFORMA GDS, en la propia BD del servicio.
+// `idUsuario` es el id del JWT del colegio (referencia lógica, SIN FK ni
+// acceso a la base de datos del colegio - aislamiento total, Req. 24, 25.3).
+// ---------------------------------------------------------------------------
+model UsuarioPlataforma {
+  id        String   @id @default(cuid())
+  idUsuario String   @unique @map("id_usuario")
+  nombre    String?
+  creadoEn  DateTime @default(now()) @map("creado_en")
+
+  roles RolPlataforma[]
+
+  @@map("gds_usuario_plataforma")
+}
+
+model RolPlataforma {
+  id        String @id @default(cuid())
+  usuarioId String @map("usuario_id")
+  rol       String
+
+  usuario UsuarioPlataforma @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, rol])
+  @@index([usuarioId])
+  @@map("gds_rol_plataforma")
+}

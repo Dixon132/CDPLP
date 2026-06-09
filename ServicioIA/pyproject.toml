@@ -1,0 +1,27 @@
+[project]
+name = "servicio-ia"
+version = "0.1.0"
+description = "Servicio_IA (FastAPI) — cerebro analítico de la Plataforma_GDS"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+# Runner no interactivo (Windows/cmd): `pytest` ejecuta y termina.
+minversion = "8.0"
+testpaths = ["app/tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-ra -q --strict-markers --strict-config"
+filterwarnings = [
+    # Avisos de terceros que no debemos arreglar desde el harness.
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore:Using `httpx`:Warning",
+    # Cualquier otro aviso de nuestro propio código es un error.
+    "error",
+]
+markers = [
+    "property: pruebas basadas en propiedades (Hypothesis).",
+    "smoke: prueba mínima que valida que el harness de pruebas funciona.",
+    "contract: prueba del contrato HTTP de un endpoint (forma de la respuesta).",
+]

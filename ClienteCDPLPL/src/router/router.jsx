@@ -5,6 +5,7 @@ import NotFound from "../features/users/pages/NotFound";
 import userRouter from "../features/users/routes";
 import AccesoPage from "../features/campo/AccesoPage";
 import CampoPage from "../features/campo/CampoPage";
+import { gdsRoutes } from "../features/gds/routes";
 
 export const router = createBrowserRouter([
     {
@@ -22,8 +23,9 @@ export const router = createBrowserRouter([
     dashboardRoutes,
     authRouter,
     userRouter,
+    gdsRoutes,
     {
         path: "*",
-        element: <NotFound/>
+        element: <NotFound />
     }
-])
+])

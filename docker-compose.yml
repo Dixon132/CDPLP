@@ -1,0 +1,135 @@
+# ===========================================================================
+# Plataforma_GDS — Orquestacion de los tres componentes + datos (D15, Req. 41.3/41.4)
+#
+#   frontend     ClienteCDPLPL  React/Vite servido por Nginx (+ reverse proxy)
+#   servidor-gds ServidorGDS    Backend NestJS (API /api/gds, BullMQ, WS)
+#   servicio-ia  ServicioIA     Cerebro analitico FastAPI (Python) — NO expuesto
+#   postgres     PostgreSQL + pgvector (BD DEDICADA del ServidorGDS)
+#   redis        Redis (cola BullMQ + cache del ServidorGDS)
+#
+# Aislamiento (Req. 25.1, 35): el `servicio-ia` solo es accesible en la red
+# interna de contenedores (sin `ports`). La BD/Redis son dedicadas al GDS.
+# ===========================================================================
+
+name: plataforma-gds
+
+services:
+  # --- Datos: PostgreSQL + pgvector ---------------------------------------
+  postgres:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-gds}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-gds}
+      POSTGRES_DB: ${POSTGRES_DB:-gds_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-gds} -d ${POSTGRES_DB:-gds_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gds_internal
+
+  # --- Datos: Redis (BullMQ + cache) --------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - gds_internal
+
+  # --- Servicio_IA (Python/FastAPI) — red interna, sin puertos publicos ----
+  servicio-ia:
+    build:
+      context: ./ServicioIA
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gds}:${POSTGRES_PASSWORD:-gds}@postgres:5432/${POSTGRES_DB:-gds_db}
+      MODEL_CACHE: /models
+      DEVICE: ${SERVICIO_IA_DEVICE:-cpu}
+    volumes:
+      - model_cache:/models
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Sin `ports`: NO se expone publicamente (Req. 35). Accesible solo en red interna.
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://localhost:8000/health').status==200 else sys.exit(1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    networks:
+      - gds_internal
+
+  # --- ServidorGDS (NestJS) -----------------------------------------------
+  servidor-gds:
+    build:
+      context: ./ServidorGDS
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      PORT: "4100"
+      NODE_ENV: production
+      DATABASE_URL: postgresql://${POSTGRES_USER:-gds}:${POSTGRES_PASSWORD:-gds}@postgres:5432/${POSTGRES_DB:-gds_db}?schema=public
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:-cambia-esto-por-el-secreto-compartido}
+      SERVICIO_IA_URL: http://servicio-ia:8000
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      servicio-ia:
+        condition: service_started
+    ports:
+      # Expuesto para acceso directo a la API/Swagger (/api/gds/docs).
+      - "${GDS_API_PORT:-4100}:4100"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4100/api/gds/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+    networks:
+      - gds_internal
+
+  # --- Frontend_GDS (React/Vite + Nginx reverse proxy) --------------------
+  frontend:
+    build:
+      context: ./ClienteCDPLPL
+      dockerfile: Dockerfile
+      args:
+        # Origen del backend visible para el navegador. Por defecto mismo-origen
+        # (el propio Nginx) que reverse-proxea `/api/gds` y `/socket.io`.
+        VITE_GDS_API_URL: ${VITE_GDS_API_URL:-http://localhost:8080}
+    restart: unless-stopped
+    depends_on:
+      servidor-gds:
+        condition: service_started
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    networks:
+      - gds_internal
+
+volumes:
+  postgres_data:
+  redis_data:
+  model_cache:
+
+networks:
+  gds_internal:
+    driver: bridge
