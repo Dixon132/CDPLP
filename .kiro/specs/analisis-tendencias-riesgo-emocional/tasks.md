@@ -149,7 +149,7 @@ Reglas transversales que aplican a **toda** tarea:
   - [x] 8.2 Implementar la sonda de disponibilidad y el proxy de degradación
     - `SondaServicioIA.disponible()` (GET `/health`) y `ProxyDegradacion<T>` que delega en el **fallback determinista TS** ante fallo HTTP/indisponibilidad, sin bloquear el ciclo, registrando el incidente y exponiendo el estado `degradado`; al recuperarse, reanuda el consumo del `Servicio_IA` sin cambios de código
     - _Requirements: 35.3, 35.4, 35.5_
-  - [-] 8.3 Resolver las implementaciones por DI según disponibilidad
+  - [x] 8.3 Resolver las implementaciones por DI según disponibilidad
     - Cada interfaz estable se inyecta como provider cuya implementación concreta (cliente HTTP o fallback TS) se resuelve por el proxy; el `Pipeline_Analisis` depende solo de las interfaces
     - _Requirements: 31.6, 35.4_
   - [x] 8.4 PBT desacople estable de subsistemas reemplazables y degradación segura
@@ -228,7 +228,7 @@ Reglas transversales que aplican a **toda** tarea:
     - _Requirements: 14.1, 14.2, 14.4, 14.5, 16.2_
 
 - [x] 13. Índice de Riesgo, Motor Explicativo y Sistema de Evidencias
-  - [x] 13.1 Implementar el `Indice_Riesgo` multidimensional
+  - [-] 13.1 Implementar el `Indice_Riesgo` multidimensional
     - Calcular cada dimensión por comunidad/semana dentro de su `[minimo, maximo]`; integrar `score_calibrado_ml` del `Servicio_IA`; exponer solo resultados colectivos; dimensiones configurables sin alterar las existentes
     - _Requirements: 17.1, 17.2, 17.4, 17.5, 17.6, 31.2_
   - [x] 13.2 Implementar el `Sistema_Evidencias` (módulo `audit`)
