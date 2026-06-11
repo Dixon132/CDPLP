@@ -29,9 +29,7 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
         const fetchUsuarios = async () => {
             setLoadingDestinatarios(true);
             try {
-                console.log("Cargando usuarios...");
                 const listado = await getAllUsuariosMinimal();
-                console.log("Usuarios recibidos:", listado);
                 
                 if (!listado || !Array.isArray(listado)) {
                     console.error("La respuesta no es un array válido:", listado);
@@ -39,7 +37,6 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
                 }
 
                 // El servicio getAllUsuariosMinimal ya devuelve { value, label }
-                console.log("Usuarios recibidos:", listado);
                 setOpcionesUsuarios(listado);
                 
             } catch (err) {
@@ -56,7 +53,6 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
     const onSubmit = async (data) => {
         try {
             setLoading(true);
-            console.log("Datos del formulario:", data);
             
             // Construir parámetros solo con valores no vacíos
             const params = {};
@@ -98,7 +94,6 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
             link.remove();
             window.URL.revokeObjectURL(url);
             
-            console.log("Descarga completada");
             
         } catch (err) {
             console.error("Error generando reporte de correspondencia:", err);
@@ -109,7 +104,7 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
     };
 
     return (
-        <div className="space-y-6 p-4 bg-white rounded shadow-lg max-w-xl mx-auto">
+        <div className="space-y-6 w-full mx-auto">
             <h2 className="text-xl font-semibold text-center mb-4">
                 Generar Reporte de Correspondencia
             </h2>
@@ -226,7 +221,7 @@ export default function GenerarReporteCorrespondencia({ onClose }) {
                 <button
                     onClick={onClose}
                     disabled={loading}
-                    className={`mt-4 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ${
+                    className={`mt-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
                         loading ? "opacity-50 cursor-not-allowed" : ""
                     }`}
                 >

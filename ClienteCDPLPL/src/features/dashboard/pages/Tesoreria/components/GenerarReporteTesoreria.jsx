@@ -142,8 +142,8 @@ export default function GenerarReporteTesoreria({ onClose }) {
                         });
                     }}
                     className={`px-4 py-2 rounded ${tabPrincipal === "presupuestos"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                            ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+                            : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                         }`}
                 >
                     Presupuestos
@@ -160,8 +160,8 @@ export default function GenerarReporteTesoreria({ onClose }) {
                         });
                     }}
                     className={`px-4 py-2 rounded ${tabPrincipal === "movimientos"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                            ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+                            : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                         }`}
                 >
                     Movimientos
@@ -188,7 +188,7 @@ export default function GenerarReporteTesoreria({ onClose }) {
                             }}
                             className={`px-4 py-2 rounded ${tabPresupuestos === "resumenPres"
                                     ? "bg-green-600 text-white"
-                                    : "bg-gray-200 text-black hover:bg-gray-300"
+                                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                                 }`}
                         >
                             Resumen Presupuestos
@@ -206,7 +206,7 @@ export default function GenerarReporteTesoreria({ onClose }) {
                             }}
                             className={`px-4 py-2 rounded ${tabPresupuestos === "detallePres"
                                     ? "bg-green-600 text-white"
-                                    : "bg-gray-200 text-black hover:bg-gray-300"
+                                    : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                                 }`}
                         >
                             Detalle Presupuesto
@@ -241,7 +241,7 @@ export default function GenerarReporteTesoreria({ onClose }) {
                             <div className="text-center pt-4">
                                 <button
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
                                 >
                                     Generar PDF Resumen Presupuestos
                                 </button>
@@ -275,7 +275,7 @@ export default function GenerarReporteTesoreria({ onClose }) {
                             <div className="text-center pt-4">
                                 <button
                                     type="submit"
-                                    className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
                                 >
                                     Generar PDF Detalle Presupuesto
                                 </button>
@@ -326,7 +326,7 @@ export default function GenerarReporteTesoreria({ onClose }) {
             <div className="text-right">
                 <button
                     onClick={onClose}
-                    className="mt-4 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded"
+                    className="mt-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
                 >
                     Cerrar
                 </button>

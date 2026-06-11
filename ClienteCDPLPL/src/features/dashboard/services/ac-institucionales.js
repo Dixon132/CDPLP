@@ -81,7 +81,6 @@ export const registerColegiadoInstitucional = async (payload) => {
     const res = await axios.post(`${BASE_URL}/registrarColegiado`,
         payload
     );
-    console.log(payload)
     return res.data;
 };
 
@@ -120,7 +119,6 @@ export const getAsistenciasPorActividad = async (id_actividad) => {
 
 export const createAsistenciaActividad = async (payload) => {
     const res = await axios.post(`${BASE_URL}/createAsistencia`, payload);
-    console.log(res.data);
     return res.data;
 };
 

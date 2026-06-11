@@ -91,7 +91,7 @@ const Invitados = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-teal-50/20 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             {/* Header */}
             <Header
                 icon={<UserCircle />}

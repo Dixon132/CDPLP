@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AccesoPage() {
     const navigate = useNavigate();
@@ -39,151 +39,99 @@ export default function AccesoPage() {
     };
 
     return (
-        <div style={{
-            minHeight: "100vh",
-            background: "linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4c1d95 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: "'Inter', 'Segoe UI', sans-serif",
-            padding: "1rem"
-        }}>
-            <div style={{
-                background: "rgba(255,255,255,0.05)",
-                backdropFilter: "blur(20px)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: "24px",
-                padding: "3rem 2.5rem",
-                width: "100%",
-                maxWidth: "420px",
-                boxShadow: "0 25px 50px rgba(0,0,0,0.4)"
-            }}>
-                {/* Logo / Header */}
-                <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-                    <div style={{
-                        width: 64, height: 64, borderRadius: "50%",
-                        background: "linear-gradient(135deg, #a78bfa, #7c3aed)",
-                        display: "flex", alignItems: "center", justifyContent: "center",
-                        margin: "0 auto 1rem",
-                        fontSize: 28
-                    }}>
-                        🏥
-                    </div>
-                    <h1 style={{ color: "white", fontSize: "1.6rem", fontWeight: 700, margin: "0 0 0.25rem" }}>
-                        Acceso de Campo
-                    </h1>
-                    <p style={{ color: "rgba(255,255,255,0.6)", fontSize: "0.9rem", margin: 0 }}>
-                        CDPLP — Sistema de Marcaje
-                    </p>
+        <div className="min-h-screen flex bg-white font-sans text-black selection:bg-black selection:text-white relative">
+            {/* Background Grid Lines */}
+            <div className="absolute inset-0 pointer-events-none z-0 flex justify-between px-8 md:px-20">
+                <div className="h-full border-l border-dashed border-gray-300"></div>
+                <div className="h-full border-l border-dashed border-gray-300"></div>
+                <div className="h-full border-l border-dashed border-gray-300"></div>
+                <div className="h-full border-l border-dashed border-gray-300 border-r"></div>
+            </div>
+
+            <div className="flex-1 flex flex-col items-center justify-center p-6 z-10">
+                <div className="absolute top-8 left-8">
+                    <Link to="/auth/login" className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-black border-b border-transparent hover:border-black transition-all">
+                        &larr; Volver
+                    </Link>
                 </div>
 
-                {/* Formulario */}
-                <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                    <div>
-                        <label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", display: "block", marginBottom: 6 }}>
-                            Correo electrónico
-                        </label>
-                        <input
-                            type="email"
-                            name="correo"
-                            value={form.correo}
-                            onChange={handleChange}
-                            required
-                            placeholder="tu@correo.com"
-                            style={inputStyle}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", display: "block", marginBottom: 6 }}>
-                            Carnet de Identidad
-                        </label>
-                        <input
-                            type="text"
-                            name="carnet_identidad"
-                            value={form.carnet_identidad}
-                            onChange={handleChange}
-                            required
-                            placeholder="Ej: 12345678"
-                            style={inputStyle}
-                        />
-                    </div>
-                    <div>
-                        <label style={{ color: "rgba(255,255,255,0.7)", fontSize: "0.85rem", display: "block", marginBottom: 6 }}>
-                            PIN de acceso (4 dígitos)
-                        </label>
-                        <input
-                            type="password"
-                            name="pin"
-                            value={form.pin}
-                            onChange={handleChange}
-                            required
-                            maxLength={4}
-                            placeholder="••••"
-                            style={{ ...inputStyle, textAlign: "center", fontSize: "1.5rem", letterSpacing: "0.5rem" }}
-                        />
+                <div className="w-full max-w-md bg-white border border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] relative p-10 md:p-12">
+                    <div className="absolute top-0 left-0 w-6 h-6 border-t-4 border-l-4 border-black -translate-x-2 -translate-y-2"></div>
+                    
+                    <div className="text-center mb-10">
+                        <h1 className="text-3xl font-black uppercase tracking-tighter mb-4 text-black">ACCESO CAMPO</h1>
+                        <div className="w-12 h-[2px] bg-black mx-auto mb-4"></div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Sistema de Marcaje CDPLP</p>
                     </div>
 
-                    {error && (
-                        <div style={{
-                            background: "rgba(239,68,68,0.2)",
-                            border: "1px solid rgba(239,68,68,0.5)",
-                            borderRadius: 10,
-                            padding: "0.75rem 1rem",
-                            color: "#fca5a5",
-                            fontSize: "0.875rem",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 8
-                        }}>
-                            ⚠️ {error}
+                    <form onSubmit={handleSubmit} className="space-y-8">
+                        <div>
+                            <label className="block text-[10px] uppercase tracking-widest font-black text-black mb-2">
+                                Correo Electrónico
+                            </label>
+                            <input
+                                type="email"
+                                name="correo"
+                                value={form.correo}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-white border-b-2 border-gray-200 py-3 px-1 focus:outline-none focus:border-black transition-all rounded-none text-sm font-bold placeholder-gray-300"
+                                placeholder="tu@correo.com"
+                            />
                         </div>
-                    )}
+                        <div>
+                            <label className="block text-[10px] uppercase tracking-widest font-black text-black mb-2">
+                                Carnet de Identidad
+                            </label>
+                            <input
+                                type="text"
+                                name="carnet_identidad"
+                                value={form.carnet_identidad}
+                                onChange={handleChange}
+                                required
+                                className="w-full bg-white border-b-2 border-gray-200 py-3 px-1 focus:outline-none focus:border-black transition-all rounded-none text-sm font-bold placeholder-gray-300"
+                                placeholder="Ej: 12345678"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[10px] uppercase tracking-widest font-black text-black mb-2">
+                                PIN de Acceso
+                            </label>
+                            <input
+                                type="password"
+                                name="pin"
+                                value={form.pin}
+                                onChange={handleChange}
+                                required
+                                maxLength={4}
+                                className="w-full bg-white border-b-2 border-gray-200 py-3 px-1 text-center text-2xl tracking-[0.5em] font-black focus:outline-none focus:border-black transition-all rounded-none placeholder-gray-300"
+                                placeholder="••••"
+                            />
+                        </div>
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            background: loading ? "#4b5563" : "linear-gradient(135deg, #7c3aed, #a855f7)",
-                            color: "white",
-                            border: "none",
-                            borderRadius: 12,
-                            padding: "0.875rem",
-                            fontSize: "1rem",
-                            fontWeight: 600,
-                            cursor: loading ? "not-allowed" : "pointer",
-                            transition: "all 0.2s",
-                            marginTop: "0.5rem"
-                        }}
-                    >
-                        {loading ? "Verificando..." : "Ingresar"}
-                    </button>
-                </form>
+                        {error && (
+                            <div className="border border-black p-3 text-[10px] font-bold uppercase tracking-widest text-white bg-black flex items-center justify-center gap-2">
+                                {error}
+                            </div>
+                        )}
 
-                {/* Ayuda */}
-                <p style={{
-                    color: "rgba(255,255,255,0.45)",
-                    fontSize: "0.8rem",
-                    textAlign: "center",
-                    marginTop: "1.5rem",
-                    lineHeight: 1.6
-                }}>
-                    Tu PIN fue asignado cuando te registraron.<br />
-                    Si no lo tienes, consulta con la administración.
-                </p>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-black text-white py-5 px-4 font-black text-xs uppercase tracking-widest hover:bg-gray-800 transition-all mt-6 shadow-[4px_4px_0px_0px_rgba(200,200,200,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]"
+                        >
+                            {loading ? "VERIFICANDO..." : "INGRESAR"}
+                        </button>
+                    </form>
+
+                    <div className="mt-10 pt-6 border-t border-gray-200 text-center">
+                        <p className="text-[9px] uppercase tracking-widest text-gray-400 font-bold leading-loose">
+                            Tu PIN fue asignado cuando te registraron.<br/>
+                            Si no lo tienes, consulta con la administración.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );
 }
-
-const inputStyle = {
-    width: "100%",
-    background: "rgba(255,255,255,0.08)",
-    border: "1px solid rgba(255,255,255,0.2)",
-    borderRadius: 10,
-    padding: "0.75rem 1rem",
-    color: "white",
-    fontSize: "1rem",
-    outline: "none",
-    boxSizing: "border-box",
-    transition: "border-color 0.2s",
-};

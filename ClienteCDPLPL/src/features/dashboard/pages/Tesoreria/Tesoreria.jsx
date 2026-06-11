@@ -79,10 +79,10 @@ export default function Tesoreria() {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
 
             {/* ✅ Header Financiero */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl p-6">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <div className="p-3 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl shadow-lg">

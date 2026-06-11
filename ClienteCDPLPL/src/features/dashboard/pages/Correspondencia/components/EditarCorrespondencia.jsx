@@ -163,7 +163,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
 
             <button
                 type="submit"
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
             >
                 Guardar cambios
             </button>

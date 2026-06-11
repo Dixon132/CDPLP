@@ -111,19 +111,29 @@ model colegiados {
 }
 
 model colegiados_asignados_social {
-  id_asignacion        Int                   @id @default(autoincrement())
-  id_actividad_social  Int?
-  id_colegiado         Int?
-  id_invitado          Int?
-  id_pasante           Int?
+  id_asignacion            Int                        @id @default(autoincrement())
+  id_actividad_social      Int?
+  id_colegiado             Int?
+  id_invitado              Int?
+  id_pasante               Int?
+  total_horas              Float?
+  horas_meta               Float?
+  invitados                invitados?                 @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
+  actividades_sociales     actividades_sociales?      @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
+  colegiados               colegiados?                @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
+  pasantes                 pasantes?                  @relation(fields: [id_pasante], references: [id_pasante], onDelete: NoAction, onUpdate: NoAction)
+  asistencia_social_diaria asistencia_social_diaria[]
+}
+
+model asistencia_social_diaria {
+  id_asistencia_diaria Int       @id @default(autoincrement())
+  id_asignacion        Int
+  fecha_marcaje        DateTime  @db.Date
   hora_entrada         DateTime?
   hora_salida          DateTime?
-  total_horas          Float?
-  horas_meta           Float?
-  invitados            invitados?            @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
-  actividades_sociales actividades_sociales? @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
-  colegiados           colegiados?           @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
-  pasantes             pasantes?             @relation(fields: [id_pasante], references: [id_pasante], onDelete: NoAction, onUpdate: NoAction)
+  horas_ganadas        Float?    @default(0)
+
+  colegiados_asignados_social colegiados_asignados_social @relation(fields: [id_asignacion], references: [id_asignacion], onDelete: Cascade)
 }
 
 model documentos_colegiados {

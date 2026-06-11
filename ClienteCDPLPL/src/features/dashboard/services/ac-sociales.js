@@ -28,7 +28,6 @@ export const updateActividadSocial = async (id, data) => {
 //////////
 export const deleteActividadSocial = async(id)=>{
     const res = await axios.delete(`/api/ac-sociales/ac-social/${id}`);
-    console.log('elimino', id)
 }
 //ASIGNAR COLEGIADO
 

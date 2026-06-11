@@ -50,15 +50,11 @@ export default function GestionAsistenciaInst() {
         setLoading(true);
 
         const rawRegs = await getRegistrosPorActividadInstitucional(id);
-        console.log("rawRegs:", rawRegs);
         // Si rawRegs no es un array (p.ej. { data: [...] }), tomamos rawRegs.data
         const regs = Array.isArray(rawRegs) ? rawRegs : rawRegs.data;
-        console.log("regs (extraído):", regs);
 
         const rawAsis = await getAsistenciasPorActividad(id);
-        console.log("rawAsis:", rawAsis);
         const asis = Array.isArray(rawAsis) ? rawAsis : rawAsis.data;
-        console.log("asis (extraído):", asis);
 
         setRegistros(regs);
         setAsistencias(asis);
@@ -69,8 +65,6 @@ export default function GestionAsistenciaInst() {
         fetchData();
     }, [id]);
 
-    console.log("Estado final de registros:", registros);
-    console.log("Estado final de asistencias:", asistencias);
 
     // 2) Saber si un colegiado ya asistió
     const hasAssisted = (id_colegiado) => {
@@ -137,12 +131,11 @@ export default function GestionAsistenciaInst() {
 
     // 5) Filtramos sólo aquellos registros que tengan id_colegiado ≠ null
     const registrosColegiados = registros.filter((r) => r.id_colegiado !== null);
-    console.log("registrosColegiados tras filtrar:", registrosColegiados);
 
     return (
-        <div className="space-y-8 p-8 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen max-w-none w-full">
+        <div className="space-y-8 p-8 bg-slate-50/50 min-h-screen max-w-none w-full">
             {/* Header Principal */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl p-6">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
@@ -179,7 +172,7 @@ export default function GestionAsistenciaInst() {
             </div>
 
             {/* Sección de Colegiados Inscritos */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
                 <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200/60">
                     <div className="flex items-center gap-3">
                         <UserPlus className="w-5 h-5 text-blue-600" />
@@ -216,12 +209,11 @@ export default function GestionAsistenciaInst() {
                             </thead>
                             <tbody className="divide-y divide-slate-200/60">
                                 {registrosColegiados.map((reg) => {
-                                    console.log("Registro completo (dentro de map):", reg);
                                     const persona = reg.colegiados;
                                     const asistio = hasAssisted(reg.id_colegiado);
 
                                     return (
-                                        <tr key={reg.id_registro} className="hover:bg-blue-50/30 transition-colors duration-150">
+                                        <tr key={reg.id_registro} className="hover:bg-slate-50 transition-colors duration-150">
                                             {/* Información del colegiado */}
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
@@ -319,7 +311,7 @@ export default function GestionAsistenciaInst() {
             </div>
 
             {/* Sección de Asistencias Confirmadas */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
                 <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-green-200/60">
                     <div className="flex items-center gap-3">
                         <UserCheck className="w-5 h-5 text-green-600" />

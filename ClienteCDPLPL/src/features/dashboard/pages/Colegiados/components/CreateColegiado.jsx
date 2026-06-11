@@ -30,7 +30,6 @@ const CreateColegiado = ({ onSuccess }) => {
 
     const onSubmit = async (data) => {
         try {
-            console.log(data);
             await createColegiado(data);
             onSuccess();
         } catch (error) {

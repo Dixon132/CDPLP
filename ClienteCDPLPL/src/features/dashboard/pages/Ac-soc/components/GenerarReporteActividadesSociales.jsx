@@ -97,7 +97,7 @@ export default function GenerarReporteActividadesSociales() {
     };
 
     return (
-        <div className="space-y-6 p-4 bg-white rounded shadow-lg max-w-xl mx-auto">
+        <div className="space-y-6 w-full mx-auto">
             <h2 className="text-xl font-semibold text-center mb-4">
                 Generar Reporte de Actividades Sociales
             </h2>
@@ -111,8 +111,8 @@ export default function GenerarReporteActividadesSociales() {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad_social: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "resumen"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                            ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+                            : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                         }`}
                 >
                     Resumen entre Fechas
@@ -124,8 +124,8 @@ export default function GenerarReporteActividadesSociales() {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad_social: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "detalle"
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-200 text-black hover:bg-gray-300"
+                            ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+                            : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
                         }`}
                 >
                     Detalle por Actividad
@@ -156,7 +156,7 @@ export default function GenerarReporteActividadesSociales() {
                     <div className="text-center pt-4">
                         <button
                             type="submit"
-                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
                         >
                             Generar PDF Resumen
                         </button>
@@ -185,7 +185,7 @@ export default function GenerarReporteActividadesSociales() {
                     <div className="text-center pt-4">
                         <button
                             type="submit"
-                            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
                         >
                             Generar PDF Detallado
                         </button>

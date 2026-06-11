@@ -4,6 +4,7 @@ import { EmailInput } from './EmailInput';
 import { PasswordInput } from './PasswordInput';
 import { SubmitButton } from './SubmitButton';
 import Modal from '../../../components/Modal';
+import { Link } from 'react-router-dom';
 
 export const LoginForm = ({ hook, onSubmit }) => {
     const {
@@ -18,19 +19,23 @@ export const LoginForm = ({ hook, onSubmit }) => {
     } = hook;
 
     return (
-        <div className="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-200 p-5">
+        <div className="w-full max-w-md p-8 md:p-12">
             <motion.div
-                initial={{ opacity: 0, x: 200 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1 }}
-                className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
             >
-                <h1 className="text-3xl font-semibold text-center text-indigo-900 mb-8">
-                    Iniciar Sesión
-                </h1>
+                <div className="mb-12 text-center">
+                    <h1 className="text-3xl font-black uppercase tracking-tighter text-black mb-4">
+                        DASHBOARD
+                    </h1>
+                    <div className="w-16 h-[2px] bg-black mx-auto mb-6"></div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
+                        Portal Administrativo
+                    </p>
+                </div>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                     <EmailInput register={register} errors={errors} />
                     <PasswordInput
                         register={register}
@@ -38,15 +43,32 @@ export const LoginForm = ({ hook, onSubmit }) => {
                         showPassword={showPassword}
                         handleClickShowPassword={handleClickShowPassword}
                     />
-                    <SubmitButton isLoading={isLoading} />
+
+                    <div className="flex justify-between items-center text-[10px] sm:text-xs text-gray-500 uppercase tracking-wider">
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" className="form-checkbox h-3 w-3 text-black border-gray-300 rounded-none focus:ring-black" />
+                            <span>Recordarme</span>
+                        </label>
+                        <a href="#" className="hover:text-black transition-colors border-b border-transparent hover:border-black">¿Olvidó su contraseña?</a>
+                    </div>
+
+                    <div className="pt-4">
+                        <SubmitButton isLoading={isLoading} />
+                    </div>
                 </form>
+
+                <div className="mt-8 text-center">
+                    <Link to="/" className="text-[10px] sm:text-xs uppercase tracking-widest text-gray-400 hover:text-black transition-colors border-b border-transparent hover:border-black">
+                        Volver al Inicio
+                    </Link>
+                </div>
             </motion.div>
 
             {error && (
                 <Modal
                     isOpen={!!error}
                     onClose={() => setError(null)}
-                    title="Error"
+                    title="Error de Autenticación"
                     message={error}
                     type="error"
                 />

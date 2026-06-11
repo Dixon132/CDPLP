@@ -8,53 +8,52 @@ const Table = ({
     emptyMessage = "No se encontraron registros",
 }) => {
     return (
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden relative">
             <div className="overflow-x-auto">
                 <table className="w-full">
-                    {/* ======= THEAD ======= */}
-                    <thead className="bg-gradient-to-r from-slate-50 to-emerald-50 border-b border-slate-200/60">
+                    <thead className="bg-slate-50 border-b border-slate-200">
                         <tr>
                             {columns.map((col, idx) => (
-                                <th key={idx} className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                <th key={idx} className="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-widest">
                                     {col.label}
                                 </th>
                             ))}
                             {actions.length > 0 && (
-                                <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">
+                                <th className="px-6 py-4 text-left text-[11px] font-bold text-slate-500 uppercase tracking-widest">
                                     Acciones
                                 </th>
                             )}
                         </tr>
                     </thead>
 
-                    {/* ======= TBODY ======= */}
-                    <tbody className="divide-y divide-slate-200/60">
+                    <tbody className="divide-y divide-slate-100">
                         {data.length === 0 ? (
                             <tr>
-                                <td colSpan={columns.length + (actions.length ? 1 : 0)} className="px-6 py-12 text-center">
-                                    <p className="text-slate-500 font-medium">{emptyMessage}</p>
-                                    <p className="text-slate-400 text-sm">Intenta ajustar los filtros o búsqueda</p>
+                                <td colSpan={columns.length + (actions.length ? 1 : 0)} className="px-6 py-12 text-center bg-white">
+                                    <p className="text-slate-700 font-bold uppercase tracking-widest text-xs">{emptyMessage}</p>
+                                    <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-widest mt-2">Ajusta los filtros de búsqueda</p>
                                 </td>
                             </tr>
                         ) : (
                             data.map((row, idx) => (
-                                <tr key={idx} className="hover:bg-emerald-50/30 transition-colors duration-150">
+                                <tr key={idx} className="hover:bg-slate-50/80 transition-colors duration-150 bg-white">
                                     {columns.map((col, cIdx) => (
-                                        <td key={cIdx} className="px-6 py-4 text-sm text-slate-700">
+                                        <td key={cIdx} className="px-6 py-4 text-sm font-medium text-slate-700">
                                             {col.render ? col.render(row) : row[col.key]}
                                         </td>
                                     ))}
                                     {actions.length > 0 && (
                                         <td className="px-6 py-4">
-                                            <div className="flex gap-2">
+                                            <div className="flex gap-2 flex-wrap">
                                                 {actions.map((action, aIdx) => (
                                                     <button
                                                         key={aIdx}
                                                         onClick={() => action.onClick(row)}
-                                                        className={action.className}
+                                                        className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[10px] uppercase font-bold tracking-widest hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm hover:shadow"
+                                                        title={action.label}
                                                     >
                                                         {action.icon && <action.icon className="w-4 h-4" />}
-                                                        {action.label && <span>{action.label}</span>}
+                                                        <span className="hidden sm:inline">{action.label}</span>
                                                     </button>
                                                 ))}
                                             </div>
@@ -65,26 +64,25 @@ const Table = ({
                         )}
                     </tbody>
 
-                    {/* ======= TFOOTER (Paginación) ======= */}
                     {pagination && (
-                        <tfoot className="bg-white/70 border-t border-slate-200/60">
+                        <tfoot className="bg-slate-50 border-t border-slate-200">
                             <tr>
                                 <td colSpan={columns.length + (actions.length ? 1 : 0)} className="px-6 py-4">
-                                    <div className="flex items-center justify-between text-sm text-slate-600">
-                                        <span>Total: <b>{pagination.total}</b> registros</span>
-                                        <div className="flex items-center gap-2">
+                                    <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-widest text-slate-600">
+                                        <span>Total: {pagination.total}</span>
+                                        <div className="flex items-center gap-4">
                                             <button
                                                 disabled={pagination.page === 1}
                                                 onClick={() => pagination.onPageChange(pagination.page - 1)}
-                                                className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-50"
+                                                className="p-2 border border-slate-200 rounded-lg bg-white hover:bg-slate-100 hover:text-slate-900 transition-all disabled:opacity-40 disabled:hover:bg-white shadow-sm"
                                             >
                                                 <ChevronLeft className="w-4 h-4" />
                                             </button>
-                                            <span>Página {pagination.page} de {pagination.totalPage}</span>
+                                            <span>Pag {pagination.page} / {pagination.totalPage}</span>
                                             <button
                                                 disabled={pagination.page === pagination.totalPage}
                                                 onClick={() => pagination.onPageChange(pagination.page + 1)}
-                                                className="p-2 bg-slate-100 rounded-lg hover:bg-slate-200 disabled:opacity-50"
+                                                className="p-2 border border-slate-200 rounded-lg bg-white hover:bg-slate-100 hover:text-slate-900 transition-all disabled:opacity-40 disabled:hover:bg-white shadow-sm"
                                             >
                                                 <ChevronRight className="w-4 h-4" />
                                             </button>

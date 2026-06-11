@@ -10,9 +10,8 @@ const Header = ({
     searchDelay = 800
 }) => {
     const [searchValue, setSearchValue] = useState("");
-    const [toggleStates, setToggleStates] = useState({}); //  para manejar toggles
+    const [toggleStates, setToggleStates] = useState({});
 
-    //  Debounce para búsqueda
     useEffect(() => {
         const timeout = setTimeout(() => {
             onSearch(searchValue);
@@ -20,7 +19,6 @@ const Header = ({
         return () => clearTimeout(timeout);
     }, [searchValue, onSearch]);
 
-    //  Manejar botones tipo toggle
     const handleToggle = (index, onClick) => {
         setToggleStates((prev) => ({
             ...prev,
@@ -30,88 +28,70 @@ const Header = ({
     };
 
     return (
-        <div className="relative overflow-hidden rounded-3xl bg-white/90 backdrop-blur-xl border border-purple-200/50 shadow-2xl shadow-purple-500/20">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 lg:p-8 mb-8 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
-            {/* Fondos decorativos */}
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-50 via-pink-50 to-indigo-50 opacity-60"></div>
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(147,51,234,0.15)_1px,transparent_0)] bg-[length:20px_20px]"></div>
+            <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+                <div className="flex items-center gap-5">
+                    <div className="p-4 bg-slate-800 text-white rounded-xl shadow-md">
+                        {icon}
+                    </div>
+                    <h1 className="text-3xl md:text-4xl font-extrabold uppercase tracking-tight text-slate-800">
+                        {title}
+                    </h1>
+                </div>
 
-            <div className="relative p-6 lg:p-8">
-                {/* ENCABEZADO */}
-                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-                    <div className="flex items-center gap-5">
-                        <div className="relative">
-                            <div className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl blur opacity-40"></div>
-                            <div className="relative p-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl shadow-xl">
-                                <p className="text-white">{icon}</p>
+                {/* ESTADÍSTICAS */}
+                <div className="flex flex-wrap gap-4 w-full lg:w-auto">
+                    {stats.map((s, i) => (
+                        <div key={i} className="text-center px-6 py-4 border border-slate-100 bg-slate-50 rounded-xl">
+                            <div className="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">
+                                {s.value}
                             </div>
+                            <div className="text-slate-500 text-[10px] sm:text-xs uppercase tracking-widest font-bold mt-1">{s.label}</div>
                         </div>
-                        <h1 className="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-pink-600 to-indigo-700">
-                            {title}
-                        </h1>
-                    </div>
-
-                    {/* ESTADÍSTICAS */}
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 w-full lg:w-auto">
-                        {stats.map((s, i) => (
-                            <div key={i} className={`text-center p-4 rounded-2xl backdrop-blur border shadow-lg
-                                ${s.color === "purple" && "bg-purple-500/10 border-purple-300/30"}
-                                ${s.color === "green" && "bg-green-500/10 border-green-300/30"}
-                                ${s.color === "blue" && "bg-blue-500/10 border-blue-300/30"}
-                                ${s.color === "red" && "bg-red-500/10 border-red-300/30"}`}>
-                                <div className={`text-2xl md:text-3xl font-black bg-clip-text text-transparent
-                                    ${s.color === "purple" && "bg-gradient-to-r from-purple-600 to-pink-600"}
-                                    ${s.color === "green" && "bg-gradient-to-r from-green-600 to-emerald-600"}
-                                    ${s.color === "blue" && "bg-gradient-to-r from-blue-600 to-cyan-600"}
-                                    ${s.color === "red" && "bg-gradient-to-r from-red-600 to-rose-600"}`}>
-                                    {s.value}
-                                </div>
-                                <div className="text-gray-600 text-xs md:text-sm font-semibold">{s.label}</div>
-                            </div>
-                        ))}
-                    </div>
+                    ))}
                 </div>
+            </div>
 
-                {/* BUSCADOR */}
-                <div className="relative mb-6">
-                    <input
-                        type="text"
-                        placeholder={searchPlaceholder}
-                        value={searchValue}
-                        onChange={(e) => setSearchValue(e.target.value)}
-                        className="w-full px-4 py-3 bg-white/80 backdrop-blur-xl border border-purple-200/50 
-                                   rounded-2xl text-gray-800 placeholder-gray-500 focus:outline-none 
-                                   focus:ring-2 focus:ring-purple-500/40 shadow-md focus:shadow-lg 
-                                   transition-all duration-300"
-                    />
-                </div>
+            {/* BUSCADOR */}
+            <div className="relative mb-6 z-10">
+                <input
+                    type="text"
+                    placeholder={searchPlaceholder.toUpperCase()}
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm font-semibold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-all uppercase tracking-wide"
+                />
+            </div>
 
-                {/* BOTONES */}
-                <div className="flex flex-wrap gap-4">
-                    {buttons.map((btn, i) => {
-                        const isActive = toggleStates[i] || false;
+            {/* BOTONES */}
+            <div className="flex flex-wrap gap-3 z-10 relative">
+                {buttons.map((btn, i) => {
+                    const isActive = toggleStates[i] || false;
+                    let colorClass = "bg-slate-800 text-white hover:bg-slate-900 hover:shadow-md"; // Default
+                    if (btn.color === "green") colorClass = "bg-emerald-600 text-white hover:bg-emerald-700 hover:shadow-md";
+                    if (btn.color === "red") colorClass = "bg-rose-600 text-white hover:bg-rose-700 hover:shadow-md";
+                    if (btn.color === "blue") colorClass = "bg-sky-600 text-white hover:bg-sky-700 hover:shadow-md";
+                    if (btn.color === "purple") colorClass = "bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-md";
 
-                        return (
-                            <button
-                                key={i}
-                                onClick={() => btn.type === "toggle" ? handleToggle(i, btn.onClick) : btn.onClick()}
-                                className={`group relative px-6 py-3 md:px-8 md:py-4 rounded-2xl font-bold text-white
-                                    shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 overflow-hidden
-                                    ${btn.color === "purple" && "bg-gradient-to-r from-purple-600 via-pink-600 to-red-600"}
-                                    ${btn.color === "blue" && "bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600"}
-                                    ${btn.color === "green" && "bg-gradient-to-r from-green-600 to-emerald-600"}
-                                    ${btn.color === "red" && "bg-gradient-to-r from-red-600 via-rose-600 to-orange-600"}
-                                    ${btn.type === "toggle" && isActive ? "ring-4 ring-white/50" : ""}`}
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                                <div className="relative flex items-center gap-3">
-                                    {btn.icon}
-                                    {btn.label}
-                                </div>
-                            </button>
-                        );
-                    })}
-                </div>
+                    if (btn.type === "toggle") {
+                        colorClass = isActive 
+                            ? (btn.color === "green" ? "bg-emerald-600 text-white" : "bg-rose-600 text-white") 
+                            : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900";
+                    }
+
+                    return (
+                        <button
+                            key={i}
+                            onClick={() => btn.type === "toggle" ? handleToggle(i, btn.onClick) : btn.onClick()}
+                            className={`flex items-center gap-2 px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all duration-200 ${colorClass}`}
+                        >
+                            {btn.icon}
+                            {btn.label}
+                        </button>
+                    );
+                })}
             </div>
         </div>
     );

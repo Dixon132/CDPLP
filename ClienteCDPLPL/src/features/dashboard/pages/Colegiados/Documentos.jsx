@@ -169,9 +169,9 @@ const Documentos = () => {
     const documentosSubidos = tiposSubidos; // para el texto informativo
 
     return (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/20 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             {/* Header mejorado */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl p-6">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
                         <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
@@ -218,7 +218,7 @@ const Documentos = () => {
             </div>
 
             {/* Tabla de documentos mejorada */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
                 <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200/60">
                     <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <FileText className="w-5 h-5 text-blue-500" />
@@ -243,7 +243,7 @@ const Documentos = () => {
                                 const existe = !!doc;
 
                                 return (
-                                    <tr key={i} className={`hover:bg-blue-50/30 transition-colors duration-150 ${!existe ? "bg-slate-50/30" : ""}`}>
+                                    <tr key={i} className={`hover:bg-slate-50 transition-colors duration-150 ${!existe ? "bg-slate-50/30" : ""}`}>
                                         {/* Tipo de documento */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">
@@ -336,7 +336,7 @@ const Documentos = () => {
             </div>
 
             {/* Sección de especialidades */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
                 <div className="bg-gradient-to-r from-slate-50 to-purple-50 px-6 py-4 border-b border-slate-200/60">
                     <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <GraduationCap className="w-5 h-5 text-purple-500" />

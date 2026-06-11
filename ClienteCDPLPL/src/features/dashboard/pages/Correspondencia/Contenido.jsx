@@ -57,7 +57,6 @@ const Contenido = () => {
   // Simulamos useParams para la demo
   const { id } = useParams();
   const navigate = (direction) => {
-    console.log(`Navegando: ${direction}`);
   };
 
   const [modalOpen, setModalOpen] = useState(false);

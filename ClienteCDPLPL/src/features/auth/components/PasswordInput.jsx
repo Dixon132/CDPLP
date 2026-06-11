@@ -1,17 +1,17 @@
 // components/Login/PasswordInput.jsx
 export const PasswordInput = ({ register, errors, showPassword, handleClickShowPassword }) => (
     <div className="space-y-2">
-        <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="password" className="block text-xs uppercase tracking-widest font-medium text-black">
             Contraseña
         </label>
         <div className="relative">
             <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
-                className={`w-full px-4 py-3 rounded-lg border ${errors.contraseña
-                        ? 'border-red-500 focus:border-red-500 focus:ring-red-500'
-                        : 'border-gray-300 focus:border-indigo-500 focus:ring-indigo-500'
-                    } focus:outline-none focus:ring-2 transition-colors duration-200`}
+                className={`w-full px-0 py-3 bg-transparent border-b ${errors.contraseña
+                        ? 'border-red-500 focus:border-red-500'
+                        : 'border-gray-300 focus:border-black'
+                    } focus:outline-none transition-colors duration-200 rounded-none pr-16`}
                 {...register('contraseña', {
                     required: 'La contraseña es obligatoria',
                     minLength: {
@@ -19,15 +19,16 @@ export const PasswordInput = ({ register, errors, showPassword, handleClickShowP
                         message: 'Mínimo 8 caracteres',
                     },
                 })}
+                placeholder="********"
             />
             <button
                 type="button"
                 onClick={handleClickShowPassword}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600 transition-colors"
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-[10px] uppercase tracking-widest text-gray-400 hover:text-black transition-colors"
             >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
+                {showPassword ? 'Ocultar' : 'Mostrar'}
             </button>
         </div>
-        {errors.contraseña && <p className="text-sm text-red-500">{errors.contraseña.message}</p>}
+        {errors.contraseña && <p className="text-xs text-red-500 mt-1">{errors.contraseña.message}</p>}
     </div>
 );

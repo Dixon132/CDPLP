@@ -105,7 +105,7 @@ const Ac_sociales = () => {
     );
 
     return (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-pink-50/30 to-purple-50/20 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             {/* ✅ HEADER REUTILIZABLE */}
             <Header
                 title="Actividades Sociales"

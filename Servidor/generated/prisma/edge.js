@@ -349,7 +349,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\VisualProyects\\RealProyects\\CDPLP\\Servidor\\generated\\prisma",
+      "value": "C:\\Users\\ASUS CREATOR\\Desktop\\realproyects\\rr\\CDPLP\\Servidor\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -363,7 +363,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\VisualProyects\\RealProyects\\CDPLP\\Servidor\\prisma\\schema.prisma",
+    "sourceFilePath": "C:\\Users\\ASUS CREATOR\\Desktop\\realproyects\\rr\\CDPLP\\Servidor\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -377,12 +377,11 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": null
+        "value": "postgresql://postgres:admin123@localhost:5432/cOL"
       }
     }
   },

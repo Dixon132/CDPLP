@@ -115,7 +115,7 @@ export default function CrearCorrespondencia({ onClose, onSuccess }) {
 
             <button
                 type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-blue-500 hover:bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
             >
                 Crear
             </button>

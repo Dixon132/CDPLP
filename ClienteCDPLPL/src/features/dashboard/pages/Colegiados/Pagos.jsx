@@ -75,12 +75,12 @@ const Pagos = () => {
     const totalPagos     = pagos.length;
 
     return (
-        <div className="space-y-6 p-6 bg-gradient-to-br from-slate-50 via-emerald-50/30 to-green-50/20 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             {/* Header mejorado */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl p-6">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
-                        <div className="p-3 bg-gradient-to-br from-emerald-500 to-green-600 rounded-xl shadow-lg">
+                        <div className="p-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-lg">
                             <CreditCard className="w-6 h-6 text-white" />
                         </div>
                         <div>
@@ -95,7 +95,7 @@ const Pagos = () => {
 
                     <button
                         onClick={() => setModalAñadir(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
                     >
                         <Plus className="w-4 h-4" />
                         Añadir Pago
@@ -104,7 +104,7 @@ const Pagos = () => {
 
                 {/* Estadísticas */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200/60">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-blue-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-blue-500 rounded-lg">
                                 <Receipt className="w-4 h-4 text-white" />
@@ -116,7 +116,7 @@ const Pagos = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200/60">
+                    <div className="bg-emerald-50 p-4 rounded-xl border border-green-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-green-500 rounded-lg">
                                 <CheckCircle className="w-4 h-4 text-white" />
@@ -128,7 +128,7 @@ const Pagos = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border border-red-200/60">
+                    <div className="bg-rose-50 p-4 rounded-xl border border-red-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-red-500 rounded-lg">
                                 <Ban className="w-4 h-4 text-white" />
@@ -140,7 +140,7 @@ const Pagos = () => {
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200/60">
+                    <div className="bg-indigo-50 p-4 rounded-xl border border-purple-200/60">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-purple-500 rounded-lg">
                                 <TrendingUp className="w-4 h-4 text-white" />
@@ -155,8 +155,8 @@ const Pagos = () => {
             </div>
 
             {/* Tabla de pagos mejorada */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl border border-white/60 shadow-xl overflow-hidden">
-                <div className="bg-gradient-to-r from-slate-50 to-emerald-50 px-6 py-4 border-b border-slate-200/60">
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200/60">
                     <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
                         <DollarSign className="w-5 h-5 text-emerald-500" />
                         Historial de Pagos
@@ -171,7 +171,7 @@ const Pagos = () => {
                             <p className="text-slate-400 text-sm mb-6">Añade el primer pago para comenzar</p>
                             <button
                                 onClick={() => setModalAñadir(true)}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
                             >
                                 <Plus className="w-4 h-4" />
                                 Añadir Primer Pago
@@ -181,7 +181,7 @@ const Pagos = () => {
                 ) : (
                     <div className="overflow-x-auto">
                         <table className="w-full">
-                            <thead className="bg-gradient-to-r from-slate-50 to-emerald-50 border-b border-slate-200/60">
+                            <thead className="bg-slate-50 border-b border-slate-200/60">
                                 <tr>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Concepto</th>
                                     <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Fecha</th>
@@ -192,7 +192,7 @@ const Pagos = () => {
                             </thead>
                             <tbody className="divide-y divide-slate-200/60">
                                 {pagos.map((pago, i) => (
-                                    <tr key={i} className="hover:bg-emerald-50/30 transition-colors duration-150">
+                                    <tr key={i} className="hover:bg-slate-50 transition-colors duration-150">
                                         {/* Concepto */}
                                         <td className="px-6 py-4">
                                             <div className="flex items-center gap-3">

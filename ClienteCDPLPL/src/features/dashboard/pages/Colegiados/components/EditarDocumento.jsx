@@ -89,7 +89,7 @@ const EditarDocumento = ({ id_documento, onSuccess }) => {
           <Button type="submit" variant="contained" color="primary">
             Guardar cambios
           </Button>
-          <Button variant="outlined" color="error" onClick={() => console.log("Eliminar")}>
+          <Button variant="outlined" color="error" onClick={() => {}}>
             Eliminar definitivamente
           </Button>
         </Box>

@@ -21,10 +21,8 @@ export default function GenerarReporteColegios({ onClose }) {
     const fetchColegios = async () => {
       try {
         setLoadingOpciones(true);
-        console.log("Cargando lista de colegiados...");
         
         const lista = await getColegiados();
-        console.log("Lista recibida:", lista);
         
         if (!lista || !Array.isArray(lista)) {
           console.error("La respuesta no es un array válido:", lista);
@@ -33,14 +31,13 @@ export default function GenerarReporteColegios({ onClose }) {
         }
 
         const opts = lista.map(c => {
-          console.log("Mapeando colegiado:", c); // 👈 Para ver la estructura
+           // 👈 Para ver la estructura
           return {
             value: c.id_colegiado, // 👈 Campo correcto
             label: `${c.apellido || c.Apellido || ''}, ${c.nombre || c.Nombre || ''}`.trim()
           };
         });
         
-        console.log("Opciones mapeadas:", opts);
         setOpcionesColegios(opts);
         
       } catch (err) {
@@ -58,10 +55,8 @@ export default function GenerarReporteColegios({ onClose }) {
   const descargarResumen = async () => {
     try {
       setLoading(true);
-      console.log("Iniciando descarga de resumen...");
       
       const response = await getColegiadosReportSummary();
-      console.log("Respuesta del servicio resumen:", response);
       
       // Verificar si la respuesta es un blob o necesita conversión
       let blob;
@@ -87,7 +82,6 @@ export default function GenerarReporteColegios({ onClose }) {
       link.remove();
       window.URL.revokeObjectURL(url);
       
-      console.log("Descarga completada");
       
     } catch (err) {
       console.error("Error descargando resumen:", err);
@@ -106,17 +100,13 @@ export default function GenerarReporteColegios({ onClose }) {
     
     try {
       setLoading(true);
-      console.log("Descargando reporte para colegiado:", seleccionColegiado);
-      console.log("ID enviado:", seleccionColegiado.value, "Tipo:", typeof seleccionColegiado.value);
       
       // Validación extra del ID
-      console.log("Objeto completo seleccionado:", seleccionColegiado);
       if (!seleccionColegiado.value || seleccionColegiado.value === '' || seleccionColegiado.value === undefined) {
         throw new Error(`ID del colegiado no válido: ${seleccionColegiado.value}`);
       }
       
       const response = await getColegiadoReportDetail(seleccionColegiado.value);
-      console.log("Respuesta del servicio individual:", response);
       
       // Verificar si la respuesta es un blob o necesita conversión
       let blob;
@@ -148,7 +138,6 @@ export default function GenerarReporteColegios({ onClose }) {
       link.remove();
       window.URL.revokeObjectURL(url);
       
-      console.log("Descarga individual completada");
       
     } catch (err) {
       console.error("Error descargando reporte individual:", err);
@@ -159,7 +148,7 @@ export default function GenerarReporteColegios({ onClose }) {
   };
 
   return (
-    <div className="space-y-6 p-4 bg-white rounded shadow-lg max-w-xl mx-auto">
+    <div className="space-y-6 w-full mx-auto">
       <h2 className="text-xl font-semibold text-center mb-4">
         Generar Reporte de Colegiados
       </h2>
@@ -171,8 +160,8 @@ export default function GenerarReporteColegios({ onClose }) {
           disabled={loading}
           className={`px-4 py-2 rounded ${
             tipoReporte === "resumen"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-black hover:bg-gray-300"
+              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
           } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           Resumen
@@ -182,8 +171,8 @@ export default function GenerarReporteColegios({ onClose }) {
           disabled={loading}
           className={`px-4 py-2 rounded ${
             tipoReporte === "individual"
-              ? "bg-blue-600 text-white"
-              : "bg-gray-200 text-black hover:bg-gray-300"
+              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
+              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
           } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           Individual
@@ -199,7 +188,7 @@ export default function GenerarReporteColegios({ onClose }) {
           <button
             onClick={descargarResumen}
             disabled={loading}
-            className={`bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded ${
+            className={`bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -234,7 +223,7 @@ export default function GenerarReporteColegios({ onClose }) {
           <button
             type="submit"
             disabled={loading || !seleccionColegiado}
-            className={`bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded ${
+            className={`bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
               loading || !seleccionColegiado ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -248,7 +237,7 @@ export default function GenerarReporteColegios({ onClose }) {
         <button
           onClick={onClose}
           disabled={loading}
-          className={`mt-4 bg-gray-300 hover:bg-gray-400 text-black px-4 py-2 rounded ${
+          className={`mt-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
