@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
     Calendar, MapPin, Target, FileText, Users, UserPlus, Eye,
     Mail, Phone, Briefcase, GraduationCap, Building2, ArrowLeft,
-    X, Clock, TrendingUp, Trophy, CheckCircle2, Edit3
+    X, Clock, TrendingUp, Trophy, CheckCircle2, Edit3, PartyPopper
 } from "lucide-react";
 import Modal from "../../../../../components/Modal";
+import Header from "../../../components/Header";
 import AsignarColegiados from "./AsignarColegiados";
 import Alerts from "../../../components/Alerts";
 import AsignarPasantes from "./AsignarPasante";
@@ -63,7 +64,7 @@ export const VerDetallesActividad = () => {
 
     if (loading) return (
         <div className="flex items-center justify-center min-h-screen">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
     );
     if (error) return (
@@ -126,8 +127,8 @@ export const VerDetallesActividad = () => {
     const AsignadoCard = ({ item, tipo }) => {
         const persona = item.colegiados || item.pasantes;
         const colors = tipo === "colegiado"
-            ? { from: "from-purple-500", to: "to-pink-600", bg: "from-purple-50 to-pink-50", border: "border-purple-100", text: "text-purple-600", icon: GraduationCap }
-            : { from: "from-pink-500", to: "to-purple-600", bg: "from-pink-50 to-purple-50", border: "border-pink-100", text: "text-pink-600", icon: Building2 };
+            ? { from: "from-blue-500", to: "to-indigo-600", bg: "from-blue-50 to-indigo-50", border: "border-blue-100", text: "text-blue-600", icon: GraduationCap }
+            : { from: "from-indigo-500", to: "to-blue-600", bg: "from-indigo-50 to-blue-50", border: "border-indigo-100", text: "text-indigo-600", icon: Building2 };
         const InfoIcon = colors.icon;
 
         return (
@@ -192,60 +193,59 @@ export const VerDetallesActividad = () => {
     return (
         <div className="min-h-screen bg-slate-50/50 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
-                {/* Header */}
-                <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
-                    <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-purple-600 hover:text-purple-700 mb-4">
-                        <ArrowLeft className="w-5 h-5" /><span>Volver</span>
-                    </button>
-                    <h1 className="text-3xl font-bold text-slate-800 mb-2">{nombre}</h1>
-                    <div className="flex items-center gap-3">
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getEstadoColor(estado)}`}>{estado}</span>
-                        <span className="px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-700">{tipo}</span>
-                    </div>
+                <Header
+                    title={nombre}
+                    icon={<PartyPopper className="w-8 h-8" />}
+                    showSearch={false}
+                    stats={todos.length > 0 ? [
+                        { label: "Horas Totales", value: formatHoras(totalHorasEquipo), color: "blue" },
+                        { label: "Promedio / persona", value: formatHoras(promedio), color: "blue" },
+                        { label: "Con Entrada", value: `${conEntrada} / ${todos.length}`, color: "green" },
+                        { label: "Cumplieron Meta", value: `${cumplieronMeta} / ${todos.length}`, color: "amber" }
+                    ] : []}
+                    buttons={[
+                        {
+                            label: "Volver",
+                            icon: <ArrowLeft className="w-4 h-4" />,
+                            onClick: () => navigate(-1),
+                            color: "blue"
+                        }
+                    ]}
+                />
+
+                <div className="flex items-center gap-3 px-2">
+                    <span className={`px-4 py-1.5 rounded-full text-sm font-bold shadow-sm ${getEstadoColor(estado)}`}>{estado}</span>
+                    <span className="px-4 py-1.5 rounded-full text-sm font-bold shadow-sm bg-blue-100 text-blue-700">{tipo}</span>
                 </div>
 
-                {/* ── Estadísticas del Equipo ── */}
-                {todos.length > 0 && (
-                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2 mb-4">
-                            <TrendingUp className="w-5 h-5 text-purple-600" /> Estadísticas del Equipo
-                        </h2>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                            <StatCard icon={<Clock className="w-5 h-5" />} label="Horas Totales" value={formatHoras(totalHorasEquipo)} color="purple" />
-                            <StatCard icon={<TrendingUp className="w-5 h-5" />} label="Promedio / persona" value={formatHoras(promedio)} color="blue" />
-                            <StatCard icon={<CheckCircle2 className="w-5 h-5" />} label="Con entrada" value={`${conEntrada} / ${todos.length}`} color="green" />
-                            <StatCard icon={<Trophy className="w-5 h-5" />} label="Cumplieron meta" value={`${cumplieronMeta} / ${todos.length}`} color="amber" />
-                        </div>
-                        {ranking.length > 0 && (
-                            <div>
-                                <p className="text-sm font-semibold text-slate-600 mb-2">🏆 Top por horas</p>
-                                <div className="flex flex-wrap gap-3">
-                                    {ranking.map((r, i) => (
-                                        <div key={i} className="flex items-center gap-2 bg-gradient-to-r from-purple-50 to-pink-50 px-3 py-1.5 rounded-full border border-purple-100">
-                                            <span className="text-lg">{["🥇", "🥈", "🥉"][i]}</span>
-                                            <span className="text-sm font-medium text-slate-700">{r.nombre}</span>
-                                            <span className="text-xs text-purple-600 font-semibold">{formatHoras(r.horas)}</span>
-                                        </div>
-                                    ))}
+                {todos.length > 0 && ranking.length > 0 && (
+                    <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-sm border border-white/60 p-4">
+                        <p className="text-sm font-semibold text-slate-600 mb-2">🏆 Top por horas</p>
+                        <div className="flex flex-wrap gap-3">
+                            {ranking.map((r, i) => (
+                                <div key={i} className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-indigo-50 px-3 py-1.5 rounded-full border border-blue-100 shadow-sm">
+                                    <span className="text-lg">{["🥇", "🥈", "🥉"][i]}</span>
+                                    <span className="text-sm font-medium text-slate-700">{r.nombre}</span>
+                                    <span className="text-xs text-blue-600 font-semibold">{formatHoras(r.horas)}</span>
                                 </div>
-                            </div>
-                        )}
+                            ))}
+                        </div>
                     </div>
                 )}
 
                 {/* Info General */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6 space-y-4">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><FileText className="w-5 h-5 text-purple-600" />Información General</h2>
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><FileText className="w-5 h-5 text-blue-600" />Información General</h2>
                         <div className="space-y-3">
                             <div><p className="text-sm text-slate-500 mb-1">Descripción</p><p className="text-slate-700">{descripcion || "Sin descripción"}</p></div>
-                            <div className="flex items-start gap-2"><MapPin className="w-5 h-5 text-pink-500 mt-1" /><div><p className="text-sm text-slate-500">Ubicación</p><p className="text-slate-700">{ubicacion}</p></div></div>
+                            <div className="flex items-start gap-2"><MapPin className="w-5 h-5 text-indigo-500 mt-1" /><div><p className="text-sm text-slate-500">Ubicación</p><p className="text-slate-700">{ubicacion}</p></div></div>
                             <div className="flex items-start gap-2"><Target className="w-5 h-5 text-blue-500 mt-1" /><div><p className="text-sm text-slate-500">Motivo</p><p className="text-slate-700">{motivo}</p></div></div>
                             {convenio && <div className="flex items-start gap-2"><Building2 className="w-5 h-5 text-green-500 mt-1" /><div><p className="text-sm text-slate-500">Convenio</p><p className="text-slate-700">{convenio.nombre}</p></div></div>}
                         </div>
                     </div>
                     <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6 space-y-4">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-purple-600" />Fechas</h2>
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Calendar className="w-5 h-5 text-blue-600" />Fechas</h2>
                         <div className="space-y-4">
                             <div className="p-4 bg-green-50 rounded-lg"><p className="text-sm text-green-600 font-medium mb-1">Fecha de Inicio</p><p className="text-lg text-green-800 font-semibold">{formatDate(fecha_inicio)}</p></div>
                             <div className="p-4 bg-red-50 rounded-lg"><p className="text-sm text-red-600 font-medium mb-1">Fecha de Fin</p><p className="text-lg text-red-800 font-semibold">{formatDate(fecha_fin)}</p></div>
@@ -256,8 +256,8 @@ export const VerDetallesActividad = () => {
                 {/* Colegiados Asignados */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Users className="w-5 h-5 text-purple-600" />Colegiados Asignados ({colegiados_asignados_social.length})</h2>
-                        <button onClick={() => setModalAsignarColegiados(true)} className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Users className="w-5 h-5 text-blue-600" />Colegiados Asignados ({colegiados_asignados_social.length})</h2>
+                        <button onClick={() => setModalAsignarColegiados(true)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             <UserPlus className="w-4 h-4" /> Asignar
                         </button>
                     </div>
@@ -273,8 +273,8 @@ export const VerDetallesActividad = () => {
                 {/* Pasantes Asignados */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Briefcase className="w-5 h-5 text-pink-600" />Pasantes Asignados ({pasantes_asignados_social.length})</h2>
-                        <button onClick={() => setModalAsignarPasantes(true)} className="flex items-center gap-2 px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition">
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Briefcase className="w-5 h-5 text-indigo-600" />Pasantes Asignados ({pasantes_asignados_social.length})</h2>
+                        <button onClick={() => setModalAsignarPasantes(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                             <UserPlus className="w-4 h-4" /> Asignar
                         </button>
                     </div>
@@ -311,7 +311,7 @@ export const VerDetallesActividad = () => {
             {modalMeta && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6">
-                        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Edit3 className="w-5 h-5 text-purple-600" />Meta de horas</h3>
+                        <h3 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2"><Edit3 className="w-5 h-5 text-blue-600" />Meta de horas</h3>
                         <input
                             type="number"
                             min="0"
@@ -319,11 +319,11 @@ export const VerDetallesActividad = () => {
                             value={metaInput}
                             onChange={(e) => setMetaInput(e.target.value)}
                             placeholder="Ej: 8"
-                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-lg text-center mb-4 focus:outline-none focus:border-purple-500"
+                            className="w-full border border-slate-300 rounded-lg px-3 py-2 text-lg text-center mb-4 focus:outline-none focus:border-blue-500"
                         />
                         <div className="flex gap-3">
                             <button onClick={() => setModalMeta(null)} className="flex-1 py-2 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition">Cancelar</button>
-                            <button onClick={saveMeta} disabled={savingMeta} className="flex-1 py-2 rounded-lg bg-purple-600 text-white font-semibold hover:bg-purple-700 transition">
+                            <button onClick={saveMeta} disabled={savingMeta} className="flex-1 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition">
                                 {savingMeta ? "Guardando..." : "Guardar"}
                             </button>
                         </div>
@@ -338,7 +338,7 @@ export const VerDetallesActividad = () => {
 
 function StatCard({ icon, label, value, color }) {
     const colors = {
-        purple: "from-purple-50 to-purple-100 text-purple-700 border-purple-200",
+        blue: "from-blue-50 to-blue-100 text-blue-700 border-blue-200",
         blue: "from-blue-50 to-blue-100 text-blue-700 border-blue-200",
         green: "from-green-50 to-green-100 text-green-700 border-green-200",
         amber: "from-amber-50 to-amber-100 text-amber-700 border-amber-200",
@@ -350,3 +350,4 @@ function StatCard({ icon, label, value, color }) {
         </div>
     );
 }
+

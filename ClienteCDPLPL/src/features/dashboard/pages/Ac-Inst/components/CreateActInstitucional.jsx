@@ -1,27 +1,20 @@
-// src/pages/dashboard/pages/Ac-institucionales/CreateActInstitucional.jsx
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createActividadInstitucional } from "../../../services/ac-institucionales";
-import Alerts from "../../../components/Alerts";
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  Container,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  InputAdornment
+} from "@mui/material";
 
 export default function CreateActInstitucional({ onClose, onSuccess }) {
-  const [alert, setAlert] = useState(false);
-  const [alertType, setAlertType] = useState("success");
-  const [alertMessage, setAlertMessage] = useState("");
-
-  const showSuccess = (msg) => {
-    setAlertType("success");
-    setAlertMessage(msg);
-    setAlert(true);
-    setTimeout(() => setAlert(false), 3000);
-  };
-
-  const showError = (msg) => {
-    setAlertType("error");
-    setAlertMessage(msg);
-    setAlert(true);
-    setTimeout(() => setAlert(false), 3000);
-  };
   const {
     register,
     handleSubmit,
@@ -29,8 +22,13 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
     reset,
   } = useForm();
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const tipos = ["Conferencia", "Taller", "Seminario", "Curso"];
+  const estados = ["ACTIVO", "INACTIVO"];
+
   const onSubmit = async (formData) => {
-    // Transformar fecha_programada a Date
+    setIsSubmitting(true);
     const payload = {
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -40,97 +38,126 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
         : null,
       costo: formData.costo ? parseFloat(formData.costo) : null,
       estado: formData.estado,
-      // ignoramos id_responsable y archivo, según tu petición
     };
 
     try {
       await createActividadInstitucional(payload);
-      showSuccess("Actividad institucional creada correctamente");
+      alert("Actividad institucional creada correctamente");
       reset();
       if (onSuccess) onSuccess();
-      setTimeout(() => { if (onClose) onClose(); }, 1500);
+      if (onClose) onClose();
     } catch (err) {
       console.error(err);
-      showError("Error al crear actividad institucional");
+      alert("Error al crear actividad institucional");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <>
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 p-4 max-w-lg mx-auto"
-    >
-      <div>
-        <label className="block font-semibold">Nombre</label>
-        <input
-          {...register("nombre", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.nombre && <p className="text-red-500">Nombre obligatorio</p>}
-      </div>
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Typography variant="h5" component="h2" gutterBottom align="center">
+          Registrar Actividad
+        </Typography>
 
-      <div>
-        <label className="block font-semibold">Descripción</label>
-        <textarea
-          {...register("descripcion")}
-          className="w-full border px-4 py-2 rounded"
-        />
-      </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 3 }}>
+            <TextField
+              label="Nombre de la Actividad"
+              {...register("nombre", { required: "El nombre es obligatorio" })}
+              error={!!errors.nombre}
+              helperText={errors.nombre?.message}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Tipo</label>
-        <input
-          {...register("tipo", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.tipo && <p className="text-red-500">Tipo obligatorio</p>}
-      </div>
+            <TextField
+              label="Descripción"
+              multiline
+              rows={3}
+              {...register("descripcion")}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Fecha Programada</label>
-        <input
-          type="date"
-          {...register("fecha_programada", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.fecha_programada && (
-          <p className="text-red-500">Fecha programada obligatoria</p>
-        )}
-      </div>
+            <FormControl fullWidth error={!!errors.tipo}>
+              <InputLabel id="tipo-label">Tipo de Actividad</InputLabel>
+              <Select
+                labelId="tipo-label"
+                label="Tipo de Actividad"
+                defaultValue=""
+                {...register("tipo", { required: "Selecciona un tipo" })}
+              >
+                <MenuItem value="" disabled>
+                  <em>Seleccione un tipo</em>
+                </MenuItem>
+                {tipos.map((t) => (
+                  <MenuItem key={t} value={t}>
+                    {t}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.tipo && (
+                <Typography color="error" variant="caption">
+                  {errors.tipo.message}
+                </Typography>
+              )}
+            </FormControl>
 
-      <div>
-        <label className="block font-semibold">Costo (Bs.)</label>
-        <input
-          type="number"
-          step="0.01"
-          {...register("costo", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.costo && <p className="text-red-500">Costo obligatorio</p>}
-      </div>
+            <TextField
+              label="Fecha Programada"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              {...register("fecha_programada", { required: "La fecha es obligatoria" })}
+              error={!!errors.fecha_programada}
+              helperText={errors.fecha_programada?.message}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Estado</label>
-        <select
-          {...register("estado", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        >
-          <option value="">Seleccione...</option>
-          <option value="ACTIVO">ACTIVO</option>
-          <option value="INACTIVO">INACTIVO</option>
-        </select>
-        {errors.estado && <p className="text-red-500">Estado obligatorio</p>}
-      </div>
+            <TextField
+              label="Costo"
+              type="number"
+              inputProps={{ min: 0, step: 0.1 }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">Bs.</InputAdornment>,
+              }}
+              {...register("costo")}
+              fullWidth
+            />
 
-      <button
-        type="submit"
-        className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
-      >
-          Crear Actividad
-        </button>
-    </form>
-    <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
-    </>
+            <FormControl fullWidth error={!!errors.estado}>
+              <InputLabel id="estado-label">Estado</InputLabel>
+              <Select
+                labelId="estado-label"
+                label="Estado"
+                defaultValue="ACTIVO"
+                {...register("estado", { required: "El estado es obligatorio" })}
+              >
+                {estados.map((e) => (
+                  <MenuItem key={e} value={e}>
+                    {e}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.estado && (
+                <Typography color="error" variant="caption">
+                  {errors.estado.message}
+                </Typography>
+              )}
+            </FormControl>
+
+            <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+              {onClose && (
+                <Button variant="outlined" color="inherit" onClick={onClose} disabled={isSubmitting}>
+                  Cancelar
+                </Button>
+              )}
+              <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                Guardar
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Box>
+    </Container>
   );
 }

@@ -111,7 +111,7 @@ const Usuarios = () => {
             {/* ✅ Header reutilizable */}
             <Header
                 title="Gestión de Usuarios"
-                icon={<Users />}
+                icon={<Users className="w-8 h-8" />}
                 stats={[{ label: "Total", value: total, color: "purple" }]}
                 searchPlaceholder="Buscar por nombre, correo o dirección..."
                 onSearch={(value) => {
@@ -129,95 +129,97 @@ const Usuarios = () => {
                         label: mostrarInactivos ? "Ver Activos" : "Ver Inactivos",
                         icon: mostrarInactivos ? <Eye /> : <EyeOff />,
                         onClick: () => setMostrarInactivos(!mostrarInactivos),
-                        color: mostrarInactivos ? "green" : "red",
+                        color: mostrarInactivos ? "emerald" : "rose",
                     },
                 ]}
             />
 
             {/* ✅ Tabla reutilizable */}
-            <Table
-                columns={[
-                    {
-                        label: "Usuario",
-                        key: "nombre",
-                        render: (item) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    {item.nombre[0].toUpperCase()}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <Table
+                    columns={[
+                        {
+                            label: "Usuario",
+                            key: "nombre",
+                            render: (item) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 font-bold shadow-sm">
+                                        {item.nombre[0].toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-800">
+                                            {item.nombre} {item.apellido}
+                                        </p>
+                                        <p className="text-xs text-slate-500 font-medium">
+                                            ID: {item.id_usuario}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-800">
-                                        {item.nombre} {item.apellido}
-                                    </p>
-                                    <p className="text-xs text-slate-500">
-                                        ID: {item.id_usuario}
-                                    </p>
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        label: "Contacto",
-                        key: "correo",
-                        render: (item) => (
-                            <div className="space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Mail className="w-4 h-4" /> {item.correo}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Phone className="w-4 h-4" /> {item.telefono}
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        label: "Dirección",
-                        key: "direccion",
-                        render: (item) => (
-                            <div className="flex items-center gap-2 text-sm">
-                                <MapPin className="w-4 h-4 text-purple-500" />{" "}
-                                {item.direccion || "N/A"}
-                            </div>
-                        ),
-                    },
-                    {
-                        label: "Estado",
-                        key: "estado",
-                        render: (item) => (
-                            <span className={getEstadoBadge(item.estado)}>
-                                {getEstadoIcon(item.estado)} {item.estado}
-                            </span>
-                        ),
-                    },
-                ]}
-                data={users}
-                actions={[
-                    {
-                        label: "Editar",
-                        icon: Edit3,
-                        className:
-                            "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                        onClick: (item) => {
-                            setUsuarioModificando(item.id_usuario);
-                            setMostrarModalModificar(true);
+                            ),
                         },
-                    },
-                    {
-                        label: mostrarInactivos ? "Activar" : "Desactivar",
-                        icon: mostrarInactivos ? UserCheck : UserX,
-                        className: mostrarInactivos
-                            ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
-                            : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200",
-                        onClick: (item) => confirmarCambioEstado(item.id_usuario),
-                    },
-                ]}
-                pagination={{
-                    total,
-                    totalPage,
-                    page,
-                    onPageChange: setPage,
-                }}
-            />
+                        {
+                            label: "Contacto",
+                            key: "correo",
+                            render: (item) => (
+                                <div className="space-y-1 text-sm text-slate-600">
+                                    <div className="flex items-center gap-2">
+                                        <Mail className="w-4 h-4 text-slate-400" /> {item.correo}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Phone className="w-4 h-4 text-slate-400" /> {item.telefono}
+                                    </div>
+                                </div>
+                            ),
+                        },
+                        {
+                            label: "Dirección",
+                            key: "direccion",
+                            render: (item) => (
+                                <div className="flex items-center gap-2 text-sm text-slate-600">
+                                    <MapPin className="w-4 h-4 text-purple-400" />{" "}
+                                    {item.direccion || "N/A"}
+                                </div>
+                            ),
+                        },
+                        {
+                            label: "Estado",
+                            key: "estado",
+                            render: (item) => (
+                                <span className={getEstadoBadge(item.estado)}>
+                                    {getEstadoIcon(item.estado)} {item.estado}
+                                </span>
+                            ),
+                        },
+                    ]}
+                    data={users}
+                    actions={[
+                        {
+                            label: "Editar",
+                            icon: Edit3,
+                            className:
+                                "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
+                            onClick: (item) => {
+                                setUsuarioModificando(item.id_usuario);
+                                setMostrarModalModificar(true);
+                            },
+                        },
+                        {
+                            label: mostrarInactivos ? "Activar" : "Desactivar",
+                            icon: mostrarInactivos ? UserCheck : UserX,
+                            className: mostrarInactivos
+                                ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors"
+                                : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
+                            onClick: (item) => confirmarCambioEstado(item.id_usuario),
+                        },
+                    ]}
+                    pagination={{
+                        total,
+                        totalPage,
+                        page,
+                        onPageChange: setPage,
+                    }}
+                />
+            </div>
 
             {/* ✅ Modales */}
             <Modal

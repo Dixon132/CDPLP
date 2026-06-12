@@ -51,7 +51,7 @@ const CircularProgress = ({ value, max, size = 160, stroke = 12 }) => {
                 cy={size / 2}
                 r={r}
                 fill="none"
-                stroke="#e5e7eb"
+                stroke="#f1f5f9"
                 strokeWidth={stroke}
             />
             {/* progress */}
@@ -76,24 +76,24 @@ const CircularProgress = ({ value, max, size = 160, stroke = 12 }) => {
 const ProgressBadge = ({ pct }) => {
     if (pct >= 100)
         return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700 border border-emerald-200">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
                 <Award className="w-3 h-3" /> Completado
             </span>
         );
     if (pct >= 60)
         return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700 border border-blue-200">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-100">
                 <TrendingUp className="w-3 h-3" /> En camino
             </span>
         );
     if (pct >= 30)
         return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700 border border-amber-200">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-100">
                 <AlertCircle className="w-3 h-3" /> Iniciado
             </span>
         );
     return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border border-slate-200">
             <Clock className="w-3 h-3" /> Sin iniciar
         </span>
     );
@@ -104,9 +104,9 @@ const ProgressBadge = ({ pct }) => {
 // ──────────────────────────────────────────────
 const AsistenciaIcon = ({ estado }) => {
     if (estado === "PRESENTE")
-        return <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />;
+        return <CheckCircle2 className="w-5 h-5 text-emerald-400 flex-shrink-0" />;
     if (estado === "AUSENTE")
-        return <XCircle className="w-5 h-5 text-red-400 flex-shrink-0" />;
+        return <XCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />;
     return <AlertCircle className="w-5 h-5 text-amber-400 flex-shrink-0" />;
 };
 
@@ -122,16 +122,12 @@ const fmt = (d) =>
 
 const getEstadoColor = (estado) =>
 ({
-    ACTIVO: "bg-emerald-100 text-emerald-700 border-emerald-200",
-    EN_PROGRESO: "bg-blue-100 text-blue-700 border-blue-200",
-    INACTIVO: "bg-slate-100 text-slate-500 border-slate-200",
-    PENDIENTE: "bg-amber-100 text-amber-700 border-amber-200",
-    FINALIZADO: "bg-rose-100 text-rose-600 border-rose-200",
-}[estado] ?? "bg-slate-100 text-slate-500 border-slate-200");
-
-// (Mocks removidos porque ahora usaremos datos reales)
-
-const META_HORAS = 60; // podés hacerlo dinámico desde la API
+    ACTIVO: "bg-emerald-50 text-emerald-600 border-emerald-100",
+    EN_PROGRESO: "bg-blue-50 text-blue-600 border-blue-100",
+    INACTIVO: "bg-slate-50 text-slate-500 border-slate-200",
+    PENDIENTE: "bg-amber-50 text-amber-600 border-amber-100",
+    FINALIZADO: "bg-rose-50 text-rose-500 border-rose-100",
+}[estado] ?? "bg-slate-50 text-slate-500 border-slate-200");
 
 // ══════════════════════════════════════════════
 // COMPONENTE PRINCIPAL
@@ -162,13 +158,11 @@ export const Perfil = () => {
     useEffect(() => {
         setLoading(true);
 
-        // Cambiá esta URL por tu endpoint real
         fetch(`/api/ac-sociales/ac-social/asignacion/${id}`)
             .then((r) => r.json())
             .then((d) => {
                 setData(d);
                 
-                // Construimos el array de asistencias usando la información real de la asignación
                 const asistenciaReal = [];
                 if (d.asistencia_social_diaria && d.asistencia_social_diaria.length > 0) {
                     d.asistencia_social_diaria.forEach(registro => {
@@ -193,26 +187,23 @@ export const Perfil = () => {
             });
     }, [id]);
 
-    // ── loading / error ──────────────────────
     if (loading)
         return (
-            <div className="flex items-center justify-center min-h-screen bg-slate-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-600" />
+            <div className="flex items-center justify-center min-h-screen bg-slate-50/50">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500" />
             </div>
         );
 
     if (error)
         return (
-            <div className="flex items-center justify-center min-h-screen">
-                <p className="text-red-500 text-lg">{error}</p>
+            <div className="flex items-center justify-center min-h-screen bg-slate-50/50">
+                <p className="text-rose-500 text-lg bg-white p-6 rounded-2xl shadow-sm border border-rose-100">{error}</p>
             </div>
         );
 
-    // ── determinar si es colegiado o pasante ─
     const isColegiado = data?.id_colegiado != null;
     const persona = isColegiado ? data?.colegiados : data?.pasantes;
     
-    // Mapeamos correctamente según la estructura de Prisma
     const actividad = {
         nombre: data?.actividades_sociales?.nombre,
         ubicacion: data?.actividades_sociales?.ubicacion,
@@ -223,10 +214,8 @@ export const Perfil = () => {
         motivo: data?.actividades_sociales?.motivo,
     };
     
-    // META_HORAS ahora se toma de la base de datos, con fallback a 60
     const HORAS_META_REAL = data?.horas_meta || 60;
 
-    // ── cálculos de horas ────────────────────
     const horasTotal = Number((data?.total_horas || 0).toFixed(1));
     const pct = Math.min(100, Math.round((horasTotal / HORAS_META_REAL) * 100));
     const presentes = asistencias.filter((a) => a.estado === "PRESENTE").length;
@@ -237,39 +226,38 @@ export const Perfil = () => {
             ? Number((horasTotal / asistencias.filter((a) => a.horas > 0).length || 0).toFixed(1))
             : 0;
 
-    // ────────────────────────────────────────
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-100 via-teal-50/30 to-slate-100 p-4 md:p-8 font-sans">
+        <div className="min-h-screen bg-slate-50/50 p-4 md:p-8 font-sans">
             <div className="max-w-5xl mx-auto space-y-6">
 
                 {/* ── BACK BUTTON ── */}
                 <button
                     onClick={() => navigate(-1)}
-                    className="flex items-center gap-2 text-teal-700 hover:text-teal-800 font-medium transition group"
+                    className="flex items-center gap-2 text-slate-500 hover:text-slate-700 font-medium transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 w-fit hover:bg-slate-50"
                 >
-                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                    <ArrowLeft className="w-5 h-5" />
                     Volver a la actividad
                 </button>
 
                 {/* ══ HERO CARD ══════════════════════════════ */}
-                <div className="relative bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                <div className="relative bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden backdrop-blur-xl bg-white/80">
                     {/* top accent strip */}
-                    <div className={`h-2 w-full ${isColegiado ? "bg-gradient-to-r from-teal-500 to-cyan-400" : "bg-gradient-to-r from-rose-400 to-pink-500"}`} />
+                    <div className={`h-2 w-full ${isColegiado ? "bg-gradient-to-r from-teal-400 to-cyan-400" : "bg-gradient-to-r from-rose-400 to-pink-400"}`} />
 
                     <div className="p-6 md:p-8 flex flex-col md:flex-row gap-8 items-start md:items-center">
                         {/* Avatar */}
                         <div className="relative flex-shrink-0">
-                            <div className={`w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-bold text-white shadow-lg
+                            <div className={`w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-bold text-white shadow-sm
                                 ${isColegiado
-                                    ? "bg-gradient-to-br from-teal-500 to-cyan-600"
-                                    : "bg-gradient-to-br from-rose-400 to-pink-600"}`}
+                                    ? "bg-gradient-to-br from-teal-400 to-cyan-500"
+                                    : "bg-gradient-to-br from-rose-400 to-pink-500"}`}
                             >
                                 {persona?.nombre?.charAt(0) ?? "?"}
                             </div>
                             <span className={`absolute -bottom-2 -right-2 text-xs font-semibold px-2 py-0.5 rounded-full border shadow-sm
                                 ${isColegiado
-                                    ? "bg-teal-100 text-teal-700 border-teal-200"
-                                    : "bg-rose-100 text-rose-600 border-rose-200"}`}
+                                    ? "bg-teal-50 text-teal-600 border-teal-100"
+                                    : "bg-rose-50 text-rose-500 border-rose-100"}`}
                             >
                                 {isColegiado ? "Colegiado" : "Pasante"}
                             </span>
@@ -286,34 +274,34 @@ export const Perfil = () => {
                                 </span>
                             </div>
 
-                            <div className="flex flex-wrap gap-4 text-sm text-slate-600">
+                            <div className="flex flex-wrap gap-4 text-sm text-slate-500">
                                 <div className="flex items-center gap-1.5">
                                     <Fingerprint className="w-4 h-4 text-slate-400" />
-                                    <span className="font-mono font-medium">{persona?.carnet_identidad}</span>
+                                    <span className="font-mono font-medium text-slate-600">{persona?.carnet_identidad}</span>
                                 </div>
                                 {isColegiado ? (
                                     <div className="flex items-center gap-1.5">
                                         <GraduationCap className="w-4 h-4 text-teal-500" />
-                                        <span>{persona?.especialidades ?? "Sin especialidad"}</span>
+                                        <span className="text-slate-600">{persona?.especialidades ?? "Sin especialidad"}</span>
                                     </div>
                                 ) : (
                                     <div className="flex items-center gap-1.5">
                                         <Building2 className="w-4 h-4 text-rose-400" />
-                                        <span>{persona?.institucion ?? "Sin institución"}</span>
+                                        <span className="text-slate-600">{persona?.institucion ?? "Sin institución"}</span>
                                     </div>
                                 )}
                                 <div className="flex items-center gap-1.5">
                                     <Mail className="w-4 h-4 text-slate-400" />
-                                    <span>{persona?.correo ?? "N/A"}</span>
+                                    <span className="text-slate-600">{persona?.correo ?? "N/A"}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <Phone className="w-4 h-4 text-slate-400" />
-                                    <span>{persona?.telefono ?? "N/A"}</span>
+                                    <span className="text-slate-600">{persona?.telefono ?? "N/A"}</span>
                                 </div>
                                 {persona?.pin_acceso && (
-                                    <div className="flex items-center gap-2 bg-slate-100/50 px-3 py-1 rounded-lg border border-slate-200">
+                                    <div className="flex items-center gap-2 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">
                                         <KeyRound className="w-4 h-4 text-amber-500" />
-                                        <span className="font-mono font-bold tracking-widest text-slate-700">
+                                        <span className="font-mono font-bold tracking-widest text-slate-600">
                                             {showPin ? persona.pin_acceso : "••••"}
                                         </span>
                                         <button
@@ -328,17 +316,17 @@ export const Perfil = () => {
                             </div>
 
                             {/* Actividad */}
-                            <div className="mt-2 p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-wrap gap-4 text-sm">
+                            <div className="mt-2 p-3 bg-slate-50/80 rounded-xl border border-slate-100 flex flex-wrap gap-4 text-sm">
                                 <div className="flex items-center gap-1.5 text-slate-600">
                                     <ClipboardList className="w-4 h-4 text-teal-500" />
-                                    <span className="font-medium">{actividad.nombre}</span>
+                                    <span className="font-medium text-slate-700">{actividad.nombre}</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-500">
-                                    <MapPin className="w-4 h-4" />
+                                    <MapPin className="w-4 h-4 text-slate-400" />
                                     {actividad.ubicacion}
                                 </div>
                                 <div className="flex items-center gap-1.5 text-slate-500">
-                                    <CalendarDays className="w-4 h-4" />
+                                    <CalendarDays className="w-4 h-4 text-slate-400" />
                                     {fmt(actividad.fecha_inicio)} → {fmt(actividad.fecha_fin)}
                                 </div>
                                 <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${getEstadoColor(actividad.estado)}`}>
@@ -352,15 +340,15 @@ export const Perfil = () => {
                 {/* ══ STATS ROW ══════════════════════════════ */}
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
-                        { label: "Horas Totales", value: horasTotal, icon: <Clock className="w-5 h-5 text-teal-500" />, color: "teal" },
-                        { label: "Sesiones", value: asistencias.length, icon: <CalendarDays className="w-5 h-5 text-blue-500" />, color: "blue" },
-                        { label: "Prom. hrs/sesión", value: promedioPorSesion, icon: <TrendingUp className="w-5 h-5 text-violet-500" />, color: "violet" },
-                        { label: "Avance", value: `${pct}%`, icon: <Target className="w-5 h-5 text-amber-500" />, color: "amber" },
+                        { label: "Horas Totales", value: horasTotal, icon: <Clock className="w-5 h-5 text-teal-500" /> },
+                        { label: "Sesiones", value: asistencias.length, icon: <CalendarDays className="w-5 h-5 text-blue-500" /> },
+                        { label: "Prom. hrs/sesión", value: promedioPorSesion, icon: <TrendingUp className="w-5 h-5 text-violet-500" /> },
+                        { label: "Avance", value: `${pct}%`, icon: <Target className="w-5 h-5 text-amber-500" /> },
                     ].map((s) => (
-                        <div key={s.label} className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 flex flex-col gap-2">
+                        <div key={s.label} className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow">
                             <div className="flex items-center justify-between">
-                                <p className="text-xs text-slate-400 font-medium uppercase tracking-wide">{s.label}</p>
-                                {s.icon}
+                                <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{s.label}</p>
+                                <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">{s.icon}</div>
                             </div>
                             <p className="text-3xl font-extrabold text-slate-800">{s.value}</p>
                         </div>
@@ -371,7 +359,7 @@ export const Perfil = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                     {/* Anillo */}
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col items-center gap-4">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col items-center gap-4">
                         <h2 className="text-lg font-bold text-slate-700 self-start flex items-center gap-2">
                             <Award className="w-5 h-5 text-amber-500" />
                             Progreso de Horas
@@ -390,28 +378,28 @@ export const Perfil = () => {
                         <p className="text-sm text-slate-500 text-center">
                             {HORAS_META_REAL - horasTotal > 0
                                 ? <>Faltan <strong className="text-slate-700">{HORAS_META_REAL - horasTotal} hrs</strong> para completar la meta.</>
-                                : <><strong className="text-emerald-600">¡Meta alcanzada!</strong> Excelente desempeño.</>}
+                                : <><strong className="text-emerald-500">¡Meta alcanzada!</strong> Excelente desempeño.</>}
                         </p>
                     </div>
 
                     {/* Desglose */}
-                    <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8 flex flex-col gap-5">
+                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col gap-5">
                         <h2 className="text-lg font-bold text-slate-700 flex items-center gap-2">
                             <UserCircle2 className="w-5 h-5 text-teal-500" />
                             Desglose de Asistencia
                         </h2>
 
                         {[
-                            { label: "Presente", count: presentes, total: asistencias.length, color: "bg-emerald-500", light: "bg-emerald-50 text-emerald-700" },
-                            { label: "Tardanza", count: tardanzas, total: asistencias.length, color: "bg-amber-400", light: "bg-amber-50 text-amber-700" },
-                            { label: "Ausente", count: ausentes, total: asistencias.length, color: "bg-red-400", light: "bg-red-50 text-red-600" },
+                            { label: "Presente", count: presentes, total: asistencias.length, color: "bg-emerald-400", light: "bg-emerald-50 text-emerald-600 border border-emerald-100" },
+                            { label: "Tardanza", count: tardanzas, total: asistencias.length, color: "bg-amber-400", light: "bg-amber-50 text-amber-600 border border-amber-100" },
+                            { label: "Ausente", count: ausentes, total: asistencias.length, color: "bg-rose-400", light: "bg-rose-50 text-rose-600 border border-rose-100" },
                         ].map((row) => (
-                            <div key={row.label} className="space-y-1">
+                            <div key={row.label} className="space-y-2">
                                 <div className="flex items-center justify-between text-sm">
-                                    <span className={`font-semibold px-2 py-0.5 rounded-md text-xs ${row.light}`}>{row.label}</span>
-                                    <span className="text-slate-500">{row.count}/{row.total}</span>
+                                    <span className={`font-semibold px-2 py-0.5 rounded-lg text-xs ${row.light}`}>{row.label}</span>
+                                    <span className="text-slate-500 font-medium">{row.count}/{row.total}</span>
                                 </div>
-                                <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden">
+                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
                                     <div
                                         className={`h-full rounded-full ${row.color} transition-all duration-700`}
                                         style={{ width: row.total ? `${(row.count / row.total) * 100}%` : "0%" }}
@@ -421,45 +409,44 @@ export const Perfil = () => {
                         ))}
 
                         {isColegiado && (
-                            <div className="mt-2 p-3 bg-teal-50 rounded-xl border border-teal-100 text-sm text-teal-700 flex items-start gap-2">
-                                <BadgeCheck className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                                <span>
-                                    Colegiado inscrito desde{" "}
-                                    <strong>{fmt(persona?.fecha_inscripcion)}</strong>.
-                                    Última renovación: <strong>{fmt(persona?.fecha_renovacion)}</strong>.
-                                </span>
+                            <div className="mt-4 p-4 bg-teal-50/50 rounded-2xl border border-teal-100 text-sm text-teal-700 flex items-start gap-3">
+                                <BadgeCheck className="w-5 h-5 flex-shrink-0 mt-0.5 text-teal-500" />
+                                <div className="flex flex-col gap-1">
+                                    <span>Colegiado inscrito desde <strong>{fmt(persona?.fecha_inscripcion)}</strong>.</span>
+                                    <span>Última renovación: <strong>{fmt(persona?.fecha_renovacion)}</strong>.</span>
+                                </div>
                             </div>
                         )}
                     </div>
                 </div>
 
                 {/* ══ TIMELINE DE ASISTENCIAS ═══════════════ */}
-                <div className="bg-white rounded-3xl border border-slate-100 shadow-sm p-8">
+                <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-8">
                     <h2 className="text-lg font-bold text-slate-700 mb-6 flex items-center gap-2">
                         <CalendarDays className="w-5 h-5 text-blue-500" />
                         Historial de Asistencias
                     </h2>
 
                     {asistencias.length === 0 ? (
-                        <div className="text-center py-10 text-slate-400">
-                            <CalendarDays className="w-14 h-14 mx-auto mb-3 opacity-30" />
+                        <div className="text-center py-10 text-slate-400 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+                            <CalendarDays className="w-12 h-12 mx-auto mb-3 text-slate-300" />
                             <p>Sin asistencias registradas aún.</p>
                         </div>
                     ) : (
                         <div className="relative">
                             {/* vertical line */}
-                            <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-slate-100 rounded-full" />
+                            <div className="absolute left-5 top-0 bottom-0 w-px bg-slate-200" />
 
                             <div className="space-y-4">
                                 {asistencias.map((a, i) => (
                                     <div key={a.id ?? i} className="relative flex items-start gap-5 group">
                                         {/* dot + icon */}
-                                        <div className="z-10 flex-shrink-0 w-10 h-10 rounded-full bg-white border-2 border-slate-200 flex items-center justify-center group-hover:border-teal-300 transition-colors shadow-sm">
+                                        <div className="z-10 flex-shrink-0 w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center group-hover:border-teal-300 transition-colors shadow-sm">
                                             <AsistenciaIcon estado={a.estado} />
                                         </div>
 
                                         {/* card */}
-                                        <div className="flex-1 bg-slate-50 hover:bg-white rounded-2xl border border-slate-100 hover:border-slate-200 hover:shadow-sm transition-all p-4">
+                                        <div className="flex-1 bg-white hover:bg-slate-50 rounded-2xl border border-slate-200 hover:border-slate-300 shadow-sm hover:shadow transition-all p-4">
                                             <div className="flex flex-wrap items-center justify-between gap-2">
                                                 <div className="flex items-center gap-2">
                                                     <CalendarDays className="w-4 h-4 text-slate-400" />
@@ -467,21 +454,23 @@ export const Perfil = () => {
                                                 </div>
                                                 <div className="flex items-center gap-3">
                                                     <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border
-                                                        ${a.estado === "PRESENTE" ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                                            : a.estado === "TARDANZA" ? "bg-amber-50 text-amber-700 border-amber-200"
-                                                                : "bg-red-50 text-red-600 border-red-200"}`}
+                                                        ${a.estado === "PRESENTE" ? "bg-emerald-50 text-emerald-600 border-emerald-100"
+                                                            : a.estado === "TARDANZA" ? "bg-amber-50 text-amber-600 border-amber-100"
+                                                                : "bg-rose-50 text-rose-500 border-rose-100"}`}
                                                     >
                                                         {a.estado}
                                                     </span>
                                                     {a.horas > 0 && (
-                                                        <span className="flex items-center gap-1 text-xs font-medium text-teal-700 bg-teal-50 border border-teal-100 px-2.5 py-0.5 rounded-full">
+                                                        <span className="flex items-center gap-1 text-xs font-medium text-teal-600 bg-teal-50 border border-teal-100 px-2.5 py-0.5 rounded-full">
                                                             <Clock className="w-3 h-3" /> {a.horas} hrs
                                                         </span>
                                                     )}
                                                 </div>
                                             </div>
                                             {a.observacion && (
-                                                <p className="mt-2 text-xs text-slate-500 italic">"{a.observacion}"</p>
+                                                <p className="mt-2 text-sm text-slate-500 italic bg-slate-50 p-2 rounded-lg border border-slate-100">
+                                                    "{a.observacion}"
+                                                </p>
                                             )}
                                         </div>
                                     </div>

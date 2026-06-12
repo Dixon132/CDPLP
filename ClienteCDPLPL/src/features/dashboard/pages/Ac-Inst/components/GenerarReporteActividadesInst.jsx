@@ -127,8 +127,8 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "resumen"
-                        ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
-                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
+                        ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] shadow-sm"
+                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px] shadow-sm"
                         }`}
                 >
                     Resumen entre Fechas
@@ -139,8 +139,8 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                         reset({ fecha_inicio: "", fecha_fin: "", id_actividad: "" });
                     }}
                     className={`px-4 py-2 rounded ${tipoReporte === "detalle"
-                        ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
-                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
+                        ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] shadow-sm"
+                        : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px] shadow-sm"
                         }`}
                 >
                     Detalle por Actividad
@@ -156,7 +156,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                             <input
                                 type="date"
                                 {...register("fecha_inicio")}
-                                className="w-full border px-3 py-2 rounded"
+                                className="w-full border border-slate-200 bg-white px-3 py-2 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                             />
                         </div>
                         <div>
@@ -164,14 +164,14 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                             <input
                                 type="date"
                                 {...register("fecha_fin")}
-                                className="w-full border px-3 py-2 rounded"
+                                className="w-full border border-slate-200 bg-white px-3 py-2 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                             />
                         </div>
                     </div>
                     <div className="text-center pt-4">
                         <button
                             type="submit"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
+                            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all"
                         >
                             Generar PDF Resumen
                         </button>
@@ -186,7 +186,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                         <label className="block font-semibold mb-1">Seleccione una Actividad</label>
                         <select
                             {...register("id_actividad")}
-                            className="w-full border px-3 py-2 rounded"
+                            className="w-full border border-slate-200 bg-white px-3 py-2 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                             disabled={loadingInst}
                             defaultValue=""
                         >
@@ -202,7 +202,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
                     <div className="text-center pt-4">
                         <button
                             type="submit"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
+                            className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all"
                         >
                             Generar PDF Detalle
                         </button>
@@ -214,7 +214,7 @@ export default function GenerarReporteActividadesInst({ onClose }) {
             <div className="text-right">
                 <button
                     onClick={onClose}
-                    className="mt-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
+                    className="mt-4 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all"
                 >
                     Cerrar
                 </button>
@@ -223,3 +223,4 @@ export default function GenerarReporteActividadesInst({ onClose }) {
         </div>
     );
 }
+

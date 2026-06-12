@@ -85,7 +85,7 @@ const Colegiados = () => {
             {/* ✅ Header */}
 
             <Header
-                icon={<Users />}
+                icon={<Users className="w-8 h-8" />}
                 title="Gestión de Colegiados"
                 stats={[
                     { label: "Total", value: total, color: "purple" },
@@ -112,122 +112,124 @@ const Colegiados = () => {
                         label: mostrarInactivos ? "Ver activos" : "Ver inactivos",
                         icon: mostrarInactivos ? <Eye /> : <EyeOff />,
                         onClick: () => setMostrarInactivos(!mostrarInactivos),
-                        color: mostrarInactivos ? "green" : "red",
+                        color: mostrarInactivos ? "emerald" : "rose",
                         type: "toggle",
                     }
                 ]}
             />
             {/* ✅ Tabla genérica */}
-            <Table
-                data={colegiados}
-                pagination={{
-                    total,
-                    totalPage,
-                    page,
-                    onPageChange: setPage,
-                }}
-                columns={[
-                    {
-                        label: "Colegiado",
-                        key: "nombre",
-                        render: (item) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    {item.nombre.charAt(0)}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <Table
+                    data={colegiados}
+                    pagination={{
+                        total,
+                        totalPage,
+                        page,
+                        onPageChange: setPage,
+                    }}
+                    columns={[
+                        {
+                            label: "Colegiado",
+                            key: "nombre",
+                            render: (item) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-bold shadow-sm">
+                                        {item.nombre.charAt(0)}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-800">
+                                            {item.nombre} {item.apellido}
+                                        </p>
+                                        <p className="text-sm text-slate-500 font-medium">CI: {item.carnet_identidad}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-800">
-                                        {item.nombre} {item.apellido}
-                                    </p>
-                                    <p className="text-sm text-slate-500">CI: {item.carnet_identidad}</p>
+                            )
+                        },
+                        {
+                            label: "Contacto",
+                            key: "correo",
+                            render: (item) => (
+                                <div className="space-y-1 text-slate-600">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Mail className="w-3.5 h-3.5 text-slate-400" /> {item.correo}
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Phone className="w-3.5 h-3.5 text-slate-400" /> {item.telefono}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Contacto",
-                        key: "correo",
-                        render: (item) => (
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Mail className="w-3 h-3" /> {item.correo}
+                            )
+                        },
+                        {
+                            label: "Especialidad",
+                            key: "especialidades",
+                            render: (item) => (
+                                <div className="flex items-center gap-2 text-slate-700">
+                                    <GraduationCap className="w-4 h-4 text-indigo-400" />
+                                    {item.especialidades}
                                 </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Phone className="w-3 h-3" /> {item.telefono}
+                            )
+                        },
+                        {
+                            label: "Fechas",
+                            key: "fecha_inscripcion",
+                            render: (item) => (
+                                <div className="space-y-1 text-sm text-slate-600">
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Inscripción: <span className="font-medium">{parseDate(item.fecha_inscripcion)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Renovación: <span className="font-medium">{parseDate(item.fecha_renovacion)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Especialidad",
-                        key: "especialidades",
-                        render: (item) => (
-                            <div className="flex items-center gap-2">
-                                <GraduationCap className="w-4 h-4 text-blue-500" />
-                                {item.especialidades}
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Fechas",
-                        key: "fecha_inscripcion",
-                        render: (item) => (
-                            <div className="space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-3 h-3" /> Inscripción: {parseDate(item.fecha_inscripcion)}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-3 h-3" /> Renovación: {parseDate(item.fecha_renovacion)}
-                                </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Estado",
-                        key: "estado",
-                        render: (item) => (
-                            <span className={getEstadoBadge(item.estado)}>
-                                {getEstadoIcon(item.estado)} {item.estado}
-                            </span>
-                        )
-                    },
-                ]}
-                actions={[
-                    {
-                        label: "Pagos",
-                        icon: CreditCard,
-                        className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
-                        onClick: (item) =>
-                            (window.location.href = `/dashboard/colegiados/pagos/${item.id_colegiado}`)
-                    },
-                    {
-                        label: "Docs",
-                        icon: FileText,
-                        className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200",
-                        onClick: (item) =>
-                            (window.location.href = `/dashboard/colegiados/documentos/${item.id_colegiado}`)
-                    },
-                    {
-                        label: "Editar",
-                        icon: Edit3,
-                        className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                        onClick: (item) => {
-                            setMostrarModal2(true);
-                            setColegiadoSeleccionado(item.id_colegiado);
+                            )
+                        },
+                        {
+                            label: "Estado",
+                            key: "estado",
+                            render: (item) => (
+                                <span className={getEstadoBadge(item.estado)}>
+                                    {getEstadoIcon(item.estado)} {item.estado}
+                                </span>
+                            )
+                        },
+                    ]}
+                    actions={[
+                        {
+                            label: "Pagos",
+                            icon: CreditCard,
+                            className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors",
+                            onClick: (item) =>
+                                (window.location.href = `/dashboard/colegiados/pagos/${item.id_colegiado}`)
+                        },
+                        {
+                            label: "Docs",
+                            icon: FileText,
+                            className: "px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl font-medium shadow-sm hover:bg-blue-100 transition-colors",
+                            onClick: (item) =>
+                                (window.location.href = `/dashboard/colegiados/documentos/${item.id_colegiado}`)
+                        },
+                        {
+                            label: "Editar",
+                            icon: Edit3,
+                            className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
+                            onClick: (item) => {
+                                setMostrarModal2(true);
+                                setColegiadoSeleccionado(item.id_colegiado);
+                            }
+                        },
+                        {
+                            label: mostrarInactivos ? "Activar" : "Desactivar",
+                            icon: mostrarInactivos ? UserCheck : UserX,
+                            className: mostrarInactivos
+                                ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors"
+                                : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
+                            onClick: (item) => {
+                                confirmarDesactivar(item.id_colegiado)
+                            }
                         }
-                    },
-                    {
-                        label: mostrarInactivos ? "Activar" : "Desactivar",
-                        icon: mostrarInactivos ? UserCheck : UserX,
-                        className: mostrarInactivos
-                            ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200"
-                            : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
-                        onClick: (item) => {
-                            confirmarDesactivar(item.id_colegiado)
-                        }
-                    }
-                ]}
-            />
+                    ]}
+                />
+            </div>
 
             {/* Modales */}
             <Modal isOpen={mostrarModal} title="Crear Colegiado" onClose={() => SetMostrarModal(false)}>

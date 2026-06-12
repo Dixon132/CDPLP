@@ -1,4 +1,3 @@
-// src/pages/dashboard/pages/Tesoreria/MovimientoForm.jsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -6,6 +5,18 @@ import {
     getMovimientosByPresupuesto,
     updateMovimientoFinanciero,
 } from "../../../services/tesoreria";
+import {
+    Button,
+    TextField,
+    Box,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    InputAdornment,
+    CircularProgress,
+    Container
+} from "@mui/material";
 
 export default function MovimientoForm({
     presupuestoId,
@@ -18,38 +29,46 @@ export default function MovimientoForm({
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            tipo_movimiento: "",
+            categoria: "",
+        }
+    });
 
     const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Si movimientoId está definido, cargamos datos del movimiento para editar
     useEffect(() => {
         if (movimientoId) {
             const fetchData = async () => {
                 setLoading(true);
-                // Como no tenemos un endpoint que devuelva “un solo movimiento”,
-                // obtenemos todos los movimientos y filtramos por ID:
-                const allMovs = await getMovimientosByPresupuesto(presupuestoId);
-                const mov = allMovs.find((m) => m.id_movimiento === movimientoId);
-                if (mov) {
-                    reset({
-                        tipo_movimiento: mov.tipo_movimiento,
-                        categoria: mov.categoria,
-                        descripcion: mov.descripcion,
-                        monto: mov.monto?.toString() ?? "",
-                        fecha_movimiento: mov.fecha_movimiento
-                            ? mov.fecha_movimiento.split("T")[0]
-                            : "",
-                    });
+                try {
+                    const allMovs = await getMovimientosByPresupuesto(presupuestoId);
+                    const mov = allMovs.find((m) => m.id_movimiento === movimientoId);
+                    if (mov) {
+                        reset({
+                            tipo_movimiento: mov.tipo_movimiento || "",
+                            categoria: mov.categoria || "",
+                            descripcion: mov.descripcion || "",
+                            monto: mov.monto?.toString() || "",
+                            fecha_movimiento: mov.fecha_movimiento
+                                ? mov.fecha_movimiento.split("T")[0]
+                                : "",
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error al cargar el movimiento:", error);
+                } finally {
+                    setLoading(false);
                 }
-                setLoading(false);
             };
             fetchData();
         }
     }, [movimientoId, presupuestoId, reset]);
 
     const onSubmit = async (formData) => {
-        setLoading(true);
+        setIsSubmitting(true);
         const payload = {
             id_presupuesto: presupuestoId,
             tipo_movimiento: formData.tipo_movimiento,
@@ -64,10 +83,10 @@ export default function MovimientoForm({
         try {
             if (movimientoId) {
                 await updateMovimientoFinanciero(movimientoId, payload);
-                alert("Movimiento actualizado");
+                alert("Movimiento actualizado correctamente");
             } else {
                 await createMovimientoFinanciero(payload);
-                alert("Movimiento creado");
+                alert("Movimiento creado correctamente");
             }
             if (onSuccess) onSuccess();
             if (onClose) onClose();
@@ -75,84 +94,101 @@ export default function MovimientoForm({
             console.error(err);
             alert("Error al guardar movimiento");
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     return (
-        <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 p-4 max-w-lg mx-auto"
-        >
-            <div>
-                <label className="block font-semibold">Tipo de Movimiento</label>
-                <select
-                    {...register("tipo_movimiento", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                >
-                    <option value="">Seleccione...</option>
-                    <option value="INGRESO">INGRESO</option>
-                    <option value="EGRESO">EGRESO</option>
-                </select>
-                {errors.tipo_movimiento && (
-                    <p className="text-red-500">Campo obligatorio</p>
-                )}
-            </div>
+        <Container maxWidth="sm" sx={{ py: 2 }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                        <FormControl fullWidth error={!!errors.tipo_movimiento}>
+                            <InputLabel shrink id="tipo-label">Tipo</InputLabel>
+                            <Select
+                                labelId="tipo-label"
+                                label="Tipo"
+                                displayEmpty
+                                {...register("tipo_movimiento", { required: "Campo obligatorio" })}
+                            >
+                                <MenuItem value="" disabled>Seleccione...</MenuItem>
+                                <MenuItem value="INGRESO">INGRESO</MenuItem>
+                                <MenuItem value="EGRESO">EGRESO</MenuItem>
+                            </Select>
+                        </FormControl>
 
-            <div>
-                <label className="block font-semibold">Categoría</label>
-                <input
-                    {...register("categoria", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.categoria && (
-                    <p className="text-red-500">Campo obligatorio</p>
-                )}
-            </div>
+                        <FormControl fullWidth error={!!errors.categoria}>
+                            <InputLabel shrink id="cat-label">Categoría</InputLabel>
+                            <Select
+                                labelId="cat-label"
+                                label="Categoría"
+                                displayEmpty
+                                {...register("categoria", { required: "Campo obligatorio" })}
+                            >
+                                <MenuItem value="" disabled>Seleccione...</MenuItem>
+                                <MenuItem value="OPERATIVO">OPERATIVO</MenuItem>
+                                <MenuItem value="ADMINISTRATIVO">ADMINISTRATIVO</MenuItem>
+                                <MenuItem value="EVENTOS">EVENTOS</MenuItem>
+                                <MenuItem value="OTROS">OTROS</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Box>
 
-            <div>
-                <label className="block font-semibold">Descripción</label>
-                <textarea
-                    {...register("descripcion")}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-            </div>
+                    <TextField
+                        label="Descripción"
+                        multiline
+                        rows={2}
+                        InputLabelProps={{ shrink: true }}
+                        {...register("descripcion")}
+                        fullWidth
+                    />
 
-            <div>
-                <label className="block font-semibold">Monto (Bs.)</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    {...register("monto", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.monto && <p className="text-red-500">Campo obligatorio</p>}
-            </div>
+                    <Box sx={{ display: "flex", gap: 2 }}>
+                        <TextField
+                            label="Monto"
+                            type="number"
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ min: 0, step: 0.1 }}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">Bs.</InputAdornment>,
+                            }}
+                            {...register("monto", { required: "El monto es obligatorio" })}
+                            error={!!errors.monto}
+                            helperText={errors.monto?.message}
+                            fullWidth
+                        />
 
-            <div>
-                <label className="block font-semibold">Fecha Movimiento</label>
-                <input
-                    type="date"
-                    {...register("fecha_movimiento", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.fecha_movimiento && (
-                    <p className="text-red-500">Campo obligatorio</p>
-                )}
-            </div>
+                        <TextField
+                            label="Fecha"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            {...register("fecha_movimiento", { required: "La fecha es obligatoria" })}
+                            error={!!errors.fecha_movimiento}
+                            helperText={errors.fecha_movimiento?.message}
+                            fullWidth
+                        />
+                    </Box>
 
-            <button
-                type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
-                disabled={loading}
-            >
-                {movimientoId ? "Guardar Cambios" : "Crear Movimiento"}
-            </button>
-        </form>
+                    <Box sx={{ mt: 2, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+                        {onClose && (
+                            <Button variant="outlined" color="inherit" onClick={onClose} disabled={isSubmitting}>
+                                Cancelar
+                            </Button>
+                        )}
+                        <Button type="submit" variant="contained" color={movimientoId ? "warning" : "primary"} disabled={isSubmitting}>
+                            {isSubmitting ? <CircularProgress size={24} color="inherit" /> : (movimientoId ? "Guardar Cambios" : "Crear Movimiento")}
+                        </Button>
+                    </Box>
+                </Box>
+            </form>
+        </Container>
     );
 }

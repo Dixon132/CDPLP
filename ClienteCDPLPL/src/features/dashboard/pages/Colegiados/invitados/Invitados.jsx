@@ -109,85 +109,80 @@ const Invitados = () => {
                         onClick: () => setMostrarModal(true),
                         color: "purple", // se transforma en un gradient
                         type: "create", // aplica estilos especiales
-                    },
-                    {
-                        label: "Reporte",
-                        icon: <BarChart3 />,
-                        onClick: () => setModalReporte(true),
-                        color: "blue",
-                        type: "report",
-                    },
+                    }
                 ]}
             />
 
             {/*  Tabla genérica */}
-            <Table
-                data={invitados}
-                pagination={{
-                    total,
-                    totalPage,
-                    page,
-                    onPageChange: setPage,
-                }}
-                columns={[
-                    {
-                        label: "Invitado",
-                        key: "nombre",
-                        render: (item) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    {item.nombre[0]}{item.apellido[0]}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <Table
+                    data={invitados}
+                    pagination={{
+                        total,
+                        totalPage,
+                        page,
+                        onPageChange: setPage,
+                    }}
+                    columns={[
+                        {
+                            label: "Invitado",
+                            key: "nombre",
+                            render: (item) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600 font-bold shadow-sm">
+                                        {item.nombre[0]}{item.apellido[0]}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p>
+                                        <p className="text-sm text-slate-500 font-medium">ID: {item.id_invitado}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p>
-                                    <p className="text-sm text-slate-500">ID: {item.id_invitado}</p>
-                                </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Correo",
-                        key: "correo",
-                        render: (item) =>
-                            item.correo ? (
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Mail className="w-4 h-4 text-emerald-500" /> {item.correo}
-                                </div>
-                            ) : (
-                                <span className="text-sm text-slate-400 italic">Sin correo</span>
                             )
-                    },
-                    {
-                        label: "Teléfono",
-                        key: "telefono",
-                        render: (item) =>
-                            item.telefono ? (
-                                <div className="flex items-center gap-2 text-sm">
-                                    <Phone className="w-4 h-4 text-teal-500" /> {item.telefono}
-                                </div>
-                            ) : (
-                                <span className="text-sm text-slate-400 italic">Sin teléfono</span>
-                            )
-                    },
-                ]}
-                actions={[
-                    {
-                        label: "Editar",
-                        icon: Edit3,
-                        className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                        onClick: (item) => {
-                            setMostrarModal2(true);
-                            setInvitadoSeleccionado(item.id_invitado);
+                        },
+                        {
+                            label: "Correo",
+                            key: "correo",
+                            render: (item) =>
+                                item.correo ? (
+                                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                                        <Mail className="w-4 h-4 text-slate-400" /> {item.correo}
+                                    </div>
+                                ) : (
+                                    <span className="text-sm text-slate-400 italic">Sin correo</span>
+                                )
+                        },
+                        {
+                            label: "Teléfono",
+                            key: "telefono",
+                            render: (item) =>
+                                item.telefono ? (
+                                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                                        <Phone className="w-4 h-4 text-slate-400" /> {item.telefono}
+                                    </div>
+                                ) : (
+                                    <span className="text-sm text-slate-400 italic">Sin teléfono</span>
+                                )
+                        },
+                    ]}
+                    actions={[
+                        {
+                            label: "Editar",
+                            icon: Edit3,
+                            className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
+                            onClick: (item) => {
+                                setMostrarModal2(true);
+                                setInvitadoSeleccionado(item.id_invitado);
+                            }
+                        },
+                        {
+                            label: "Eliminar",
+                            icon: Trash2,
+                            className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
+                            onClick: (item) => confirmDelete(item.id_invitado)
                         }
-                    },
-                    {
-                        label: "Eliminar",
-                        icon: Trash2,
-                        className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
-                        onClick: (item) => confirmDelete(item.id_invitado)
-                    }
-                ]}
-            />
+                    ]}
+                />
+            </div>
 
             {/* Modal confirmación de eliminación */}
             <ConfirmDialog

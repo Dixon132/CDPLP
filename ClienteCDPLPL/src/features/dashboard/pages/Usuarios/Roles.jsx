@@ -103,25 +103,25 @@ const Roles = () => {
 
     const getEstadoBadge = (activo) =>
         activo
-            ? "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 border border-green-200"
-            : "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200";
+            ? "inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100"
+            : "inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-500 border border-rose-100";
 
     const getEstadoIcon = (activo) =>
         activo ? (
-            <CheckCircle className="w-4 h-4" />
+            <CheckCircle className="w-3.5 h-3.5" />
         ) : (
-            <XCircle className="w-4 h-4" />
+            <XCircle className="w-3.5 h-3.5" />
         );
 
     const getRolIcon = (rol) => {
         switch (rol?.toLowerCase()) {
             case "admin":
             case "administrador":
-                return <Crown className="w-4 h-4 text-yellow-500" />;
+                return <Crown className="w-4 h-4 text-amber-500" />;
             case "moderador":
                 return <Shield className="w-4 h-4 text-blue-500" />;
             case "usuario":
-                return <User className="w-4 h-4 text-gray-500" />;
+                return <User className="w-4 h-4 text-slate-500" />;
             default:
                 return <Settings className="w-4 h-4 text-indigo-500" />;
         }
@@ -129,15 +129,15 @@ const Roles = () => {
 
     const getRolBadge = (rol) => {
         const base =
-            "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+            "inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold";
         switch (rol?.toLowerCase()) {
             case "admin":
             case "administrador":
-                return `${base} bg-yellow-100 text-yellow-800 border border-yellow-200`;
+                return `${base} bg-amber-50 text-amber-600 border border-amber-100`;
             case "moderador":
-                return `${base} bg-blue-100 text-blue-800 border border-blue-200`;
+                return `${base} bg-blue-50 text-blue-600 border border-blue-100`;
             default:
-                return `${base} bg-gray-100 text-gray-800 border border-gray-200`;
+                return `${base} bg-slate-50 text-slate-600 border border-slate-200`;
         }
     };
 
@@ -146,7 +146,7 @@ const Roles = () => {
             {/* HEADER REUTILIZABLE */}
             <Header
                 title="Gestión de Roles"
-                icon={<Shield />}
+                icon={<Shield className="w-8 h-8" />}
                 stats={[
                     {
                         label: "Total de Roles",
@@ -164,96 +164,98 @@ const Roles = () => {
                         label: mostrarInactivos ? "Ver Activos" : "Ver Inactivos",
                         icon: mostrarInactivos ? <Eye /> : <EyeOff />,
                         onClick: () => setMostrarInactivos(!mostrarInactivos),
-                        color: mostrarInactivos ? "green" : "red",
+                        color: mostrarInactivos ? "emerald" : "rose",
                     },
                 ]}
             />
 
             {/* TABLA REUTILIZABLE */}
-            <Table
-                columns={[
-                    {
-                        label: "Usuario",
-                        key: "usuario",
-                        render: (r) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-cyan-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    {r.usuarios?.nombre?.[0]?.toUpperCase() || "U"}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <Table
+                    columns={[
+                        {
+                            label: "Usuario",
+                            key: "usuario",
+                            render: (r) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-bold shadow-sm">
+                                        {r.usuarios?.nombre?.[0]?.toUpperCase() || "U"}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-800">
+                                            {r.usuarios?.nombre} {r.usuarios?.apellido}
+                                        </p>
+                                        <p className="text-xs text-slate-500 font-medium">ID: {r.id_rol}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-800">
-                                        {r.usuarios?.nombre} {r.usuarios?.apellido}
-                                    </p>
-                                    <p className="text-xs text-slate-500">ID: {r.id_rol}</p>
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        label: "Rol",
-                        key: "rol",
-                        render: (r) => (
-                            <span className={getRolBadge(r.rol)}>
-                                {getRolIcon(r.rol)} {r.rol}
-                            </span>
-                        ),
-                    },
-                    {
-                        label: "Período",
-                        key: "fecha",
-                        render: (r) => (
-                            <div className="text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" />{" "}
-                                    {new Date(r.fecha_inicio).toLocaleDateString()}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-4 h-4" />{" "}
-                                    {r.fecha_fin
-                                        ? new Date(r.fecha_fin).toLocaleDateString()
-                                        : "—"}
-                                </div>
-                            </div>
-                        ),
-                    },
-                    {
-                        label: "Estado",
-                        key: "estado",
-                        render: (r) => (
-                            <span className={getEstadoBadge(r.activo)}>
-                                {getEstadoIcon(r.activo)} {r.activo ? "Activo" : "Inactivo"}
-                            </span>
-                        ),
-                    },
-                ]}
-                data={roles}
-                actions={[
-                    {
-                        label: "Editar",
-                        icon: Edit3,
-                        className:
-                            "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                        onClick: (r) => {
-                            setCurrentId(r.id_rol);
-                            setMostrarModal(true);
+                            ),
                         },
-                    },
-                    {
-                        label: mostrarInactivos ? "Activar" : "Desactivar",
-                        icon: mostrarInactivos ? ShieldCheck : ShieldX,
-                        className: mostrarInactivos
-                            ? "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg hover:bg-green-200"
-                            : "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200",
-                        onClick: (r) => confirmarCambioEstado(r.id_rol),
-                    },
-                ]}
-                pagination={{
-                    total,
-                    totalPage,
-                    page,
-                    onPageChange: setPage,
-                }}
-            />
+                        {
+                            label: "Rol",
+                            key: "rol",
+                            render: (r) => (
+                                <span className={getRolBadge(r.rol)}>
+                                    {getRolIcon(r.rol)} {r.rol}
+                                </span>
+                            ),
+                        },
+                        {
+                            label: "Período",
+                            key: "fecha",
+                            render: (r) => (
+                                <div className="text-sm text-slate-600 space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-slate-400" />{" "}
+                                        {new Date(r.fecha_inicio).toLocaleDateString()}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-4 h-4 text-slate-400" />{" "}
+                                        {r.fecha_fin
+                                            ? new Date(r.fecha_fin).toLocaleDateString()
+                                            : "—"}
+                                    </div>
+                                </div>
+                            ),
+                        },
+                        {
+                            label: "Estado",
+                            key: "estado",
+                            render: (r) => (
+                                <span className={getEstadoBadge(r.activo)}>
+                                    {getEstadoIcon(r.activo)} {r.activo ? "Activo" : "Inactivo"}
+                                </span>
+                            ),
+                        },
+                    ]}
+                    data={roles}
+                    actions={[
+                        {
+                            label: "Editar",
+                            icon: Edit3,
+                            className:
+                                "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
+                            onClick: (r) => {
+                                setCurrentId(r.id_rol);
+                                setMostrarModal(true);
+                            },
+                        },
+                        {
+                            label: mostrarInactivos ? "Activar" : "Desactivar",
+                            icon: mostrarInactivos ? ShieldCheck : ShieldX,
+                            className: mostrarInactivos
+                                ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors"
+                                : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
+                            onClick: (r) => confirmarCambioEstado(r.id_rol),
+                        },
+                    ]}
+                    pagination={{
+                        total,
+                        totalPage,
+                        page,
+                        onPageChange: setPage,
+                    }}
+                />
+            </div>
 
             {/* MODAL DE ASIGNACIÓN */}
             <Modal

@@ -1,10 +1,22 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
     getCorrespondenciaById,
     updateCorrespondenciaById,
     usuariosCorrespondencia,
 } from "../../../services/correspondencia";
+import {
+    Button,
+    TextField,
+    Box,
+    Typography,
+    Container,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    CircularProgress
+} from '@mui/material';
 
 export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     const {
@@ -16,18 +28,24 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     const [loading, setLoading] = useState(true);
     const [usuarios, setUsuarios] = useState([]);
 
-    // Fecha máxima (hoy) para los campos de fecha
     const hoy = new Date().toISOString().split('T')[0];
+
+    const estados = [
+        "RECIBIDO",
+        "VISTO",
+        "A DISCUSIÓN",
+        "PENDIENTE",
+        "ARREGLADO"
+    ];
 
     useEffect(() => {
         const fetchData = async () => {
             const res = await getCorrespondenciaById(id);
             reset({
                 asunto: res.asunto,
-                contenido: res.contenido,
                 resumen: res.resumen,
                 fecha_envio: res.fecha_envio?.slice(0, 10),
-                fecha_recibido: res.fecha_recibido?.slice(0, 10),
+                fecha_recibido: res.fecha_recibido?.slice(0, 10) || '',
                 remitente: res.remitente,
                 id_destinatario: res.id_destinatario,
                 estado: res.estado,
@@ -51,122 +69,125 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
         if (onClose) onClose();
     };
 
-    if (loading) return <p className="text-center">Cargando...</p>;
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            {/* Asunto */}
-            <div>
-                <label className="block font-semibold">Asunto</label>
-                <input
-                    {...register("asunto", { required: "Asunto obligatorio" })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.asunto && <p className="text-red-500">{errors.asunto.message}</p>}
-            </div>
+        <Container maxWidth="sm">
+            <Box sx={{ mt: 2, mb: 2 }}>
+                <Typography variant="h5" component="h2" gutterBottom>
+                    Modificar Correspondencia
+                </Typography>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mt: 2 }}>
+                        <TextField
+                            label="Asunto"
+                            {...register('asunto', { required: "Asunto es obligatorio" })}
+                            error={!!errors.asunto}
+                            helperText={errors.asunto?.message}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                        />
 
-            {/* Resumen */}
-            <div>
-                <label className="block font-semibold">Resumen</label>
-                <textarea
-                    {...register("resumen")}
-                    className="w-full border px-4 py-2 rounded"
-                />
-            </div>
+                        <TextField
+                            label="Resumen"
+                            multiline
+                            rows={3}
+                            {...register('resumen')}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                        />
 
-            {/* Fecha de envío con validación */}
-            <div>
-                <label className="block font-semibold">Fecha de envío</label>
-                <input
-                    type="date"
-                    max={hoy}
-                    {...register("fecha_envio", {
-                        required: "Fecha de envío requerida",
-                        validate: value =>
-                            value <= hoy || "No puedes escoger una fecha futura",
-                    })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.fecha_envio && (
-                    <p className="text-red-500">{errors.fecha_envio.message}</p>
-                )}
-            </div>
+                        <TextField
+                            label="Fecha de envío"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ max: hoy }}
+                            {...register('fecha_envio', {
+                                required: "Fecha de envío requerida",
+                                validate: value => value <= hoy || "No puedes escoger una fecha futura"
+                            })}
+                            error={!!errors.fecha_envio}
+                            helperText={errors.fecha_envio?.message}
+                            fullWidth
+                        />
 
-            {/* Fecha de recepción (opcional, también sin futuro) */}
-            <div>
-                <label className="block font-semibold">Fecha de recibido</label>
-                <input
-                    type="date"
-                    max={hoy}
-                    {...register("fecha_recibido", {
-                        validate: value =>
-                            !value || value <= hoy || "No puedes escoger una fecha futura",
-                    })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.fecha_recibido && (
-                    <p className="text-red-500">{errors.fecha_recibido.message}</p>
-                )}
-            </div>
+                        <TextField
+                            label="Fecha de recibido"
+                            type="date"
+                            InputLabelProps={{ shrink: true }}
+                            inputProps={{ max: hoy }}
+                            {...register('fecha_recibido', {
+                                validate: value => !value || value <= hoy || "No puedes escoger una fecha futura"
+                            })}
+                            error={!!errors.fecha_recibido}
+                            helperText={errors.fecha_recibido?.message}
+                            fullWidth
+                        />
 
-            {/* Remitente */}
-            <div>
-                <label className="block font-semibold">Remitente</label>
-                <input
-                    {...register("remitente", { required: "Remitente obligatorio" })}
-                    className="w-full border px-4 py-2 rounded"
-                />
-                {errors.remitente && <p className="text-red-500">{errors.remitente.message}</p>}
-            </div>
+                        <TextField
+                            label="Remitente"
+                            {...register('remitente', { required: "Remitente obligatorio" })}
+                            error={!!errors.remitente}
+                            helperText={errors.remitente?.message}
+                            fullWidth
+                            InputLabelProps={{ shrink: true }}
+                        />
 
-            {/* Destinatario */}
-            <div>
-                <label className="block font-semibold">Destinatario</label>
-                <select
-                    {...register("id_destinatario", {
-                        required: "Destinatario obligatorio",
-                        valueAsNumber: true,
-                    })}
-                    className="w-full border px-4 py-2 rounded"
-                >
-                    <option value="">Selecciona un destinatario</option>
-                    {usuarios.map(usuario => (
-                        <option
-                            key={usuario.id_usuario}
-                            value={usuario.id_usuario}
-                        >
-                            {usuario.nombre} {usuario.apellido}
-                        </option>
-                    ))}
-                </select>
-                {errors.id_destinatario && (
-                    <p className="text-red-500">{errors.id_destinatario.message}</p>
-                )}
-            </div>
+                        <FormControl fullWidth error={!!errors.id_destinatario}>
+                            <InputLabel shrink id="destinatario-label">Destinatario</InputLabel>
+                            <Select
+                                labelId="destinatario-label"
+                                label="Destinatario"
+                                displayEmpty
+                                {...register('id_destinatario', { required: "Destinatario obligatorio" })}
+                            >
+                                <MenuItem value="" disabled>
+                                    <em>Selecciona un destinatario</em>
+                                </MenuItem>
+                                {usuarios.map(u => (
+                                    <MenuItem key={u.id_usuario} value={u.id_usuario}>
+                                        {u.nombre} {u.apellido}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.id_destinatario && <Typography color="error" variant="caption">{errors.id_destinatario.message}</Typography>}
+                        </FormControl>
 
-            {/* Estado */}
-            <div>
-                <label className="block font-semibold">Estado</label>
-                <select
-                    {...register("estado", { required: "Estado requerido" })}
-                    className="w-full border px-4 py-2 rounded"
-                >
-                    <option value="">Selecciona...</option>
-                    <option value="RECIBIDO">RECIBIDO</option>
-                    <option value="VISTO">VISTO</option>
-                    <option value="A DISCUSIÓN">A DISCUSIÓN</option>
-                    <option value="PENDIENTE">PENDIENTE</option>
-                    <option value="ARREGLADO">ARREGLADO</option>
-                </select>
-                {errors.estado && <p className="text-red-500">{errors.estado.message}</p>}
-            </div>
+                        <FormControl fullWidth error={!!errors.estado}>
+                            <InputLabel shrink id="estado-label">Estado</InputLabel>
+                            <Select
+                                labelId="estado-label"
+                                label="Estado"
+                                {...register('estado', { required: "Estado obligatorio" })}
+                            >
+                                {estados.map(est => (
+                                    <MenuItem key={est} value={est}>
+                                        {est}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            {errors.estado && <Typography color="error" variant="caption">{errors.estado.message}</Typography>}
+                        </FormControl>
 
-            <button
-                type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
-            >
-                Guardar cambios
-            </button>
-        </form>
+                        <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+                            {onClose && (
+                                <Button variant="outlined" color="inherit" onClick={onClose}>
+                                    Cancelar
+                                </Button>
+                            )}
+                            <Button type="submit" variant="contained" color="warning">
+                                Actualizar
+                            </Button>
+                        </Box>
+                    </Box>
+                </form>
+            </Box>
+        </Container>
     );
 }

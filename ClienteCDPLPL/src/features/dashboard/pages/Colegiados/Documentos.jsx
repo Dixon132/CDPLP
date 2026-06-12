@@ -309,9 +309,9 @@ const Documentos = () => {
                                                         setModalDetalles(true)
                                                         setTipoDoc(tipo)
                                                     }}
-                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition-colors duration-150"
+                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-medium hover:bg-indigo-100 transition-colors duration-150 shadow-sm"
                                                 >
-                                                    <Info className="w-3 h-3" />
+                                                    <Info className="w-3.5 h-3.5" />
                                                     Ver detalles
                                                 </button>
                                             ) : (
@@ -320,9 +320,9 @@ const Documentos = () => {
                                                         setModalAñadir(true)
                                                         setTipoDoc(tipo)
                                                     }}
-                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg text-sm font-medium hover:shadow-lg hover:shadow-green-500/25 transition-all duration-200 hover:scale-105"
+                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium hover:bg-emerald-100 transition-colors duration-150 shadow-sm"
                                                 >
-                                                    <Plus className="w-3 h-3" />
+                                                    <Plus className="w-3.5 h-3.5" />
                                                     Añadir
                                                 </button>
                                             )}

@@ -239,9 +239,9 @@ const Pagos = () => {
                                                     setCurrentId(pago.id_pago);
                                                     setModalDetalles(true);
                                                 }}
-                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-200 transition-colors duration-150"
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-medium hover:bg-indigo-100 transition-colors duration-150 shadow-sm"
                                             >
-                                                <Eye className="w-3 h-3" />
+                                                <Eye className="w-3.5 h-3.5" />
                                                 {pago.estado_pago === 'ANULADO' ? 'Ver detalle' : 'Ver / Anular'}
                                             </button>
                                         </td>

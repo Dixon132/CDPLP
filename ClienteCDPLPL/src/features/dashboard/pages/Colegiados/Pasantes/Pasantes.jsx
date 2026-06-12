@@ -118,7 +118,7 @@ const Pasantes = () => {
                 {
                     label: "Editar",
                     icon: Edit3,
-                    className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                    className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
                     onClick: (item) => {
                         setPasanteSeleccionado(item.id_pasante);
                         setMostrarModal2(true);
@@ -127,7 +127,7 @@ const Pasantes = () => {
                 {
                     label: "Activar",
                     icon: UserCheck,
-                    className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
+                    className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors",
                     onClick: (item) => {
                         confirmarDesactivar(item.id_pasante);
                     }
@@ -135,7 +135,7 @@ const Pasantes = () => {
                 {
                     label: "Eliminar",
                     icon: Trash2,
-                    className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
+                    className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
                     onClick: (item) => {
                         confirmDelete(item.id_pasante);
                     }
@@ -147,7 +147,7 @@ const Pasantes = () => {
                 {
                     label: "Editar",
                     icon: Edit3,
-                    className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                    className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
                     onClick: (item) => {
                         setPasanteSeleccionado(item.id_pasante);
                         setMostrarModal2(true);
@@ -156,7 +156,7 @@ const Pasantes = () => {
                 {
                     label: "Desactivar",
                     icon: UserX,
-                    className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
+                    className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
                     onClick: (item) => {
                         confirmarDesactivar(item.id_pasante);
                     }
@@ -169,7 +169,7 @@ const Pasantes = () => {
         <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             <Header
                 title="Pasantes"
-                icon={<Briefcase />}
+                icon={<Briefcase className="w-8 h-8" />}
                 stats={[
                     { label: 'Total', value: total, color: 'blue' }
                 ]}
@@ -186,91 +186,87 @@ const Pasantes = () => {
                         label: mostrarInactivos ? 'Ver activos' : 'Ver inactivos',
                         icon: mostrarInactivos ? <Eye /> : <EyeOff />,
                         onClick: () => setMostrarInactivos(!mostrarInactivos),
-                        color: mostrarInactivos ? "green" : "red",
-                    },
-                    {
-                        label: "Generar Reporte",
-                        icon: <Download />,
-                        onClick: () => setModalReporte(true),
-                        color: "blue",
+                        color: mostrarInactivos ? "emerald" : "rose",
                     }
                 ]}
             />
 
             {/* ✅ Tabla usando <Table /> */}
-            <Table
-                data={pasantes}
-                pagination={{
-                    total,
-                    totalPage,
-                    page,
-                    onPageChange: setPage,
-                }}
-                columns={[
-                    {
-                        label: "Pasante",
-                        key: "nombre",
-                        render: (item) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                    {item.nombre?.charAt(0) || "P"}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+                <Table
+                    data={pasantes}
+                    pagination={{
+                        total,
+                        totalPage,
+                        page,
+                        onPageChange: setPage,
+                    }}
+                    columns={[
+                        {
+                            label: "Pasante",
+                            key: "nombre",
+                            render: (item) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 font-bold shadow-sm">
+                                        {item.nombre?.charAt(0) || "P"}
+                                    </div>
+                                    <div>
+                                        <p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p>
+                                        <p className="text-sm text-slate-500 font-medium">CI: {item.carnet_identidad}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p>
-                                    <p className="text-sm text-slate-500">CI: {item.carnet_identidad}</p>
+                            )
+                        },
+                        {
+                            label: "Contacto",
+                            key: "correo",
+                            render: (item) => (
+                                <div className="space-y-1 text-sm text-slate-600">
+                                    <div className="flex items-center gap-2">
+                                        <Mail className="w-3.5 h-3.5 text-slate-400" /> {item.correo || "N/A"}
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Phone className="w-3.5 h-3.5 text-slate-400" /> {item.telefono || "N/A"}
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Contacto",
-                        key: "correo",
-                        render: (item) => (
-                            <div className="space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Mail className="w-3 h-3" /> {item.correo || "N/A"}
+                            )
+                        },
+                        {
+                            label: "Institución",
+                            key: "institucion",
+                            render: (item) => (
+                                <div className="flex items-center gap-2 text-sm text-slate-700">
+                                    <Building2 className="w-4 h-4 text-purple-400" /> {item.institucion || "N/A"}
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Phone className="w-3 h-3" /> {item.telefono || "N/A"}
+                            )
+                        },
+                        {
+                            label: "Fechas",
+                            key: "createdAt",
+                            render: (item) => (
+                                <div className="space-y-1 text-sm text-slate-600">
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Creado: <span className="font-medium">{parseDate(item.createdAt)}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="w-3.5 h-3.5 text-slate-400" /> Actualizado: <span className="font-medium">{parseDate(item.updatedAt)}</span>
+                                    </div>
                                 </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Institución",
-                        key: "institucion",
-                        render: (item) => (
-                            <div className="flex items-center gap-2 text-sm">
-                                <Building2 className="w-4 h-4 text-purple-500" /> {item.institucion || "N/A"}
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Fechas",
-                        key: "createdAt",
-                        render: (item) => (
-                            <div className="space-y-1 text-sm">
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-3 h-3" /> Creado: {parseDate(item.createdAt)}
-                                </div>
-                                <div className="flex items-center gap-2">
-                                    <Calendar className="w-3 h-3" /> Actualizado: {parseDate(item.updatedAt)}
-                                </div>
-                            </div>
-                        )
-                    },
-                    {
-                        label: "Estado",
-                        key: "estado",
-                        render: (item) => (
-                            <span className={getEstadoBadge(item.estado)}>
-                                {getEstadoIcon(item.estado)} {item.estado}
-                            </span>
-                        )
-                    },
-                ]}
-                actions={getActions()}
-            />
+                            )
+                        },
+                        {
+                            label: "Estado",
+                            key: "estado",
+                            render: (item) => (
+                                <span className={getEstadoBadge(item.estado)}>
+                                    {getEstadoIcon(item.estado)} {item.estado}
+                                </span>
+                            )
+                        },
+                    ]}
+                    actions={getActions()}
+                />
+            </div>
 
             {/*  Modales */}
 

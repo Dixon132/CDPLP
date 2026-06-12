@@ -160,8 +160,8 @@ export default function GenerarReporteColegios({ onClose }) {
           disabled={loading}
           className={`px-4 py-2 rounded ${
             tipoReporte === "resumen"
-              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
-              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
+              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] shadow-sm"
+              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px] shadow-sm"
           } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           Resumen
@@ -171,8 +171,8 @@ export default function GenerarReporteColegios({ onClose }) {
           disabled={loading}
           className={`px-4 py-2 rounded ${
             tipoReporte === "individual"
-              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px]"
-              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px]"
+              ? "bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] shadow-sm"
+              : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 font-bold uppercase tracking-widest text-[10px] shadow-sm"
           } ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         >
           Individual
@@ -188,7 +188,7 @@ export default function GenerarReporteColegios({ onClose }) {
           <button
             onClick={descargarResumen}
             disabled={loading}
-            className={`bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
+            className={`bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all ${
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -223,7 +223,7 @@ export default function GenerarReporteColegios({ onClose }) {
           <button
             type="submit"
             disabled={loading || !seleccionColegiado}
-            className={`bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
+            className={`bg-emerald-500 hover:bg-emerald-600 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all ${
               loading || !seleccionColegiado ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -237,7 +237,7 @@ export default function GenerarReporteColegios({ onClose }) {
         <button
           onClick={onClose}
           disabled={loading}
-          className={`mt-4 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded ${
+          className={`mt-4 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-xl shadow-sm transition-all ${
             loading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

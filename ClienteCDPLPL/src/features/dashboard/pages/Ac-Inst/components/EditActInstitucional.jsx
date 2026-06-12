@@ -1,31 +1,24 @@
-// src/pages/dashboard/pages/Ac-institucionales/EditActInstitucional.jsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import Alerts from "../../../components/Alerts";
 import {
   getActividadInstitucionalById,
   updateActividadInstitucional,
 } from "../../../services/ac-institucionales";
+import {
+  Button,
+  TextField,
+  Box,
+  Typography,
+  Container,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
+  InputAdornment,
+  CircularProgress
+} from "@mui/material";
 
 export default function EditActInstitucional({ id, onClose, onSuccess }) {
-  const [alert, setAlert] = useState(false);
-  const [alertType, setAlertType] = useState("success");
-  const [alertMessage, setAlertMessage] = useState("");
-
-  const showSuccess = (msg) => {
-    setAlertType("success");
-    setAlertMessage(msg);
-    setAlert(true);
-    setTimeout(() => setAlert(false), 3000);
-  };
-
-  const showError = (msg) => {
-    setAlertType("error");
-    setAlertMessage(msg);
-    setAlert(true);
-    setTimeout(() => setAlert(false), 3000);
-  };
-
   const {
     register,
     handleSubmit,
@@ -33,25 +26,38 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
     formState: { errors },
   } = useForm();
 
-  // Traer datos iniciales y hacer reset()
+  const [loading, setLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const tipos = ["Conferencia", "Taller", "Seminario", "Curso"];
+  const estados = ["ACTIVO", "INACTIVO"];
+
   useEffect(() => {
     const fetchData = async () => {
-      const actividad = await getActividadInstitucionalById(id);
-      reset({
-        nombre: actividad.nombre ?? "",
-        descripcion: actividad.descripcion ?? "",
-        tipo: actividad.tipo ?? "",
-        fecha_programada: actividad.fecha_programada
-          ? actividad.fecha_programada.split("T")[0]
-          : "",
-        costo: actividad.costo ?? "",
-        estado: actividad.estado ?? "",
-      });
+      try {
+        const actividad = await getActividadInstitucionalById(id);
+        reset({
+          nombre: actividad.nombre ?? "",
+          descripcion: actividad.descripcion ?? "",
+          tipo: actividad.tipo ?? "",
+          fecha_programada: actividad.fecha_programada
+            ? actividad.fecha_programada.split("T")[0]
+            : "",
+          costo: actividad.costo ?? "",
+          estado: actividad.estado ?? "",
+        });
+      } catch (err) {
+        console.error("Error al cargar actividad", err);
+        alert("Error al cargar la actividad");
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, [id, reset]);
 
   const onSubmit = async (formData) => {
+    setIsSubmitting(true);
     const payload = {
       nombre: formData.nombre,
       descripcion: formData.descripcion,
@@ -65,91 +71,132 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
 
     try {
       await updateActividadInstitucional(id, payload);
-      showSuccess("Actividad institucional actualizada correctamente");
+      alert("Actividad institucional actualizada correctamente");
       if (onSuccess) onSuccess();
-      setTimeout(() => { if (onClose) onClose(); }, 1500);
+      if (onClose) onClose();
     } catch (err) {
       console.error(err);
-      showError("Error al actualizar actividad institucional");
+      alert("Error al actualizar actividad institucional");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <>
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-4 p-4 max-w-lg mx-auto"
-    >
-      <div>
-        <label className="block font-semibold">Nombre</label>
-        <input
-          {...register("nombre", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.nombre && <p className="text-red-500">Nombre obligatorio</p>}
-      </div>
+    <Container maxWidth="sm">
+      <Box sx={{ mt: 2, mb: 2 }}>
+        <Typography variant="h5" component="h2" gutterBottom align="center">
+          Editar Actividad
+        </Typography>
 
-      <div>
-        <label className="block font-semibold">Descripción</label>
-        <textarea
-          {...register("descripcion")}
-          className="w-full border px-4 py-2 rounded"
-        />
-      </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 3 }}>
+            <TextField
+              label="Nombre de la Actividad"
+              InputLabelProps={{ shrink: true }}
+              {...register("nombre", { required: "El nombre es obligatorio" })}
+              error={!!errors.nombre}
+              helperText={errors.nombre?.message}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Tipo</label>
-        <input
-          {...register("tipo", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.tipo && <p className="text-red-500">Tipo obligatorio</p>}
-      </div>
+            <TextField
+              label="Descripción"
+              multiline
+              rows={3}
+              InputLabelProps={{ shrink: true }}
+              {...register("descripcion")}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Fecha Programada</label>
-        <input
-          type="date"
-          {...register("fecha_programada", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.fecha_programada && (
-          <p className="text-red-500">Fecha programada obligatoria</p>
-        )}
-      </div>
+            <FormControl fullWidth error={!!errors.tipo}>
+              <InputLabel shrink id="tipo-label">Tipo de Actividad</InputLabel>
+              <Select
+                labelId="tipo-label"
+                label="Tipo de Actividad"
+                displayEmpty
+                {...register("tipo", { required: "Selecciona un tipo" })}
+              >
+                <MenuItem value="" disabled>
+                  <em>Seleccione un tipo</em>
+                </MenuItem>
+                {tipos.map((t) => (
+                  <MenuItem key={t} value={t}>
+                    {t}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.tipo && (
+                <Typography color="error" variant="caption">
+                  {errors.tipo.message}
+                </Typography>
+              )}
+            </FormControl>
 
-      <div>
-        <label className="block font-semibold">Costo (Bs.)</label>
-        <input
-          type="number"
-          step="0.01"
-          {...register("costo", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        />
-        {errors.costo && <p className="text-red-500">Costo obligatorio</p>}
-      </div>
+            <TextField
+              label="Fecha Programada"
+              type="date"
+              InputLabelProps={{ shrink: true }}
+              {...register("fecha_programada", { required: "La fecha es obligatoria" })}
+              error={!!errors.fecha_programada}
+              helperText={errors.fecha_programada?.message}
+              fullWidth
+            />
 
-      <div>
-        <label className="block font-semibold">Estado</label>
-        <select
-          {...register("estado", { required: true })}
-          className="w-full border px-4 py-2 rounded"
-        >
-          <option value="">Seleccione...</option>
-          <option value="ACTIVO">ACTIVO</option>
-          <option value="INACTIVO">INACTIVO</option>
-        </select>
-        {errors.estado && <p className="text-red-500">Estado obligatorio</p>}
-      </div>
+            <TextField
+              label="Costo"
+              type="number"
+              InputLabelProps={{ shrink: true }}
+              inputProps={{ min: 0, step: 0.1 }}
+              InputProps={{
+                startAdornment: <InputAdornment position="start">Bs.</InputAdornment>,
+              }}
+              {...register("costo")}
+              fullWidth
+            />
 
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-slate-800 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
-      >
-          Guardar Cambios
-        </button>
-    </form>
-    <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
-    </>
+            <FormControl fullWidth error={!!errors.estado}>
+              <InputLabel shrink id="estado-label">Estado</InputLabel>
+              <Select
+                labelId="estado-label"
+                label="Estado"
+                displayEmpty
+                {...register("estado", { required: "El estado es obligatorio" })}
+              >
+                {estados.map((e) => (
+                  <MenuItem key={e} value={e}>
+                    {e}
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.estado && (
+                <Typography color="error" variant="caption">
+                  {errors.estado.message}
+                </Typography>
+              )}
+            </FormControl>
+
+            <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+              {onClose && (
+                <Button variant="outlined" color="inherit" onClick={onClose} disabled={isSubmitting}>
+                  Cancelar
+                </Button>
+              )}
+              <Button type="submit" variant="contained" color="warning" disabled={isSubmitting}>
+                Actualizar
+              </Button>
+            </Box>
+          </Box>
+        </form>
+      </Box>
+    </Container>
   );
 }

@@ -1,4 +1,3 @@
-// src/pages/dashboard/pages/Tesoreria/PresupuestoForm.jsx
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -6,6 +5,18 @@ import {
     getPresupuestoById,
     updatePresupuesto,
 } from "../../../services/tesoreria";
+import {
+    Button,
+    TextField,
+    Box,
+    MenuItem,
+    Select,
+    FormControl,
+    InputLabel,
+    InputAdornment,
+    CircularProgress,
+    Container
+} from "@mui/material";
 
 export default function PresupuestoForm({
     presupuestoId = null,
@@ -17,35 +28,42 @@ export default function PresupuestoForm({
         handleSubmit,
         reset,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            estado: "ACTIVO"
+        }
+    });
 
     const [loading, setLoading] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Si presupuestoId viene definido, estamos en “Editar”, así que cargamos datos
     useEffect(() => {
         if (presupuestoId) {
             const fetchData = async () => {
                 setLoading(true);
-                const data = await getPresupuestoById(presupuestoId);
-                // Llenamos el formulario (aunque getPresupuestoById devuelve también movimientos, nos quedamos con los campos del presupuesto)
-                reset({
-                    nombre_presupuesto: data.nombre_presupuesto ?? "",
-                    descripcion: data.descripcion ?? "",
-                    monto_total: data.monto_total?.toString() ?? "",
-                    fecha_asignacion: data.fecha_asignacion
-                        ? data.fecha_asignacion.split("T")[0]
-                        : "",
-                    estado: data.estado ?? "",
-                });
-                setLoading(false);
+                try {
+                    const data = await getPresupuestoById(presupuestoId);
+                    reset({
+                        nombre_presupuesto: data.nombre_presupuesto || "",
+                        descripcion: data.descripcion || "",
+                        monto_total: data.monto_total || "",
+                        fecha_asignacion: data.fecha_asignacion
+                            ? data.fecha_asignacion.split("T")[0]
+                            : "",
+                        estado: data.estado || "ACTIVO",
+                    });
+                } catch (error) {
+                    console.error("Error al cargar presupuesto", error);
+                } finally {
+                    setLoading(false);
+                }
             };
             fetchData();
         }
     }, [presupuestoId, reset]);
 
     const onSubmit = async (formData) => {
-        setLoading(true);
-
+        setIsSubmitting(true);
         const payload = {
             nombre_presupuesto: formData.nombre_presupuesto,
             descripcion: formData.descripcion,
@@ -70,86 +88,90 @@ export default function PresupuestoForm({
             console.error(err);
             alert("Error al guardar el presupuesto");
         } finally {
-            setLoading(false);
+            setIsSubmitting(false);
         }
     };
 
+    if (loading) {
+        return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+                <CircularProgress />
+            </Box>
+        );
+    }
+
     return (
-        <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="space-y-4 p-4 max-w-lg mx-auto"
-        >
-            <div>
-                <label className="block font-semibold">Nombre Presupuesto</label>
-                <input
-                    {...register("nombre_presupuesto", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.nombre_presupuesto && (
-                    <p className="text-red-500">Este campo es obligatorio</p>
-                )}
-            </div>
+        <Container maxWidth="sm" sx={{ py: 2 }}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <TextField
+                        label="Nombre del Presupuesto"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("nombre_presupuesto", { required: "Este campo es obligatorio" })}
+                        error={!!errors.nombre_presupuesto}
+                        helperText={errors.nombre_presupuesto?.message}
+                        fullWidth
+                    />
 
-            <div>
-                <label className="block font-semibold">Descripción</label>
-                <textarea
-                    {...register("descripcion")}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-            </div>
+                    <TextField
+                        label="Descripción"
+                        multiline
+                        rows={3}
+                        InputLabelProps={{ shrink: true }}
+                        {...register("descripcion")}
+                        fullWidth
+                    />
 
-            <div>
-                <label className="block font-semibold">Monto Total</label>
-                <input
-                    type="number"
-                    step="0.01"
-                    {...register("monto_total", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.monto_total && (
-                    <p className="text-red-500">Este campo es obligatorio</p>
-                )}
-            </div>
+                    <TextField
+                        label="Monto Total"
+                        type="number"
+                        InputLabelProps={{ shrink: true }}
+                        inputProps={{ min: 0, step: 0.1 }}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start">Bs.</InputAdornment>,
+                        }}
+                        {...register("monto_total", { required: "El monto es obligatorio" })}
+                        error={!!errors.monto_total}
+                        helperText={errors.monto_total?.message}
+                        fullWidth
+                    />
 
-            <div>
-                <label className="block font-semibold">Fecha Asignación</label>
-                <input
-                    type="date"
-                    {...register("fecha_asignacion", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                />
-                {errors.fecha_asignacion && (
-                    <p className="text-red-500">Este campo es obligatorio</p>
-                )}
-            </div>
+                    <TextField
+                        label="Fecha de Asignación"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("fecha_asignacion", { required: "La fecha es obligatoria" })}
+                        error={!!errors.fecha_asignacion}
+                        helperText={errors.fecha_asignacion?.message}
+                        fullWidth
+                    />
 
-            <div>
-                <label className="block font-semibold">Estado</label>
-                <select
-                    {...register("estado", { required: true })}
-                    className="w-full border px-4 py-2 rounded"
-                    disabled={loading}
-                >
-                    <option value="">Seleccione...</option>
-                    <option value="ACTIVO">ACTIVO</option>
-                    <option value="INACTIVO">INACTIVO</option>
-                </select>
-                {errors.estado && (
-                    <p className="text-red-500">Este campo es obligatorio</p>
-                )}
-            </div>
+                    <FormControl fullWidth error={!!errors.estado}>
+                        <InputLabel shrink id="estado-label">Estado</InputLabel>
+                        <Select
+                            labelId="estado-label"
+                            label="Estado"
+                            displayEmpty
+                            defaultValue="ACTIVO"
+                            {...register("estado", { required: "El estado es obligatorio" })}
+                        >
+                            <MenuItem value="ACTIVO">Activo</MenuItem>
+                            <MenuItem value="INACTIVO">Inactivo</MenuItem>
+                        </Select>
+                    </FormControl>
 
-            <button
-                type="submit"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded"
-                disabled={loading}
-            >
-                {presupuestoId ? "Guardar Cambios" : "Crear Presupuesto"}
-            </button>
-        </form>
+                    <Box sx={{ mt: 2, display: "flex", gap: 2, justifyContent: "flex-end" }}>
+                        {onClose && (
+                            <Button variant="outlined" color="inherit" onClick={onClose} disabled={isSubmitting}>
+                                Cancelar
+                            </Button>
+                        )}
+                        <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                            {isSubmitting ? <CircularProgress size={24} color="inherit" /> : (presupuestoId ? "Guardar Cambios" : "Crear Presupuesto")}
+                        </Button>
+                    </Box>
+                </Box>
+            </form>
+        </Container>
     );
 }

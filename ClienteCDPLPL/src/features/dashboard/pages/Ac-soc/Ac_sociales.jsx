@@ -98,7 +98,7 @@ const Ac_sociales = () => {
             {
                 label: "Finalizadas",
                 value: actividades.filter((a) => a.estado === "FINALIZADO").length,
-                color: "purple",
+                color: "indigo",
             },
         ],
         [actividades, total]
@@ -133,7 +133,7 @@ const Ac_sociales = () => {
                         label: "Nueva Actividad",
                         icon: <Plus />,
                         onClick: () => setShowCreate(true),
-                        color: "purple",
+                        color: "indigo",
                     },
                 ]}
             />
@@ -147,7 +147,7 @@ const Ac_sociales = () => {
                             key: "nombre",
                             render: (a) => (
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full flex items-center justify-center text-white shadow">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white shadow">
                                         {getTipoIcon(a.tipo)}
                                     </div>
                                     <div>
@@ -166,7 +166,7 @@ const Ac_sociales = () => {
                             key: "ubicacion",
                             render: (a) => (
                                 <div className="flex items-center gap-1 text-slate-600">
-                                    <MapPin className="w-4 h-4 text-pink-500" />
+                                    <MapPin className="w-4 h-4 text-blue-500" />
                                     {a.ubicacion}
                                 </div>
                             ),
@@ -248,7 +248,7 @@ const Ac_sociales = () => {
                             <div className="p-6 space-y-2">
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
-                                        <div className="p-3 bg-gradient-to-r from-pink-500 to-purple-500 rounded-xl text-white shadow">
+                                        <div className="p-3 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-xl text-white shadow">
                                             {getTipoIcon(a.tipo)}
                                         </div>
                                         <div>
@@ -268,7 +268,7 @@ const Ac_sociales = () => {
                                     {a.descripcion}
                                 </p>
                                 <p className="text-sm text-slate-600 flex items-center gap-1">
-                                    <MapPin className="w-4 h-4 text-pink-500" />{" "}
+                                    <MapPin className="w-4 h-4 text-blue-500" />{" "}
                                     {a.ubicacion}
                                 </p>
                                 <p className="text-sm text-slate-600 flex items-center gap-1">

@@ -1,4 +1,3 @@
-// src/pages/dashboard/pages/Ac-institucionales/GestionAsistenciaInst.jsx
 import React, { useEffect, useState } from "react";
 import {
     getRegistrosPorActividadInstitucional,
@@ -12,370 +11,258 @@ import {
     UserX,
     CheckCircle,
     XCircle,
-    Clock,
     UserPlus,
-    Eye,
-    Mail,
-    Phone,
-    Calendar,
-    GraduationCap,
-    Search,
-    Filter,
-    Download,
-    FileText,
-    Award
+    ArrowLeft,
+    ListChecks
 } from 'lucide-react';
-
-import { Link, useParams } from "react-router-dom";
-import Alerts from "../../../components/Alerts";
+import { useNavigate, useParams } from "react-router-dom";
+import Header from "../../../components/Header";
+import Table from "../../../components/Table";
+import ConfirmDialog from "../../../components/ConfirmDialog";
+import Modal from "../../../../../components/Modal";
+import { CircularProgress, Box, Typography } from "@mui/material";
 
 export default function GestionAsistenciaInst() {
-    const [alert, setAlert] = useState(false);
-    const [alertType, setAlertType] = useState("success");
-    const [alertMessage, setAlertMessage] = useState("");
-
-    const showError = (msg) => {
-        setAlertType("error");
-        setAlertMessage(msg);
-        setAlert(true);
-        setTimeout(() => setAlert(false), 3000);
-    };
-
-    const [registros, setRegistros] = useState([]);     // Inscritos (colegiados + invitados)
-    const [asistencias, setAsistencias] = useState([]); // Colegiados que asistieron
+    const [registros, setRegistros] = useState([]);
+    const [asistencias, setAsistencias] = useState([]);
     const [loading, setLoading] = useState(true);
-    const { id } = useParams()
-    // 1) Traer inscritos y asistencias; en caso de venir envuelto en { data: [...] }, extraemos el array
+    const { id } = useParams();
+    const navigate = useNavigate();
+
+    // Estados para el Modal de Confirmación
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [selectedColegiado, setSelectedColegiado] = useState(null);
+    const [confirmAction, setConfirmAction] = useState(""); // "MARCAR" o "DESMARCAR"
+
+    // Estado para el Modal de Ver Lista
+    const [showListaModal, setShowListaModal] = useState(false);
+
     const fetchData = async () => {
         setLoading(true);
+        try {
+            const rawRegs = await getRegistrosPorActividadInstitucional(id);
+            const regs = Array.isArray(rawRegs) ? rawRegs : (rawRegs?.data || []);
 
-        const rawRegs = await getRegistrosPorActividadInstitucional(id);
-        // Si rawRegs no es un array (p.ej. { data: [...] }), tomamos rawRegs.data
-        const regs = Array.isArray(rawRegs) ? rawRegs : rawRegs.data;
+            const rawAsis = await getAsistenciasPorActividad(id);
+            const asis = Array.isArray(rawAsis) ? rawAsis : (rawAsis?.data || []);
 
-        const rawAsis = await getAsistenciasPorActividad(id);
-        const asis = Array.isArray(rawAsis) ? rawAsis : rawAsis.data;
-
-        setRegistros(regs);
-        setAsistencias(asis);
-        setLoading(false);
+            setRegistros(regs);
+            setAsistencias(asis);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
         fetchData();
     }, [id]);
 
-
-    // 2) Saber si un colegiado ya asistió
     const hasAssisted = (id_colegiado) => {
         return asistencias.some((a) => a.id_colegiado === id_colegiado);
     };
 
-    // 3) Encontrar id_asistencia para desmarcar
     const findAsistenciaId = (id_colegiado) => {
         const found = asistencias.find((a) => a.id_colegiado === id_colegiado);
         return found ? found.id_asistencia : null;
     };
 
-    // 4) Toggle: si existe, DELETE; si no existe, POST
-    const toggleAsistencia = async (id_colegiado) => {
-        const existingId = findAsistenciaId(id_colegiado);
-        if (existingId) {
-            await deleteAsistenciaActividad(existingId);
-        } else {
-            await createAsistenciaActividad({
-                id_actividad: id,
-                id_colegiado: id_colegiado,
-            });
-        }
-        await fetchData();
+    const handleToggleClick = (id_colegiado) => {
+        const asistio = hasAssisted(id_colegiado);
+        setSelectedColegiado(id_colegiado);
+        setConfirmAction(asistio ? "DESMARCAR" : "MARCAR");
+        setShowConfirm(true);
     };
 
-    const getEstadoBadge = (estado) => {
-        const baseClasses = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
-        switch (estado?.toUpperCase()) {
-            case 'CONFIRMADO':
-                return `${baseClasses} bg-green-100 text-green-800 border border-green-200`;
-            case 'PENDIENTE':
-                return `${baseClasses} bg-yellow-100 text-yellow-800 border border-yellow-200`;
-            case 'CANCELADO':
-                return `${baseClasses} bg-red-100 text-red-800 border border-red-200`;
-            default:
-                return `${baseClasses} bg-gray-100 text-gray-800 border border-gray-200`;
-        }
-    };
-
-    const getEstadoIcon = (estado) => {
-        switch (estado?.toUpperCase()) {
-            case 'CONFIRMADO':
-                return <CheckCircle className="w-3 h-3 text-green-500" />;
-            case 'CANCELADO':
-                return <XCircle className="w-3 h-3 text-red-500" />;
-            case 'PENDIENTE':
-                return <Clock className="w-3 h-3 text-yellow-500" />;
-            default:
-                return <Clock className="w-3 h-3 text-gray-500" />;
+    const confirmToggle = async () => {
+        if (!selectedColegiado) return;
+        
+        const existingId = findAsistenciaId(selectedColegiado);
+        try {
+            if (existingId) {
+                await deleteAsistenciaActividad(existingId);
+            } else {
+                await createAsistenciaActividad({
+                    id_actividad: id,
+                    id_colegiado: selectedColegiado,
+                });
+            }
+            await fetchData();
+            setShowConfirm(false);
+        } catch (err) {
+            console.error("Error toggling asistencia", err);
+            alert("Error al actualizar la asistencia");
+            setShowConfirm(false);
         }
     };
 
     if (loading) {
         return (
-            <div className="flex items-center justify-center p-12">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="w-8 h-8 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin"></div>
-                    <p className="text-slate-600 font-medium">Cargando datos de asistencia...</p>
-                </div>
-            </div>
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 12 }}>
+                <CircularProgress />
+            </Box>
         );
     }
 
-    // 5) Filtramos sólo aquellos registros que tengan id_colegiado ≠ null
     const registrosColegiados = registros.filter((r) => r.id_colegiado !== null);
 
+    const columns = [
+        {
+            label: "Colegiado",
+            key: "colegiado",
+            render: (r) => (
+                <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center font-bold">
+                        {r.colegiados?.nombre?.charAt(0)?.toUpperCase() || 'N'}
+                    </div>
+                    <div>
+                        <p className="font-bold text-slate-800">
+                            {r.colegiados?.nombre} {r.colegiados?.apellido}
+                        </p>
+                        <p className="text-xs text-slate-500">ID: {r.id_colegiado}</p>
+                    </div>
+                </div>
+            )
+        },
+        {
+            label: "Estado Registro",
+            key: "estado",
+            render: (r) => {
+                const est = r.estado_registro?.toUpperCase();
+                let color = "bg-slate-50 text-slate-700 border-slate-200";
+                if (est === 'CONFIRMADO') color = "bg-emerald-50 text-emerald-700 border-emerald-200";
+                if (est === 'CANCELADO') color = "bg-rose-50 text-rose-700 border-rose-200";
+                if (est === 'PENDIENTE') color = "bg-amber-50 text-amber-700 border-amber-200";
+
+                return (
+                    <span className={`px-3 py-1 rounded-full text-xs font-semibold border ${color}`}>
+                        {r.estado_registro}
+                    </span>
+                );
+            }
+        },
+        {
+            label: "Asistencia",
+            key: "asistencia",
+            render: (r) => {
+                const asistio = hasAssisted(r.id_colegiado);
+                return (
+                    <div className="flex items-center gap-2">
+                        {asistio ? (
+                            <span className="flex items-center gap-1.5 text-emerald-600 font-medium bg-emerald-50 px-2 py-1 rounded-md text-xs">
+                                <CheckCircle className="w-4 h-4" /> Asistió
+                            </span>
+                        ) : (
+                            <span className="flex items-center gap-1.5 text-rose-500 font-medium bg-rose-50 px-2 py-1 rounded-md text-xs">
+                                <XCircle className="w-4 h-4" /> No asistió
+                            </span>
+                        )}
+                    </div>
+                );
+            }
+        }
+    ];
+
+    const actions = [
+        {
+            label: (r) => hasAssisted(r.id_colegiado) ? "Desmarcar" : "Marcar Asistencia",
+            icon: (r) => hasAssisted(r.id_colegiado) ? UserX : UserCheck,
+            className: (r) => hasAssisted(r.id_colegiado) 
+                ? "text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100" 
+                : "text-emerald-600 bg-emerald-50 border-emerald-100 hover:bg-emerald-100",
+            onClick: (r) => handleToggleClick(r.id_colegiado)
+        }
+    ];
+
     return (
-        <div className="space-y-8 p-8 bg-slate-50/50 min-h-screen max-w-none w-full">
-            {/* Header Principal */}
-            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl shadow-lg">
-                            <Users className="w-6 h-6 text-white" />
-                        </div>
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-800 mb-1">
-                                Gestión de Asistencia
-                            </h1>
-                            <p className="text-slate-600 text-sm">
-                                Control de asistencia para la actividad institucional
-                            </p>
-                        </div>
-                    </div>
+        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
+            <Header
+                title="Gestión de Asistencia"
+                icon={<Users className="w-8 h-8" />}
+                showSearch={false}
+                stats={[
+                    { label: "Inscritos", value: registrosColegiados.length, color: "blue" },
+                    { label: "Asistieron", value: asistencias.length, color: "emerald" },
+                    { label: "Pendientes", value: registrosColegiados.length - asistencias.length, color: "amber" }
+                ]}
+                buttons={[
+                    {
+                        label: "Ver Lista",
+                        icon: <ListChecks />,
+                        onClick: () => setShowListaModal(true),
+                        color: "emerald"
+                    },
+                    {
+                        label: "Volver",
+                        icon: <ArrowLeft />,
+                        onClick: () => navigate(-1),
+                        color: "blue"
+                    }
+                ]}
+            />
 
-                    {/* Estadísticas rápidas */}
-                    <div className="hidden md:flex items-center gap-6">
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-blue-600">{registrosColegiados.length}</div>
-                            <div className="text-xs text-slate-500">Inscritos</div>
-                        </div>
-                        <div className="w-px h-10 bg-slate-200"></div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-green-600">{asistencias.length}</div>
-                            <div className="text-xs text-slate-500">Asistieron</div>
-                        </div>
-                        <div className="w-px h-10 bg-slate-200"></div>
-                        <div className="text-center">
-                            <div className="text-2xl font-bold text-amber-600">{registrosColegiados.length - asistencias.length}</div>
-                            <div className="text-xs text-slate-500">Pendientes</div>
-                        </div>
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+                <div className="px-6 py-4 border-b border-slate-200/60 bg-slate-50/50">
+                    <div className="flex items-center gap-3">
+                        <UserPlus className="w-5 h-5 text-indigo-600" />
+                        <h2 className="text-lg font-bold text-slate-800">Colegiados Inscritos</h2>
                     </div>
                 </div>
+                
+                <Table 
+                    columns={columns}
+                    data={registrosColegiados}
+                    actions={actions}
+                    emptyMessage="No hay colegiados inscritos para esta actividad"
+                />
             </div>
 
-            {/* Sección de Colegiados Inscritos */}
-            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
-                <div className="bg-gradient-to-r from-slate-50 to-blue-50 px-6 py-4 border-b border-slate-200/60">
-                    <div className="flex items-center gap-3">
-                        <UserPlus className="w-5 h-5 text-blue-600" />
-                        <h2 className="text-lg font-semibold text-slate-800">Colegiados Inscritos</h2>
-                        <span className="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
-                            {registrosColegiados.length} Total
-                        </span>
-                    </div>
-                </div>
+            {/* Modal de Confirmación */}
+            <ConfirmDialog
+                isOpen={showConfirm}
+                message={confirmAction === "MARCAR" 
+                    ? "¿Estás seguro de que deseas MARCAR la asistencia de este colegiado?" 
+                    : "¿Estás seguro de que deseas DESMARCAR la asistencia de este colegiado?"}
+                onConfirm={confirmToggle}
+                onClose={() => setShowConfirm(false)}
+                confirmText={confirmAction === "MARCAR" ? "Marcar" : "Desmarcar"}
+            />
 
-                {registrosColegiados.length === 0 ? (
-                    <div className="px-6 py-12 text-center">
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center">
-                                <Users className="w-8 h-8 text-slate-400" />
-                            </div>
-                            <div>
-                                <p className="text-slate-600 font-medium text-lg">No hay colegiados inscritos</p>
-                                <p className="text-slate-400 text-sm mt-1">Los colegiados inscritos aparecerán aquí</p>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="overflow-auto max-h-[70vh]">
-                        <table className="w-full">
-                            <thead className="bg-gradient-to-r from-slate-50 to-blue-50 border-b border-slate-200/60 sticky top-0">
-                                <tr>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Colegiado</th>
-                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Estado Registro</th>
-                                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Asistencia</th>
-                                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Certificado</th>
-                                    <th className="px-6 py-4 text-center text-xs font-semibold text-slate-600 uppercase tracking-wider">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-200/60">
-                                {registrosColegiados.map((reg) => {
-                                    const persona = reg.colegiados;
-                                    const asistio = hasAssisted(reg.id_colegiado);
-
-                                    return (
-                                        <tr key={reg.id_registro} className="hover:bg-slate-50 transition-colors duration-150">
-                                            {/* Información del colegiado */}
-                                            <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
-                                                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                                        {persona?.nombre?.charAt(0)?.toUpperCase() || 'N'}
-                                                    </div>
-                                                    <div>
-                                                        <p className="font-semibold text-slate-800">
-                                                            {persona?.nombre} {persona?.apellido}
-                                                        </p>
-                                                        <p className="text-sm text-slate-500">
-                                                            ID Colegiado: {reg.id_colegiado}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </td>
-
-                                            {/* Estado del registro */}
-                                            <td className="px-6 py-4">
-                                                <span className={getEstadoBadge(reg.estado_registro)}>
-                                                    {getEstadoIcon(reg.estado_registro)}
-                                                    {reg.estado_registro}
-                                                </span>
-                                            </td>
-
-                                            {/* Estado de asistencia */}
-                                            <td className="px-6 py-4 text-center">
-                                                <div className="flex items-center justify-center gap-2">
-                                                    {asistio ? (
-                                                        <div className="flex items-center gap-2 text-green-600">
-                                                            <CheckCircle className="w-5 h-5" />
-                                                            <span className="font-medium text-sm">Asistió</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="flex items-center gap-2 text-red-500">
-                                                            <XCircle className="w-5 h-5" />
-                                                            <span className="font-medium text-sm">No asistió</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </td>
-
-                                            {/* Acciones */}
-                                            <td className="px-6 py-4 text-center">
-                                                <button
-                                                    onClick={() => {
-                                                        const token = localStorage.getItem("token");
-                                                        fetch(`/api/ac-institucionales/registro/${reg.id_registro}/certificado`, {
-                                                            headers: { Authorization: `Bearer ${token}` }
-                                                        })
-                                                            .then(r => r.blob())
-                                                            .then(blob => {
-                                                                const url = URL.createObjectURL(blob);
-                                                                window.open(url, "_blank");
-                                                            })
-                                                            .catch(() => showError("Error al generar el certificado"));
-                                                    }}
-                                                    className="inline-flex items-center gap-1.5 px-3 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium text-xs shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 transition-all duration-200 hover:scale-105"
-                                                    title="Descargar certificado de participación"
-                                                >
-                                                    <Award className="w-3.5 h-3.5" />
-                                                    Certificado
-                                                </button>
-                                            </td>
-
-                                            {/* Toggle Asistencia */}
-                                            <td className="px-6 py-4 text-center">
-                                                <button
-                                                    onClick={() => toggleAsistencia(reg.id_colegiado)}
-                                                    className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-200 hover:scale-105 shadow-lg ${asistio
-                                                        ? "bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-red-500/25 hover:shadow-xl hover:shadow-red-500/30"
-                                                        : "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-green-500/25 hover:shadow-xl hover:shadow-green-500/30"
-                                                        }`}
-                                                >
-                                                    {asistio ? (
-                                                        <>
-                                                            <UserX className="w-4 h-4" />
-                                                            Desmarcar
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <UserCheck className="w-4 h-4" />
-                                                            Marcar
-                                                        </>
-                                                    )}
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-            </div>
-
-            {/* Sección de Asistencias Confirmadas */}
-            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-6 py-4 border-b border-green-200/60">
-                    <div className="flex items-center gap-3">
-                        <UserCheck className="w-5 h-5 text-green-600" />
-                        <h2 className="text-lg font-semibold text-slate-800">Colegiados que Asistieron</h2>
-                        <span className="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                            {asistencias.length} Confirmados
-                        </span>
-                    </div>
-                </div>
-
-                <div className="p-6">
+            {/* Modal de Ver Lista de Asistentes */}
+            <Modal 
+                isOpen={showListaModal} 
+                onClose={() => setShowListaModal(false)}
+                title="Lista de Asistentes"
+            >
+                <div className="p-4 max-h-[60vh] overflow-y-auto">
                     {asistencias.length === 0 ? (
-                        <div className="text-center py-8">
-                            <div className="flex flex-col items-center gap-4">
-                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                                    <UserCheck className="w-8 h-8 text-green-500" />
-                                </div>
-                                <div>
-                                    <p className="text-slate-600 font-medium text-lg">Nadie ha asistido aún</p>
-                                    <p className="text-slate-400 text-sm mt-1">Las asistencias confirmadas aparecerán aquí</p>
-                                </div>
-                            </div>
-                        </div>
+                        <Box sx={{ textAlign: 'center', py: 4 }}>
+                            <UserX className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+                            <Typography color="textSecondary">No hay asistencias confirmadas aún.</Typography>
+                        </Box>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {asistencias.map((a) => {
-                                const persona = a.colegiados;
-                                return (
-                                    <div key={a.id_asistencia} className="bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200/60 rounded-xl p-4 hover:shadow-lg transition-all duration-200">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                                {persona?.nombre?.charAt(0)?.toUpperCase() || 'N'}
-                                            </div>
-                                            <div className="flex-1">
-                                                <p className="font-semibold text-slate-800">
-                                                    {persona?.nombre} {persona?.apellido}
-                                                </p>
-                                                <div className="flex items-center gap-1 mt-1">
-                                                    <CheckCircle className="w-3 h-3 text-green-500" />
-                                                    <span className="text-xs text-green-600 font-medium">Asistencia confirmada</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                        <div className="grid grid-cols-1 gap-3">
+                            {asistencias.map(a => (
+                                <div key={a.id_asistencia} className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
+                                    <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">
+                                        {a.colegiados?.nombre?.charAt(0)?.toUpperCase() || 'N'}
                                     </div>
-                                );
-                            })}
+                                    <div>
+                                        <p className="font-semibold text-slate-800">
+                                            {a.colegiados?.nombre} {a.colegiados?.apellido}
+                                        </p>
+                                        <p className="text-xs text-slate-500">CI: {a.colegiados?.carnet_identidad || "N/A"}</p>
+                                    </div>
+                                    <div className="ml-auto">
+                                        <CheckCircle className="w-5 h-5 text-emerald-500" />
+                                    </div>
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
-            </div>
-
-            {/* Footer con botón de cerrar */}
-            <div className="flex justify-end pt-4">
-                <button
-
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-slate-500 to-slate-600 text-white rounded-xl font-medium shadow-lg shadow-slate-500/25 hover:shadow-xl hover:shadow-slate-500/30 transition-all duration-200 hover:scale-105"
-                >
-                    <XCircle className="w-4 h-4" />
-                    <Link to={`/dashboard/actividades_institucionales`}>
-                        Cerrar Gestión
-                    </Link>
-                </button>
-            </div>
-            <Alerts type={alertType} message={alertMessage} show={alert} onClose={() => setAlert(false)} />
+            </Modal>
         </div>
     );
 }

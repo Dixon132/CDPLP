@@ -7,7 +7,8 @@ const Header = ({
     searchPlaceholder = "Buscar...",
     onSearch = () => { },
     buttons = [],
-    searchDelay = 800
+    searchDelay = 800,
+    showSearch = true
 }) => {
     const [searchValue, setSearchValue] = useState("");
     const [toggleStates, setToggleStates] = useState({});
@@ -55,15 +56,17 @@ const Header = ({
             </div>
 
             {/* BUSCADOR */}
-            <div className="relative mb-6 z-10">
-                <input
-                    type="text"
-                    placeholder={searchPlaceholder.toUpperCase()}
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                    className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm font-semibold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-all uppercase tracking-wide"
-                />
-            </div>
+            {showSearch && (
+                <div className="relative mb-6 z-10">
+                    <input
+                        type="text"
+                        placeholder={searchPlaceholder.toUpperCase()}
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 text-sm font-semibold placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:border-transparent transition-all uppercase tracking-wide"
+                    />
+                </div>
+            )}
 
             {/* BOTONES */}
             <div className="flex flex-wrap gap-3 z-10 relative">

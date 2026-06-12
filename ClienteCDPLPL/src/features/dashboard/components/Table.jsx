@@ -39,23 +39,39 @@ const Table = ({
                                 <tr key={idx} className="hover:bg-slate-50/80 transition-colors duration-150 bg-white">
                                     {columns.map((col, cIdx) => (
                                         <td key={cIdx} className="px-6 py-4 text-sm font-medium text-slate-700">
-                                            {col.render ? col.render(row) : row[col.key]}
+                                            {col.render ? col.render(row, idx) : row[col.key]}
                                         </td>
                                     ))}
                                     {actions.length > 0 && (
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2 flex-wrap">
-                                                {actions.map((action, aIdx) => (
-                                                    <button
-                                                        key={aIdx}
-                                                        onClick={() => action.onClick(row)}
-                                                        className="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 text-slate-600 rounded-lg text-[10px] uppercase font-bold tracking-widest hover:bg-slate-100 hover:text-slate-900 transition-all shadow-sm hover:shadow"
-                                                        title={action.label}
-                                                    >
-                                                        {action.icon && <action.icon className="w-4 h-4" />}
-                                                        <span className="hidden sm:inline">{action.label}</span>
-                                                    </button>
-                                                ))}
+                                                {actions.map((action, aIdx) => {
+                                                    const labelStr = (typeof action.label === 'string' ? action.label.toLowerCase() : '');
+                                                    let colorClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
+                                                    if (labelStr.includes('edit') || labelStr.includes('modificar')) colorClass = "bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-100";
+                                                    else if (labelStr.includes('elimin') || labelStr.includes('desactiv') || labelStr.includes('baja') || labelStr.includes('rechaz')) colorClass = "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-100";
+                                                    else if (labelStr.includes('activ') || labelStr.includes('alta') || labelStr.includes('aprob') || labelStr.includes('acept')) colorClass = "bg-emerald-50 text-emerald-600 hover:bg-emerald-100 border border-emerald-100";
+                                                    else if (labelStr.includes('ver') || labelStr.includes('detall') || labelStr.includes('revis') || labelStr.includes('movimient')) colorClass = "bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-100";
+                                                    
+                                                    if (action.className) {
+                                                        colorClass = typeof action.className === 'function' ? action.className(row) : action.className;
+                                                    }
+
+                                                    return (
+                                                        <button
+                                                            key={aIdx}
+                                                            onClick={() => action.onClick(row)}
+                                                            className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-[10px] uppercase font-bold tracking-widest transition-all shadow-sm hover:shadow ${colorClass}`}
+                                                            title={typeof action.label === 'string' ? action.label : ''}
+                                                        >
+                                                            {action.icon && (() => {
+                                                                const IconCmp = typeof action.icon === 'function' && !action.icon.$$typeof ? action.icon(row) : action.icon;
+                                                                return <IconCmp className="w-4 h-4" />;
+                                                            })()}
+                                                            <span className="hidden sm:inline">{typeof action.label === 'function' ? action.label(row) : action.label}</span>
+                                                        </button>
+                                                    );
+                                                })}
                                             </div>
                                         </td>
                                     )}

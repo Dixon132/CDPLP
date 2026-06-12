@@ -259,7 +259,7 @@ export default function Tesoreria() {
             </Modal>
 
             <Modal isOpen={modalReporte} title="Generar Reporte de Tesorería" onClose={() => setModalReporte(false)}>
-                <GenerarReporteTesoreria />
+                <GenerarReporteTesoreria onClose={() => setModalReporte(false)} />
             </Modal>
         </div>
     );
