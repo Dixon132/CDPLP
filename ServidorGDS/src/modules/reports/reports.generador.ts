@@ -20,6 +20,7 @@ import {
     EntradaContenido,
     EvidenciaReporte,
     ExplicacionReporte,
+    HitoReporte,
     Horizonte,
     IndicadorReporte,
     RangoSemanas,
@@ -30,6 +31,15 @@ import {
 
 /** Umbral (en valor absoluto de dimension) para considerar un cambio "estable". */
 const EPSILON_ESTABLE = 1e-9;
+
+/**
+ * Umbral minimo de variacion (en puntos 0-100) entre dos semanas CONSECUTIVAS
+ * para considerar el movimiento un HITO digno de mencionarse en el reporte.
+ */
+const UMBRAL_HITO = 8;
+
+/** Maximo de hitos que se convierten en conclusiones para no saturar el texto. */
+const MAX_HITOS_CONCLUSION = 6;
 
 /**
  * Calcula el rango de `Semana_Simulada` (inclusive) que cubre un reporte de un
@@ -75,6 +85,33 @@ function direccionDe(variacion: number): DireccionCambio {
     if (variacion > EPSILON_ESTABLE) return 'sube';
     if (variacion < -EPSILON_ESTABLE) return 'baja';
     return 'estable';
+}
+
+/**
+ * Sanea texto de patrones/eventos provenientes de datos YA persistidos (incluso
+ * de analisis antiguos): elimina sufijos sin valor ("(estable, magnitud 0.00)"),
+ * reformula "intervenciones" y traduce etiquetas de emocion del modelo (ingles)
+ * a espanol. Asi un reporte REGENERADO de datos viejos sale limpio y en espanol.
+ */
+function limpiarTextoEvento(texto: string): string {
+    let t = texto;
+    // Quita sufijos de tendencia sin valor: "(estable, magnitud 0.00)" o magnitud 0.
+    t = t.replace(/\s*\((?:estable|sube|baja|ascendente|descendente),\s*magnitud\s*0(?:[.,]0+)?\)/gi, '');
+    // Quita el resto de paréntesis de magnitud dejando la narrativa.
+    t = t.replace(/\s*\([^()]*magnitud[^()]*\)/gi, '');
+    // Reformula la jerga "intervenciones" por algo entendible.
+    t = t.replace(/\ben el conjunto de\b/gi, 'De las');
+    t = t.replace(/\bintervenciones\b/gi, 'publicaciones analizadas');
+    // Traduce etiquetas de emocion del modelo (ingles) a espanol.
+    t = t
+        .replace(/\banger\b/gi, 'enojo')
+        .replace(/\bneutral\b/gi, 'neutralidad')
+        .replace(/\bjoy\b/gi, 'alegria')
+        .replace(/\bsadness\b/gi, 'tristeza')
+        .replace(/\bfear\b/gi, 'miedo')
+        .replace(/\bsurprise\b/gi, 'sorpresa')
+        .replace(/\bdisgust\b/gi, 'desagrado');
+    return t.replace(/\s{2,}/g, ' ').replace(/\s+\./g, '.').trim();
 }
 
 /** Une listas de strings preservando el primer orden de aparicion, sin duplicados. */
@@ -177,10 +214,12 @@ export function construirContenido(entrada: EntradaContenido): ReporteContenido 
                 evidenciasPorDimension.set(dim, lista);
             }
             for (const evento of ev.eventosAsociados) {
-                const det = detonantesMapa.get(evento) ?? { semanas: new Set<number>(), evidenciaIds: [] };
+                const eventoLimpio = limpiarTextoEvento(evento);
+                if (!eventoLimpio) continue;
+                const det = detonantesMapa.get(eventoLimpio) ?? { semanas: new Set<number>(), evidenciaIds: [] };
                 det.semanas.add(ev.numeroSemana);
                 if (!det.evidenciaIds.includes(ev.id)) det.evidenciaIds.push(ev.id);
-                detonantesMapa.set(evento, det);
+                detonantesMapa.set(eventoLimpio, det);
             }
             publicaciones.push(ev.publicacionesAsociadas);
         }
@@ -264,10 +303,38 @@ export function construirContenido(entrada: EntradaContenido): ReporteContenido 
     indicadores.sort((a, b) => a.dimension.localeCompare(b.dimension));
     cambios.sort((a, b) => a.dimension.localeCompare(b.dimension));
 
+    // --- Hitos: movimientos notables ENTRE SEMANAS CONSECUTIVAS (Req. 16.4) ---
+    // No basta comparar inicio-final: detectamos alzas/bajas relevantes en
+    // cualquier tramo del periodo (semana 2->3, 3->4, etc.) para narrarlas.
+    const hitos: HitoReporte[] = [];
+    for (const acum of porDimension.values()) {
+        const m = [...acum.muestras].sort((a, b) => a.semana - b.semana);
+        const evidenciaIds = evidenciaIdsDe(acum.nombre);
+        for (let i = 1; i < m.length; i++) {
+            const delta = m[i].valor - m[i - 1].valor;
+            if (Math.abs(delta) < UMBRAL_HITO) continue;
+            const pct =
+                m[i - 1].valor !== 0 ? redondear((delta / Math.abs(m[i - 1].valor)) * 100) : null;
+            hitos.push({
+                dimension: acum.nombre,
+                desdeSemana: m[i - 1].semana,
+                hastaSemana: m[i].semana,
+                valorDesde: redondear(m[i - 1].valor),
+                valorHasta: redondear(m[i].valor),
+                variacionAbsoluta: redondear(delta),
+                variacionPct: pct,
+                direccion: direccionDe(delta),
+                evidenciaIds,
+            });
+        }
+    }
+    // Orden por magnitud descendente (los movimientos mas fuertes primero).
+    hitos.sort((a, b) => Math.abs(b.variacionAbsoluta) - Math.abs(a.variacionAbsoluta));
+
     // --- Tendencias (patrones anclados a comunidad/zona) ---
     const tendencias: TendenciaReporte[] = patrones.map((p) => ({
         tipo: p.tipo,
-        descripcion: p.descripcion,
+        descripcion: limpiarTextoEvento(p.descripcion),
         comunidadId: p.comunidadId,
     }));
 
@@ -299,6 +366,18 @@ export function construirContenido(entrada: EntradaContenido): ReporteContenido 
         conclusiones.push({
             texto: `El evento "${d.evento}" se correlaciona con la actividad de las semanas ${d.semanas.join(', ')}.`,
             evidenciaIds: d.evidenciaIds,
+        });
+    }
+    // Conclusiones de HITOS inter-semana: alzas/bajas considerables en tramos
+    // intermedios del periodo, mas alla del comparativo inicio-final (Req. 16.4).
+    for (const h of hitos.slice(0, MAX_HITOS_CONCLUSION)) {
+        const pct = h.variacionPct !== null ? ` (${h.variacionPct > 0 ? '+' : ''}${h.variacionPct}%)` : '';
+        const verbo = h.direccion === 'sube' ? 'un alza' : 'una baja';
+        conclusiones.push({
+            texto:
+                `Entre la semana ${h.desdeSemana} y la ${h.hastaSemana}, "${h.dimension}" registro ${verbo} ` +
+                `considerable de ${Math.abs(h.variacionAbsoluta)} puntos${pct} (de ${h.valorDesde} a ${h.valorHasta}).`,
+            evidenciaIds: h.evidenciaIds,
         });
     }
     if (conclusiones.length === 0 && indicadores.length > 0) {
@@ -344,6 +423,7 @@ export function construirContenido(entrada: EntradaContenido): ReporteContenido 
         tendencias,
         detonantes,
         explicaciones,
+        hitos,
         publicacionesRelevantes,
         evidencias,
         conclusiones,

@@ -4,7 +4,7 @@
  * Expone el CRUD de instituciones educativas geolocalizadas y la consulta
  * PROACTIVA de restricciones de eliminacion a traves del `InstitutionsService`.
  * Bajo el prefijo global `/api/gds`, las rutas quedan en
- * `/api/gds/institutions`.
+ * `/api/gds/instituciones`.
  *
  * Reglas garantizadas por el servicio:
  *  - `POST` crea/persiste una `Institucion` validada (Req. 7.1-7.4).
@@ -45,8 +45,8 @@ import { ActualizarInstitucionDto } from './dto/actualizar-institucion.dto';
 import { InstitutionsService } from './institutions.service';
 import type { Institucion, RestriccionEliminacion } from './institutions.types';
 
-@ApiTags('institutions')
-@Controller('institutions')
+@ApiTags('instituciones')
+@Controller('instituciones')
 export class InstitutionsController {
     constructor(private readonly service: InstitutionsService) { }
 

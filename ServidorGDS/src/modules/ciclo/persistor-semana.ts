@@ -39,6 +39,61 @@ function aJson(valor: unknown): Prisma.InputJsonValue {
     return (valor ?? {}) as Prisma.InputJsonValue;
 }
 
+/** Métrica de contenido de una semana para la cronología por institución. */
+interface MetricaSemanaContenido {
+    numeroSemana: number;
+    totalItems: number;
+    contributivos: number;
+    noContributivos: number;
+    aportePost: number;
+    aporteComentarios: number;
+    aporteImagen: number;
+    hashtags: { tag: string; conteo: number }[];
+}
+
+/** Cuenta frecuencias de hashtags (normalizados) y devuelve los más concurrentes. */
+function contarHashtags(hashtags: string[] | undefined): { tag: string; conteo: number }[] {
+    if (!Array.isArray(hashtags) || hashtags.length === 0) return [];
+    const conteos = new Map<string, number>();
+    for (const raw of hashtags) {
+        const tag = String(raw ?? '').trim().replace(/^#+/, '').toLowerCase();
+        if (!tag) continue;
+        conteos.set(tag, (conteos.get(tag) ?? 0) + 1);
+    }
+    return [...conteos.entries()]
+        .map(([tag, conteo]) => ({ tag, conteo }))
+        .sort((a, b) => b.conteo - a.conteo || a.tag.localeCompare(b.tag))
+        .slice(0, 8);
+}
+
+/**
+ * Deriva las métricas de contenido de la semana (cuántas publicaciones se
+ * tomaron en cuenta, aportes de post/comentarios/imagen, hashtags) a partir de
+ * los datos que el pipeline produjo EN MEMORIA (filtro de relevancia, visión y
+ * contrato). Estos datos hoy se descartan; aquí se persisten para la cronología.
+ */
+function derivarMetricasContenido(
+    numeroSemana: number,
+    filtro: { contributivos: { refId: string }[]; noContributivos: { refId: string }[] } | undefined,
+    huboImagen: boolean,
+    hashtags: string[] | undefined,
+): MetricaSemanaContenido {
+    const contributivos = filtro?.contributivos ?? [];
+    const noContributivos = filtro?.noContributivos ?? [];
+    const aportePost = contributivos.some((i) => i.refId === 'post') ? 1 : 0;
+    const aporteComentarios = contributivos.filter((i) => i.refId.startsWith('comment:')).length;
+    return {
+        numeroSemana,
+        totalItems: contributivos.length + noContributivos.length,
+        contributivos: contributivos.length,
+        noContributivos: noContributivos.length,
+        aportePost,
+        aporteComentarios,
+        aporteImagen: huboImagen ? 1 : 0,
+        hashtags: contarHashtags(hashtags),
+    };
+}
+
 /**
  * Crea el {@link PersistorSemana} transaccional sobre `Prisma.TransactionClient`.
  *
@@ -77,6 +132,15 @@ export function crearPersistorSemana(): PersistorSemana<Prisma.TransactionClient
         });
 
         // 2) Resultado de la semana (datos NLP/vision/temporal) (Req. 13.2).
+        //    `datosTemporal` lleva las MÉTRICAS DE CONTENIDO de la semana para la
+        //    cronología por institución (publicaciones tomadas en cuenta, aportes
+        //    de post/comentarios/imagen, hashtags más concurrentes).
+        const metricasContenido = derivarMetricasContenido(
+            contexto.numeroSemana,
+            analisis.filtro,
+            artefactos.vision !== undefined,
+            resultado.contrato?.hashtags,
+        );
         const resultadoFila = await tx.resultadoAnalisis.create({
             data: {
                 cicloId: ciclo.id,
@@ -84,7 +148,7 @@ export function crearPersistorSemana(): PersistorSemana<Prisma.TransactionClient
                 datosVision: artefactos.vision
                     ? aJson(artefactos.vision)
                     : Prisma.JsonNull,
-                datosTemporal: Prisma.JsonNull,
+                datosTemporal: aJson({ metricasContenido }),
             },
             select: { id: true },
         });
@@ -107,6 +171,43 @@ export function crearPersistorSemana(): PersistorSemana<Prisma.TransactionClient
                             },
                         ],
                     },
+                },
+            });
+        }
+
+        // 3.b) Evidencias trazables (Req. 22.5, 30.1): por cada dimension RELEVANTE
+        //      (valor >= 40) se persiste una evidencia COLECTIVA descriptiva en
+        //      espanol. Si ninguna llega al umbral, se incluye la dimension mas
+        //      alta de la semana para que el reporte SIEMPRE tenga evidencia.
+        const indiceSemana = artefactos.indice ?? [];
+        let dimensionesRelevantes = indiceSemana.filter((d) => d.valor >= 40);
+        if (dimensionesRelevantes.length === 0 && indiceSemana.length > 0) {
+            const top = indiceSemana.reduce((a, b) => (b.valor > a.valor ? b : a));
+            dimensionesRelevantes = [top];
+        }
+        const nivelTexto = (v: number) =>
+            v >= 66 ? 'alto' : v >= 33 ? 'moderado' : 'bajo';
+        for (const dim of dimensionesRelevantes) {
+            await tx.evidence.create({
+                data: {
+                    resultadoId: resultadoFila.id,
+                    analisisId: contexto.analisisId,
+                    comunidadId: contexto.comunidadId,
+                    institucionId: contexto.institucionId,
+                    numeroSemana: contexto.numeroSemana,
+                    refContenido: `dim:${dim.nombre}:semana:${contexto.numeroSemana}`,
+                    contributividad: 'CONTRIBUTIVO',
+                    tipo: 'indicador',
+                    contenido: `En la semana ${contexto.numeroSemana}, el indicador colectivo "${dim.nombre}" alcanzo un nivel ${nivelTexto(dim.valor)} (${dim.valor.toFixed(1)}/100), derivado del analisis emocional agregado de la comunidad.`,
+                    publicacionesAsociadas: [],
+                    comentariosAsociados: [],
+                    eventosAsociados: (artefactos.patrones ?? []).map((p) => p.descripcion).slice(0, 3),
+                    semanasInvolucradas: [contexto.numeroSemana],
+                    indicadoresUtilizados: [dim.nombre],
+                    explicacionIa: `El indicador colectivo "${dim.nombre}" refleja la senal emocional agregada de la comunidad en la semana ${contexto.numeroSemana}.`,
+                    metricasUtilizadas: { valor: dim.valor, scoreCalibradoMl: dim.scoreCalibradoMl },
+                    variacionPct: null,
+                    conteo: null,
                 },
             });
         }

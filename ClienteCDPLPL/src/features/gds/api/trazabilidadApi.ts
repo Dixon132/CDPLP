@@ -18,6 +18,8 @@
 // dimensión, comparación por institución/zona, meses, seudónimos) vive aquí
 // para poder probarla sin red ni DOM y la lógica de red DEGRADA CON ELEGANCIA.
 import gdsApiClient from './client.js';
+import type { MetricaSemanaContenido } from './reportesApi';
+export type { MetricaSemanaContenido } from './reportesApi';
 
 // Número de semanas que componen un "mes" simulado del análisis (Req. 12.1:
 // hasta 24 semanas ≈ 6 meses → 4 semanas por mes).
@@ -596,6 +598,46 @@ export async function listResultadosSemanales(
                 resumen: String(o.resumen ?? o.summary ?? '').trim(),
                 dimensiones: Array.isArray(o.dimensiones)
                     ? (o.dimensiones as unknown[]).map(normalizeEvolucionPunto)
+                    : [],
+            };
+        });
+    } catch {
+        return [];
+    }
+}
+
+/**
+ * Obtiene la cronología de contenido por semana de una institución: cuántas
+ * publicaciones se generaron y se tomaron en cuenta, aportes de post/
+ * comentarios/imagen y hashtags más concurrentes. Degrada a `[]`.
+ */
+export async function getCronologia(
+    analisisId: string,
+    institucionId: string,
+): Promise<MetricaSemanaContenido[]> {
+    try {
+        const { data } = await gdsApiClient.get(
+            `/analisis/${analisisId}/instituciones/${institucionId}/cronologia`,
+        );
+        const num = (v: unknown): number => {
+            const n = Number(v);
+            return Number.isFinite(n) ? n : 0;
+        };
+        return extraerLista(data).map((raw): MetricaSemanaContenido => {
+            const o = asObjeto(raw);
+            return {
+                numeroSemana: num(o.numeroSemana),
+                totalItems: num(o.totalItems),
+                contributivos: num(o.contributivos),
+                noContributivos: num(o.noContributivos),
+                aportePost: num(o.aportePost),
+                aporteComentarios: num(o.aporteComentarios),
+                aporteImagen: num(o.aporteImagen),
+                hashtags: Array.isArray(o.hashtags)
+                    ? (o.hashtags as Record<string, unknown>[]).map((h) => ({
+                        tag: String(h.tag ?? ''),
+                        conteo: num(h.conteo),
+                    }))
                     : [],
             };
         });

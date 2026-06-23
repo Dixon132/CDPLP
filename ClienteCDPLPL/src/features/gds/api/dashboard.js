@@ -29,16 +29,20 @@ export const ESTADO_META = Object.freeze({
 
 /**
  * Normaliza un estado crudo del backend a uno del dominio conocido.
+ * Mapea los `Estado_Ejecucion` del backend (DETENIDO/EN_EJECUCION/PAUSADO/
+ * COMPLETADO) a los estados de presentación del panel.
  * @param {unknown} raw
  * @returns {string}
  */
 export function normalizeEstado(raw) {
   const s = String(raw ?? '').trim().toUpperCase();
   if (ESTADOS_EJECUCION.includes(s)) return s;
-  if (s === 'EN_CURSO' || s === 'RUNNING' || s === 'IN_PROGRESS') return 'EN_PROCESO';
+  if (s === 'EN_EJECUCION' || s === 'EN_CURSO' || s === 'RUNNING' || s === 'IN_PROGRESS') return 'EN_PROCESO';
   if (s === 'ACELERANDO' || s === 'ACCELERATING') return 'EN_ACELERACION';
   if (s === 'DONE' || s === 'FINISHED') return 'COMPLETADO';
   if (s === 'ERROR' || s === 'FAILED') return 'FALLIDO';
+  if (s === 'PAUSADO' || s === 'PAUSED') return 'EN_ACELERACION';
+  // DETENIDO (listo para avanzar) se muestra como Pendiente.
   return 'PENDIENTE';
 }
 

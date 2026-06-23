@@ -77,15 +77,11 @@ describe('analisisToPayload', () => {
             escenario_nombre: '  Crisis del agua  ',
             guardar_en_biblioteca: true,
         });
-        expect(payload.escenario).toEqual({
-            tipo: TIPO_ESCENARIO.PERSONALIZADO,
-            texto: 'Conflicto local por el agua',
-            guardar_en_biblioteca: true,
-            nombre: 'Crisis del agua',
-        });
+        expect(payload.personalizado).toBe('Conflicto local por el agua');
+        expect(payload.guardarEnBiblioteca).toBe(true);
     });
 
-    it('omite el nombre del escenario personalizado cuando está vacío', () => {
+    it('omite el escenarioId cuando se usa personalizado', () => {
         const payload = analisisToPayload({
             ...baseValida,
             tipo_escenario: TIPO_ESCENARIO.PERSONALIZADO,
@@ -93,11 +89,11 @@ describe('analisisToPayload', () => {
             escenario_nombre: '   ',
             guardar_en_biblioteca: false,
         });
-        expect(payload.escenario).not.toHaveProperty('nombre');
-        expect(payload.escenario).toMatchObject({ guardar_en_biblioteca: false });
+        expect(payload).not.toHaveProperty('escenarioId');
+        expect(payload.guardarEnBiblioteca).toBe(false);
     });
 
-    it('recorta nombre/descripcion y filtra ids vacíos', () => {
+    it('recorta nombre y filtra ids vacíos', () => {
         const payload = analisisToPayload({
             ...baseValida,
             nombre: '  Estudio  ',
@@ -105,12 +101,11 @@ describe('analisisToPayload', () => {
             institucionIds: ['i1', '', 'i3'],
         });
         expect(payload.nombre).toBe('Estudio');
-        expect(payload.descripcion).toBe('desc');
-        expect(payload.institucion_ids).toEqual(['i1', 'i3']);
+        expect(payload.institucionIds).toEqual(['i1', 'i3']);
     });
 
     it('acota las semanas fuera de rango al construir el payload', () => {
-        expect(analisisToPayload({ ...baseValida, total_semanas: 99 }).total_semanas).toBe(
+        expect(analisisToPayload({ ...baseValida, total_semanas: 99 }).semanasTotales).toBe(
             SEMANAS_MAX,
         );
     });

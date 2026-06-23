@@ -79,8 +79,16 @@ export class GestorEjecucionController {
     })
     @ApiParam({ name: 'id', description: 'Identificador del analisis.' })
     @ApiOkResponse({ description: 'Avance disparado; trabajos encolados.' })
-    avanzar(@Param('id') id: string): Promise<ResultadoEjecucion> {
-        return this.gestor.avanzar(id);
+    async avanzar(@Param('id') id: string): Promise<ResultadoEjecucion> {
+        try {
+            return await this.gestor.avanzar(id);
+        } catch (err) {
+            // Log del error real para diagnóstico
+            const msg = err instanceof Error ? err.message : String(err);
+            const stack = err instanceof Error ? err.stack : '';
+            console.error(`[GDS][avanzar] Error al avanzar analisis ${id}:`, msg, stack);
+            throw err;
+        }
     }
 
     @Post(':id/pausar')

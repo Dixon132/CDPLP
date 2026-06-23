@@ -25,6 +25,26 @@ export interface TrazabilidadSoportePanelProps {
     cargando: boolean;
 }
 
+/** Parsea el texto de explicación en factores por dimensión con su valor. */
+function parsearFactores(texto: string): Array<{ dimension: string; valor: number }> {
+    if (!texto) return [];
+    // Formato: "Dimension: La dimension X se situa en 56.01 (rango 0-100).."
+    const factores: Array<{ dimension: string; valor: number }> = [];
+    const regex = /([\wáéíóúñ\s]+?):\s*La dimension .+?se situa en ([\d.]+)/gi;
+    let m: RegExpExecArray | null;
+    while ((m = regex.exec(texto)) !== null) {
+        factores.push({ dimension: m[1].trim(), valor: parseFloat(m[2]) });
+    }
+    return factores;
+}
+
+/** Color según el nivel de riesgo del valor (0-100). */
+function colorRiesgo(valor: number): string {
+    if (valor >= 66) return '#ef4444';
+    if (valor >= 33) return '#f59e0b';
+    return '#22c55e';
+}
+
 export function TrazabilidadSoportePanel({
     seleccion,
     soporte,
@@ -41,6 +61,7 @@ export function TrazabilidadSoportePanel({
     }
 
     const { explicacion, evidencias, parcial, faltantes } = soporte;
+    const factores = explicacion ? parsearFactores(explicacion.texto) : [];
 
     return (
         <div className="space-y-4">
@@ -51,21 +72,49 @@ export function TrazabilidadSoportePanel({
                 <span className="font-mono">{mostrarSeudonimo(seleccion.institucionId)}</span>
             </p>
 
-            {parcial && (
+            {parcial && faltantes.length > 0 && (
                 <Aviso tono="warn">
                     Vista parcial: falta {faltantes.join(' y ')}. Se muestra la información disponible.
                 </Aviso>
             )}
 
             {explicacion ? (
-                <div className="rounded border border-slate-200 bg-slate-50 p-3">
-                    <h4 className="text-sm font-semibold text-slate-700">Explicación</h4>
-                    <p className="mt-1 text-sm text-slate-700">{explicacion.texto}</p>
-                    {explicacion.cuando && (
-                        <p className="mt-1 text-xs text-slate-500">Inicio: {explicacion.cuando}</p>
+                <div className="rounded-lg border border-slate-200 bg-white p-4">
+                    <h4 className="mb-3 text-sm font-semibold text-slate-700">
+                        Índice de riesgo por dimensión
+                    </h4>
+                    {factores.length > 0 ? (
+                        <div className="space-y-2.5">
+                            {factores.map((f) => (
+                                <div key={f.dimension}>
+                                    <div className="mb-1 flex items-center justify-between text-xs">
+                                        <span className="font-medium text-slate-700">{f.dimension}</span>
+                                        <span
+                                            className="font-mono font-semibold"
+                                            style={{ color: colorRiesgo(f.valor) }}
+                                        >
+                                            {f.valor.toFixed(1)}
+                                        </span>
+                                    </div>
+                                    <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                                        <div
+                                            className="h-full rounded-full transition-all"
+                                            style={{
+                                                width: `${Math.min(100, f.valor)}%`,
+                                                backgroundColor: colorRiesgo(f.valor),
+                                            }}
+                                        />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p className="text-sm text-slate-700">{explicacion.texto}</p>
                     )}
                     {explicacion.comoEvoluciono && (
-                        <p className="text-xs text-slate-500">Evolución: {explicacion.comoEvoluciono}</p>
+                        <p className="mt-3 text-xs text-slate-500">
+                            Evolución: {explicacion.comoEvoluciono}
+                        </p>
                     )}
                 </div>
             ) : (
@@ -77,28 +126,26 @@ export function TrazabilidadSoportePanel({
                     Evidencia ({evidencias.length})
                 </h4>
                 {evidencias.length === 0 ? (
-                    <p className="mt-1 text-sm text-slate-400">Sin evidencia disponible todavía.</p>
+                    <p className="mt-1 text-sm text-slate-400">
+                        Sin evidencia para esta semana. Avanza el análisis para generar evidencia trazable.
+                    </p>
                 ) : (
                     <ul className="mt-2 space-y-2">
                         {evidencias.map((e, i) => (
                             <li
                                 key={e.id ?? i}
-                                className="rounded border border-slate-200 bg-white p-2 text-sm"
+                                className="rounded-lg border border-slate-200 bg-white p-3 text-sm"
                             >
                                 <div className="flex items-center justify-between gap-2">
-                                    <span className="font-medium text-slate-700">{e.tipo}</span>
+                                    <span className="inline-flex items-center rounded-full bg-cyan-50 px-2 py-0.5 text-xs font-medium text-cyan-700">
+                                        {e.tipo}
+                                    </span>
                                     {e.semana != null && (
                                         <span className="text-xs text-slate-500">Semana {e.semana}</span>
                                     )}
                                 </div>
-                                {e.descripcion && <p className="mt-1 text-slate-600">{e.descripcion}</p>}
-                                {e.refContenido && (
-                                    <p className="mt-1 text-xs text-slate-400">
-                                        Origen:{' '}
-                                        <span className="font-mono">
-                                            {mostrarSeudonimo(e.refContenido)}
-                                        </span>
-                                    </p>
+                                {e.descripcion && (
+                                    <p className="mt-2 text-slate-700">{e.descripcion}</p>
                                 )}
                             </li>
                         ))}

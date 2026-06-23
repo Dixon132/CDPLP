@@ -82,6 +82,32 @@ STOPWORDS_ES: frozenset[str] = frozenset(
     }
 )
 
+# Stopwords en inglés: el contenido sintético se genera en inglés para el modelo
+# de emociones, por lo que los términos clave deben filtrar las palabras vacías
+# inglesas (artículos, pronombres, auxiliares, conectores) para que los "temas"
+# sean significativos y no ruido como "the, just, can, like".
+STOPWORDS_EN: frozenset[str] = frozenset(
+    {
+        "the", "a", "an", "and", "or", "but", "if", "of", "at", "by", "for",
+        "with", "about", "against", "between", "into", "through", "during",
+        "to", "from", "up", "down", "in", "out", "on", "off", "over", "under",
+        "again", "further", "then", "once", "here", "there", "when", "where",
+        "why", "how", "all", "any", "both", "each", "few", "more", "most",
+        "other", "some", "such", "no", "nor", "not", "only", "own", "same",
+        "so", "than", "too", "very", "can", "will", "just", "should", "now",
+        "is", "am", "are", "was", "were", "be", "been", "being", "have", "has",
+        "had", "having", "do", "does", "did", "doing", "would", "could",
+        "this", "that", "these", "those", "i", "you", "he", "she", "it", "we",
+        "they", "them", "his", "her", "its", "our", "their", "my", "your",
+        "me", "him", "us", "what", "which", "who", "whom", "as", "like", "even",
+        "get", "got", "really", "much", "many", "lot", "one", "also", "still",
+        "yeah", "okay", "ok", "im", "dont", "didnt", "cant", "thats", "gonna",
+    }
+)
+
+# Conjunto combinado usado para filtrar términos clave en ambos idiomas.
+STOPWORDS: frozenset[str] = STOPWORDS_ES | STOPWORDS_EN
+
 
 @dataclass(frozen=True)
 class EmocionTexto:
@@ -331,7 +357,7 @@ class NlpService:
     def _analisis_semantico(self, tokens_por_texto: list[list[str]]) -> Semantico:
         """Resumen, términos clave y métricas conversacionales (Req. 14.1, 14.3)."""
         todos = [tok for tokens in tokens_por_texto for tok in tokens]
-        contenido_tokens = [t for t in todos if t not in STOPWORDS_ES and len(t) > 2]
+        contenido_tokens = [t for t in todos if t not in STOPWORDS and len(t) > 2]
         frecuencias = Counter(contenido_tokens)
         terminos = [term for term, _ in frecuencias.most_common(self._max_terminos)]
 
@@ -368,7 +394,7 @@ class NlpService:
             tok
             for tokens in tokens_por_texto
             for tok in tokens
-            if tok not in STOPWORDS_ES and len(tok) > 2
+            if tok not in STOPWORDS and len(tok) > 2
         )
         if not global_freq:
             return []
@@ -435,8 +461,8 @@ class NlpService:
     ) -> str:
         """Interpretación en lenguaje natural de tendencias del texto (Req. 14.4)."""
         partes = [
-            f"En el conjunto de {num} intervenciones predomina la emoción "
-            f"'{emocion.etiqueta}' ({emocion.puntuacion:.0%})."
+            f"De las {num} publicaciones analizadas en la comunidad, la emoción "
+            f"predominante fue '{emocion.etiqueta}' (presente en el {emocion.puntuacion:.0%} del contenido)."
         ]
         if temas:
             etiquetas = ", ".join(t.etiqueta for t in temas[:3])

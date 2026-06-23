@@ -5,6 +5,7 @@
   "main": "dist/main.js",
   "type": "commonjs",
   "scripts": {
+    "prebuild": "del /f /q tsconfig.build.tsbuildinfo tsconfig.tsbuildinfo 2>nul || exit 0",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",

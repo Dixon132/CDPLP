@@ -58,14 +58,14 @@ export const DIMENSIONES_VARIEDAD: readonly string[] = [
 ] as const;
 
 /**
- * Rasgos de la variedad linguistica exigida: espanol andino de Bolivia/regional
- * con modismos y jerga estudiantil local (Req. 6.3, D6).
+ * Rasgos de la variedad linguistica exigida: English for accurate NLP emotion
+ * detection, with context of a Bolivian educational community.
  */
 export const REGISTRO_ANDINO =
-    "espanol andino de Bolivia (modismos y jerga estudiantil local, regional)" as const;
+    "English (informal, colloquial, student slang typical of a Bolivian university community)" as const;
 
-/** Etiqueta de idioma del contenido simulado (Req. 6.3, D6). */
-export const IDIOMA_ANDINO = "es-BO" as const;
+/** Etiqueta de idioma del contenido simulado. */
+export const IDIOMA_ANDINO = "en" as const;
 
 /** Opciones del diseno del prompt; reservadas para extension futura. */
 export interface OpcionesPrompt {
@@ -119,59 +119,75 @@ export function construirPromptGeneracion(
     const listaIds = idsValidos.length > 0 ? idsValidos.join(", ") : "(ninguno)";
 
     return [
-        "# Rol",
-        "Eres un generador de ecosistemas digitales sinteticos para una comunidad educativa.",
-        "Simulas la actividad de una red social estudiantil durante una semana: una",
-        "publicacion principal, sus comentarios y las conversaciones (hilos) entre los",
-        "usuarios de la comunidad.",
+        "# Role",
+        "You are an expert social simulation engine generating a realistic week of",
+        "activity for a student digital community. You produce ONE main post, its",
+        "comments and threaded conversations between the community's persistent users,",
+        "modeling collective emotional dynamics with psychological depth.",
         "",
-        "# Lengua y registro (obligatorio)",
-        `Escribe TODO el contenido en ${REGISTRO_ANDINO}.`,
-        "Usa jerga y modismos locales de forma natural; evita el espanol neutro de manual.",
+        "# Language and register (mandatory)",
+        `Write ALL content in ${REGISTRO_ANDINO}.`,
+        "Use informal, natural language with slang; avoid formal or textbook English.",
         "",
-        "# Variedad exigida (obligatorio)",
-        "El conjunto de publicacion + comentarios debe mostrar variedad emocional y de",
-        "registro, combinando a lo largo de la semana:",
-        ...DIMENSIONES_VARIEDAD.map((d) => `- ${d}`),
-        "No produzcas contenido simplista ni monotematico como unica salida: si incluyes",
-        "un mensaje simple, debe ir acompanado de alguna dimension emocional (sarcasmo,",
-        "ironia o sentimiento). Incluye al menos un conflicto o desacuerdo y algo de ruido.",
+        "# Realism and psychological depth (mandatory)",
+        "- Model how real students react emotionally to the active scenario this week.",
+        "- Show evolution: if there is previous history, the mood must CONTINUE from it",
+        "  (escalate, de-escalate, or shift) coherently, not reset each week.",
+        "- Mix individual personalities: some users are anxious, others sarcastic,",
+        "  others supportive, others confrontational. Stay true to each profile below.",
+        "- Reflect the geographic/local context of the community in references and tone.",
         "",
-        "# Atribucion a usuarios persistentes (obligatorio)",
-        "Atribuye cada publicacion y comentario UNICAMENTE a estos usuarios persistentes",
-        "(reutilizalos; esta PROHIBIDO inventar nuevos identificadores):",
+        "# Required variety and emotional balance (mandatory)",
+        "The content MUST be emotionally BALANCED and REALISTIC, not uniformly negative.",
+        "Most everyday student conversation is neutral or positive (jokes, plans, support,",
+        "daily life). Negative content (stress, conflict, anxiety) should appear ONLY in",
+        "proportion to how tense the active scenario actually is:",
+        "- If the scenario is calm/positive: generate MOSTLY positive and neutral content,",
+        "  with only minor or occasional negative notes.",
+        "- If the scenario is tense/critical: increase the share of negative/conflictive content.",
+        "Vary the emotional climate WEEK BY WEEK so the simulation has ups and downs (peaks",
+        "and valleys), not a flat constant mood. Some weeks calmer, some weeks more intense.",
+        "Across the set, combine: " + DIMENSIONES_VARIEDAD.join(', ') + '.',
+        "Generate at least 8-12 messages so no single message dominates the collective signal.",
+        "Use EXPRESSIVE punctuation (!!!, ???, ..., CAPS), elongations (nooo, soo, yesss),",
+        "and natural texting style. Real social media, not formal writing.",
+        "",
+        "# Attribution to persistent users (mandatory)",
+        "Attribute each post and comment ONLY to these persistent users",
+        "(reuse them; inventing new identifiers is FORBIDDEN):",
         describirUsuarios(ctx.usuariosSinteticos),
-        `Identificadores validos: ${listaIds}.`,
-        "Mantente fiel al perfil, estilo e intereses de cada usuario. Construye",
-        "conversaciones reales: usa `enRespuestaA` para encadenar respuestas entre ellos.",
+        `Valid identifiers: ${listaIds}.`,
+        "Stay faithful to each user's profile, style and interests. Build real",
+        "conversations: use `enRespuestaA` to chain replies between them.",
         "",
-        "# Escenario activo (inmutable durante todo el analisis)",
-        ctx.escenario || "(sin escenario definido)",
-        "Todo el contenido debe ser coherente con este escenario.",
+        "# Active scenario (immutable during the entire analysis)",
+        ctx.escenario || "(no scenario defined)",
+        "All content must be coherent with this scenario and reflect its impact",
+        `on this specific community (institution id: ${ctx.comunidad.institucionId}).`,
         "",
-        `# Semana simulada: ${ctx.semana}`,
-        `# Zona geografica (ancla el contenido): lat=${ctx.zonaGeografica.latitud}, ` +
-        `lon=${ctx.zonaGeografica.longitud}, radio=${ctx.zonaGeografica.radioMetros}m`,
+        `# Simulated week: ${ctx.semana}`,
+        `# Geographic zone (anchor content to this local area): lat=${ctx.zonaGeografica.latitud}, ` +
+        `lon=${ctx.zonaGeografica.longitud}, radius=${ctx.zonaGeografica.radioMetros}m`,
         "",
-        "# Memoria del historial previo (resumen jerarquico, no semanas crudas)",
-        ctx.contextoMemoria || "(sin historial previo: es la primera semana)",
+        "# Memory of previous history (hierarchical summary, not raw weeks)",
+        ctx.contextoMemoria || "(no previous history: this is the first week)",
         "",
-        "# Contexto semantico recuperado por similitud",
+        "# Semantic context retrieved by similarity",
         describirSemantico(ctx.contextoSemantico),
         "",
-        "# Patrones/tendencias acumulados detectados",
+        "# Accumulated patterns/trends detected",
         describirPatrones(ctx.patronesAcumulados),
         "",
-        "# Formato de salida (obligatorio)",
-        "Responde UNICAMENTE con un objeto JSON valido con esta forma exacta, sin texto",
-        "adicional ni vallas de codigo:",
+        "# Output format (mandatory)",
+        "Respond ONLY with a valid JSON object with this exact shape, no additional text",
+        "or code fences:",
         "{",
-        '  "post": { "autorId": "<id de un usuario valido>", "texto": "<contenido>" },',
+        '  "post": { "autorId": "<valid user id>", "texto": "<content in English>" },',
         '  "comments": [',
-        '    { "autorId": "<id valido>", "texto": "<contenido>", "enRespuestaA": "<id, autorId del post, o null>" }',
+        '    { "autorId": "<valid id>", "texto": "<content in English>", "enRespuestaA": "<id, autorId of post, or null>" }',
         "  ],",
-        '  "image_description": "<descripcion textual de una imagen asociada al post>",',
-        '  "hashtags": ["#ejemplo"]',
+        '  "image_description": "<textual description of an image related to the post>",',
+        '  "hashtags": ["#example"]',
         "}",
     ].join("\n");
 }

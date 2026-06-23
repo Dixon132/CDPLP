@@ -92,6 +92,12 @@ export class GeminiProvider implements IDataProvider {
     async generar(ctx: ContextoGeneracion): Promise<ContratoNormalizado> {
         const prompt = construirPrompt(ctx);
         const textoCrudo = await this.cliente.generar({ prompt, temperatura: 0.9 });
+
+        // Vista previa del resultado del LLM en consola
+        console.log(`\n[GDS][LLM] Semana ${ctx.semana} | Generacion recibida:`);
+        console.log(textoCrudo.substring(0, 500) + (textoCrudo.length > 500 ? '...' : ''));
+        console.log(`[GDS][LLM] (${textoCrudo.length} chars total)\n`);
+
         const crudo = parsearJson(textoCrudo);
         const candidato = this.ensamblarCandidato(crudo, ctx);
 

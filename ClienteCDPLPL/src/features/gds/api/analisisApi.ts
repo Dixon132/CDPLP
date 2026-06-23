@@ -125,11 +125,13 @@ export type EscenarioPayload =
 /** Payload que se envía al backend para crear un `Analisis` (Req. 8.1). */
 export interface AnalisisPayload {
     nombre: string;
-    descripcion: string;
-    institucion_ids: string[];
-    radio_metros: number;
-    total_semanas: number;
-    escenario: EscenarioPayload;
+    institucionIds: string[];
+    radioAnalisis: number;
+    semanasTotales: number;
+    escenarioId?: string;
+    personalizado?: string;
+    guardarEnBiblioteca?: boolean;
+    modoEjecucion?: string;
 }
 
 /** `Analisis` normalizado tal como lo consume la UI tras crearlo. */
@@ -145,7 +147,7 @@ export interface Analisis {
 /**
  * Construye el payload de creación a partir de los valores del formulario
  * (Req. 8.1, 8.2, 8.3, 29.2, 29.3). Convierte numéricos, recorta texto y arma
- * el sub-objeto `escenario` según el tipo elegido.
+ * los campos del DTO del backend (camelCase, campos planos).
  */
 export function analisisToPayload(form: AnalisisFormValues): AnalisisPayload {
     const ids = Array.isArray(form.institucionIds)
@@ -154,26 +156,18 @@ export function analisisToPayload(form: AnalisisFormValues): AnalisisPayload {
 
     const payload: AnalisisPayload = {
         nombre: (form.nombre ?? '').trim(),
-        descripcion: (form.descripcion ?? '').trim(),
-        institucion_ids: ids,
-        radio_metros: Number(form.radio_metros ?? RADIO_ANALISIS_DEFECTO),
-        total_semanas: clampSemanas(form.total_semanas),
-        escenario:
-            form.tipo_escenario === TIPO_ESCENARIO.PERSONALIZADO
-                ? {
-                    tipo: TIPO_ESCENARIO.PERSONALIZADO,
-                    texto: (form.escenario_texto ?? '').trim(),
-                    guardar_en_biblioteca: Boolean(form.guardar_en_biblioteca),
-                }
-                : {
-                    tipo: TIPO_ESCENARIO.BIBLIOTECA,
-                    escenario_id: form.escenario_id ?? '',
-                },
+        institucionIds: ids,
+        radioAnalisis: Number(form.radio_metros ?? RADIO_ANALISIS_DEFECTO),
+        semanasTotales: clampSemanas(form.total_semanas),
     };
 
-    if (payload.escenario.tipo === TIPO_ESCENARIO.PERSONALIZADO) {
-        const nombre = (form.escenario_nombre ?? '').trim();
-        if (nombre) payload.escenario.nombre = nombre;
+    if (form.tipo_escenario === TIPO_ESCENARIO.PERSONALIZADO) {
+        const texto = (form.escenario_texto ?? '').trim();
+        if (texto) payload.personalizado = texto;
+        payload.guardarEnBiblioteca = Boolean(form.guardar_en_biblioteca);
+    } else {
+        const escId = (form.escenario_id ?? '').trim();
+        if (escId) payload.escenarioId = escId;
     }
 
     return payload;
@@ -233,6 +227,34 @@ export async function listAnalisis(): Promise<Analisis[]> {
  * (semana 1) por cada `Institucion` seleccionada (Req. 8.5).
  */
 export async function createAnalisis(form: AnalisisFormValues): Promise<Analisis> {
-    const { data } = await gdsApiClient.post('/analisis', analisisToPayload(form));
+    const payload = analisisToPayload(form);
+    const { data } = await gdsApiClient.post('/analisis', payload);
     return normalizeAnalisis(extraerObjeto(data));
+}
+
+/** Estado/progreso de un `Analisis` para la UI de control. */
+export interface EstadoAnalisis {
+    id: string;
+    nombre: string;
+    escenario: string;
+    escenarioEsPersonalizado: boolean;
+    modoEjecucion: string;
+    estadoEjecucion: string;
+    intervaloTiempoRealMs: number | null;
+    semanaActual: number;
+    semanasTotales: number;
+    radioAnalisis: number;
+    instituciones: number;
+    progreso: number;
+}
+
+/** Obtiene el estado/progreso de un `Analisis` (modo, estado, semana actual/total). */
+export async function getEstadoAnalisis(analisisId: string): Promise<EstadoAnalisis> {
+    const { data } = await gdsApiClient.get(`/analisis/${analisisId}/estado`);
+    return data as EstadoAnalisis;
+}
+
+/** Elimina un `Analisis` en cascada. */
+export async function deleteAnalisis(analisisId: string): Promise<void> {
+    await gdsApiClient.delete(`/analisis/${analisisId}`);
 }

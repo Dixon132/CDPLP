@@ -12,6 +12,7 @@ import GdsHome from './pages/GdsHome';
 import GdsInstituciones from './pages/GdsInstitucionesAdmin';
 import GdsAnalisisNuevo from './pages/GdsAnalisisNuevo';
 import GdsTrazabilidad from './pages/GdsTrazabilidad';
+import GdsEscenarios from './pages/GdsEscenarios';
 import GdsReportes from './pages/GdsReportes';
 import GdsNoAutorizado from './pages/GdsNoAutorizado';
 
@@ -38,6 +39,10 @@ export const gdsRoutes: RouteObject = {
     {
       path: 'trazabilidad',
       element: <GdsTrazabilidad />,
+    },
+    {
+      path: 'escenarios',
+      element: <GdsEscenarios />,
     },
     {
       path: 'reportes',

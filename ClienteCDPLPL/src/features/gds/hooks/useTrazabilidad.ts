@@ -16,6 +16,7 @@ import {
     getEvolucionPuntos,
     listResultadosSemanales,
     getSoporteResultado,
+    getCronologia,
     combinarComparacionInstituciones,
     combinarComparacionPorZona,
     type Comunidad,
@@ -26,6 +27,7 @@ import {
     type ComparacionInstituciones,
     type ComparacionZonaPunto,
     type EntradaComparacion,
+    type MetricaSemanaContenido,
 } from '../api/trazabilidadApi';
 // `analisis.js` es JS heredado (sin tipos): lo consumimos solo para poblar el
 // selector de análisis, degradando a `[]` ante error.
@@ -47,6 +49,8 @@ export const trazabilidadKeys = {
         ['gds', 'trazabilidad', 'evolucion', analisisId, institucionId] as const,
     resultados: (analisisId: string, institucionId: string) =>
         ['gds', 'trazabilidad', 'resultados', analisisId, institucionId] as const,
+    cronologia: (analisisId: string, institucionId: string) =>
+        ['gds', 'trazabilidad', 'cronologia', analisisId, institucionId] as const,
     soporte: (sel: Seleccion | null) =>
         [
             'gds',
@@ -122,6 +126,21 @@ export function useResultadosSemanales(
     return useQuery<ResultadoSemanal[], Error>({
         queryKey: trazabilidadKeys.resultados(aId, iId),
         queryFn: () => listResultadosSemanales(aId, iId),
+        enabled: Boolean(aId && iId),
+        retry: false,
+    });
+}
+
+/** Cronología de contenido por semana de una institución (Req. 22, 34). */
+export function useCronologia(
+    analisisId: string | null | undefined,
+    institucionId: string | null | undefined,
+): UseQueryResult<MetricaSemanaContenido[], Error> {
+    const aId = analisisId ?? '';
+    const iId = institucionId ?? '';
+    return useQuery<MetricaSemanaContenido[], Error>({
+        queryKey: trazabilidadKeys.cronologia(aId, iId),
+        queryFn: () => getCronologia(aId, iId),
         enabled: Boolean(aId && iId),
         retry: false,
     });

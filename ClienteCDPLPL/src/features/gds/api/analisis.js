@@ -53,26 +53,18 @@ export function analisisToPayload(form) {
 
   const payload = {
     nombre: (f.nombre ?? '').trim(),
-    descripcion: (f.descripcion ?? '').trim(),
-    institucion_ids: ids,
-    radio_metros: Number(f.radio_metros ?? RADIO_ANALISIS_DEFECTO),
-    total_semanas: semanas,
+    institucionIds: ids,
+    radioAnalisis: Number(f.radio_metros ?? RADIO_ANALISIS_DEFECTO),
+    semanasTotales: semanas,
   };
 
   if (f.tipo_escenario === TIPO_ESCENARIO.PERSONALIZADO) {
     const texto = (f.escenario_texto ?? '').trim();
-    const nombre = (f.escenario_nombre ?? '').trim();
-    payload.escenario = {
-      tipo: TIPO_ESCENARIO.PERSONALIZADO,
-      texto,
-      guardar_en_biblioteca: Boolean(f.guardar_en_biblioteca),
-    };
-    if (nombre) payload.escenario.nombre = nombre;
+    if (texto) payload.personalizado = texto;
+    payload.guardarEnBiblioteca = Boolean(f.guardar_en_biblioteca);
   } else {
-    payload.escenario = {
-      tipo: TIPO_ESCENARIO.BIBLIOTECA,
-      escenario_id: f.escenario_id ?? '',
-    };
+    const escId = (f.escenario_id ?? '').trim();
+    if (escId) payload.escenarioId = escId;
   }
 
   return payload;

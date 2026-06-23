@@ -104,10 +104,10 @@ describe('institucionToPayload', () => {
             categoria: 'colegio',
             latitud: -16.5,
             longitud: -68.1,
-            radio_metros: 300,
+            radioMetros: 300,
             descripcion: 'algo',
         });
-        expect(payload).not.toHaveProperty('logo_url');
+        expect(payload).not.toHaveProperty('logoUrl');
     });
 
     it('incluye el logo cuando se provee', () => {
@@ -120,7 +120,7 @@ describe('institucionToPayload', () => {
             logo_url: 'http://x/l.png',
             descripcion: '',
         });
-        expect(payload.logo_url).toBe('http://x/l.png');
+        expect(payload.logoUrl).toBe('http://x/l.png');
     });
 });
 

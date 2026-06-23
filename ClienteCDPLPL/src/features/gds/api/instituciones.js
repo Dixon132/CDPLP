@@ -66,11 +66,11 @@ export function institucionToPayload(form) {
     categoria: f.categoria ?? '',
     latitud: f.latitud === null || f.latitud === '' ? null : Number(f.latitud),
     longitud: f.longitud === null || f.longitud === '' ? null : Number(f.longitud),
-    radio_metros: Number(f.radio_metros ?? RADIO_METROS_DEFECTO),
+    radioMetros: Number(f.radio_metros ?? f.radioMetros ?? RADIO_METROS_DEFECTO),
     descripcion: (f.descripcion ?? '').trim(),
   };
-  const logo = (f.logo_url ?? '').trim();
-  if (logo) payload.logo_url = logo;
+  const logo = (f.logo_url ?? f.logoUrl ?? '').trim();
+  if (logo) payload.logoUrl = logo;
   return payload;
 }
 

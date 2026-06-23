@@ -58,6 +58,86 @@ export interface Reporte {
     institucionNombre: string;
     periodo: string;
     generadoEn: string | null;
+    contenido?: ReporteContenido | null;
+}
+
+/** Afirmación con texto (conclusión o recomendación). */
+export interface Afirmacion {
+    texto: string;
+}
+
+/** Cambio de una dimensión en el periodo del reporte. */
+export interface CambioReporte {
+    dimension: string;
+    variacionAbsoluta: number;
+    variacionPct: number | null;
+    direccion: string;
+    desdeSemana?: number;
+    hastaSemana?: number;
+}
+
+/** Indicador agregado de una dimensión en el periodo. */
+export interface IndicadorReporte {
+    dimension: string;
+    valorInicial: number;
+    valorFinal: number;
+    promedio: number;
+    minimo: number;
+    maximo: number;
+}
+
+/** Movimiento notable de una dimensión entre dos semanas consecutivas. */
+export interface HitoReporte {
+    dimension: string;
+    desdeSemana: number;
+    hastaSemana: number;
+    valorDesde: number;
+    valorHasta: number;
+    variacionAbsoluta: number;
+    variacionPct: number | null;
+    direccion: string;
+}
+
+/** Métrica de contenido de una semana (cronología por institución). */
+export interface MetricaSemanaContenido {
+    numeroSemana: number;
+    totalItems: number;
+    contributivos: number;
+    noContributivos: number;
+    aportePost: number;
+    aporteComentarios: number;
+    aporteImagen: number;
+    hashtags: { tag: string; conteo: number }[];
+}
+
+/** Contenido estructurado del reporte (Req. 19, 20). */
+export interface ReporteContenido {
+    resumen: string;
+    indicadores: IndicadorReporte[];
+    cambios: CambioReporte[];
+    conclusiones: Afirmacion[];
+    recomendaciones: Afirmacion[];
+    detonantes: Array<{ evento: string; semanas: number[] }>;
+    hitos: HitoReporte[];
+    publicacionesRelevantes: string[];
+    secciones: SeccionInstitucion[];
+    semanasCubiertas: number[];
+}
+
+/** Sección de un reporte correspondiente a una institución. */
+export interface SeccionInstitucion {
+    institucionId: string;
+    institucionNombre: string;
+    logoUrl: string | null;
+    resumen: string;
+    indicadores: IndicadorReporte[];
+    cambios: CambioReporte[];
+    conclusiones: Afirmacion[];
+    recomendaciones: Afirmacion[];
+    detonantes: Array<{ evento: string; semanas: number[] }>;
+    hitos: HitoReporte[];
+    cronologia: MetricaSemanaContenido[];
+    semanasCubiertas: number[];
 }
 
 /** Cuerpo de la solicitud de generación de un reporte (Req. 19.3, 19.4). */
@@ -139,6 +219,104 @@ export function normalizeReporte(raw: unknown): Reporte {
             o.createdAt ??
             o.created_at ??
             null) as string | null,
+        contenido: normalizeContenido(o.contenido ?? o.content ?? null),
+    };
+}
+
+/** Normaliza el contenido estructurado del reporte (tolerante a ausencias). */
+function normalizeContenido(raw: unknown): ReporteContenido | null {
+    if (!raw || typeof raw !== 'object') return null;
+    const o = raw as Record<string, unknown>;
+    return {
+        ...normalizeBloque(o),
+        publicacionesRelevantes: Array.isArray(o.publicacionesRelevantes)
+            ? (o.publicacionesRelevantes as unknown[]).map(String)
+            : [],
+        secciones: Array.isArray(o.secciones)
+            ? (o.secciones as Record<string, unknown>[]).map((s) => ({
+                institucionId: String(s.institucionId ?? ''),
+                institucionNombre: String(s.institucionNombre ?? s.institucionId ?? 'Institución'),
+                logoUrl: s.logoUrl ? String(s.logoUrl) : null,
+                ...normalizeBloque(s),
+            }))
+            : [],
+    };
+}
+
+/** Normaliza el bloque común (indicadores, cambios, conclusiones…) de un reporte o sección. */
+function normalizeBloque(o: Record<string, unknown>) {
+    const afirmaciones = (v: unknown): Afirmacion[] =>
+        Array.isArray(v)
+            ? v.map((x) => ({
+                texto: typeof x === 'string' ? x : String((x as { texto?: string })?.texto ?? ''),
+            })).filter((a) => a.texto)
+            : [];
+    const num = (v: unknown): number => {
+        const n = Number(v);
+        return Number.isFinite(n) ? n : 0;
+    };
+    return {
+        resumen: String(o.resumen ?? o.summary ?? ''),
+        indicadores: Array.isArray(o.indicadores)
+            ? (o.indicadores as Record<string, unknown>[]).map((d) => ({
+                dimension: String(d.dimension ?? d.nombre ?? ''),
+                valorInicial: num(d.valorInicial),
+                valorFinal: num(d.valorFinal),
+                promedio: num(d.promedio),
+                minimo: num(d.minimo),
+                maximo: num(d.maximo),
+            }))
+            : [],
+        cambios: Array.isArray(o.cambios)
+            ? (o.cambios as Record<string, unknown>[]).map((c) => ({
+                dimension: String(c.dimension ?? ''),
+                variacionAbsoluta: num(c.variacionAbsoluta),
+                variacionPct: c.variacionPct === null ? null : num(c.variacionPct),
+                direccion: String(c.direccion ?? 'estable'),
+                desdeSemana: c.desdeSemana != null ? num(c.desdeSemana) : undefined,
+                hastaSemana: c.hastaSemana != null ? num(c.hastaSemana) : undefined,
+            }))
+            : [],
+        conclusiones: afirmaciones(o.conclusiones),
+        recomendaciones: afirmaciones(o.recomendaciones),
+        detonantes: Array.isArray(o.detonantes)
+            ? (o.detonantes as Record<string, unknown>[]).map((d) => ({
+                evento: String(d.evento ?? ''),
+                semanas: Array.isArray(d.semanas) ? (d.semanas as number[]).map(Number) : [],
+            }))
+            : [],
+        hitos: Array.isArray(o.hitos)
+            ? (o.hitos as Record<string, unknown>[]).map((h) => ({
+                dimension: String(h.dimension ?? ''),
+                desdeSemana: num(h.desdeSemana),
+                hastaSemana: num(h.hastaSemana),
+                valorDesde: num(h.valorDesde),
+                valorHasta: num(h.valorHasta),
+                variacionAbsoluta: num(h.variacionAbsoluta),
+                variacionPct: h.variacionPct === null ? null : num(h.variacionPct),
+                direccion: String(h.direccion ?? 'estable'),
+            }))
+            : [],
+        cronologia: Array.isArray(o.cronologia)
+            ? (o.cronologia as Record<string, unknown>[]).map((m) => ({
+                numeroSemana: num(m.numeroSemana),
+                totalItems: num(m.totalItems),
+                contributivos: num(m.contributivos),
+                noContributivos: num(m.noContributivos),
+                aportePost: num(m.aportePost),
+                aporteComentarios: num(m.aporteComentarios),
+                aporteImagen: num(m.aporteImagen),
+                hashtags: Array.isArray(m.hashtags)
+                    ? (m.hashtags as Record<string, unknown>[]).map((h) => ({
+                        tag: String(h.tag ?? ''),
+                        conteo: num(h.conteo),
+                    }))
+                    : [],
+            }))
+            : [],
+        semanasCubiertas: Array.isArray(o.semanasCubiertas)
+            ? (o.semanasCubiertas as number[]).map(Number)
+            : [],
     };
 }
 
@@ -237,7 +415,7 @@ export async function generarReporte(
     body: GenerarReporteBody,
 ): Promise<Reporte> {
     const payload: Record<string, unknown> = {
-        horizonte: normalizeHorizonte(body.horizonte),
+        horizonte: normalizeHorizonte(body.horizonte).toUpperCase(),
     };
     if (body.institucionId) payload.institucionId = body.institucionId;
     const { data } = await gdsApiClient.post(`/analisis/${analisisId}/reportes`, payload);

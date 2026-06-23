@@ -29,6 +29,7 @@ import {
     useResultadosSemanales,
     useSoporteResultado,
     useComparacionInstituciones,
+    useCronologia,
 } from '../hooks/useTrazabilidad';
 import {
     agruparSemanasPorMes,
@@ -42,6 +43,9 @@ import { TrazabilidadEvolucionChart } from '../components/TrazabilidadEvolucionC
 import { TrazabilidadComparacionChart } from '../components/TrazabilidadComparacionChart';
 import { TrazabilidadZonaMapa } from '../components/TrazabilidadZonaMapa';
 import { TrazabilidadSoportePanel } from '../components/TrazabilidadSoportePanel';
+import { CronologiaTimeline } from '../components/CronologiaTimeline';
+import PanelModoEjecucion from '../components/PanelModoEjecucion';
+import PanelInfoAnalisis from '../components/PanelInfoAnalisis';
 
 function Tarjeta({
     titulo,
@@ -80,6 +84,10 @@ function VistaTrazabilidad() {
     const series = useMemo(() => evolucionQuery.data ?? [], [evolucionQuery.data]);
     const resultadosQuery = useResultadosSemanales(analisisId, institucionId);
     const resultados = useMemo(() => resultadosQuery.data ?? [], [resultadosQuery.data]);
+
+    // 3.b Cronología de contenido por semana de la institución elegida.
+    const cronologiaQuery = useCronologia(analisisId, institucionId);
+    const cronologia = useMemo(() => cronologiaQuery.data ?? [], [cronologiaQuery.data]);
 
     // 4. Soporte (explicación + evidencia) del resultado seleccionado.
     const soporteQuery = useSoporteResultado(seleccion);
@@ -193,6 +201,22 @@ function VistaTrazabilidad() {
                 </div>
             </Card>
 
+            {/* Control de ejecución / avance semanal (Req. 32) */}
+            {analisisId && (
+                <div className="grid gap-4 lg:grid-cols-2">
+                    <PanelInfoAnalisis
+                        analisisId={analisisId}
+                        onEliminado={() => {
+                            setAnalisisId('');
+                            void analisisQuery.refetch();
+                        }}
+                    />
+                    <PanelModoEjecucion
+                        analisis={analisis.find((a) => a.id === analisisId) ?? {}}
+                    />
+                </div>
+            )}
+
             {/* Evolución por dimensión (Req. 22.2) */}
             <Tarjeta
                 titulo="Evolución temporal por dimensión del índice de riesgo"
@@ -222,6 +246,16 @@ function VistaTrazabilidad() {
                     </div>
                 )}
             </Tarjeta>
+
+            {/* Cronología de contenido por semana (Req. 22, 34) */}
+            {institucionId && (
+                <Tarjeta
+                    titulo="Cronología de contenido por semana"
+                    etiqueta="Cronología de contenido"
+                >
+                    <CronologiaTimeline cronologia={cronologia} />
+                </Tarjeta>
+            )}
 
             {/* Comparación entre instituciones / zonas (Req. 22.4, 33.5) */}
             {comparar && (

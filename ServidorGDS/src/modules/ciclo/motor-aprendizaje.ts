@@ -144,15 +144,35 @@ export function derivarSenalesIndice(
     const incertidumbre = distribucion.incertidumbre ?? 0;
     const valenciaNegativa = Math.max(0, -senal.valencia);
 
+    // Factor de NEGATIVIDAD global [0,1]: cuanto mas positivo/calmado es el
+    // contenido, mas bajo es este factor y MENOR el riesgo en TODAS las
+    // dimensiones. Evita el sesgo de que el riesgo quede alto cuando el
+    // contenido es neutral o positivo (no hay "piso" artificial de riesgo).
+    const factorNegativo = Math.min(
+        1,
+        valenciaNegativa * 0.6 + tension * 0.3 + incertidumbre * 0.1,
+    );
+    // El entusiasmo/positividad AMORTIGUA el riesgo: contenido alegre reduce
+    // todas las dimensiones de riesgo colectivo.
+    const amortiguador = 1 - Math.min(0.8, entusiasmo);
+
     return {
-        estresAcademico: aEscala100(senal.intensidad),
-        ansiedadColectiva: aEscala100(incertidumbre),
+        // Estres: intensidad emocional, pero solo cuando hay carga negativa.
+        estresAcademico: aEscala100(senal.intensidad * factorNegativo),
+        // Ansiedad: incertidumbre (miedo/sorpresa) ponderada.
+        ansiedadColectiva: aEscala100(incertidumbre * (0.5 + factorNegativo * 0.5)),
+        // Conflicto: tension (enfado/asco) directa.
         conflictoSocial: aEscala100(tension),
-        bullying: aEscala100(valenciaNegativa),
-        aislamiento: aEscala100(senal.dispersion),
-        agotamiento: aEscala100(1 - entusiasmo),
+        // Bullying: valencia muy negativa y dirigida.
+        bullying: aEscala100(valenciaNegativa * tension),
+        // Aislamiento: dispersion del discurso ponderada por negatividad.
+        aislamiento: aEscala100(senal.dispersion * factorNegativo),
+        // Agotamiento: cansancio emocional = negatividad sostenida sin entusiasmo.
+        agotamiento: aEscala100(factorNegativo * amortiguador),
+        // Violencia verbal: tension activada (enfado con alta activacion).
         violenciaVerbal: aEscala100(tension * senal.activacion),
-        desmotivacion: aEscala100(1 - senal.activacion),
+        // Desmotivacion: falta de entusiasmo SOLO cuando hay negatividad.
+        desmotivacion: aEscala100((1 - entusiasmo) * factorNegativo),
     };
 }
 
@@ -166,15 +186,43 @@ export function derivarPatrones(nlp: ResultadoNLP | undefined): PatronDetectado[
     if (!nlp) {
         return [];
     }
+    // Elimina de las descripciones la enumeracion de terminos crudos (que pueden
+    // venir en otro idioma del contenido generado) y traduce las etiquetas de
+    // emocion del modelo (ingles) a espanol, dejando solo narrativa en espanol.
+    const traducirEmociones = (t: string): string =>
+        t
+            .replace(/\banger\b/gi, 'enojo')
+            .replace(/\bneutral\b/gi, 'neutralidad')
+            .replace(/\bjoy\b/gi, 'alegria')
+            .replace(/\bsadness\b/gi, 'tristeza')
+            .replace(/\bfear\b/gi, 'miedo')
+            .replace(/\bsurprise\b/gi, 'sorpresa')
+            .replace(/\bdisgust\b/gi, 'desagrado');
+    const limpiar = (texto: string): string =>
+        traducirEmociones(
+            texto
+                .replace(/\.?\s*Los temas con mayor presencia son:[^.]*\.?/gi, '.')
+                .replace(/\s{2,}/g, ' ')
+                .replace(/\.\.+/g, '.')
+                .trim(),
+        );
+
     const patrones: PatronDetectado[] = [];
     for (const tendencia of nlp.tendencias) {
+        const desc = limpiar(tendencia.descripcion);
+        // Solo se anexa "(direccion, magnitud)" cuando hay una tendencia REAL
+        // (magnitud significativa). La interpretacion narrativa del NLP llega con
+        // magnitud 0 / "estable" y anexarla solo confunde ("magnitud 0.00").
+        const tendenciaReal = tendencia.magnitud > 1e-6 && tendencia.direccion !== 'estable';
         patrones.push({
             tipo: 'tendencia',
-            descripcion: `${tendencia.descripcion} (${tendencia.direccion}, magnitud ${tendencia.magnitud.toFixed(2)})`,
+            descripcion: tendenciaReal
+                ? `${desc} (${tendencia.direccion}, magnitud ${tendencia.magnitud.toFixed(2)})`
+                : desc,
         });
     }
     for (const elemento of nlp.elementosCausales) {
-        patrones.push({ tipo: elemento.tipo, descripcion: elemento.descripcion });
+        patrones.push({ tipo: elemento.tipo, descripcion: limpiar(elemento.descripcion) });
     }
     return patrones;
 }

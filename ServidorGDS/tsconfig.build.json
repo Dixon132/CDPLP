@@ -11,23 +11,7 @@
     "**/*.spec.ts",
     "**/*.test.ts",
     "**/__tests__/**",
-    "**/pbt/**",
-    "src/config",
-    "src/middlewares",
-    "src/utils",
-    "src/routes",
-    "src/modules/adquisicion",
-    "src/modules/analisis",
-    "src/modules/auth",
-    "src/modules/ciclo",
-    "src/modules/contracts",
-    "src/modules/escenarios",
-    "src/modules/evidencias",
-    "src/modules/instituciones",
-    "src/modules/memoria",
-    "src/modules/ml",
-    "src/modules/pipeline",
-    "src/modules/reportes",
-    "src/modules/ws"
+    "**/pbt/**"
   ]
 }
+

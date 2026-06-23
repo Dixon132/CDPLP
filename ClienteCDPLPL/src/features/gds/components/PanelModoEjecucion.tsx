@@ -115,8 +115,17 @@ export default function PanelModoEjecucion({
         if (bloqueado) return;
         setMensaje(null);
         try {
+            // Aplica primero el modo seleccionado (persiste en BD) para que el
+            // backend avance segun el modo elegido, sin requerir "Aplicar modo".
+            await seleccionarModo.mutateAsync({ modo, intervaloMs });
             const res = await avanzar.mutateAsync();
-            manejar('avanzar', res, 'Avance disparado correctamente.');
+            const exito =
+                modo === MODOS_EJECUCION.MANUAL
+                    ? 'Semana avanzada correctamente.'
+                    : modo === MODOS_EJECUCION.AUTOMATICO
+                      ? 'Ejecución automática iniciada: se procesan todas las semanas pendientes.'
+                      : 'Modo tiempo real iniciado: las semanas avanzan según el intervalo.';
+            manejar('avanzar', res, exito);
         } catch {
             setMensaje({ tipo: 'error', texto: 'No se pudo avanzar. Intenta de nuevo.' });
         }

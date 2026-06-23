@@ -51,12 +51,39 @@ export class ReportsExportService {
             };
         }
 
-        const buffer = await renderReportePdf(contenido);
+        const buffer = await renderReportePdf(contenido, await this.cargarLogos(contenido));
         return {
             buffer,
             filename: this.nombreArchivo(id, contenido, 'pdf'),
             contentType: CONTENT_TYPE_PDF,
         };
+    }
+
+    /**
+     * Pre-carga los logos (PNG/JPEG) de las instituciones de las secciones para
+     * embeberlos en el PDF. Tolerante a fallos: un logo inaccesible o de formato
+     * no soportado simplemente se omite (el reporte se genera igual).
+     */
+    private async cargarLogos(contenido: ReporteContenido): Promise<Map<string, Buffer>> {
+        const mapa = new Map<string, Buffer>();
+        const secciones = contenido.secciones ?? [];
+        await Promise.all(
+            secciones.map(async (s) => {
+                const url = s.logoUrl;
+                if (!url || !/^https?:\/\//i.test(url)) return;
+                try {
+                    const res = await fetch(url);
+                    if (!res.ok) return;
+                    const tipo = res.headers.get('content-type') ?? '';
+                    if (!/image\/(png|jpe?g)/i.test(tipo)) return; // PDFKit: solo PNG/JPEG
+                    const ab = await res.arrayBuffer();
+                    mapa.set(s.institucionId, Buffer.from(ab));
+                } catch {
+                    // Logo opcional: se omite ante cualquier error de red/formato.
+                }
+            }),
+        );
+        return mapa;
     }
 
     /** Construye un nombre de archivo descriptivo y seguro para descarga. */

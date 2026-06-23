@@ -73,5 +73,5 @@ export function claveTrabajo(datos: DatosTrabajoSemana): string {
  */
 export function jobIdSemana(datos: DatosTrabajoSemana): string {
     validarDatos(datos);
-    return `${PREFIJO_TRABAJO_SEMANA}:${datos.analisisId}:${datos.institucionId}:${datos.numeroSemana}`;
+    return `${PREFIJO_TRABAJO_SEMANA}_${datos.analisisId}_${datos.institucionId}_${datos.numeroSemana}`;
 }

@@ -58,6 +58,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
             timestamp: new Date().toISOString(),
             path: request.url,
             error: typeof detalle === 'string' ? { message: detalle } : detalle,
+            // Exponer siempre en desarrollo el mensaje y stack para diagnóstico.
+            ...(exception instanceof Error
+                ? { debug: { message: exception.message, stack: exception.stack } }
+                : {}),
         });
     }
 }

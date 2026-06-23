@@ -52,24 +52,15 @@ export const GEMINI_MODEL_ENV = "GEMINI_MODEL" as const;
 /** Variable de entorno con la URL base de la API de Gemini. */
 export const GEMINI_API_URL_ENV = "GEMINI_API_URL" as const;
 
-/** Modelo Gemini por defecto si no se configura `GEMINI_MODEL`. */
-export const GEMINI_MODEL_DEFAULT = "gemini-1.5-flash" as const;
-/** URL base por defecto de la API `generateContent` de Gemini. */
+/** Modelo por defecto si no se configura `GEMINI_MODEL`. */
+export const GEMINI_MODEL_DEFAULT = "gpt-4o-mini" as const;
+/** URL base por defecto de la API. */
 export const GEMINI_API_URL_DEFAULT =
-    "https://generativelanguage.googleapis.com/v1beta" as const;
-
-/** Forma (subconjunto) de la respuesta `generateContent` de Gemini. */
-interface GeminiGenerateContentResponse {
-    candidates?: Array<{
-        content?: {
-            parts?: Array<{ text?: string }>;
-        };
-    }>;
-}
+    "https://api.openai.com/v1" as const;
 
 /**
  * Implementacion por defecto del {@link GeminiClient} sobre la API HTTP
- * `generateContent` de Google Gemini. La API key, el modelo y la URL base se
+ * de OpenAI (`chat/completions`). La API key, el modelo y la URL base se
  * resuelven por `ConfigService` (Req. 4.3, 4.4): cambiar el proveedor o sus
  * credenciales es configuracion, no codigo.
  */
@@ -91,35 +82,44 @@ export class GeminiHttpClient implements GeminiClient {
     }
 
     async generar(solicitud: GeminiSolicitud): Promise<string> {
-        if (!this.apiKey) {
-            throw new Error(
-                "GeminiProvider: falta GEMINI_API_KEY; configure la API key de Google Gemini.",
-            );
-        }
-        const url = `${this.baseUrl}/models/${this.modelo}:generateContent?key=${encodeURIComponent(this.apiKey)}`;
+        // Usa la API compatible OpenAI (Ollama local / OpenAI / cualquier proveedor compatible)
+        const url = `${this.baseUrl}/chat/completions`;
         const body = {
-            contents: [{ role: "user", parts: [{ text: solicitud.prompt }] }],
-            generationConfig: {
-                temperature: solicitud.temperatura ?? 0.9,
-                responseMimeType: "application/json",
-            },
+            model: this.modelo,
+            messages: [
+                {
+                    role: "system" as const,
+                    content: "Eres un generador de contenido sintetico para simulacion de redes sociales. Responde SOLO con JSON valido, sin texto adicional ni vallas markdown.",
+                },
+                { role: "user" as const, content: solicitud.prompt },
+            ],
+            temperature: solicitud.temperatura ?? 0.9,
         };
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
+        if (this.apiKey) {
+            headers["Authorization"] = `Bearer ${this.apiKey}`;
+        }
         const respuesta = await firstValueFrom(
-            this.http.post<GeminiGenerateContentResponse>(url, body),
+            this.http.post<OpenAIChatResponse>(url, body, { headers }),
         );
-        return extraerTexto(respuesta.data);
+        const texto = respuesta.data?.choices?.[0]?.message?.content?.trim() ?? "";
+        if (!texto) {
+            throw new Error("LLMProvider: la respuesta no contiene texto generado.");
+        }
+        return texto;
     }
 }
 
-/** Extrae el texto generado de la respuesta `generateContent` de Gemini. */
-export function extraerTexto(data: GeminiGenerateContentResponse): string {
-    const partes = data.candidates?.[0]?.content?.parts ?? [];
-    const texto = partes
-        .map((p) => p.text ?? "")
-        .join("")
-        .trim();
-    if (!texto) {
-        throw new Error("GeminiProvider: la respuesta de Gemini no contiene texto generado.");
-    }
-    return texto;
+/** Forma de la respuesta de chat/completions de OpenAI. */
+interface OpenAIChatResponse {
+    choices?: Array<{
+        message?: { content?: string };
+    }>;
+}
+
+/** Extrae el texto generado (mantiene retrocompatibilidad del export). */
+export function extraerTexto(data: unknown): string {
+    // Retrocompatibilidad: si alguien llama directamente a esta funcion
+    const d = data as { choices?: Array<{ message?: { content?: string } }> };
+    return d?.choices?.[0]?.message?.content?.trim() ?? "";
 }

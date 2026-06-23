@@ -64,6 +64,104 @@ export class AnalysisController {
         return this.service.obtener(id);
     }
 
+    @Get(':id/estado')
+    @ApiOperation({
+        summary: 'Estado/progreso del Analisis: modo, estado, semana actual/total.',
+    })
+    @ApiParam({ name: 'id', description: 'Identificador del analisis.' })
+    @ApiOkResponse({ description: 'Estado de ejecucion y progreso.' })
+    @ApiNotFoundResponse({ description: 'El analisis no existe.' })
+    estado(@Param('id') id: string) {
+        return this.service.obtenerEstado(id);
+    }
+
+    @Get(':id/comunidades')
+    @ApiOperation({
+        summary:
+            'Lista las comunidades (instituciones + zona geografica) de un Analisis.',
+    })
+    @ApiParam({ name: 'id', description: 'Identificador del analisis.' })
+    @ApiOkResponse({ description: 'Comunidades del analisis.' })
+    @ApiNotFoundResponse({ description: 'El analisis no existe.' })
+    comunidades(@Param('id') id: string) {
+        return this.service.listarComunidades(id);
+    }
+
+    @Get(':id/instituciones/:institucionId/evolucion')
+    @ApiOperation({
+        summary: 'Evolucion temporal por dimension de una comunidad (Req. 22.2).',
+    })
+    @ApiParam({ name: 'id' })
+    @ApiParam({ name: 'institucionId' })
+    @ApiOkResponse({ description: 'Serie de evolucion por dimension.' })
+    evolucion(
+        @Param('id') id: string,
+        @Param('institucionId') institucionId: string,
+    ) {
+        return this.service.obtenerEvolucion(id, institucionId);
+    }
+
+    @Get(':id/instituciones/:institucionId/resultados')
+    @ApiOperation({
+        summary: 'Resultados semanales navegables de una comunidad (Req. 22.1).',
+    })
+    @ApiParam({ name: 'id' })
+    @ApiParam({ name: 'institucionId' })
+    @ApiOkResponse({ description: 'Resultados semanales.' })
+    resultados(
+        @Param('id') id: string,
+        @Param('institucionId') institucionId: string,
+    ) {
+        return this.service.obtenerResultados(id, institucionId);
+    }
+
+    @Get(':id/instituciones/:institucionId/cronologia')
+    @ApiOperation({
+        summary:
+            'Cronología de contenido por semana de una institución: publicaciones tomadas en cuenta, aportes de post/comentarios/imagen y hashtags.',
+    })
+    @ApiParam({ name: 'id' })
+    @ApiParam({ name: 'institucionId' })
+    @ApiOkResponse({ description: 'Cronología de contenido por semana.' })
+    cronologia(
+        @Param('id') id: string,
+        @Param('institucionId') institucionId: string,
+    ) {
+        return this.service.obtenerCronologia(id, institucionId);
+    }
+
+    @Get(':id/instituciones/:institucionId/semanas/:semana/explicacion')
+    @ApiOperation({
+        summary: 'Explicacion que sustenta un indicador semanal (Req. 22.3).',
+    })
+    @ApiParam({ name: 'id' })
+    @ApiParam({ name: 'institucionId' })
+    @ApiParam({ name: 'semana' })
+    @ApiOkResponse({ description: 'Explicacion.' })
+    explicacion(
+        @Param('id') id: string,
+        @Param('institucionId') institucionId: string,
+        @Param('semana') semana: string,
+    ) {
+        return this.service.obtenerExplicacion(id, institucionId, Number(semana));
+    }
+
+    @Get(':id/instituciones/:institucionId/semanas/:semana/evidencias')
+    @ApiOperation({
+        summary: 'Evidencias que respaldan un resultado semanal (Req. 22.5).',
+    })
+    @ApiParam({ name: 'id' })
+    @ApiParam({ name: 'institucionId' })
+    @ApiParam({ name: 'semana' })
+    @ApiOkResponse({ description: 'Evidencias.' })
+    evidencias(
+        @Param('id') id: string,
+        @Param('institucionId') institucionId: string,
+        @Param('semana') semana: string,
+    ) {
+        return this.service.obtenerEvidencias(id, institucionId, Number(semana));
+    }
+
     @Post()
     @ApiOperation({
         summary:

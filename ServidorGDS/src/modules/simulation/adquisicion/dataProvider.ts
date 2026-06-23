@@ -121,7 +121,7 @@ export type NombreProveedor =
  * Proveedor por defecto cuando no se especifica configuracion: `GeminiProvider`
  * (Google Gemini API) en la nube (Req. 4.3, 4.4).
  */
-export const PROVEEDOR_POR_DEFECTO: NombreProveedor = "gemini";
+export const PROVEEDOR_POR_DEFECTO: NombreProveedor = "openai";
 
 /**
  * Interfaz comun de los proveedores de datos. El `Modulo_Simulacion` invoca

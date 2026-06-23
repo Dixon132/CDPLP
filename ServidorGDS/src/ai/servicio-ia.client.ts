@@ -316,6 +316,67 @@ export class ServicioNlpClient extends ServicioIaHttpBase implements ServicioNLP
     }
 
     /** Traduce la respuesta de `POST /nlp` al {@link ResultadoNLP} estable. */
+    /**
+     * Traduce la deteccion emocional REAL del modelo del Servicio_IA (emociones
+     * tipo anger/joy/sadness/fear/surprise/disgust/neutral) a las senales que el
+     * `Indice_Riesgo` consume (valencia, activacion, intensidad, dispersion +
+     * distribucion tension/entusiasmo/incertidumbre/neutral). Sin esta traduccion
+     * el indice no recibe senal y las dimensiones colapsan a 0/100.
+     */
+    private mapearEmocional(
+        emocion: { etiqueta: string; puntuacion: number; distribucion: Record<string, number> },
+        totalItems: number,
+    ): DeteccionEmocional {
+        const d = emocion.distribucion ?? {};
+        const g = (k: string) => this.clamp(Number(d[k] ?? 0), 0, 1);
+
+        // Emociones del modelo (en ingles, j-hartmann/emotion-english-distilroberta-base)
+        const anger = g('anger');
+        const disgust = g('disgust');
+        const fear = g('fear');
+        const joy = g('joy');
+        const sadness = g('sadness');
+        const surprise = g('surprise');
+        const neutral = g('neutral');
+
+        // Valencia: positiva (joy) menos negativa (anger, sadness, disgust, fear)
+        const valencia = this.clamp(joy - (anger + sadness + disgust + fear) / 2, -1, 1);
+        // Activacion/arousal: emociones de alta energia
+        const activacion = this.clamp(anger + fear + surprise + joy * 0.5, 0, 1);
+        // Intensidad emocional global: 1 - neutral, reforzada por la puntuacion del modelo
+        const intensidad = this.clamp(
+            (1 - neutral) * 0.6 + this.clamp(emocion.puntuacion, 0, 1) * 0.4,
+            0,
+            1,
+        );
+        // Dispersion: cuan repartida esta la emocion entre categorias (entropia simple)
+        const valores = [anger, disgust, fear, joy, sadness, surprise, neutral];
+        const suma = valores.reduce((a, b) => a + b, 0) || 1;
+        const dispersion = this.clamp(
+            valores.filter((v) => v / suma > 0.1).length / valores.length,
+            0,
+            1,
+        );
+
+        // Distribucion mapeada a las categorias que espera derivarSenalesIndice
+        const crudo: Record<string, number> = {
+            tension: anger + disgust,
+            entusiasmo: joy,
+            incertidumbre: fear + surprise,
+            neutral: neutral + sadness * 0.5,
+        };
+        const totalDist = Object.values(crudo).reduce((a, b) => a + b, 0) || 1;
+        const distribucion: Record<string, number> = {};
+        for (const [k, v] of Object.entries(crudo)) {
+            distribucion[k] = v / totalDist;
+        }
+
+        return {
+            senal: { valencia, activacion, intensidad, dispersion },
+            distribucion,
+        };
+    }
+
     private mapearNlp(dto: NlpResponseDTO, totalItems: number): ResultadoNLP {
         const conv = dto.semantico.conversacional;
 
@@ -339,15 +400,10 @@ export class ServicioNlpClient extends ServicioIaHttpBase implements ServicioNLP
             terminosClave,
         };
 
-        const emocional: DeteccionEmocional = {
-            senal: {
-                valencia: 0,
-                activacion: 0,
-                intensidad: this.clamp(dto.emocion.puntuacion, 0, 1),
-                dispersion: 0,
-            },
-            distribucion: { ...dto.emocion.distribucion },
-        };
+        const emocional: DeteccionEmocional = this.mapearEmocional(
+            dto.emocion,
+            totalItems,
+        );
 
         const tematico: ClasificacionTematica = {
             grupos: dto.temas.map((t, i) => ({

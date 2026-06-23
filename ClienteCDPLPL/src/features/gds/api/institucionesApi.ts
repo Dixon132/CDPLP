@@ -86,15 +86,15 @@ export type InstitucionFormValues = z.input<typeof institucionSchema>;
 /** Valores del formulario ya validados/normalizados por Zod. */
 export type InstitucionFormParsed = z.output<typeof institucionSchema>;
 
-/** Payload que se envía al backend (snake_case, sin campos vacíos opcionales). */
+/** Payload que se envía al backend (camelCase, coincide con el DTO de NestJS). */
 export interface InstitucionPayload {
     nombre: string;
     categoria: string;
     latitud: number | null;
     longitud: number | null;
-    radio_metros: number;
+    radioMetros: number;
     descripcion: string;
-    logo_url?: string;
+    logoUrl?: string;
 }
 
 function toNumberOrNull(value: unknown): number | null {
@@ -133,11 +133,11 @@ export function institucionToPayload(form: InstitucionFormValues): InstitucionPa
         categoria: form.categoria ?? '',
         latitud: toNumberOrNull(form.latitud),
         longitud: toNumberOrNull(form.longitud),
-        radio_metros: Number(form.radio_metros ?? RADIO_METROS_DEFECTO),
+        radioMetros: Number(form.radio_metros ?? RADIO_METROS_DEFECTO),
         descripcion: (form.descripcion ?? '').trim(),
     };
     const logo = (form.logo_url ?? '').trim();
-    if (logo) payload.logo_url = logo;
+    if (logo) payload.logoUrl = logo;
     return payload;
 }
 

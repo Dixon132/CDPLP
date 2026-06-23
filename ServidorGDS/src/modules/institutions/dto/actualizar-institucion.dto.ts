@@ -1,5 +1,5 @@
 /**
- * DTO de edicion de una `Institucion` (endpoint `PUT /api/gds/institutions/:id`).
+ * DTO de edicion de una `Institucion` (endpoint `PUT /api/gds/instituciones/:id`).
  *
  * Hereda de `CrearInstitucionDto` via `PartialType`, de modo que todos los
  * campos son opcionales y se actualiza unicamente lo provisto, conservando las

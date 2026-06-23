@@ -94,6 +94,24 @@ export interface CambioReporte {
 }
 
 /**
+ * Hito: movimiento NOTABLE de una dimension entre dos semanas CONSECUTIVAS del
+ * periodo (alza o baja considerable), no solo el comparativo inicial-final. Es
+ * lo que permite narrar "entre la semana 3 y 4 hubo un alza grande" (Req. 16.4).
+ */
+export interface HitoReporte {
+    dimension: string;
+    desdeSemana: number;
+    hastaSemana: number;
+    valorDesde: number;
+    valorHasta: number;
+    variacionAbsoluta: number;
+    /** Variacion porcentual; null si el valor de partida es 0 (indefinida). */
+    variacionPct: number | null;
+    direccion: DireccionCambio;
+    evidenciaIds: string[];
+}
+
+/**
  * Explicacion en lenguaje natural (que / por que / cuando empezo / como
  * evoluciono) de la variacion de una dimension, con su evidencia (Req. 20.x).
  */
@@ -158,6 +176,8 @@ export interface ReporteContenido {
     tendencias: TendenciaReporte[];
     detonantes: DetonanteReporte[];
     explicaciones: ExplicacionReporte[];
+    /** Movimientos notables entre semanas consecutivas del periodo (Req. 16.4). */
+    hitos: HitoReporte[];
     /** Refs anonimizadas de publicaciones relevantes (Req. 19.2). */
     publicacionesRelevantes: string[];
     evidencias: EvidenciaReporte[];
@@ -165,6 +185,43 @@ export interface ReporteContenido {
     recomendaciones: AfirmacionConEvidencia[];
     generadoEn: string;
     /** Semanas con resultados encontrados en el periodo (trazabilidad de cobertura). */
+    semanasCubiertas: number[];
+    /**
+     * Secciones POR INSTITUCION del analisis (Req. 19.4). Cuando el reporte
+     * cubre todo el analisis (sin institucion acotada), incluye una seccion por
+     * cada institucion participante con sus propios indicadores/cambios/etc.
+     */
+    secciones?: SeccionInstitucion[];
+}
+
+/** Métrica de contenido de una semana (cronología por institución). */
+export interface MetricaSemanaContenido {
+    numeroSemana: number;
+    totalItems: number;
+    contributivos: number;
+    noContributivos: number;
+    aportePost: number;
+    aporteComentarios: number;
+    aporteImagen: number;
+    hashtags: { tag: string; conteo: number }[];
+}
+
+/** Seccion de un reporte correspondiente a una institucion concreta. */
+export interface SeccionInstitucion {
+    institucionId: string;
+    institucionNombre: string;
+    /** URL del logo de la institucion (si lo tiene configurado). */
+    logoUrl: string | null;
+    resumen: string;
+    indicadores: IndicadorReporte[];
+    cambios: CambioReporte[];
+    conclusiones: AfirmacionConEvidencia[];
+    recomendaciones: AfirmacionConEvidencia[];
+    detonantes: DetonanteReporte[];
+    /** Movimientos notables entre semanas consecutivas de la institucion. */
+    hitos: HitoReporte[];
+    /** Cronología de contenido por semana (publicaciones, aportes, hashtags). */
+    cronologia: MetricaSemanaContenido[];
     semanasCubiertas: number[];
 }
 

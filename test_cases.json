@@ -1,0 +1,205 @@
+[
+  {
+    "id": "CU-01",
+    "description": "Registrar nuevo usuario del sistema",
+    "actor": "Cualquier persona",
+    "flow": [
+      "Ingresa nombre, apellido, correo, contraseña, teléfono, dirección",
+      "Sistema verifica que el correo no exista (si existe → error 400 \"Ya existe\")",
+      "Sistema hashea la contraseña con bcrypt",
+      "Sistema crea el usuario con estado \"ACTIVO\"",
+      "Sistema le asigna automáticamente rol \"NO_DEFINIDO\"",
+      "Usuario queda registrado pero sin acceso a módulos hasta que un Presidente le asigne rol"
+    ],
+    "rule": "Un usuario con rol NO_DEFINIDO no puede hacer nada en el sistema hasta que alguien con permiso le asigne un rol real."
+  },
+  {
+    "id": "CU-02",
+    "description": "Iniciar sesión (Login)",
+    "actor": "Usuario registrado",
+    "flow": [
+      "Ingresa correo y contraseña",
+      "Sistema busca usuario por correo (si no existe → 401)",
+      "Sistema compara contraseña con hash bcrypt (si no coincide → 401)",
+      "Sistema busca el rol activo del usuario en tabla roles",
+      "Sistema genera JWT con: { userId, rol: { rol, fecha_inicio, fecha_fin, activo } }",
+      "JWT expira en 8 horas",
+      "Sistema retorna { user, token }"
+    ],
+    "rule": "El JWT contiene el rol embebido. El frontend lo decodifica para mostrar/ocultar menús. El backend verifica el rol en la DB en cada request (no confía en el token para autorización)."
+  },
+  {
+    "id": "CU-03",
+    "description": "Registrar nuevo colegiado",
+    "actor": "Usuario con rol SECRETARIO, SECRETARIO_GENERAL o PRESIDENTE",
+    "flow": [
+      "Ingresa: carnet_identidad, nombre, apellido, correo, teléfono, especialidades, fecha_inscripción, estado, pin_acceso",
+      "Sistema verifica que carnet_identidad sea único (constraint @unique)",
+      "Sistema crea el colegiado con estado ACTIVO",
+      "Sistema registra auditoría: \"Se registró al colegiado X\""
+    ],
+    "rule": "Los colegiados NO son usuarios del sistema. Son miembros del colegio profesional. Tienen su propio pin_acceso para el módulo de campo."
+  },
+  {
+    "id": "CU-04",
+    "description": "Registrar pago de colegiatura",
+    "actor": "Usuario con rol TESORERO o PRESIDENTE",
+    "flow": [
+      "Selecciona colegiado por ID",
+      "Ingresa: concepto, fecha_pago, monto",
+      "Sistema crea el pago con estado \"REALIZADO\"",
+      "Sistema ejecuta una transacción:",
+      "Crea origen_movimiento con tipo \"COLEGIATURA\"",
+      "Crea movimiento_financiero tipo INGRESO vinculado al presupuesto 1",
+      "Sistema registra auditoría: \"Se registró pago de X Bs del colegiado Y\""
+    ],
+    "rule": "Todo pago genera automáticamente un movimiento financiero de INGRESO en tesorería. Es una transacción atómica — si falla una parte, no se crea nada."
+  },
+  {
+    "id": "CU-05",
+    "description": "Anular pago de colegiatura",
+    "actor": "Usuario con rol TESORERO o PRESIDENTE",
+    "flow": [
+      "Selecciona pago existente",
+      "Solo se puede cambiar estado a \"ANULADO\" (no se puede editar monto ni concepto)",
+      "Si el pago ya está ANULADO → error 409 \"Ya fue anulado\"",
+      "Sistema cambia estado a ANULADO",
+      "Sistema crea un EGRESO de reversión: nuevo movimiento_financiero tipo EGRESO con categoría \"Anulación de Colegiatura\"",
+      "El INGRESO original NO se borra (queda como trazabilidad)",
+      "Sistema registra auditoría: \"Se anuló el pago de X por monto Y — se generó reversión\""
+    ],
+    "rule": "Nunca se elimina un movimiento financiero. Si se anula un pago, se crea un contra-movimiento (EGRESO) que balancea la contabilidad."
+  },
+  {
+    "id": "CU-06",
+    "description": "Crear actividad social (trabajo comunitario)",
+    "actor": "Cualquiera (BUG: no tiene authMiddleware)",
+    "flow": [
+      "Ingresa: nombre, descripción, ubicación, motivo, tipo, fecha_inicio, fecha_fin, latitud, longitud, radio_metros, id_convenio",
+      "Sistema crea la actividad con estado PROGRAMADA",
+      "Se pueden asignar colegiados o pasantes a la actividad"
+    ],
+    "rule": "Las actividades sociales tienen coordenadas GPS y un radio. Los colegiados deben estar físicamente dentro del radio para marcar asistencia (validación Haversine)."
+  },
+  {
+    "id": "CU-07",
+    "description": "Marcar asistencia en campo (GPS)",
+    "actor": "Colegiado o Pasante (desde su celular, ruta /campo)",
+    "flow": [
+      "Colegiado se autentica con correo + carnet + pin (login especial de campo)",
+      "Ve sus actividades sociales asignadas",
+      "Presiona \"Marcar Entrada\"",
+      "Sistema obtiene GPS del celular",
+      "Sistema calcula distancia con fórmula Haversine entre posición del colegiado y la actividad",
+      "Si distancia > radio_metros → ERROR \"Estás a Xm, debes estar a menos de Ym\"",
+      "Si está dentro del radio → registra hora_entrada en asistencia_social_diaria",
+      "Al finalizar turno, presiona \"Marcar Salida\"",
+      "Sistema calcula horas_ganadas = (hora_salida - hora_entrada) y acumula en total_horas"
+    ],
+    "rule": "Solo se puede marcar una entrada por día. Si ya marcó salida hoy, no puede volver a marcar. Las horas se acumulan hasta alcanzar horas_meta."
+  },
+  {
+    "id": "CU-08",
+    "description": "Crear actividad institucional",
+    "actor": "Usuario con rol SECRETARIO_GENERAL o PRESIDENTE",
+    "flow": [
+      "Ingresa: nombre, descripción, tipo (CAPACITACION/ASAMBLEA/etc), fecha_programada, id_responsable, costo, estado",
+      "Sistema crea la actividad",
+      "Se pueden registrar colegiados como participantes"
+    ],
+    "rule": "Si la actividad tiene costo > 0, al registrar un colegiado se cobra y se genera un movimiento financiero de INGRESO con categoría \"Curso\"."
+  },
+  {
+    "id": "CU-09",
+    "description": "Registrar colegiado en actividad institucional (con pago)",
+    "actor": "Usuario autenticado",
+    "flow": [
+      "Selecciona actividad y colegiado",
+      "Si la actividad tiene costo > 0:",
+      "Registra el pago en colegiados_registrados_actividad_institucional",
+      "Ejecuta transacción: crea origen_movimiento + movimiento_financiero INGRESO",
+      "Sistema crea el registro con estado \"REGISTRADO\"",
+      "Registra auditoría"
+    ],
+    "rule": "Es el mismo patrón que CU-04 pero para cursos/capacitaciones en vez de colegiaturas."
+  },
+  {
+    "id": "CU-10",
+    "description": "Gestionar correspondencia",
+    "actor": "Usuario con rol SECRETARIO, SECRETARIO_GENERAL o PRESIDENTE",
+    "flow": [
+      "Registrar correspondencia: asunto, contenido (archivo PDF/DOC subido a S3), resumen, remitente, destinatario (usuario del sistema)",
+      "El archivo se sube a AWS S3 con key correspondencia/{uuid}-{filename}",
+      "Para ver el archivo: sistema genera URL firmada con expiración de 5 minutos",
+      "Estados: se puede marcar como \"VISTO\", cambiar estado dinámicamente",
+      "El destinatario ve la correspondencia en su \"Buzón\""
+    ],
+    "rule": "Los archivos nunca se almacenan localmente — siempre en S3. Las URLs firmadas expiran por seguridad."
+  },
+  {
+    "id": "CU-11",
+    "description": "Gestionar presupuestos (Tesorería)",
+    "actor": "Usuario con rol TESORERO o PRESIDENTE",
+    "flow": [
+      "Crear presupuesto: nombre, descripción, monto_total, fecha_asignación",
+      "El saldo_restante se calcula dinámicamente: monto_total - sum(EGRESOS) + sum(INGRESOS)",
+      "Se pueden crear movimientos manuales (INGRESO o EGRESO) asociados al presupuesto",
+      "Los pagos de colegiatura y cursos generan INGRESOS automáticamente",
+      "Las anulaciones generan EGRESOS automáticamente"
+    ],
+    "rule": "El saldo NO se guarda en la DB — se calcula sumando todos los movimientos del presupuesto cada vez que se consulta."
+  },
+  {
+    "id": "CU-12",
+    "description": "Asignar rol a usuario",
+    "actor": "Usuario con rol SECRETARIO_GENERAL o PRESIDENTE",
+    "flow": [
+      "Selecciona usuario",
+      "Asigna rol: PRESIDENTE, VICEPRESIDENTE, SECRETARIO_GENERAL, SECRETARIO, TESORERO, VOCAL",
+      "Define fecha_inicio y fecha_fin del mandato",
+      "Sistema marca el rol como activo"
+    ],
+    "rule": "El frontend valida antes de mostrar menús: si now < fecha_inicio || now > fecha_fin → rol expirado. Si !activo → rol inactivo. Ambos redirigen a página de error."
+  },
+  {
+    "id": "CU-13",
+    "description": "Generar reportes PDF",
+    "actor": "Cualquier usuario con acceso al módulo correspondiente",
+    "flow": [
+      "Click en \"Generar Reporte\" (en colegiados, actividades, tesorería, etc.)",
+      "Backend usa Puppeteer (headless Chrome) para renderizar HTML con CSS elegante",
+      "Genera PDF con: datos tabulados, fechas, montos, logos",
+      "Retorna el PDF como descarga directa"
+    ],
+    "rule": "Los reportes se generan en tiempo real (no están pre-calculados). Puppeteer renderiza HTML → PDF con gradientes, tablas y diseño profesional."
+  },
+  {
+    "id": "CU-14",
+    "description": "Subir documentos de colegiado (S3)",
+    "actor": "Cualquiera (BUG: no tiene authMiddleware)",
+    "flow": [
+      "Selecciona colegiado",
+      "Sube archivo (tipo: título profesional, CI, certificados, etc.)",
+      "Multer recibe el archivo en memoria",
+      "Sistema lo sube a S3 con key documentos/{uuid}-{filename}",
+      "Guarda referencia en tabla documentos_colegiados con tipo, fecha_entrega, estado",
+      "Para ver: genera URL firmada S3 (5 min expiración)"
+    ],
+    "rule": "El endpoint de documentos NO tiene protección de autenticación (bug documentado en la auditoría). Cualquiera con la URL puede subir/ver documentos."
+  },
+  {
+    "id": "CU-15",
+    "description": "Consultar auditoría del sistema",
+    "actor": "Usuario con rol PRESIDENTE",
+    "flow": [
+      "Va a módulo Auditorías",
+      "Ve lista ordenada por fecha (más reciente primero) con:",
+      "Quién hizo la acción (usuario)",
+      "Qué acción (REGISTRÓ, MODIFICÓ, ELIMINÓ, INICIÓ SESIÓN)",
+      "En qué módulo (Pagos, Actividades, Usuarios, Perfil)",
+      "Descripción detallada (\"Se registró el pago de 100Bs del colegiado Juan Pérez\")",
+      "Fecha y hora"
+    ],
+    "rule": "La auditoría es append-only — nunca se editan ni eliminan registros. Solo PRESIDENTE puede ver el módulo de auditorías"
+  }
+]

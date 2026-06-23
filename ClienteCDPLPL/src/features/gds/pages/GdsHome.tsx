@@ -30,6 +30,7 @@ import { isSesionValida, type JwtPayload } from '../guards/session';
 import IndicadoresGlobales from '../components/IndicadoresGlobales.jsx';
 import InstitucionesSlider from '../components/InstitucionesSlider.jsx';
 import EstadosEjecucion from '../components/EstadosEjecucion.jsx';
+import ComoAnalizaIA from '../components/ComoAnalizaIA.jsx';
 
 function BloqueoNoAutorizado() {
     return (
@@ -106,14 +107,24 @@ function PanelPrincipal() {
             transition={{ duration: 0.3 }}
         >
             {/* Información general y descripción del sistema (Req. 21.1) */}
-            <section>
-                <h2 className="text-2xl font-semibold text-slate-800">Panel de la Plataforma GDS</h2>
-                <p className="mt-2 max-w-3xl text-slate-600">
-                    Gemelo Digital Social de Comunidades Educativas. Esta plataforma simula y
-                    analiza la evolución de tendencias de riesgo emocional a nivel colectivo,
-                    de forma longitudinal y anonimizada, sobre comunidades digitales asociadas
-                    a cada institución. Aquí tienes una visión general del estado del sistema.
-                </p>
+            <section className="flex items-start gap-4">
+                <img
+                    src="/img/logo.png"
+                    alt="Plataforma GDS"
+                    className="h-14 w-14 flex-none rounded-lg object-contain"
+                    onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                    }}
+                />
+                <div>
+                    <h2 className="text-2xl font-semibold text-slate-800">Panel de la Plataforma GDS</h2>
+                    <p className="mt-2 max-w-3xl text-slate-600">
+                        Gemelo Digital Social de Comunidades Educativas. Esta plataforma simula y
+                        analiza la evolución de tendencias de riesgo emocional a nivel colectivo,
+                        de forma longitudinal y anonimizada, sobre comunidades digitales asociadas
+                        a cada institución. Aquí tienes una visión general del estado del sistema.
+                    </p>
+                </div>
             </section>
 
             {/* Resumen de análisis por estado (Req. 21.1, 21.3) */}
@@ -144,6 +155,9 @@ function PanelPrincipal() {
 
             {/* Slider automático de instituciones (Req. 21.2) */}
             <InstitucionesSlider instituciones={institucionesSlider} />
+
+            {/* Explicación de cómo la IA analiza las dimensiones de riesgo */}
+            <ComoAnalizaIA />
 
             {/* Indicadores globales e históricos con Recharts (Req. 21.1, 21.5) */}
             <IndicadoresGlobales

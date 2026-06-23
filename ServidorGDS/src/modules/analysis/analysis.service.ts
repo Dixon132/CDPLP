@@ -210,7 +210,16 @@ export class AnalysisService {
         //    `Analisis` ya esta persistido y consistente; el encolado es un
         //    efecto idempotente por `(A,I,1)` (Req. 38.3).
         for (const institucionId of institucionIds) {
-            await this.disparador.dispararSemanaInicial(analisisId, institucionId);
+            try {
+                await this.disparador.dispararSemanaInicial(analisisId, institucionId);
+            } catch (err) {
+                // Si Redis/BullMQ no esta disponible, el analisis ya fue creado
+                // correctamente. Se loguea el fallo sin romper la respuesta al
+                // usuario; el ciclo puede redispararse manualmente despues.
+                this.logger.warn(
+                    `No se pudo encolar semana 1 para (${analisisId}, ${institucionId}): ${err instanceof Error ? err.message : err}`,
+                );
+            }
         }
 
         return this.obtener(analisisId);
@@ -225,6 +234,45 @@ export class AnalysisService {
         return rows.map(aDominio);
     }
 
+    /**
+     * Estado/progreso de un `Analisis` para la UI: modo, estado de ejecucion,
+     * semana actual (ultima COMPLETADA) y total, mas conteo de instituciones.
+     */
+    async obtenerEstado(analisisId: string) {
+        const analisis = await this.prisma.analisis.findUnique({
+            where: { id: analisisId },
+            include: {
+                comunidades: { select: { institucionId: true } },
+                ciclos: {
+                    where: { estado: 'COMPLETADO' },
+                    orderBy: { numeroSemana: 'desc' },
+                    take: 1,
+                    select: { numeroSemana: true },
+                },
+            },
+        });
+        if (!analisis) {
+            throw new NotFoundException(`Analisis no encontrado: ${analisisId}`);
+        }
+        const semanaActual = analisis.ciclos[0]?.numeroSemana ?? 0;
+        return {
+            id: analisis.id,
+            nombre: analisis.nombre,
+            escenario: analisis.escenario,
+            escenarioEsPersonalizado: analisis.escenarioEsPersonalizado,
+            modoEjecucion: analisis.modoEjecucion,
+            estadoEjecucion: analisis.estadoEjecucion,
+            intervaloTiempoRealMs: analisis.intervaloTiempoRealMs,
+            semanaActual,
+            semanasTotales: analisis.semanasTotales,
+            radioAnalisis: analisis.radioAnalisis,
+            instituciones: analisis.comunidades.length,
+            progreso: analisis.semanasTotales > 0
+                ? Math.round((semanaActual / analisis.semanasTotales) * 100)
+                : 0,
+        };
+    }
+
     /** Recupera un `Analisis` por su `id` o lanza `NotFoundException`. */
     async obtener(id: string): Promise<Analisis> {
         const row = await this.prisma.analisis.findUnique({
@@ -235,6 +283,40 @@ export class AnalysisService {
             throw new NotFoundException(`Analisis no encontrado: ${id}`);
         }
         return aDominio(row);
+    }
+
+    /**
+     * Lista las comunidades (instituciones + zona geografica) de un `Analisis`.
+     * Devuelve los datos que el frontend necesita para la vista de trazabilidad
+     * (Req. 22.4): id de comunidad, id/nombre de la institucion, y la zona.
+     */
+    async listarComunidades(analisisId: string) {
+        const analisis = await this.prisma.analisis.findUnique({
+            where: { id: analisisId },
+            select: { id: true },
+        });
+        if (!analisis) {
+            throw new NotFoundException(`Analisis no encontrado: ${analisisId}`);
+        }
+
+        const comunidades = await this.prisma.comunidad.findMany({
+            where: { analisisId },
+            include: {
+                institucion: {
+                    select: { id: true, nombre: true, categoria: true, latitud: true, longitud: true },
+                },
+            },
+        });
+
+        return comunidades.map((c) => ({
+            id: c.id,
+            institucionId: c.institucionId,
+            nombre: c.institucion?.nombre ?? '',
+            categoria: c.institucion?.categoria ?? '',
+            latitud: c.zonaLatitud,
+            longitud: c.zonaLongitud,
+            radioMetros: c.zonaRadioMetros,
+        }));
     }
 
     /**
@@ -259,6 +341,186 @@ export class AnalysisService {
         });
 
         this.auditar('eliminar', id, actorId);
+    }
+
+    /**
+     * Obtiene la evolución temporal por dimensión para una institución dentro de
+     * un análisis (Req. 22.2). Devuelve un punto por (semana, dimensión).
+     *
+     * NOTA: el campo `valor` de `DimensionRiesgo` queda en 1.0 cuando el NLP no
+     * está disponible (fallback determinista). El score real del IndiceRiesgo se
+     * persiste en el texto de la explicación. Extraemos de ahí hasta que el
+     * pipeline persista correctamente en `valor`.
+     */
+    async obtenerEvolucion(analisisId: string, institucionId: string) {
+        const ciclos = await this.prisma.cicloSemanal.findMany({
+            where: { analisisId, institucionId, estado: 'COMPLETADO' },
+            orderBy: { numeroSemana: 'asc' },
+            include: {
+                resultados: {
+                    include: {
+                        dimensiones: {
+                            include: { explicaciones: { take: 1 } },
+                        },
+                    },
+                },
+            },
+        });
+        const puntos: Array<{ semana: number; dimension: string; valor: number }> = [];
+        for (const ciclo of ciclos) {
+            for (const resultado of ciclo.resultados) {
+                for (const dim of resultado.dimensiones) {
+                    puntos.push({
+                        semana: ciclo.numeroSemana,
+                        dimension: dim.nombre,
+                        valor: this.extraerScoreReal(dim),
+                    });
+                }
+            }
+        }
+        return puntos;
+    }
+
+    /**
+     * Obtiene los resultados semanales navegables de una institución (Req. 22.1).
+     */
+    async obtenerResultados(analisisId: string, institucionId: string) {
+        const ciclos = await this.prisma.cicloSemanal.findMany({
+            where: { analisisId, institucionId, estado: 'COMPLETADO' },
+            orderBy: { numeroSemana: 'asc' },
+            include: {
+                resultados: {
+                    include: {
+                        dimensiones: {
+                            include: { explicaciones: { take: 1 } },
+                        },
+                    },
+                },
+            },
+        });
+        return ciclos.map((ciclo) => {
+            const dimensiones = ciclo.resultados.flatMap((r) =>
+                r.dimensiones.map((d) => ({
+                    dimension: d.nombre,
+                    semana: ciclo.numeroSemana,
+                    valor: this.extraerScoreReal(d),
+                })),
+            );
+            return {
+                semana: ciclo.numeroSemana,
+                resumen: `Semana ${ciclo.numeroSemana} completada`,
+                dimensiones,
+            };
+        });
+    }
+
+    /**
+     * Obtiene la CRONOLOGÍA de contenido por semana de una institución: por cada
+     * semana completada, cuántas publicaciones se tomaron en cuenta (filtro de
+     * relevancia), aportes de post/comentarios/imagen y hashtags más concurrentes.
+     * Lee las métricas persistidas en `ResultadoAnalisis.datosTemporal`.
+     */
+    async obtenerCronologia(analisisId: string, institucionId: string) {
+        const ciclos = await this.prisma.cicloSemanal.findMany({
+            where: { analisisId, institucionId, estado: 'COMPLETADO' },
+            orderBy: { numeroSemana: 'asc' },
+            include: { resultados: { select: { datosTemporal: true } } },
+        });
+        const semanas: Array<Record<string, unknown>> = [];
+        for (const ciclo of ciclos) {
+            for (const r of ciclo.resultados) {
+                const dt = r.datosTemporal as { metricasContenido?: Record<string, unknown> } | null;
+                const m = dt?.metricasContenido;
+                if (!m) continue;
+                semanas.push({ ...m, numeroSemana: ciclo.numeroSemana });
+            }
+        }
+        return semanas;
+    }
+
+    /**
+     * Extrae el score real de una dimensión. Prioriza el texto de la explicación
+     * (donde el IndiceRiesgo persiste el cálculo real) sobre el campo `valor`
+     * (que queda en 1.0 cuando el NLP falla por fallback determinista).
+     */
+    private extraerScoreReal(dim: { valor: number; scoreCalibradoMl: number | null; explicaciones: Array<{ que: string }> }): number {
+        if (dim.explicaciones.length > 0) {
+            const match = dim.explicaciones[0].que.match(/se situa en ([\d.]+)/);
+            if (match) return parseFloat(match[1]);
+        }
+        const score = dim.scoreCalibradoMl ?? dim.valor;
+        return score === 1 ? dim.valor : score;
+    }
+
+    /**
+     * Obtiene la explicación de un resultado semanal (Req. 22.3).
+     */
+    async obtenerExplicacion(analisisId: string, institucionId: string, semana: number) {
+        const ciclo = await this.prisma.cicloSemanal.findUnique({
+            where: { analisisId_institucionId_numeroSemana: { analisisId, institucionId, numeroSemana: semana } },
+            include: {
+                resultados: {
+                    include: {
+                        dimensiones: {
+                            include: { explicaciones: true },
+                        },
+                    },
+                },
+            },
+        });
+        if (!ciclo) return { texto: '', factores: [], confianza: 0 };
+        const explicaciones = ciclo.resultados.flatMap((r) =>
+            r.dimensiones.flatMap((d) =>
+                d.explicaciones.map((e) => ({
+                    dimension: d.nombre,
+                    que: e.que,
+                    porQue: (e as { porQue?: string }).porQue ?? '',
+                    confianza: (e as { confianza?: number }).confianza ?? 0,
+                })),
+            ),
+        );
+        return {
+            texto: explicaciones.map((e) => `${e.dimension}: ${e.que}`).join('. '),
+            factores: explicaciones,
+            confianza: explicaciones.length > 0
+                ? explicaciones.reduce((s, e) => s + e.confianza, 0) / explicaciones.length
+                : 0,
+        };
+    }
+
+    /**
+     * Obtiene las evidencias de un resultado semanal (Req. 22.5).
+     */
+    async obtenerEvidencias(analisisId: string, institucionId: string, semana: number) {
+        const ciclo = await this.prisma.cicloSemanal.findUnique({
+            where: { analisisId_institucionId_numeroSemana: { analisisId, institucionId, numeroSemana: semana } },
+            include: {
+                resultados: {
+                    include: { evidences: true },
+                },
+            },
+        });
+        if (!ciclo) return [];
+        // Saneo defensivo: evidencias persistidas con el formato anterior podian
+        // incluir terminos crudos del contenido (en otro idioma). Se recorta esa
+        // enumeracion para no mostrar texto en idioma extranjero al usuario.
+        const limpiar = (texto: string): string =>
+            texto
+                .replace(/,?\s*sustentad[oa]s?\s+por\s+t[eé]rminos\s+recurrentes:[^.]*/gi, '')
+                .replace(/\s{2,}/g, ' ')
+                .trim();
+        return ciclo.resultados.flatMap((r) =>
+            r.evidences.map((e) => ({
+                id: e.id,
+                tipo: e.tipo,
+                descripcion: limpiar(e.contenido),
+                refContenido: e.refContenido,
+                semana: e.numeroSemana,
+                contributiva: e.contributividad === 'CONTRIBUTIVO',
+                indicadores: e.indicadoresUtilizados,
+                explicacion: e.explicacionIa,
+            })),
+        );
     }
 
     /** Registra un cambio sobre un `Analisis` para su auditoria. */

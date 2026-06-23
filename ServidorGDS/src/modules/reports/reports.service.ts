@@ -25,6 +25,7 @@ import { construirContenido, rangoSemanas } from './reports.generador';
 import {
     EvidenciaCruda,
     Horizonte,
+    MetricaSemanaContenido,
     PatronCrudo,
     ReporteContenido,
     ReporteGenerado,
@@ -102,6 +103,55 @@ export class ReportsService {
             resultados,
             patrones,
         });
+
+        // Si el reporte cubre TODO el analisis (sin institucion acotada), agrega
+        // una SECCION por cada institucion participante (Req. 19.4): el mismo
+        // reporte queda dividido por institucion para comparar su evolucion.
+        if (institucionId === null) {
+            const comunidades = await this.prisma.comunidad.findMany({
+                where: { analisisId },
+                select: {
+                    institucionId: true,
+                    institucion: { select: { nombre: true, logoUrl: true } },
+                },
+            });
+            const secciones = [];
+            for (const com of comunidades) {
+                const resInst = resultados.filter((r) => r.institucionId === com.institucionId);
+                if (resInst.length === 0) continue;
+                const patrInst = await this.leerPatrones(analisisId, com.institucionId);
+                const cronologia = await this.leerCronologia(
+                    analisisId,
+                    com.institucionId,
+                    rango.desde,
+                    rango.hasta,
+                );
+                const c = construirContenido({
+                    analisisId,
+                    institucionId: com.institucionId,
+                    horizonte,
+                    periodo,
+                    rango,
+                    resultados: resInst,
+                    patrones: patrInst,
+                });
+                secciones.push({
+                    institucionId: com.institucionId,
+                    institucionNombre: com.institucion?.nombre ?? com.institucionId,
+                    logoUrl: com.institucion?.logoUrl ?? null,
+                    resumen: c.resumen,
+                    indicadores: c.indicadores,
+                    cambios: c.cambios,
+                    conclusiones: c.conclusiones,
+                    recomendaciones: c.recomendaciones,
+                    detonantes: c.detonantes,
+                    hitos: c.hitos,
+                    cronologia,
+                    semanasCubiertas: c.semanasCubiertas,
+                });
+            }
+            contenido.secciones = secciones;
+        }
 
         const fila = await this.prisma.reporte.create({
             data: {
@@ -236,5 +286,37 @@ export class ReportsService {
             descripcion: p.descripcion,
             comunidadId: p.comunidadId,
         }));
+    }
+
+    /**
+     * Lee la cronología de contenido (métricas por semana) de una institución
+     * dentro del rango, desde `ResultadoAnalisis.datosTemporal.metricasContenido`.
+     */
+    private async leerCronologia(
+        analisisId: string,
+        institucionId: string,
+        desde: number,
+        hasta: number,
+    ): Promise<MetricaSemanaContenido[]> {
+        const ciclos = await this.prisma.cicloSemanal.findMany({
+            where: {
+                analisisId,
+                institucionId,
+                numeroSemana: { gte: desde, lte: hasta },
+                estado: 'COMPLETADO',
+            },
+            orderBy: { numeroSemana: 'asc' },
+            include: { resultados: { select: { datosTemporal: true } } },
+        });
+        const out: MetricaSemanaContenido[] = [];
+        for (const ciclo of ciclos) {
+            for (const r of ciclo.resultados) {
+                const dt = r.datosTemporal as { metricasContenido?: MetricaSemanaContenido } | null;
+                const m = dt?.metricasContenido;
+                if (!m) continue;
+                out.push({ ...m, numeroSemana: ciclo.numeroSemana });
+            }
+        }
+        return out;
     }
 }

@@ -25,7 +25,7 @@ const NAV_ITEMS: readonly NavItem[] = [
   { to: '/gds/instituciones', label: 'Instituciones' },
   { to: '/gds/analisis/nuevo', label: 'Análisis' },
   { to: '/gds/trazabilidad', label: 'Trazabilidad' },
-  { label: 'Escenarios', disabled: true },
+  { to: '/gds/escenarios', label: 'Escenarios' },
   { to: '/gds/reportes', label: 'Reportes' },
 ];
 

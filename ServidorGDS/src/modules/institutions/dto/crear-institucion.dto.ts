@@ -1,5 +1,5 @@
 /**
- * DTO de alta de una `Institucion` (endpoint `POST /api/gds/institutions`).
+ * DTO de alta de una `Institucion` (endpoint `POST /api/gds/instituciones`).
  *
  * Valida la entrada con class-validator y se documenta en Swagger
  * (@nestjs/swagger). Reglas de geolocalizacion y categoria (Req. 7.2, 7.3):

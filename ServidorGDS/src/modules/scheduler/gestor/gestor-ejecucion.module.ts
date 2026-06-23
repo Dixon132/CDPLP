@@ -28,7 +28,7 @@ import {
     PROGRAMADOR_TEMPORAL,
 } from '../programador/puertos-programador';
 import { ProgramadorModule } from '../programador/programador.module';
-import { AlmacenEstadoEjecucionEnMemoria } from './almacen-estado-ejecucion';
+import { AlmacenEstadoEjecucionPrisma } from './almacen-estado-ejecucion.prisma';
 import {
     GestorEjecucionService,
     type DependenciasGestorEjecucion,
@@ -49,8 +49,8 @@ import {
     imports: [ProgramadorModule],
     controllers: [GestorEjecucionController],
     providers: [
-        // Estado de modo/intervalo/ejecucion: en memoria por defecto.
-        { provide: ALMACEN_ESTADO_EJECUCION, useClass: AlmacenEstadoEjecucionEnMemoria },
+        // Estado de modo/intervalo/ejecucion: persistido en Prisma (gds_analisis).
+        { provide: ALMACEN_ESTADO_EJECUCION, useClass: AlmacenEstadoEjecucionPrisma },
 
         // Contador inyectable del Tiempo_Real: `setInterval` por defecto (Req. 32.5).
         { provide: TEMPORIZADOR_EJECUCION, useClass: TemporizadorIntervalo },
