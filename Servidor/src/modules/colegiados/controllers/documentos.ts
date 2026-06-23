@@ -1,19 +1,9 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import dotenv from "dotenv";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
-import { subirAaws } from "../../../utils/uploadS3";
-import { Param } from "@prisma/client/runtime/library";
+import { subirAaws, subirArchivo, eliminarArchivo, buildPublicUrl } from "../../../utils/uploadS3";
 dotenv.config();
-const s3 = new S3Client({
-    region: process.env.AWS_REGION!,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-});
+
 export const obtenerUrlFirmada = async (req: Request, res: Response) => {
     try {
         const id = +req.params.id;
@@ -24,19 +14,15 @@ export const obtenerUrlFirmada = async (req: Request, res: Response) => {
 
         if (!documento) return res.status(404).json({ error: "Documento no encontrado" });
 
-        const command = new GetObjectCommand({
-            Bucket: process.env.AWS_BUCKET_NAME!,
-            Key: documento.archivo!, // Esto debe ser tipo: documentos/archivo.pdf
-        });
-
-        const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 minutos
-
+        // Con Supabase los archivos son públicos — devolvemos la URL directamente
+        const url = buildPublicUrl(documento.archivo);
         res.json({ url });
     } catch (error) {
-        console.error("Error generando URL firmada:", error);
+        console.error("Error generando URL:", error);
         res.status(500).json({ error: "Error al generar el acceso al archivo" });
     }
 };
+
 export const createDoc = async (req: Request, res: Response) => {
     try {
         const id = +req.params.id;
@@ -46,13 +32,44 @@ export const createDoc = async (req: Request, res: Response) => {
             return res.status(400).json({ error: "Archivo no recibido" });
         }
 
-        const urlArchivo = await subirAaws(req.file); // 🔥 Subida a S3
+        const col = await prismaClient.colegiados.findUnique({
+            where: { id_colegiado: id },
+            select: { nombre: true, apellido: true }
+        });
+
+        if (!col) return res.status(404).json({ error: "Colegiado no encontrado" });
+
+        let folderUser = '';
+
+        const existingDoc = await prismaClient.documentos_colegiados.findFirst({
+            where: { id_colegiado: id }
+        });
+        if (existingDoc && existingDoc.archivo?.includes('/')) {
+            folderUser = existingDoc.archivo.split('/')[1];
+        }
+
+        if (!folderUser) {
+            const existingPago = await prismaClient.pagos_colegiados.findFirst({
+                where: { id_colegiado: id, comprobante: { not: null } }
+            });
+            if (existingPago && existingPago.comprobante?.includes('/')) {
+                folderUser = existingPago.comprobante.split('/')[1];
+            }
+        }
+
+        if (!folderUser) {
+            const iniciales = `${col.nombre?.charAt(0).toUpperCase() ?? ''}${col.apellido?.charAt(0).toUpperCase() ?? ''}`;
+            const hash = Math.random().toString(36).substring(2, 6);
+            folderUser = `${iniciales}-${hash}`;
+        }
+
+        const rutaRelativa = await subirArchivo(req.file, `colegiados/${folderUser}`);
 
         const doc = await prismaClient.documentos_colegiados.create({
             data: {
                 id_colegiado: id,
                 tipo_documento,
-                archivo: urlArchivo, // guarda la URL de S3
+                archivo: rutaRelativa,
                 fecha_entrega: new Date(),
                 fecha_vencimiento: new Date(fecha_vencimiento),
                 estado: "VIGENTE"
@@ -65,18 +82,15 @@ export const createDoc = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Error al subir documento" });
     }
 };
+
 export const getAllDocsById = async (req: Request, res: Response) => {
-    const id = req.params.id
+    const id = req.params.id;
     const data = await prismaClient.documentos_colegiados.findMany({
-        where: {
-            id_colegiado: +id
-        },
-        orderBy: {
-            fecha_entrega: 'desc'  // el más reciente primero
-        }
-    })
-    res.status(200).json(data)
-}
+        where: { id_colegiado: +id },
+        orderBy: { fecha_entrega: 'desc' }
+    });
+    res.status(200).json(data);
+};
 
 export const getDocumentoById = async (req: Request, res: Response) => {
     const id = req.params.id;
@@ -87,31 +101,29 @@ export const getDocumentoById = async (req: Request, res: Response) => {
         }
     });
     res.status(200).json(documento);
-}
+};
+
 export const getEspecificDocumentoById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const documento = await prismaClient.documentos_colegiados.findUnique({
-        where: {
-            id_documento: +id
-        }
+        where: { id_documento: +id }
     });
     if (!documento) {
         return res.status(404).json({ error: "Documento no encontrado" });
     }
     res.status(200).json(documento);
-}
-
+};
 
 export const updateDocumento = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const { fecha_entrega,estado, fecha_vencimiento } = req.body;
+    const { fecha_entrega, estado, fecha_vencimiento } = req.body;
 
     try {
         const updatedDoc = await prismaClient.documentos_colegiados.update({
             where: { id_documento: +id },
             data: {
                 fecha_entrega: new Date(fecha_entrega),
-                estado: estado,
+                estado,
                 fecha_vencimiento: new Date(fecha_vencimiento),
             },
         });
@@ -121,4 +133,4 @@ export const updateDocumento = async (req: Request, res: Response) => {
         console.error("Error actualizando documento:", error);
         res.status(500).json({ error: "Error al actualizar el documento" });
     }
-}
+};

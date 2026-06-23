@@ -179,6 +179,7 @@ model pagos_colegiados {
   fecha_pago        DateTime?           @db.Date
   monto             Decimal?            @db.Decimal(10, 2)
   estado_pago       String?             @default("REALIZADO") @db.VarChar(50)
+  comprobante       String?             @db.VarChar(300)
   origen_movimiento origen_movimiento[]
   colegiados        colegiados?         @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -265,4 +266,44 @@ model invitados {
   telefono                                       String?
   colegiados_asignados_social                    colegiados_asignados_social[]
   colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
+}
+
+// ─── POSTULACIONES ────────────────────────────────────────────
+model postulaciones {
+  id_postulacion   Int      @id @default(autoincrement())
+  carnet_identidad String   @db.VarChar(20)
+  nombre           String   @db.VarChar(100)
+  apellido         String   @db.VarChar(100)
+  correo           String   @db.VarChar(150)
+  telefono         String   @db.VarChar(20)
+  especialidades   String?  @db.VarChar(500)
+  // rutas relativas de archivos en Supabase Storage (separadas por coma)
+  documentos       String?  @db.Text
+  // ruta relativa del comprobante de pago
+  comprobante_pago String?  @db.VarChar(300)
+  estado           String   @default("EN_REVISION") @db.VarChar(30)
+  motivo_rechazo   String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+// ─── CONFIGURACIÓN DE PAGO ────────────────────────────────────
+model config_pago {
+  id          Int      @id @default(autoincrement())
+  clave       String   @unique @db.VarChar(50)
+  valor       String   @db.Text
+  descripcion String?  @db.VarChar(200)
+  updatedAt   DateTime @updatedAt
+}
+
+// ─── MEMORIAS Y BALANCES ──────────────────────────────────────
+model memorias_balances {
+  id          Int      @id @default(autoincrement())
+  titulo      String   @db.VarChar(200)
+  descripcion String?  @db.Text
+  archivo     String   @db.VarChar(500)
+  categoria   String   @db.VarChar(100) // e.g. "Memorias Anuales", "Balances"
+  anio        Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

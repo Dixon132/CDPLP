@@ -24,6 +24,7 @@ import {
     KeyRound,
 } from "lucide-react";
 import Alerts from "../../../components/Alerts";
+import PinDisplay from "../../../../../components/PinDisplay";
 
 // ──────────────────────────────────────────────
 // Circular progress ring
@@ -299,18 +300,9 @@ export const Perfil = () => {
                                     <span className="text-slate-600">{persona?.telefono ?? "N/A"}</span>
                                 </div>
                                 {persona?.pin_acceso && (
-                                    <div className="flex items-center gap-2 bg-slate-50 px-3 py-1 rounded-lg border border-slate-100">
-                                        <KeyRound className="w-4 h-4 text-amber-500" />
-                                        <span className="font-mono font-bold tracking-widest text-slate-600">
-                                            {showPin ? persona.pin_acceso : "••••"}
-                                        </span>
-                                        <button
-                                            onClick={() => setShowPin(!showPin)}
-                                            className="p-1 hover:bg-slate-200 rounded-md transition-colors text-slate-400 hover:text-slate-600 ml-1"
-                                            title={showPin ? "Ocultar PIN" : "Ver PIN"}
-                                        >
-                                            {showPin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                                        </button>
+                                    <div className="flex items-center gap-2">
+                                        <KeyRound className="w-4 h-4 text-slate-400" />
+                                        <PinDisplay pin={persona.pin_acceso} />
                                     </div>
                                 )}
                             </div>

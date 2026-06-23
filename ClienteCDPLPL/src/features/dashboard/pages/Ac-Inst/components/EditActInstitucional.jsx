@@ -23,6 +23,7 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
     register,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm();
 
@@ -123,6 +124,7 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
                 labelId="tipo-label"
                 label="Tipo de Actividad"
                 displayEmpty
+                value={watch("tipo") || ""}
                 {...register("tipo", { required: "Selecciona un tipo" })}
               >
                 <MenuItem value="" disabled>
@@ -169,7 +171,8 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
                 labelId="estado-label"
                 label="Estado"
                 displayEmpty
-                {...register("estado", { required: "El estado es obligatorio" })}
+                value={watch("estado") || ""}
+                {...register("estado", { required: "Selecciona el estado" })}
               >
                 {estados.map((e) => (
                   <MenuItem key={e} value={e}>

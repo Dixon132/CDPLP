@@ -27,6 +27,7 @@ export default function PresupuestoForm({
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -152,7 +153,7 @@ export default function PresupuestoForm({
                             labelId="estado-label"
                             label="Estado"
                             displayEmpty
-                            defaultValue="ACTIVO"
+                            value={watch("estado") || "ACTIVO"}
                             {...register("estado", { required: "El estado es obligatorio" })}
                         >
                             <MenuItem value="ACTIVO">Activo</MenuItem>

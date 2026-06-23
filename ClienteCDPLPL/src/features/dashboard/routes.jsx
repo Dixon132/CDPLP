@@ -19,6 +19,7 @@ import Contenido from "./pages/Correspondencia/Contenido";
 import GestionAsistenciaInst from "./pages/Ac-Inst/components/GestionAsistenciaInst";
 import MovimientosPorPresupuesto from "./pages/Tesoreria/MovimientosPorPresupuesto";
 import Auditorias from "./pages/Auditorias/Auditorias";
+import Memorias from "./pages/Memorias/Memorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
@@ -27,6 +28,7 @@ import Invitados from "./pages/Colegiados/invitados/Invitados";
 // import IRECDashboard from "./pages/Ia/IREC";
 import { VerDetallesActividad } from "./pages/Ac-soc/components/VerDetallesActividad";
 import { Perfil } from "./pages/Ac-soc/components/Perfil";
+import PostulacionesAdmin from "./pages/Colegiados/Postulaciones/PostulacionesAdmin";
 
 
 
@@ -93,6 +95,14 @@ export const dashboardRoutes = {
             ]
         },
         {
+            path: 'postulaciones',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                    <PostulacionesAdmin />
+                </RequireRole>
+            )
+        },
+        {
             path: 'actividades_sociales',
             element: (
                 <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
@@ -119,6 +129,13 @@ export const dashboardRoutes = {
             element: (
                 <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
                     <Ac_institucionales />
+                </RequireRole>)
+        },
+        {
+            path: 'memorias',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                    <Memorias />
                 </RequireRole>)
         },
         {

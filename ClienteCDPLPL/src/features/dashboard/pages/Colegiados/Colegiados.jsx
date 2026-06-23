@@ -8,11 +8,12 @@ import GenerarReporteColegios from "./components/GenerarReporte";
 import parseDate from "../../../../utils/parseData";
 import Alerts from "../../components/Alerts";
 import { Link, Outlet } from "react-router-dom";
+import PinDisplay from "../../../../components/PinDisplay";
 
 import {
     Users, UserCircle, UserPlus, Plus, Eye, BarChart3, EyeOff, FileText, CreditCard,
     Edit3, UserCheck, UserX, Download, Search, Calendar,
-    Mail, Phone, GraduationCap, CheckCircle, XCircle, Clock
+    Mail, Phone, GraduationCap, CheckCircle, XCircle, Clock, Key
 } from 'lucide-react';
 import Header from "../../components/Header";
 import { getEstadoBadge, getEstadoIcon } from "../../hooks/estados";
@@ -167,6 +168,13 @@ const Colegiados = () => {
                                     <GraduationCap className="w-4 h-4 text-indigo-400" />
                                     {item.especialidades}
                                 </div>
+                            )
+                        },
+                        {
+                            label: "PIN Acceso",
+                            key: "pin_acceso",
+                            render: (item) => (
+                                <PinDisplay pin={item.pin_acceso} />
                             )
                         },
                         {

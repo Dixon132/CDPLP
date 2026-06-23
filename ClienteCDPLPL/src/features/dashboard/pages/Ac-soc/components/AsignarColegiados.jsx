@@ -73,7 +73,7 @@ export default function AsignarColegiados({ id, onSuccess, asignados }) {
             }}
         >
             <Typography variant="h6" fontWeight={700}>
-                Asignar Colegiado
+                Asignar a Voluntariado
             </Typography>
 
             {/* Autocomplete Colegiado */}

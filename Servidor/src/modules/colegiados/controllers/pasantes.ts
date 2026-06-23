@@ -67,6 +67,7 @@ export const createPasante = async (req: Request, res: Response) => {
         // ⚠️ pin_temporal solo se devuelve ESTA vez
         res.status(201).json({ message: 'Pasante creado exitosamente', pasante, pin_temporal: pinPlano })
     } catch (error) {
+        console.error('Error al crear pasante:', error);
         throw new BadRequestException('Error al crear pasante', ErrorCodes.INTERNAL_EXCEPTION)
     }
 }

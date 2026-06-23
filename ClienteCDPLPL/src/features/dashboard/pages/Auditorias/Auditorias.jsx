@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
-import { Shield, Filter, RefreshCw } from 'lucide-react';
+import { Shield, Filter, RefreshCw, Lock, Plus, Pencil, Trash2, Eye, FileText, Key, Users, Package, Settings, BarChart3, File } from 'lucide-react';
 import Header from '../../components/Header';
 import Table from '../../components/Table';
 
@@ -29,35 +29,35 @@ const Auditorias = () => {
 
     const getActionIcon = (accion) => {
         switch (accion) {
-            case 'LOGIN': return '🔐';
-            case 'CREATE': return '➕';
-            case 'UPDATE': return '✏️';
-            case 'DELETE': return '🗑️';
-            case 'VIEW': return '👁️';
-            default: return '📝';
+            case 'LOGIN':    return <Lock size={13} />;
+            case 'CREATE':   return <Plus size={13} />;
+            case 'UPDATE':   return <Pencil size={13} />;
+            case 'DELETE':   return <Trash2 size={13} />;
+            case 'VIEW':     return <Eye size={13} />;
+            default:         return <FileText size={13} />;
         }
     };
 
     const getActionColor = (accion) => {
         switch (accion) {
-            case 'LOGIN': return 'bg-blue-100 text-blue-800 border-blue-200';
-            case 'Creó': return 'bg-green-100 text-green-800 border-green-200';
+            case 'LOGIN':    return 'bg-blue-100 text-blue-800 border-blue-200';
+            case 'Creó':     return 'bg-green-100 text-green-800 border-green-200';
             case 'Registro': return 'bg-green-100 text-green-800 border-green-200';
-            case 'UPDATE': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-            case 'DELETE': return 'bg-red-100 text-red-800 border-red-200';
-            case 'VIEW': return 'bg-purple-100 text-purple-800 border-purple-200';
-            default: return 'bg-gray-100 text-gray-800 border-gray-200';
+            case 'UPDATE':   return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+            case 'DELETE':   return 'bg-red-100 text-red-800 border-red-200';
+            case 'VIEW':     return 'bg-purple-100 text-purple-800 border-purple-200';
+            default:         return 'bg-gray-100 text-gray-800 border-gray-200';
         }
     };
 
     const getModuleIcon = (modulo) => {
         switch (modulo) {
-            case 'Autenticación': return '🔑';
-            case 'Usuarios': return '👥';
-            case 'Productos': return '📦';
-            case 'Sistema': return '⚙️';
-            case 'Reportes': return '📊';
-            default: return '📄';
+            case 'Autenticación': return <Key size={14} />;
+            case 'Usuarios':      return <Users size={14} />;
+            case 'Productos':     return <Package size={14} />;
+            case 'Sistema':       return <Settings size={14} />;
+            case 'Reportes':      return <BarChart3 size={14} />;
+            default:              return <File size={14} />;
         }
     };
 

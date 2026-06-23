@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Modal from "../../../../../components/Modal";
 import Table from "../../../components/Table";
+import PinDisplay from "../../../../../components/PinDisplay";
 import { getAllPasantes, updateEstadoPasante, deletePasante } from "../../../services/pasantes";
 import CreatePasante from "./Components/CreatePasante";
 import ModificarPasante from "./Components/ModificarPasante";
@@ -18,7 +19,7 @@ import {
     Building2, Calendar,
     Edit3, UserCheck, UserX,
     Download,
-    Trash2
+    Trash2, Key
 } from 'lucide-react';
 import Header from "../../../components/Header";
 import ConfirmDialog from "../../../components/ConfirmDialog";
@@ -238,6 +239,13 @@ const Pasantes = () => {
                                 <div className="flex items-center gap-2 text-sm text-slate-700">
                                     <Building2 className="w-4 h-4 text-purple-400" /> {item.institucion || "N/A"}
                                 </div>
+                            )
+                        },
+                        {
+                            label: "PIN Acceso",
+                            key: "pin_acceso",
+                            render: (item) => (
+                                <PinDisplay pin={item.pin_acceso} />
                             )
                         },
                         {

@@ -143,6 +143,7 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
                                 labelId="estado-label"
                                 label="Estado"
                                 displayEmpty
+                                value={watch("estado") || ""}
                                 {...register("estado", { required: "El estado es obligatorio" })}
                             >
                                 <MenuItem value="ACTIVO">ACTIVO</MenuItem>

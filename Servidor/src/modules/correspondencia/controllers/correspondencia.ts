@@ -1,19 +1,10 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { Prisma } from "../../../../generated/prisma";
-import { subirAawsCorrespondencia } from "../../../utils/uploadS3";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { subirAawsCorrespondencia, buildPublicUrl } from "../../../utils/uploadS3";
 import puppeteer from "puppeteer";
 import dotenv from "dotenv";
 dotenv.config();
-const s3 = new S3Client({
-    region: process.env.AWS_REGION!,
-    credentials: {
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-    },
-});
 export const getCorrespondencia = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 15;
@@ -213,16 +204,11 @@ export const verDocFirmado = async (req: Request, res: Response) => {
 
         if (!documento) return res.status(404).json({ error: "Documento no encontrado" });
 
-        const command = new GetObjectCommand({
-            Bucket: process.env.AWS_BUCKET_NAME!,
-            Key: documento.contenido!,
-        });
-
-        const url = await getSignedUrl(s3, command, { expiresIn: 300 }); // 5 minutos
-
+        // Supabase: archivos públicos, devolvemos la URL directamente
+        const url = buildPublicUrl(documento.contenido);
         res.json({ url });
     } catch (error) {
-        console.error("Error generando URL firmada:", error);
+        console.error("Error generando URL:", error);
         res.status(500).json({ error: "Error al generar el acceso al archivo" });
     }
 }

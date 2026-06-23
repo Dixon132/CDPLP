@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
     Button,
@@ -9,9 +9,13 @@ import {
     MenuItem,
     Select,
     FormControl,
-    InputLabel
+    InputLabel,
+    Alert,
+    IconButton,
+    InputAdornment
 } from '@mui/material';
-import { createColegiado } from '../../../services/colegiados'; // tu función API
+import { Visibility, VisibilityOff, ContentCopy } from '@mui/icons-material';
+import { createColegiado } from '../../../services/colegiados';
 
 const CreateColegiado = ({ onSuccess }) => {
     const {
@@ -19,6 +23,9 @@ const CreateColegiado = ({ onSuccess }) => {
         handleSubmit,
         formState: { errors }
     } = useForm();
+
+    const [pinGenerado, setPinGenerado] = useState(null);
+    const [mostrarPin, setMostrarPin] = useState(false);
 
     // Fecha de hoy en formato AAAA-MM-DD
     const today = new Date().toISOString().split('T')[0];
@@ -30,8 +37,13 @@ const CreateColegiado = ({ onSuccess }) => {
 
     const onSubmit = async (data) => {
         try {
-            await createColegiado(data);
-            onSuccess();
+            const response = await createColegiado(data);
+            const pin = response?.pin_temporal;
+            if (pin) {
+                setPinGenerado(pin);
+            } else {
+                onSuccess();
+            }
         } catch (error) {
             alert('Error al registrar colegiado');
         }
@@ -153,9 +165,53 @@ const CreateColegiado = ({ onSuccess }) => {
                             )}
                         </FormControl>
 
-                        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                            Registrar Colegiado
-                        </Button>
+                        {pinGenerado && (
+                            <Alert
+                                severity="warning"
+                                sx={{ mt: 2 }}
+                                action={
+                                    <IconButton
+                                        color="inherit"
+                                        size="small"
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(pinGenerado);
+                                        }}
+                                    >
+                                        <ContentCopy fontSize="small" />
+                                    </IconButton>
+                                }
+                            >
+                                <strong>PIN de acceso:</strong>{" "}
+                                {mostrarPin ? pinGenerado : "••••"}
+                                <IconButton
+                                    size="small"
+                                    onClick={() => setMostrarPin(!mostrarPin)}
+                                    sx={{ ml: 0.5 }}
+                                >
+                                    {mostrarPin ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
+                                </IconButton>
+                                <br />
+                                <Typography variant="caption" color="text.secondary">
+                                    Guarda este PIN, solo se muestra una vez y es necesario para el acceso por GPS.
+                                </Typography>
+                            </Alert>
+                        )}
+                        {pinGenerado ? (
+                            <Button
+                                variant="contained"
+                                color="success"
+                                onClick={() => {
+                                    setPinGenerado(null);
+                                    onSuccess();
+                                }}
+                            >
+                                Entendido, continuar
+                            </Button>
+                        ) : (
+                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+                                Registrar Colegiado
+                            </Button>
+                        )}
                     </Box>
                 </form>
             </Box>

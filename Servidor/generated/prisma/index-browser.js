@@ -255,7 +255,8 @@ exports.Prisma.Pagos_colegiadosScalarFieldEnum = {
   concepto: 'concepto',
   fecha_pago: 'fecha_pago',
   monto: 'monto',
-  estado_pago: 'estado_pago'
+  estado_pago: 'estado_pago',
+  comprobante: 'comprobante'
 };
 
 exports.Prisma.PresupuestosScalarFieldEnum = {
@@ -321,6 +322,41 @@ exports.Prisma.InvitadosScalarFieldEnum = {
   telefono: 'telefono'
 };
 
+exports.Prisma.PostulacionesScalarFieldEnum = {
+  id_postulacion: 'id_postulacion',
+  carnet_identidad: 'carnet_identidad',
+  nombre: 'nombre',
+  apellido: 'apellido',
+  correo: 'correo',
+  telefono: 'telefono',
+  especialidades: 'especialidades',
+  documentos: 'documentos',
+  comprobante_pago: 'comprobante_pago',
+  estado: 'estado',
+  motivo_rechazo: 'motivo_rechazo',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Config_pagoScalarFieldEnum = {
+  id: 'id',
+  clave: 'clave',
+  valor: 'valor',
+  descripcion: 'descripcion',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Memorias_balancesScalarFieldEnum = {
+  id: 'id',
+  titulo: 'titulo',
+  descripcion: 'descripcion',
+  archivo: 'archivo',
+  categoria: 'categoria',
+  anio: 'anio',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -364,7 +400,10 @@ exports.Prisma.ModelName = {
   pasantes: 'pasantes',
   roles: 'roles',
   usuarios: 'usuarios',
-  invitados: 'invitados'
+  invitados: 'invitados',
+  postulaciones: 'postulaciones',
+  config_pago: 'config_pago',
+  memorias_balances: 'memorias_balances'
 };
 
 /**

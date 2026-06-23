@@ -76,7 +76,7 @@ export default function AsignarPasantes({ id, onSuccess, asignados }) {
             }}
         >
             <Typography variant="h6" fontWeight={700}>
-                Asignar Pasante
+                Asignar a Práctica Académica
             </Typography>
 
             {/* Autocomplete Pasante */}

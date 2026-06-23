@@ -3,13 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import {
     Calendar, MapPin, Target, FileText, Users, UserPlus, Eye,
     Mail, Phone, Briefcase, GraduationCap, Building2, ArrowLeft,
-    X, Clock, TrendingUp, Trophy, CheckCircle2, Edit3, PartyPopper
+    X, Clock, TrendingUp, Trophy, CheckCircle2, Edit3, PartyPopper, Key
 } from "lucide-react";
 import Modal from "../../../../../components/Modal";
 import Header from "../../../components/Header";
 import AsignarColegiados from "./AsignarColegiados";
 import Alerts from "../../../components/Alerts";
 import AsignarPasantes from "./AsignarPasante";
+import PinDisplay from "../../../../../components/PinDisplay";
 
 function formatTime(isoDate) {
     if (!isoDate) return "—";
@@ -156,6 +157,10 @@ export const VerDetallesActividad = () => {
                 <div className="space-y-1 text-xs text-slate-600 mb-3">
                     <div className="flex items-center gap-1.5"><InfoIcon className={`w-3.5 h-3.5 ${colors.text}`} /><span>{tipo === "colegiado" ? (item.colegiados?.especialidades || "N/A") : (item.pasantes?.institucion || "N/A")}</span></div>
                     <div className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5 text-slate-400" /><span className="truncate">{persona?.correo || "N/A"}</span></div>
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                        <span className="text-slate-400 text-xs"><Key className="w-3.5 h-3.5" /></span>
+                        <PinDisplay pin={persona?.pin_acceso} />
+                    </div>
                 </div>
 
                 {/* Datos de horas */}
@@ -256,7 +261,7 @@ export const VerDetallesActividad = () => {
                 {/* Colegiados Asignados */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Users className="w-5 h-5 text-blue-600" />Colegiados Asignados ({colegiados_asignados_social.length})</h2>
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Users className="w-5 h-5 text-blue-600" />Voluntariado (Colegiados Asignados: {colegiados_asignados_social.length})</h2>
                         <button onClick={() => setModalAsignarColegiados(true)} className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
                             <UserPlus className="w-4 h-4" /> Asignar
                         </button>
@@ -273,7 +278,7 @@ export const VerDetallesActividad = () => {
                 {/* Pasantes Asignados */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/60 p-6">
                     <div className="flex items-center justify-between mb-6">
-                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Briefcase className="w-5 h-5 text-indigo-600" />Pasantes Asignados ({pasantes_asignados_social.length})</h2>
+                        <h2 className="text-xl font-semibold text-slate-800 flex items-center gap-2"><Briefcase className="w-5 h-5 text-indigo-600" />Práctica Académica (Pasantes Asignados: {pasantes_asignados_social.length})</h2>
                         <button onClick={() => setModalAsignarPasantes(true)} className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
                             <UserPlus className="w-4 h-4" /> Asignar
                         </button>
@@ -289,7 +294,7 @@ export const VerDetallesActividad = () => {
             </div>
 
             {/* Modales */}
-            <Modal isOpen={modalAsignarColegiados} title="Asignar Colegiados" onClose={() => setModalAsignarColegiados(false)}>
+            <Modal isOpen={modalAsignarColegiados} title="Asignar a Voluntariado (Colegiados)" onClose={() => setModalAsignarColegiados(false)}>
                 <AsignarColegiados id={id} asignados={colegiados_asignados_social} onSuccess={() => { setModalAsignarColegiados(false); handleSuccess("Colegiado asignado correctamente"); getData(); }} />
             </Modal>
 
@@ -297,7 +302,7 @@ export const VerDetallesActividad = () => {
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-auto">
                         <div className="sticky top-0 bg-white border-b border-slate-200 p-6 flex items-center justify-between">
-                            <h3 className="text-2xl font-bold text-slate-800">Asignar Pasantes</h3>
+                            <h3 className="text-2xl font-bold text-slate-800">Asignar a Práctica Académica (Pasantes)</h3>
                             <button onClick={() => setModalAsignarPasantes(false)} className="p-2 hover:bg-slate-100 rounded-lg transition"><X className="w-6 h-6" /></button>
                         </div>
                         <div className="p-6">
@@ -338,7 +343,6 @@ export const VerDetallesActividad = () => {
 
 function StatCard({ icon, label, value, color }) {
     const colors = {
-        blue: "from-blue-50 to-blue-100 text-blue-700 border-blue-200",
         blue: "from-blue-50 to-blue-100 text-blue-700 border-blue-200",
         green: "from-green-50 to-green-100 text-green-700 border-green-200",
         amber: "from-amber-50 to-amber-100 text-amber-700 border-amber-200",

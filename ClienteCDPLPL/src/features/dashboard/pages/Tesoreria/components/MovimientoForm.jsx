@@ -28,6 +28,7 @@ export default function MovimientoForm({
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm({
         defaultValues: {
@@ -117,6 +118,7 @@ export default function MovimientoForm({
                                 labelId="tipo-label"
                                 label="Tipo"
                                 displayEmpty
+                                value={watch("tipo_movimiento") || ""}
                                 {...register("tipo_movimiento", { required: "Campo obligatorio" })}
                             >
                                 <MenuItem value="" disabled>Seleccione...</MenuItem>
@@ -131,6 +133,7 @@ export default function MovimientoForm({
                                 labelId="cat-label"
                                 label="Categoría"
                                 displayEmpty
+                                value={watch("categoria") || ""}
                                 {...register("categoria", { required: "Campo obligatorio" })}
                             >
                                 <MenuItem value="" disabled>Seleccione...</MenuItem>

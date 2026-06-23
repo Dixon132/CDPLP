@@ -763,4 +763,137 @@ export const getMovimientosSummaryReport = async (req: Request, res: Response) =
     }
 };
 
+/**
+ * GET /api/financiero/tesoreria/presupuestos/:id/analytics
+ */
+export const getPresupuestoAnalytics = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const { tipo, categoria, fecha_desde, fecha_hasta } = req.query;
 
+        const where: any = { id_presupuesto: id };
+        if (tipo) where.tipo_movimiento = String(tipo);
+        if (categoria) where.categoria = String(categoria);
+        if (fecha_desde || fecha_hasta) {
+            where.fecha_movimiento = {};
+            if (fecha_desde) where.fecha_movimiento.gte = new Date(String(fecha_desde));
+            if (fecha_hasta) where.fecha_movimiento.lte = new Date(String(fecha_hasta) + 'T23:59:59');
+        }
+
+        const movimientos = await prismaClient.movimientos_financieros.findMany({
+            where,
+            orderBy: { fecha_movimiento: 'asc' },
+        });
+
+        let totalIngresos = 0;
+        let totalEgresos = 0;
+        movimientos.forEach((m) => {
+            const monto = Number(m.monto ?? 0);
+            if (m.tipo_movimiento === 'INGRESO') totalIngresos += monto;
+            else if (m.tipo_movimiento === 'EGRESO') totalEgresos += monto;
+        });
+
+        const mensualMap = new Map<string, { ingresos: number; egresos: number }>();
+        movimientos.forEach((m) => {
+            if (!m.fecha_movimiento) return;
+            const mes = new Date(m.fecha_movimiento).toISOString().slice(0, 7);
+            if (!mensualMap.has(mes)) mensualMap.set(mes, { ingresos: 0, egresos: 0 });
+            const entry = mensualMap.get(mes)!;
+            const monto = Number(m.monto ?? 0);
+            if (m.tipo_movimiento === 'INGRESO') entry.ingresos += monto;
+            else if (m.tipo_movimiento === 'EGRESO') entry.egresos += monto;
+        });
+        const evolucion_mensual = Array.from(mensualMap.entries())
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([mes, vals]) => ({ mes, ...vals }));
+
+        const catMap = new Map<string, { monto: number; cantidad: number; tipo: string; anio: string }>();
+        movimientos.forEach((m) => {
+            const cat = m.categoria ?? 'Sin categoria';
+            const anio = m.fecha_movimiento ? new Date(m.fecha_movimiento).getFullYear().toString() : 'N/A';
+            const key = `${anio}|${cat}`;
+            if (!catMap.has(key)) catMap.set(key, { monto: 0, cantidad: 0, tipo: m.tipo_movimiento ?? 'EGRESO', anio });
+            const entry = catMap.get(key)!;
+            entry.monto += Number(m.monto ?? 0);
+            entry.cantidad += 1;
+        });
+        const por_categoria = Array.from(catMap.entries())
+            .map(([key, vals]) => {
+                const [, categoria] = key.split('|');
+                return { categoria, ...vals };
+            })
+            .sort((a, b) => b.monto - a.monto);
+
+        const hoy = new Date();
+        const ultimos6: { mes: string; ingresos: number; egresos: number }[] = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date(hoy.getFullYear(), hoy.getMonth() - i, 1);
+            const mes = d.toISOString().slice(0, 7);
+            const found = mensualMap.get(mes) ?? { ingresos: 0, egresos: 0 };
+            ultimos6.push({ mes, ...found });
+        }
+
+        return res.status(200).json({
+            resumen: { total_ingresos: totalIngresos, total_egresos: totalEgresos, balance: totalIngresos - totalEgresos, total_movimientos: movimientos.length },
+            evolucion_mensual,
+            por_categoria,
+            ultimos6_meses: ultimos6,
+        });
+    } catch (error) {
+        console.error('Error getPresupuestoAnalytics:', error);
+        return res.status(500).json({ message: 'Error al obtener analytics.' });
+    }
+};
+
+/**
+ * GET /api/financiero/tesoreria/presupuestos/:id/movimientos-filtrados
+ */
+export const getMovimientosFiltrados = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const { page = 1, limit = 10, tipo, categoria, fecha_desde, fecha_hasta, search, sortOrder = 'desc' } = req.query;
+        const pageNum = Number(page);
+        const take = Number(limit);
+        const skip = (pageNum - 1) * take;
+
+        const where: any = { id_presupuesto: id };
+        if (tipo) where.tipo_movimiento = String(tipo);
+        if (categoria) where.categoria = String(categoria);
+        if (search) where.descripcion = { contains: String(search), mode: 'insensitive' };
+        if (fecha_desde || fecha_hasta) {
+            where.fecha_movimiento = {};
+            if (fecha_desde) where.fecha_movimiento.gte = new Date(String(fecha_desde));
+            if (fecha_hasta) where.fecha_movimiento.lte = new Date(String(fecha_hasta) + 'T23:59:59');
+        }
+
+        const orderByDirection = String(sortOrder).toLowerCase() === 'asc' ? 'asc' : 'desc';
+
+        const [movimientos, total] = await Promise.all([
+            prismaClient.movimientos_financieros.findMany({ where, skip, take, orderBy: { fecha_movimiento: orderByDirection } }),
+            prismaClient.movimientos_financieros.count({ where }),
+        ]);
+
+        return res.status(200).json({ data: movimientos, total, page: pageNum, totalPages: Math.ceil(total / take) });
+    } catch (error) {
+        console.error('Error getMovimientosFiltrados:', error);
+        return res.status(500).json({ message: 'Error al filtrar movimientos.' });
+    }
+};
+
+/**
+ * GET /api/financiero/tesoreria/presupuestos/:id/categorias
+ */
+export const getCategoriasByPresupuesto = async (req: Request, res: Response) => {
+    try {
+        const id = Number(req.params.id);
+        const movimientos = await prismaClient.movimientos_financieros.findMany({
+            where: { id_presupuesto: id },
+            select: { categoria: true },
+        });
+        const categorias = [...new Set(movimientos.map(m => m.categoria).filter(Boolean))];
+        return res.status(200).json({ categorias });
+    } catch (error) {
+        console.error('Error getCategoriasByPresupuesto:', error);
+        return res.status(500).json({ message: 'Error al obtener categorias.' });
+    }
+};

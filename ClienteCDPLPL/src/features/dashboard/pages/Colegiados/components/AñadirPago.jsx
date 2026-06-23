@@ -19,13 +19,22 @@ const AñadirPago = ({ id }) => {
         formState: { errors },
     } = useForm();
     const [submitted, setSubmitted] = useState(false);
+    const [fileComprobante, setFileComprobante] = useState(null);
 
     // Fecha de hoy en YYYY-MM-DD para validación
     const today = new Date().toISOString().split("T")[0];
 
     const onSubmit = async (data) => {
         try {
-            await createPago(id, data);
+            const formData = new FormData();
+            formData.append("concepto", data.concepto);
+            formData.append("fecha_pago", data.fecha_pago);
+            formData.append("monto", data.monto);
+            if (fileComprobante) {
+                formData.append("comprobante", fileComprobante);
+            }
+
+            await createPago(id, formData);
             setSubmitted(true);
         } catch (err) {
             console.error("Error al registrar pago:", err);
@@ -86,6 +95,24 @@ const AñadirPago = ({ id }) => {
                     error={!!errors.monto}
                     helperText={errors.monto?.message}
                 />
+
+                {/* Comprobante */}
+                <Box>
+                    <Typography variant="body2" color="text.secondary" mb={1}>
+                        Comprobante (Opcional)
+                    </Typography>
+                    <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onChange={(e) => setFileComprobante(e.target.files[0])}
+                        style={{
+                            width: "100%",
+                            padding: "8px",
+                            border: "1px solid #c4c4c4",
+                            borderRadius: "4px"
+                        }}
+                    />
+                </Box>
 
                 <Button type="submit" variant="contained" size="large">
                     Registrar Pago

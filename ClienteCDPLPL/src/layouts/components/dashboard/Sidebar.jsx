@@ -16,7 +16,8 @@ import {
   UserCog,
   ChevronRight,
   Search,
-  Activity
+  Activity,
+  ClipboardList
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { parseToken } from '../../../utils/parsejwt';
@@ -45,9 +46,11 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Auditorias', icon: <Search size={20} />, path: '/dashboard/auditorias' },
       { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
       { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados', subtitles: ['Invitados', `Pasantes`] },
+      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
       // Módulo IREC anterior retirado del dashboard del colegio (Req. 1.3, 1.4, tarea 26.12).
       // La fuente del módulo IREC permanece en disco; solo se desconecta de la navegación.
@@ -56,7 +59,9 @@ const Sidebar = ({ collapsed }) => {
     mainNavItems = [
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' }
+      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' }
     ];
   } else if (rol === "TESORERO") {
     mainNavItems = [
@@ -68,9 +73,11 @@ const Sidebar = ({ collapsed }) => {
     mainNavItems = [
       { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
       { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
+      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
     ];
   }
@@ -79,6 +86,7 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Buzon', icon: <FolderDot size={20} />, path: '/dashboard/Buzon' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
       { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
       { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' }
     ];
   }
@@ -87,7 +95,8 @@ const Sidebar = ({ collapsed }) => {
       { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
       { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
       { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' }
+      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
+      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' }
     ];
   }
 

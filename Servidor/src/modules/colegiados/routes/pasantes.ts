@@ -1,13 +1,15 @@
 import { Router } from "express";
 import { authMiddleware } from "../../../middlewares/auth";
+import { validateBody } from "../../../middlewares/validate";
 import errorHandler from "../../../utils/error-handler";
 import { createPasante, deletePasanteById, getPasanteById, getPasantes, getPasantesReportDetail, getPasantesReportSummary, getPasantesSimple, updateEstadoById, updateEstadoPasanteById, updatePasanteById } from "../controllers/pasantes";
+import { pasanteSchema } from "../schemas/pasantes";
 
 
 const pasantesRouter: Router = Router()
 
 pasantesRouter.get('/', [authMiddleware], errorHandler(getPasantes))
-pasantesRouter.post('/', errorHandler(createPasante))
+pasantesRouter.post('/', [validateBody(pasanteSchema)], errorHandler(createPasante))
 pasantesRouter.get('/:id', [authMiddleware], errorHandler(getPasanteById))
 pasantesRouter.put('/estado/:id', [authMiddleware], errorHandler(updateEstadoById))
 pasantesRouter.put('/:id', [authMiddleware], errorHandler(updatePasanteById))

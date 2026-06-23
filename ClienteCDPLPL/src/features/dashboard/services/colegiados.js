@@ -9,6 +9,7 @@ export const getAllColegiados = async ({ page = 1, limit = 15, search = '', inac
 }
 export const createColegiado = async (data) => {
     const res = await axios.post('/api/colegiados/colegiado/', data)
+    return res.data
 }
 export const updateEstadoColegiado = async (id, estado) => {
     const res = await axios.put(`/api/colegiados/colegiado/${id}`, {
@@ -60,7 +61,7 @@ export const getAllPagos = async (id) => {
 }
 export const createPago = async (id, data) => {
     const res = await axios.post(`/api/colegiados/pagos/${id}`, data)
-    return alert('success')
+    return res.data
 }
 export const getPagoById = async (id_pago) => {
     const res = await axios.get(`/api/colegiados/pagos/getOne/${id_pago}`)

@@ -13,7 +13,7 @@ export const getAllPasantes = async ({page=1, limit=15, search='',inactivos}) =>
 export const createPasante = async (data) => {
     try{
         const response = await axios.post('/api/colegiados/pasantes', data)
-        return response
+        return response.data
     }catch(e){
         console.error("Error al crear pasante:", e)
     }

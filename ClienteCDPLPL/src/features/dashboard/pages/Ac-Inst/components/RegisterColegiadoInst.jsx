@@ -89,7 +89,7 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
     };
 
     try {
-      const res = await fetch("/api/ac-institucionales/registrarColegiado", {
+      const res = await fetch("/api/ac-institucionales/ac-ins/registrarColegiado", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

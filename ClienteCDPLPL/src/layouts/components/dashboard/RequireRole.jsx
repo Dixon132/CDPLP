@@ -31,7 +31,6 @@ export function RequireRole({ allowedRoles, children }) {
   if (!allowedRoles.includes(payload.rol.rol)) {
     return <Navigate to="/dashboard/notAuthorized" replace />;
   }
-  console.log('Rol válido')
 
   return <>{children}</>;
 }

@@ -23,6 +23,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
         register,
         handleSubmit,
         reset,
+        watch,
         formState: { errors },
     } = useForm();
     const [loading, setLoading] = useState(true);
@@ -145,6 +146,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
                                 labelId="destinatario-label"
                                 label="Destinatario"
                                 displayEmpty
+                                value={watch("id_destinatario") || ""}
                                 {...register('id_destinatario', { required: "Destinatario obligatorio" })}
                             >
                                 <MenuItem value="" disabled>
@@ -164,6 +166,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
                             <Select
                                 labelId="estado-label"
                                 label="Estado"
+                                value={watch("estado") || ""}
                                 {...register('estado', { required: "Estado obligatorio" })}
                             >
                                 {estados.map(est => (
