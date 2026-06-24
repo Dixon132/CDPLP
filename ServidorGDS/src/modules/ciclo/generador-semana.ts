@@ -105,12 +105,31 @@ export class GeneradorSemanaModuloSimulacion implements GeneradorSemana {
 
         const resultado = await this.simulacion.generarSemana(solicitud);
 
+        const intensidad = intensidadDeEscenario(analisis.escenario);
+
         return {
             contrato: resultado.contrato,
             comunidadId: comunidad.id,
             proveedor: resultado.proveedor,
+            ...(intensidad !== undefined ? { intensidad } : {}),
         };
     }
+}
+
+/**
+ * Extrae la intensidad declarada del texto del `Escenario`, que el
+ * `Motor_Escenarios` antepone como `Scenario intensity (intensidad declarada):
+ * <nivel>.` al fijar el escenario en el `Analisis`. Devuelve `undefined` si el
+ * texto no incluye el marcador (p. ej. escenarios personalizados en texto libre),
+ * en cuyo caso el scoring usa la banda `media` por defecto.
+ */
+function intensidadDeEscenario(
+    escenario: string,
+): 'baja' | 'media' | 'alta' | 'extrema' | undefined {
+    const m = /intensidad declarada\)\s*:\s*(baja|media|alta|extrema)/i.exec(
+        escenario,
+    );
+    return m ? (m[1].toLowerCase() as 'baja' | 'media' | 'alta' | 'extrema') : undefined;
 }
 
 /** Divide la cadena de `intereses` persistida en una lista limpia (sin vacios). */

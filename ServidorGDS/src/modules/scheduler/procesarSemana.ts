@@ -79,6 +79,13 @@ export interface ContextoSemana {
     comunidadId: string;
     /** Numero de `Semana_Simulada` (entero >= 1), procesado en orden creciente. */
     numeroSemana: number;
+    /**
+     * Intensidad declarada del `Escenario` del `Analisis` (banda de riesgo
+     * objetivo). Calibra la magnitud del `Indice_Riesgo`: define el piso/techo de
+     * las dimensiones, mientras el contenido genera los picos/valles dentro de la
+     * banda. Si se omite, el scoring usa la banda `media` por defecto.
+     */
+    intensidad?: IntensidadCiclo;
 }
 
 /**
@@ -95,7 +102,21 @@ export interface ResultadoGeneracionSemana {
     comunidadId: string;
     /** Nombre del proveedor (`IDataProvider`) que genero el contenido (trazable). */
     proveedor?: string;
+    /**
+     * Intensidad declarada del `Escenario` del `Analisis`, resuelta por el
+     * generador (que carga el escenario). Se propaga al `ContextoSemana` para
+     * calibrar la banda del `Indice_Riesgo`. Opcional: si se omite, el scoring
+     * usa la banda `media`.
+     */
+    intensidad?: IntensidadCiclo;
 }
+
+/**
+ * Banda de intensidad del `Escenario` que calibra la magnitud del
+ * `Indice_Riesgo`. Replica `IntensidadEscenario` del dominio de escenarios sin
+ * acoplar el motor de ciclos (framework-agnostico) a ese modulo.
+ */
+export type IntensidadCiclo = 'baja' | 'media' | 'alta' | 'extrema';
 
 /**
  * Puerto de GENERACION: produce el contenido de UNA `Semana_Simulada` a partir
@@ -312,6 +333,9 @@ export class ProcesadorSemana<TX = unknown> {
             institucionId,
             comunidadId: generacion.comunidadId,
             numeroSemana,
+            ...(generacion.intensidad !== undefined
+                ? { intensidad: generacion.intensidad }
+                : {}),
         };
 
         // 2) VALIDA (frontera Contrato_Normalizado). Rechaza no conformes ANTES

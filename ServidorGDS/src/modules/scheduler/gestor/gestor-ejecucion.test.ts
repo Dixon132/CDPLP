@@ -5,8 +5,8 @@
  * fijo y contador del Tiempo_Real disparable a voluntad), que el gestor:
  *  - Manual: avanza EXACTAMENTE la siguiente semana pendiente por solicitud
  *    (Req. 32.2);
- *  - Automatico: encola todas las pendientes en orden creciente reutilizando la
- *    `Herramienta_Aceleracion` (Req. 32.3);
+ *  - Automatico: encola la siguiente semana pendiente y el worker encadena la
+ *    siguiente tras registrarla, en orden estricto (Req. 32.3);
  *  - Tiempo_Real: encola una semana, arranca el contador inyectable y, al vencer,
  *    encola la siguiente reutilizando el `Programador_Temporal` (Req. 32.4, 32.5);
  *  - pausar/reanudar conserva el estado: las semanas completadas permanecen
@@ -149,7 +149,7 @@ describe('GestorEjecucion (modos de ejecucion y pausa/reanudacion)', () => {
     });
 
     describe('Modo Automatico (Req. 32.3)', () => {
-        it('encola todas las semanas pendientes en orden creciente', async () => {
+        it('encola SOLO la siguiente semana pendiente por institucion (el resto lo encadena el worker)', async () => {
             const plan = new PlanAnalisisEnMemoria({
                 a1: { instituciones: ['i1', 'i2'], totalSemanas: 4 },
             });
@@ -166,9 +166,10 @@ describe('GestorEjecucion (modos de ejecucion y pausa/reanudacion)', () => {
 
             const r = await gestor.avanzar('a1');
             expect(r.estadoEjecucion).toBe('EN_EJECUCION');
-            // Orden global por semana ascendente.
+            // Solo la PRIMERA semana pendiente de cada institucion (encadenado
+            // secuencial: el worker encola la siguiente tras registrar la actual).
             expect(r.avance.encolados.map((e) => e.datos.numeroSemana)).toEqual([
-                1, 1, 2, 2, 3, 3, 4, 4,
+                1, 1,
             ]);
 
             // Sin pendientes -> COMPLETADO.
@@ -290,10 +291,11 @@ describe('GestorEjecucion (modos de ejecucion y pausa/reanudacion)', () => {
             await gestor.pausar('a1');
             expect((await almacen.obtener('a1')).estadoEjecucion).toBe('PAUSADO');
 
-            // Reanudar: vuelve a encolar SOLO las pendientes 3..5 (no repite 1,2).
+            // Reanudar: el gestor encola SOLO la siguiente pendiente (3); el worker
+            // encadena 4 y 5 al registrar cada una. No repite 1,2 (ya completadas).
             const r = await gestor.reanudar('a1');
             expect(r.avance.encolados.map((e) => e.datos.numeroSemana)).toEqual([
-                3, 4, 5,
+                3,
             ]);
         });
 
@@ -336,11 +338,14 @@ describe('GestorEjecucion (modos de ejecucion y pausa/reanudacion)', () => {
                 await gestorM.avanzarManual('a1');
             }
 
-            // Automatico: hasta el final en una sola operacion.
+            // Automatico: el gestor encola la PRIMERA semana y el worker encadena
+            // la siguiente tras registrar cada una. Aqui el EncoladorAutocompletante
+            // completa cada semana al encolarla, simulando al worker; repetimos
+            // avanzar hasta drenar todas las pendientes (encadenado secuencial).
             const planA = new PlanAnalisisEnMemoria({
                 a1: { instituciones, totalSemanas: total },
             });
-            const encA = new EncoladorDoble();
+            const encA = new EncoladorAutocompletante(planA);
             const gestorA = construir(
                 planA,
                 encA,
@@ -349,7 +354,12 @@ describe('GestorEjecucion (modos de ejecucion y pausa/reanudacion)', () => {
                 }),
                 new TemporizadorManual(),
             );
-            await gestorA.avanzar('a1');
+            for (let guard = 0; guard < total * instituciones.length + 5; guard++) {
+                const r = await gestorA.avanzar('a1');
+                if (r.avance.encolados.length === 0) {
+                    break;
+                }
+            }
 
             // Tiempo_Real: una semana por vencimiento del contador.
             const planT = new PlanAnalisisEnMemoria({

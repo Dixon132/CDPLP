@@ -323,7 +323,11 @@ describe('Property 30: Inmutabilidad del escenario copiado al crear el análisis
                     const creado = await service.crear(dto);
 
                     // Invariantes en el momento de la creacion: copia + trazabilidad.
-                    expect(creado.escenario).toBe(original.contexto);
+                    // La copia fijada antepone la intensidad declarada (carrier que
+                    // el generador lee para calibrar el riesgo); sigue siendo INMUTABLE.
+                    expect(creado.escenario).toBe(
+                        `Scenario intensity (intensidad declarada): ${original.intensidad}.\n\n${original.contexto}`,
+                    );
                     expect(creado.escenarioId).toBe(original.id);
                     expect(creado.escenarioVersion).toBe(1);
                     expect(creado.escenarioEsPersonalizado).toBe(false);
@@ -353,7 +357,9 @@ describe('Property 30: Inmutabilidad del escenario copiado al crear el análisis
                         escenarioVersion: recargado.escenarioVersion,
                         escenarioEsPersonalizado: recargado.escenarioEsPersonalizado,
                     }).toEqual(snapshot);
-                    expect(recargado.escenario).toBe(original.contexto);
+                    expect(recargado.escenario).toBe(
+                        `Scenario intensity (intensidad declarada): ${original.intensidad}.\n\n${original.contexto}`,
+                    );
                     expect(recargado.escenarioId).toBe(original.id);
                     expect(recargado.escenarioVersion).toBe(1);
 

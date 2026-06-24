@@ -91,7 +91,7 @@ describe('resolverContextoEscenarioAnalisis: escenario de biblioteca (Req. 29.4,
         });
 
         expect(ctx).toEqual({
-            escenario: guardado.contexto,
+            escenario: `Scenario intensity (intensidad declarada): ${guardado.intensidad}.\n\n${guardado.contexto}`,
             escenarioId: guardado.id,
             escenarioVersion: guardado.version,
             escenarioEsPersonalizado: false,
@@ -107,7 +107,9 @@ describe('resolverContextoEscenarioAnalisis: escenario de biblioteca (Req. 29.4,
         await motor.editar(v1.id, { contexto: 'contexto editado 1' });
         await motor.editar(v1.id, { contexto: 'contexto editado 2' });
 
-        expect(ctx.escenario).toBe('contexto original');
+        expect(ctx.escenario).toBe(
+            'Scenario intensity (intensidad declarada): media.\n\ncontexto original',
+        );
         expect(ctx.escenarioId).toBe(v1.id);
         expect(ctx.escenarioVersion).toBe(1);
         expect(ctx.escenarioEsPersonalizado).toBe(false);
@@ -148,7 +150,9 @@ describe('resolverContextoEscenarioAnalisis: escenario personalizado (Req. 8.6, 
             guardarEnBiblioteca: true,
         });
 
-        expect(ctx.escenario).toBe('contexto a reutilizar');
+        expect(ctx.escenario).toBe(
+            'Scenario intensity (intensidad declarada): media.\n\ncontexto a reutilizar',
+        );
         expect(ctx.escenarioId).toBeTruthy();
         expect(ctx.escenarioVersion).toBe(1);
         expect(ctx.escenarioEsPersonalizado).toBe(true);
@@ -164,7 +168,9 @@ describe('resolverContextoEscenarioAnalisis: escenario personalizado (Req. 8.6, 
             contexto: 'editado tras crear el analisis',
         });
 
-        expect(ctx.escenario).toBe('contexto inicial libre');
+        expect(ctx.escenario).toBe(
+            'Scenario intensity (intensidad declarada): media.\n\ncontexto inicial libre',
+        );
         expect(ctx.escenarioVersion).toBe(1);
     });
 

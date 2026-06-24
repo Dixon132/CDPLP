@@ -14,7 +14,7 @@
  */
 
 /** Grado de impacto del escenario sobre la comunidad simulada. */
-export type IntensidadEscenario = 'baja' | 'media' | 'alta';
+export type IntensidadEscenario = 'baja' | 'media' | 'alta' | 'extrema';
 
 /**
  * `Escenario_Reutilizable` tal como vive en la `Biblioteca_Escenarios`.

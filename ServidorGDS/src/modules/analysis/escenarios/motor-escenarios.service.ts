@@ -26,6 +26,7 @@ import {
     type DefinicionEscenario,
     type EscenarioFijado,
     type EscenarioReutilizable,
+    type IntensidadEscenario,
     type MotorEscenarios,
     type SeleccionEscenario,
 } from './escenarios.types';
@@ -46,6 +47,20 @@ function definicionDesdePersonalizado(contexto: string): DefinicionEscenario {
         parametros: {},
         esPredefinido: false,
     };
+}
+
+/**
+ * Antepone al contexto inmutable una linea con la INTENSIDAD declarada del
+ * escenario. Asi la eleccion del analista (baja/media/alta) viaja DENTRO del
+ * texto del escenario fijado hasta el prompt de generacion y guia el clima
+ * emocional del contenido. Sin esto, la intensidad se perdia (solo se propagaba
+ * el texto libre) y un escenario "tranquilo" podia generar contenido en crisis.
+ */
+function contextoConIntensidad(
+    contexto: string,
+    intensidad: IntensidadEscenario,
+): string {
+    return `Scenario intensity (intensidad declarada): ${intensidad}.\n\n${contexto}`;
 }
 
 @Injectable()
@@ -113,9 +128,13 @@ export class MotorEscenariosService implements MotorEscenarios {
                     `Escenario no encontrado en la biblioteca: ${escenarioId}`,
                 );
             }
-            // Copia inmutable: el contexto se copia por valor (string).
+            // Copia inmutable: el contexto se copia por valor (string) e incluye
+            // la intensidad declarada para que guie el clima emocional generado.
             return {
-                contexto: escenario.contexto,
+                contexto: contextoConIntensidad(
+                    escenario.contexto,
+                    escenario.intensidad,
+                ),
                 escenarioId: escenario.id,
                 version: escenario.version,
             };
@@ -127,12 +146,16 @@ export class MotorEscenariosService implements MotorEscenarios {
                     definicionDesdePersonalizado(personalizado),
                 );
                 return {
-                    contexto: guardado.contexto,
+                    contexto: contextoConIntensidad(
+                        guardado.contexto,
+                        guardado.intensidad,
+                    ),
                     escenarioId: guardado.id,
                     version: guardado.version,
                 };
             }
-            // Personalizado no guardado: sin referencia de trazabilidad.
+            // Personalizado no guardado: sin referencia de trazabilidad. No se
+            // declara intensidad explicita; el prompt la infiere del texto libre.
             return { contexto: personalizado, escenarioId: null, version: null };
         }
 

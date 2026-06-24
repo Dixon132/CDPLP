@@ -304,8 +304,9 @@ async function quedanPendientes(
  * Arranca el `Analisis` en su `Modo_Ejecucion` y procesa EXACTAMENTE
  * `objetivoPausa` semanas (globales), dejando el resto pendiente: ese es el
  * "punto de pausa".
- *  - Automatico: `avanzar` encola TODAS las pendientes de golpe; se drena hasta
- *    el objetivo (el resto queda encolado, simulando al worker detenido).
+ *  - Automatico: `avanzar` encola la siguiente y, tras registrarla, el worker
+ *    encadena la proxima; aqui se simula drenando y re-`avanzar`-ando hasta el
+ *    objetivo (el resto queda sin encolar, como el worker detenido).
  *  - Tiempo_Real: `avanzar` encola la primera por institucion y arranca el
  *    contador; se drena y, si falta, se disparan vencimientos hasta el objetivo.
  */
@@ -325,7 +326,18 @@ async function avanzarHastaPausa(
     const completados: DatosTrabajoSemana[] = [];
     completados.push(...(await drenarHasta(ctx, objetivoPausa - completados.length)));
 
-    if (config.modo === "TIEMPO_REAL") {
+    if (config.modo === "AUTOMATICO") {
+        // Encadenado del worker: tras registrar cada semana, encola la siguiente.
+        const guardMax = objetivoPausa + config.instituciones.length + 5;
+        let guard = 0;
+        while (completados.length < objetivoPausa && guard++ < guardMax) {
+            await ctx.gestor.avanzar(config.analisisId);
+            if (ctx.cola.pendientes.length === 0) break;
+            completados.push(
+                ...(await drenarHasta(ctx, objetivoPausa - completados.length)),
+            );
+        }
+    } else if (config.modo === "TIEMPO_REAL") {
         const guardMax = objetivoPausa + config.instituciones.length + 5;
         let guard = 0;
         while (completados.length < objetivoPausa && guard++ < guardMax) {
@@ -342,7 +354,8 @@ async function avanzarHastaPausa(
 
 /**
  * Tras `reanudar`, lleva el `Analisis` hasta el final:
- *  - Automatico: drena las pendientes (las restantes y/o reencoladas, dedupe).
+ *  - Automatico: drena las pendientes y re-`avanzar` para encadenar la siguiente
+ *    (como el worker), hasta que no quede ninguna pendiente.
  *  - Tiempo_Real: drena y dispara vencimientos hasta que el contador marque el
  *    `Analisis` COMPLETADO.
  */
@@ -353,7 +366,18 @@ async function completarTrasReanudar(
     const completados: DatosTrabajoSemana[] = [];
     completados.push(...(await drenarTodo(ctx)));
 
-    if (config.modo === "TIEMPO_REAL") {
+    if (config.modo === "AUTOMATICO") {
+        const guardMax =
+            config.totalSemanas * config.instituciones.length +
+            config.instituciones.length +
+            5;
+        let guard = 0;
+        while (guard++ < guardMax) {
+            await ctx.gestor.avanzar(config.analisisId); // encadena la siguiente
+            if (ctx.cola.pendientes.length === 0) break;
+            completados.push(...(await drenarTodo(ctx)));
+        }
+    } else if (config.modo === "TIEMPO_REAL") {
         const guardMax =
             config.totalSemanas * config.instituciones.length +
             config.instituciones.length +

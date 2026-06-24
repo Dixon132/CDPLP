@@ -12,9 +12,11 @@
  *  - **Manual** (Req. 32.2): cada solicitud explicita avanza EXACTAMENTE la
  *    siguiente `Semana_Simulada` pendiente por institucion, reutilizando
  *    `HerramientaAceleracion.avanzarUnaSemana` (1 semana).
- *  - **Automatico** (Req. 32.3): encola de corrido TODAS las semanas pendientes
- *    en orden estrictamente creciente, reutilizando
- *    `HerramientaAceleracion.avanzarHastaElFinal`.
+ *  - **Automatico** (Req. 32.3): encola la siguiente `Semana_Simulada` pendiente
+ *    por institucion (`avanzarUnaSemana`); el `ProcesarSemanaProcessor` ENCADENA
+ *    la siguiente SOLO tras registrar la actual, logrando un avance estrictamente
+ *    secuencial (generar -> analizar -> registrar -> siguiente) sin encolado
+ *    masivo (evita desorden/saltos/repeticiones por reintentos de la cola).
  *  - **Tiempo_Real** (Req. 32.4, 32.5): encola una semana, arranca un contador
  *    inyectable con el intervalo configurado y, al vencer, encola la siguiente
  *    pendiente reutilizando `ProgramadorTemporal.tick`.
@@ -227,14 +229,19 @@ export class GestorEjecucionService {
     // --- Internos ----------------------------------------------------------
 
     /**
-     * Automatico (Req. 32.3): encola TODAS las semanas pendientes en orden
-     * creciente reutilizando `avanzarHastaElFinal`. Si no quedaban pendientes,
-     * el `Analisis` queda COMPLETADO; si encolo trabajo, queda EN_EJECUCION.
+     * Automatico (Req. 32.3): encola SOLO la siguiente `Semana_Simulada` pendiente
+     * por institucion (como el Manual), reutilizando `avanzarUnaSemana`. El
+     * `ProcesarSemanaProcessor` ENCADENA la siguiente semana tras REGISTRAR la
+     * actual, de modo que el avance es estrictamente secuencial (generar ->
+     * analizar -> registrar -> siguiente) sin encolado masivo: asi se evitan el
+     * desorden, los saltos y las repeticiones que provocaba encolar todas las
+     * semanas de golpe (los reintentos con backoff reordenaban la cola). Si no
+     * quedaban pendientes, el `Analisis` queda COMPLETADO; si encolo, EN_EJECUCION.
      */
     private async ejecutarAutomatico(
         analisisId: string,
     ): Promise<ResultadoEjecucion> {
-        const avance = await this.deps.herramienta.avanzarHastaElFinal(analisisId);
+        const avance = await this.deps.herramienta.avanzarUnaSemana(analisisId);
         const estado: EstadoEjecucion =
             avance.encolados.length > 0 ? 'EN_EJECUCION' : 'COMPLETADO';
         await this.deps.almacen.fijarEstado(analisisId, estado);

@@ -37,6 +37,7 @@ import type { PatronDetectado } from '../communities/zonaGeografica';
 import type {
     ArtefactosAprendizaje,
     EntradaAprendizaje,
+    IntensidadCiclo,
     MotorAprendizaje,
 } from '../scheduler/procesarSemana';
 
@@ -79,11 +80,12 @@ export class MotorAprendizajeReal implements MotorAprendizaje {
         const nlp = analisis.nlp;
         const vision = analisis.vision;
 
-        // 1) Senales colectivas agregadas del indice, derivadas del NLP (Req. 17.2).
+        // 1) Senales colectivas agregadas del indice, derivadas del NLP (Req. 17.2)
+        //    y calibradas a la BANDA de la intensidad declarada del escenario.
         const entradaIndice: EntradaIndice = {
             comunidadId: contexto.comunidadId,
             numeroSemana: contexto.numeroSemana,
-            senales: derivarSenalesIndice(nlp),
+            senales: derivarSenalesIndice(nlp, contexto.intensidad),
         };
 
         // 2) Dimensiones del indice integrando el score calibrado de la Capa_ML
@@ -115,22 +117,48 @@ export class MotorAprendizajeReal implements MotorAprendizaje {
     }
 }
 
-/** Escala una proporcion `[0,1]` al rango por defecto de las dimensiones `[0,100]`. */
-function aEscala100(proporcion: number): number {
-    if (!Number.isFinite(proporcion)) {
-        return 0;
-    }
-    return Math.min(100, Math.max(0, proporcion * 100));
-}
+/**
+ * Techo y piso AMBIENTE del `Indice_Riesgo` por intensidad declarada del
+ * `Escenario`. La intensidad fija el RANGO disponible: el `techo` es el maximo
+ * que alcanzan las dimensiones DOMINANTES del escenario, y el `pisoAmbiente` es
+ * un fondo BAJO (no uniforme-alto) para las dimensiones poco relevantes. Asi las
+ * emociones NO quedan todas al mismo nivel: las que el contenido activa suben
+ * hacia el techo y las que no, se quedan cerca del fondo.
+ */
+const RANGO_INTENSIDAD: Record<
+    IntensidadCiclo,
+    { pisoAmbiente: number; techo: number }
+> = {
+    baja: { pisoAmbiente: 3, techo: 22 },
+    media: { pisoAmbiente: 5, techo: 58 },
+    alta: { pisoAmbiente: 8, techo: 88 },
+    extrema: { pisoAmbiente: 14, techo: 99 },
+};
+
+/**
+ * Ganancia que expande la senal de contenido `[0,1]` sin saturar: con 1.8 una
+ * senal dominante (~0.4-0.5) llega a ~0.7-0.9 del rango y las debiles quedan
+ * bajas, generando CONTRASTE entre dimensiones y oscilacion semana a semana.
+ */
+const GANANCIA_SENAL = 1.8;
 
 /**
  * Deriva las senales colectivas por dimension del `Indice_Riesgo` a partir de
- * features HOLISTICAS del `ResultadoNLP` (Req. 16.1, 17.2). Sin NLP disponible,
- * todas las senales son 0 (la semana no aporta senal de riesgo). Es una funcion
- * determinista que SOLO lee agregados colectivos (Req. 17.4, 17.6).
+ * features HOLISTICAS del `ResultadoNLP` (Req. 16.1, 17.2), calibradas al RANGO
+ * de la `intensidad` declarada. Sin NLP disponible, todas las senales son 0. Es
+ * determinista y SOLO lee agregados colectivos (Req. 17.4, 17.6).
+ *
+ * Modelo: cada dimension tiene un DRIVER emocional DISTINTO (varias como
+ * PRODUCTO de dos senales, de modo que solo se activan cuando ambas estan
+ * presentes -> quedan bajas y mas variables si el escenario no las provoca). La
+ * senal `r in [0,1]` se mapea al rango de la intensidad:
+ * `valor = pisoAmbiente + clamp(r * GANANCIA, 0, 1) * (techo - pisoAmbiente)`.
+ * Resultado: la intensidad fija cuanto puede subir el riesgo; el contenido
+ * decide QUE dimensiones suben (contraste) y CUANTO cada semana (oscilacion).
  */
 export function derivarSenalesIndice(
     nlp: ResultadoNLP | undefined,
+    intensidad: IntensidadCiclo = 'media',
 ): Record<string, number> {
     if (!nlp) {
         return Object.fromEntries(
@@ -138,41 +166,49 @@ export function derivarSenalesIndice(
         );
     }
 
+    const rango = RANGO_INTENSIDAD[intensidad] ?? RANGO_INTENSIDAD.media;
+
     const { senal, distribucion } = nlp.emocional;
     const tension = distribucion.tension ?? 0;
     const entusiasmo = distribucion.entusiasmo ?? 0;
     const incertidumbre = distribucion.incertidumbre ?? 0;
     const valenciaNegativa = Math.max(0, -senal.valencia);
 
-    // Factor de NEGATIVIDAD global [0,1]: cuanto mas positivo/calmado es el
-    // contenido, mas bajo es este factor y MENOR el riesgo en TODAS las
-    // dimensiones. Evita el sesgo de que el riesgo quede alto cuando el
-    // contenido es neutral o positivo (no hay "piso" artificial de riesgo).
+    // Negatividad global [0,1]: clima negativo sostenido (no es un piso, modula
+    // las dimensiones de desgaste).
     const factorNegativo = Math.min(
         1,
         valenciaNegativa * 0.6 + tension * 0.3 + incertidumbre * 0.1,
     );
-    // El entusiasmo/positividad AMORTIGUA el riesgo: contenido alegre reduce
-    // todas las dimensiones de riesgo colectivo.
     const amortiguador = 1 - Math.min(0.8, entusiasmo);
 
+    // Mapea una senal de contenido `r in [0,1]` al rango de la intensidad.
+    const enRango = (r: number): number => {
+        const base = Number.isFinite(r) ? Math.max(0, r) : 0;
+        const s = Math.min(1, base * GANANCIA_SENAL);
+        return Math.min(
+            100,
+            Math.max(0, rango.pisoAmbiente + s * (rango.techo - rango.pisoAmbiente)),
+        );
+    };
+
     return {
-        // Estres: intensidad emocional, pero solo cuando hay carga negativa.
-        estresAcademico: aEscala100(senal.intensidad * factorNegativo),
-        // Ansiedad: incertidumbre (miedo/sorpresa) ponderada.
-        ansiedadColectiva: aEscala100(incertidumbre * (0.5 + factorNegativo * 0.5)),
-        // Conflicto: tension (enfado/asco) directa.
-        conflictoSocial: aEscala100(tension),
-        // Bullying: valencia muy negativa y dirigida.
-        bullying: aEscala100(valenciaNegativa * tension),
-        // Aislamiento: dispersion del discurso ponderada por negatividad.
-        aislamiento: aEscala100(senal.dispersion * factorNegativo),
-        // Agotamiento: cansancio emocional = negatividad sostenida sin entusiasmo.
-        agotamiento: aEscala100(factorNegativo * amortiguador),
-        // Violencia verbal: tension activada (enfado con alta activacion).
-        violenciaVerbal: aEscala100(tension * senal.activacion),
-        // Desmotivacion: falta de entusiasmo SOLO cuando hay negatividad.
-        desmotivacion: aEscala100((1 - entusiasmo) * factorNegativo),
+        // Estres academico: intensidad emocional con carga negativa (driver mixto).
+        estresAcademico: enRango(senal.intensidad * (0.3 + factorNegativo * 0.7)),
+        // Ansiedad: incertidumbre (miedo) DIRECTA -> dominante en crisis con miedo.
+        ansiedadColectiva: enRango(incertidumbre),
+        // Conflicto: tension (enfado/asco) DIRECTA -> dominante en crisis de conflicto.
+        conflictoSocial: enRango(tension),
+        // Bullying: PRODUCTO valencia-negativa x tension -> raro, solo si ambos altos.
+        bullying: enRango(valenciaNegativa * tension * 1.6),
+        // Aislamiento: PRODUCTO dispersion x negatividad -> bajo salvo discurso disperso y negativo.
+        aislamiento: enRango(senal.dispersion * valenciaNegativa * 1.6),
+        // Agotamiento: negatividad sostenida sin entusiasmo (driver de desgaste).
+        agotamiento: enRango(factorNegativo * amortiguador),
+        // Violencia verbal: PRODUCTO tension x activacion -> enfado activado.
+        violenciaVerbal: enRango(tension * senal.activacion * 1.5),
+        // Desmotivacion: PRODUCTO falta-de-entusiasmo x negatividad.
+        desmotivacion: enRango((1 - entusiasmo) * valenciaNegativa * 1.4),
     };
 }
 

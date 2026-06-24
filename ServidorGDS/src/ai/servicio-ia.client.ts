@@ -358,11 +358,14 @@ export class ServicioNlpClient extends ServicioIaHttpBase implements ServicioNLP
             1,
         );
 
-        // Distribucion mapeada a las categorias que espera derivarSenalesIndice
+        // Distribucion mapeada a las categorias que espera derivarSenalesIndice.
+        // La 'surprise' del modelo es AMBIGUA (puede ser entusiasmo positivo o
+        // alarma): se reparte mitad a entusiasmo y mitad a incertidumbre para no
+        // inflar la ansiedad colectiva con contenido positivo pero efusivo.
         const crudo: Record<string, number> = {
             tension: anger + disgust,
-            entusiasmo: joy,
-            incertidumbre: fear + surprise,
+            entusiasmo: joy + surprise * 0.5,
+            incertidumbre: fear + surprise * 0.5,
             neutral: neutral + sadness * 0.5,
         };
         const totalDist = Object.values(crudo).reduce((a, b) => a + b, 0) || 1;

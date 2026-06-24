@@ -156,11 +156,14 @@ describe('MotorEscenarios: fijarParaAnalisis copia inmutable (Req. 29.3, 29.4, 2
         motor = new MotorEscenariosService(repo);
     });
 
-    it('fija un escenario de biblioteca copiando contexto + (id, version)', async () => {
+    it('fija un escenario de biblioteca copiando contexto (con intensidad) + (id, version)', async () => {
         const guardado = await motor.guardar(DEF_BASE);
         const fijado = await motor.fijarParaAnalisis({ escenarioId: guardado.id });
 
-        expect(fijado.contexto).toBe(guardado.contexto);
+        expect(fijado.contexto).toBe(
+            `Scenario intensity (intensidad declarada): ${guardado.intensidad}.\n\n${guardado.contexto}`,
+        );
+        expect(fijado.contexto).toContain(guardado.contexto);
         expect(fijado.escenarioId).toBe(guardado.id);
         expect(fijado.version).toBe(guardado.version);
     });
@@ -172,12 +175,14 @@ describe('MotorEscenarios: fijarParaAnalisis copia inmutable (Req. 29.3, 29.4, 2
         // Una edicion posterior genera una nueva version; la copia no cambia.
         await motor.editar(v1.id, { contexto: 'contexto editado posterior' });
 
-        expect(fijado.contexto).toBe('contexto original');
+        expect(fijado.contexto).toBe(
+            'Scenario intensity (intensidad declarada): media.\n\ncontexto original',
+        );
         expect(fijado.escenarioId).toBe(v1.id);
         expect(fijado.version).toBe(1);
     });
 
-    it('fija un escenario personalizado sin guardarlo (sin trazabilidad)', async () => {
+    it('fija un escenario personalizado sin guardarlo (sin trazabilidad ni prefijo)', async () => {
         const fijado = await motor.fijarParaAnalisis({
             personalizado: 'mi contexto libre',
         });
@@ -194,7 +199,9 @@ describe('MotorEscenarios: fijarParaAnalisis copia inmutable (Req. 29.3, 29.4, 2
             guardarEnBiblioteca: true,
         });
 
-        expect(fijado.contexto).toBe('contexto a reutilizar');
+        expect(fijado.contexto).toBe(
+            'Scenario intensity (intensidad declarada): media.\n\ncontexto a reutilizar',
+        );
         expect(fijado.escenarioId).toBeTruthy();
         expect(fijado.version).toBe(1);
 
@@ -216,7 +223,7 @@ describe('MotorEscenarios: fijarParaAnalisis copia inmutable (Req. 29.3, 29.4, 2
 });
 
 describe('Escenarios predefinidos y siembra (Req. 29.1, 29.7)', () => {
-    it('define los 6 escenarios predefinidos esperados como datos puros', () => {
+    it('define los 8 escenarios predefinidos esperados como datos puros', () => {
         const nombres = ESCENARIOS_PREDEFINIDOS.map((e) => e.nombre);
         expect(nombres).toEqual([
             'Guerra del Gas',
@@ -225,6 +232,8 @@ describe('Escenarios predefinidos y siembra (Req. 29.1, 29.7)', () => {
             'Pandemia',
             'Problemas de Transporte',
             'Elecciones',
+            'Semestre Tranquilo',
+            'Estallido Social',
         ]);
         expect(ESCENARIOS_PREDEFINIDOS.every((e) => e.esPredefinido)).toBe(true);
     });

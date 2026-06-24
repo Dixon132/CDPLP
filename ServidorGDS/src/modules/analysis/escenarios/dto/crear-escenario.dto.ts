@@ -27,6 +27,7 @@ export const INTENSIDADES_ESCENARIO: readonly IntensidadEscenario[] = [
     'baja',
     'media',
     'alta',
+    'extrema',
 ];
 
 export class CrearEscenarioDto {

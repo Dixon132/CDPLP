@@ -205,6 +205,66 @@ export const ESCENARIOS_PREDEFINIDOS: ReadonlyArray<DefinicionEscenario> = [
         parametros: { ambitoGeografico: 'nacional', riesgoDesinformacion: 'medio' },
         esPredefinido: true,
     },
+    {
+        nombre: 'Semestre Tranquilo',
+        descripcion:
+            'Periodo academico sereno y cotidiano, sin conflictos relevantes: rutina de clases, vida estudiantil y buen clima de convivencia.',
+        contexto:
+            'Semana normal de clases, sin sobresaltos. El estudiantado comparte apuntes, coordina trabajos en grupo y organiza un campeonato interno. Predominan las bromas cotidianas, el entusiasmo por actividades extracurriculares y los mensajes de apoyo entre companeros. El ambiente es relajado, positivo y colaborativo, con tensiones minimas propias del dia a dia (una entrega, un examen sencillo).',
+        intensidad: 'baja',
+        duracionEsperada: 6,
+        eventosDetonantes: [
+            'inicio de un campeonato interno',
+            'feria de clubes estudiantiles',
+            'entrega de un trabajo sencillo',
+            'actividad recreativa de fin de semana',
+        ],
+        actoresInvolucrados: [
+            'estudiantes',
+            'docentes',
+            'centros de estudiantes',
+        ],
+        categoria: 'academico',
+        tags: ['rutina', 'convivencia', 'tranquilo', 'positivo', 'cotidiano'],
+        configuracionComportamiento: {
+            polarizacion: 'muy baja',
+            tonoPredominante: 'cotidiano',
+            volatilidad: 'baja',
+        },
+        parametros: { ambitoGeografico: 'campus', impactoAcademico: 'bajo' },
+        esPredefinido: true,
+    },
+    {
+        nombre: 'Estallido Social',
+        descripcion:
+            'Crisis social extrema: convulsion generalizada, represion, desabastecimiento y miedo colectivo que desbordan la vida cotidiana de la comunidad.',
+        contexto:
+            'El pais entra en un estallido social extremo: enfrentamientos diarios, represion dura, heridos, desabastecimiento de alimentos y combustible, toques de queda y cortes de internet intermitentes. La comunidad educativa vive con miedo, rabia y agotamiento; circulan rumores y noticias de violencia, las clases se suspenden indefinidamente y crece la angustia por la seguridad de familiares y companeros.',
+        intensidad: 'extrema',
+        duracionEsperada: 10,
+        eventosDetonantes: [
+            'represion con heridos y detenidos',
+            'toque de queda y militarizacion',
+            'desabastecimiento de alimentos y combustible',
+            'cortes de internet y comunicaciones',
+        ],
+        actoresInvolucrados: [
+            'estudiantes',
+            'familias',
+            'juntas vecinales',
+            'fuerzas de seguridad',
+            'organizaciones de derechos humanos',
+        ],
+        categoria: 'sociopolitico',
+        tags: ['estallido', 'crisis extrema', 'represion', 'miedo', 'violencia'],
+        configuracionComportamiento: {
+            polarizacion: 'muy alta',
+            tonoPredominante: 'miedo y rabia',
+            volatilidad: 'muy alta',
+        },
+        parametros: { ambitoGeografico: 'nacional', nivelRiesgo: 'critico' },
+        esPredefinido: true,
+    },
 ];
 
 /**

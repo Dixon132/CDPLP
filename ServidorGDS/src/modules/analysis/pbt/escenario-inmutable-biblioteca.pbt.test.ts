@@ -208,7 +208,9 @@ describe('Property 41: Inmutabilidad del escenario copiado desde la biblioteca a
                     const fijado = await motor.fijarParaAnalisis({
                         escenarioId: original.id,
                     });
-                    expect(fijado.contexto).toBe(original.contexto);
+                    expect(fijado.contexto).toBe(
+                        `Scenario intensity (intensidad declarada): ${original.intensidad}.\n\n${original.contexto}`,
+                    );
                     expect(fijado.escenarioId).toBe(original.id);
                     expect(fijado.version).toBe(1);
 
@@ -244,7 +246,9 @@ describe('Property 41: Inmutabilidad del escenario copiado desde la biblioteca a
                         escenarioId: original.id,
                     });
                     expect(JSON.stringify(refijado)).toBe(snapshotFijado);
-                    expect(refijado.contexto).toBe(original.contexto);
+                    expect(refijado.contexto).toBe(
+                        `Scenario intensity (intensidad declarada): ${original.intensidad}.\n\n${original.contexto}`,
+                    );
                     expect(refijado.escenarioId).toBe(original.id);
                     expect(refijado.version).toBe(1);
 

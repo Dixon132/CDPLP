@@ -16,17 +16,17 @@ export default function Home() {
                 {/* Left side: Image */}
                 <div className="w-full md:w-1/2 flex justify-center mb-12 md:mb-0 relative">
                     <div className="absolute inset-0 bg-gray-100 transform translate-x-4 translate-y-4 -z-10 w-[70%] md:w-[60%] aspect-[3/4] mx-auto border border-black hidden md:block"></div>
-                    <img 
-                        src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" 
-                        alt="Psicólogos CDPLP" 
+                    <img
+                        src="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                        alt="Psicólogos CDPLP"
                         className="w-[80%] md:w-[60%] aspect-[3/4] object-cover border border-black shadow-2xl grayscale hover:grayscale-0 transition-all duration-700"
                     />
                 </div>
 
                 {/* Right side: Huge Typography and Text */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center px-4 md:px-12 bg-white/80 backdrop-blur-sm md:bg-transparent py-8 md:py-0">
-                    <h1 className="text-[12vw] md:text-[6rem] xl:text-[8rem] leading-none font-black tracking-tighter uppercase mb-6 text-black drop-shadow-sm">
-                        PSICOLOGÍA
+                    <h1 className="text-[10vw] md:text-[5rem] xl:text-[6rem] leading-none font-black tracking-tighter uppercase mb-6 text-black drop-shadow-sm">
+                        COLEGIO DEPARTAMENTAL DE PSICÓLOGOS DE LA PAZ
                     </h1>
                     <p className="text-lg md:text-xl font-bold leading-snug mb-10 max-w-xl text-gray-900">
                         Fundado en febrero de 1999, nos comprometemos a mejorar las condiciones laborales de nuestros colegas psicólogos y promover el valor de su trabajo en la sociedad de La Paz.

@@ -30,7 +30,8 @@ import { Module } from '@nestjs/common';
 
 import { COLA_PROCESAR_SEMANA } from '../../../queue/queue.constants';
 import { CicloModule } from '../../ciclo/ciclo.module';
-import { ConsultaResultadoSemanaPrisma } from '../../ciclo/adaptadores-prisma';
+import { ConsultaResultadoSemanaPrisma, PlanAnalisisPrisma } from '../../ciclo/adaptadores-prisma';
+import { AlmacenEstadoEjecucionPrisma } from '../gestor/almacen-estado-ejecucion.prisma';
 import { WsModule } from '../../ws/ws.module';
 import {
     CerrojoConcurrenciaEnMemoria,
@@ -120,6 +121,13 @@ import { PROCESADOR_SEMANA } from '../procesarSemana';
         // Worker BullMQ + frontera de encolado.
         ProcesarSemanaProcessor,
         ColaProcesarSemanaService,
+
+        // Soporte del ENCADENADO SECUENCIAL del modo Automatico que usa el
+        // `ProcesarSemanaProcessor` (estado/avance del analisis sobre la BD
+        // dedicada). Son clases standalone (solo dependen de PrismaService), por
+        // lo que proveerlas aqui NO crea ciclo con el modulo del Gestor.
+        PlanAnalisisPrisma,
+        AlmacenEstadoEjecucionPrisma,
     ],
     exports: [
         ColaProcesarSemanaService,

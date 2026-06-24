@@ -597,15 +597,28 @@ async function ejecutarManual(config: ConfigAnalisis): Promise<EstadoFinal> {
 }
 
 /**
- * (A) Automatico (Req. 32.3): un unico `avanzar` reutiliza
- * `avanzarHastaElFinal` y encola TODAS las semanas pendientes de golpe; se drenan.
+ * (A) Automatico (Req. 32.3): el gestor encola la PRIMERA semana pendiente y el
+ * `ProcesarSemanaProcessor` ENCADENA la siguiente tras REGISTRAR la actual. Aqui
+ * se simula ese encadenado secuencial: `avanzar` (encola la siguiente) -> drenar
+ * (procesa y completa) -> `avanzar`... hasta que no queden pendientes. Asi nunca
+ * hay mas de una semana por institucion en vuelo (orden estricto, sin saltos ni
+ * repeticiones), a diferencia del encolado masivo previo.
  */
 async function ejecutarAutomatico(config: ConfigAnalisis): Promise<EstadoFinal> {
     const ctx = montar(config);
     await ctx.gestor.seleccionarModo(config.analisisId, "AUTOMATICO");
 
-    await ctx.gestor.avanzar(config.analisisId);
-    const orden = await drenar(ctx.cola, ctx.ejecutor, ctx.plan);
+    const orden: DatosTrabajoSemana[] = [];
+    // Cota de seguridad: a lo sumo total*instituciones encadenamientos (mas margen).
+    const maxIteraciones =
+        config.totalSemanas * config.instituciones.length + 5;
+    for (let i = 0; i < maxIteraciones; i++) {
+        const r = await ctx.gestor.avanzar(config.analisisId);
+        if (r.avance.encolados.length === 0) {
+            break; // Analisis completo: no quedan semanas pendientes.
+        }
+        orden.push(...(await drenar(ctx.cola, ctx.ejecutor, ctx.plan)));
+    }
     return instantanea(ctx.banco, orden);
 }
 

@@ -214,6 +214,13 @@ class _TransformersSpacyNltkAnalyzer:
         except LookupError:
             nltk.download("punkt", quiet=True)
 
+        # NLTK >= 3.9 reemplazó el recurso 'punkt' por 'punkt_tab' para
+        # word_tokenize/sent_tokenize. Aseguramos ambos por compatibilidad.
+        try:
+            nltk.data.find("tokenizers/punkt_tab")
+        except LookupError:
+            nltk.download("punkt_tab", quiet=True)
+
         self._emotion = pipeline(
             "text-classification",
             model=emotion_model,
