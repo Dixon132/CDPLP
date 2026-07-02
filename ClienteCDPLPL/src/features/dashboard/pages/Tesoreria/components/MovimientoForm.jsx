@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
     createMovimientoFinanciero,
@@ -15,8 +15,11 @@ import {
     InputLabel,
     InputAdornment,
     CircularProgress,
-    Container
+    Container,
+    Typography,
 } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
+import Alerts from "../../../components/Alerts";
 
 export default function MovimientoForm({
     presupuestoId,
@@ -39,6 +42,13 @@ export default function MovimientoForm({
 
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
+    const [comprobante, setComprobante] = useState(null);
+    const fileInputRef = useRef(null);
+
+    const showAlert = (type, message) => {
+        setAlert({ show: true, type, message });
+    };
 
     useEffect(() => {
         if (movimientoId) {
@@ -84,16 +94,29 @@ export default function MovimientoForm({
         try {
             if (movimientoId) {
                 await updateMovimientoFinanciero(movimientoId, payload);
-                alert("Movimiento actualizado correctamente");
+                showAlert("success", "Movimiento actualizado correctamente");
             } else {
-                await createMovimientoFinanciero(payload);
-                alert("Movimiento creado correctamente");
+                let createPayload;
+                if (comprobante) {
+                    createPayload = new FormData();
+                    createPayload.append("id_presupuesto", presupuestoId);
+                    createPayload.append("tipo_movimiento", formData.tipo_movimiento);
+                    createPayload.append("categoria", formData.categoria);
+                    if (formData.descripcion) createPayload.append("descripcion", formData.descripcion);
+                    createPayload.append("monto", parseFloat(formData.monto));
+                    if (formData.fecha_movimiento) createPayload.append("fecha_movimiento", new Date(formData.fecha_movimiento).toISOString());
+                    createPayload.append("comprobante", comprobante);
+                } else {
+                    createPayload = payload;
+                }
+                await createMovimientoFinanciero(createPayload);
+                showAlert("success", "Movimiento creado correctamente");
             }
             if (onSuccess) onSuccess();
             if (onClose) onClose();
         } catch (err) {
             console.error(err);
-            alert("Error al guardar movimiento");
+            showAlert("error", "Error al guardar movimiento");
         } finally {
             setIsSubmitting(false);
         }
@@ -109,6 +132,7 @@ export default function MovimientoForm({
 
     return (
         <Container maxWidth="sm" sx={{ py: 2 }}>
+            <Alerts type={alert.type} message={alert.message} show={alert.show} duration={2000} onClose={() => setAlert((prev) => ({ ...prev, show: false }))} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     <Box sx={{ display: "flex", gap: 2 }}>
@@ -179,6 +203,54 @@ export default function MovimientoForm({
                             fullWidth
                         />
                     </Box>
+
+                    {!movimientoId && (
+                        <Box>
+                            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: "block" }}>
+                                Comprobante (opcional)
+                            </Typography>
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: 1.5,
+                                    border: "1px solid",
+                                    borderColor: "divider",
+                                    borderRadius: 1,
+                                    px: 2,
+                                    py: 1.25,
+                                    cursor: "pointer",
+                                    "&:hover": { borderColor: "text.primary" },
+                                }}
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <AttachFileIcon fontSize="small" color="action" />
+                                <Typography variant="body2" color={comprobante ? "text.primary" : "text.secondary"} noWrap>
+                                    {comprobante ? comprobante.name : "Seleccionar imagen o PDF..."}
+                                </Typography>
+                                <input
+                                    ref={fileInputRef}
+                                    type="file"
+                                    accept="image/*,.pdf"
+                                    style={{ display: "none" }}
+                                    onChange={(e) => setComprobante(e.target.files?.[0] ?? null)}
+                                />
+                            </Box>
+                            {comprobante && (
+                                <Button
+                                    size="small"
+                                    color="inherit"
+                                    sx={{ mt: 0.5, fontSize: 11 }}
+                                    onClick={() => {
+                                        setComprobante(null);
+                                        if (fileInputRef.current) fileInputRef.current.value = "";
+                                    }}
+                                >
+                                    Quitar archivo
+                                </Button>
+                            )}
+                        </Box>
+                    )}
 
                     <Box sx={{ mt: 2, display: "flex", gap: 2, justifyContent: "flex-end" }}>
                         {onClose && (

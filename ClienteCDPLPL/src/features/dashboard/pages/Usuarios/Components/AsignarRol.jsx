@@ -13,7 +13,7 @@ const roles = [
     "NO_DEFINIDO",
 ];
 
-const AsignarRol = ({ id, onClose }) => {
+const AsignarRol = ({ id, onClose, onSuccess }) => {
     const {
         register,
         handleSubmit,
@@ -51,7 +51,8 @@ const AsignarRol = ({ id, onClose }) => {
     const onSubmit = async (formData) => {
         try {
             await actualizarRol(id, formData);
-            if (onClose) onClose();
+            if (onSuccess) onSuccess();
+            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al actualizar el rol:", error);
         }

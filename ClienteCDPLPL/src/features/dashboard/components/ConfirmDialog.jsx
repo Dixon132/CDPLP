@@ -9,13 +9,14 @@ const ConfirmDialog = ({
     onConfirm,
     onClose,
     confirmText = "Eliminar",
+    waitSeconds = 2,
 }) => {
-    const [countdown, setCountdown] = useState(5);
+    const [countdown, setCountdown] = useState(waitSeconds);
     const [canConfirm, setCanConfirm] = useState(false);
 
     useEffect(() => {
         if (isOpen) {
-            setCountdown(2);
+            setCountdown(waitSeconds);
             setCanConfirm(false);
 
             const timer = setInterval(() => {
@@ -31,7 +32,7 @@ const ConfirmDialog = ({
 
             return () => clearInterval(timer);
         }
-    }, [isOpen]);
+    }, [isOpen, waitSeconds]);
 
     if (!isOpen) return null;
 

@@ -89,7 +89,7 @@ Reglas transversales que aplican a **toda** tarea:
     - **Property 6: Reemplazo total de identificadores antes del análisis**
     - **Validates: Requirements 23.1, 13.5**
 
-- [~] 4. Checkpoint — Migración NestJS, datos y dominio fallback
+- [ ] 4. Checkpoint — Migración NestJS, datos y dominio fallback
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 5. Andamiaje del `ServicioIA/` (Python/FastAPI)
@@ -139,7 +139,7 @@ Reglas transversales que aplican a **toda** tarea:
     - Verificar acumulación monotónica en `pgvector`, trazabilidad de cada vector y orden por similitud descendente
     - **Validates: Requirements 36.1, 36.2, 36.5, 36.6, 39.4**
 
-- [~] 7. Checkpoint — Servicio_IA operativo (endpoints + pytest)
+- [ ] 7. Checkpoint — Servicio_IA operativo (endpoints + pytest)
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 8. Capa de integración IA por HTTP + degradación segura (R35)
@@ -174,7 +174,7 @@ Reglas transversales que aplican a **toda** tarea:
     - Invocar `POST /calibrar` al crecer el corpus, registrar `gds_calibracion` (`version`, `artefacto_ref`, `metricas`); conservar la última calibración válida ante fallo
     - _Requirements: 31.3, 31.4, 36.4_
 
-- [~] 10. Checkpoint — Integración IA y bucle de aprendizaje
+- [ ] 10. Checkpoint — Integración IA y bucle de aprendizaje
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 11. `IDataProvider` (Gemini/Ollama) y `Modulo_Simulacion`
@@ -228,7 +228,7 @@ Reglas transversales que aplican a **toda** tarea:
     - _Requirements: 14.1, 14.2, 14.4, 14.5, 16.2_
 
 - [x] 13. Índice de Riesgo, Motor Explicativo y Sistema de Evidencias
-  - [-] 13.1 Implementar el `Indice_Riesgo` multidimensional
+  - [ ] 13.1 Implementar el `Indice_Riesgo` multidimensional
     - Calcular cada dimensión por comunidad/semana dentro de su `[minimo, maximo]`; integrar `score_calibrado_ml` del `Servicio_IA`; exponer solo resultados colectivos; dimensiones configurables sin alterar las existentes
     - _Requirements: 17.1, 17.2, 17.4, 17.5, 17.6, 31.2_
   - [x] 13.2 Implementar el `Sistema_Evidencias` (módulo `audit`)
@@ -276,7 +276,7 @@ Reglas transversales que aplican a **toda** tarea:
     - **Property 38: Trazabilidad de patrones a su zona geográfica**
     - **Validates: Requirements 33.4, 33.5**
 
-- [~] 15. Checkpoint — Pipeline y analítica sobre Servicio_IA + fallback
+- [ ] 15. Checkpoint — Pipeline y analítica sobre Servicio_IA + fallback
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 16. Cola y motor de ciclos sobre BullMQ/Redis
@@ -327,7 +327,7 @@ Reglas transversales que aplican a **toda** tarea:
     - **Property 36: Pausa y reanudación conservan estado consistente**
     - **Validates: Requirements 32.6, 32.8**
 
-- [~] 18. Checkpoint — Motor de ciclos (BullMQ) y modos de ejecución
+- [ ] 18. Checkpoint — Motor de ciclos (BullMQ) y modos de ejecución
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 19. Authentication (NestJS + Passport) y roles GDS
@@ -422,7 +422,7 @@ Reglas transversales que aplican a **toda** tarea:
     - Cubrir handshake/autorización y emisión de eventos de progreso
     - _Requirements: 18.6, 21.4_
 
-- [~] 25. Checkpoint — API GDS completa (NestJS + Swagger)
+- [ ] 25. Checkpoint — API GDS completa (NestJS + Swagger)
   - Ensure all tests pass, ask the user if questions arise.
 
 - [x] 26. Frontend `ClienteCDPLPL` (migración a TypeScript + Shadcn/UI + TanStack Query + Zustand + Framer Motion)
@@ -485,7 +485,7 @@ Reglas transversales que aplican a **toda** tarea:
     - Ejecutar el ciclo de extremo a extremo con dobles deterministas (proveedor con semilla, `Servicio_IA`/fallback dobles, BullMQ inmediato/in-memory) y verificar resultados/indicadores/evidencias/embeddings/reporte reproducibles (sin red ni esperas reales)
     - _Requirements: 26.1, 26.2, 26.4, 12.5_
 
-- [~] 29. Checkpoint final — Suite completa verde (Jest/Supertest/Vitest/Playwright/pytest)
+- [ ] 29. Checkpoint final — Suite completa verde (Jest/Supertest/Vitest/Playwright/pytest)
   - Ensure all tests pass, ask the user if questions arise.
 
 ## Notes

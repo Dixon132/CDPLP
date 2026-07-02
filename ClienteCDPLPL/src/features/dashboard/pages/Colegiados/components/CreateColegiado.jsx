@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { Visibility, VisibilityOff, ContentCopy } from '@mui/icons-material';
 import { createColegiado } from '../../../services/colegiados';
+import EspecialidadesSelect from '../../../components/EspecialidadesSelect';
 
 const CreateColegiado = ({ onSuccess }) => {
     const {
@@ -26,6 +27,7 @@ const CreateColegiado = ({ onSuccess }) => {
 
     const [pinGenerado, setPinGenerado] = useState(null);
     const [mostrarPin, setMostrarPin] = useState(false);
+    const [especialidades, setEspecialidades] = useState([]);
 
     // Fecha de hoy en formato AAAA-MM-DD
     const today = new Date().toISOString().split('T')[0];
@@ -37,7 +39,11 @@ const CreateColegiado = ({ onSuccess }) => {
 
     const onSubmit = async (data) => {
         try {
-            const response = await createColegiado(data);
+            const payload = {
+                ...data,
+                especialidades: especialidades.join(", "),
+            };
+            const response = await createColegiado(payload);
             const pin = response?.pin_temporal;
             if (pin) {
                 setPinGenerado(pin);
@@ -107,14 +113,16 @@ const CreateColegiado = ({ onSuccess }) => {
                             helperText={errors.telefono?.message}
                         />
 
-                        <TextField
-                            label="Especialidades"
-                            {...register('especialidades', {
-                                required: 'Campo requerido'
-                            })}
-                            error={!!errors.especialidades}
-                            helperText={errors.especialidades?.message}
-                        />
+                        <Box>
+                            <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                                Especialidades
+                            </Typography>
+                            <EspecialidadesSelect
+                                value={especialidades}
+                                onChange={setEspecialidades}
+                                allowCreate
+                            />
+                        </Box>
 
                         <TextField
                             label="Fecha de Inscripción"

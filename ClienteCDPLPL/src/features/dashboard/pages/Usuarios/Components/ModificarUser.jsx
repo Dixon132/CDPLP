@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { TextField, Button, Box } from "@mui/material";
 import { getUserById, ModificarUsuario } from "../../../services/usuarios";
 
-const ModificarUser = ({ id, onClose }) => {
+const ModificarUser = ({ id, onClose, onSuccess }) => {
     const {
         register,
         handleSubmit,
@@ -29,7 +29,8 @@ const ModificarUser = ({ id, onClose }) => {
     const onSubmit = async (data) => {
         try {
             await ModificarUsuario(id, data);
-            if (onClose) onClose();
+            if (onSuccess) onSuccess();
+            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al modificar usuario:", error);
         }

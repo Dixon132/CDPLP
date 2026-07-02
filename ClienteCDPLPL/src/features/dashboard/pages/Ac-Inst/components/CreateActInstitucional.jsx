@@ -25,7 +25,7 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const tipos = ["Conferencia", "Taller", "Seminario", "Curso"];
-  const estados = ["ACTIVO", "INACTIVO"];
+  const estados = ["EN_INSCRIPCION", "EN_CURSO", "TERMINADO"];
 
   const onSubmit = async (formData) => {
     setIsSubmitting(true);
@@ -42,10 +42,8 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
 
     try {
       await createActividadInstitucional(payload);
-      alert("Actividad institucional creada correctamente");
       reset();
       if (onSuccess) onSuccess();
-      if (onClose) onClose();
     } catch (err) {
       console.error(err);
       alert("Error al crear actividad institucional");
@@ -129,7 +127,7 @@ export default function CreateActInstitucional({ onClose, onSuccess }) {
               <Select
                 labelId="estado-label"
                 label="Estado"
-                defaultValue="ACTIVO"
+                defaultValue="EN_INSCRIPCION"
                 {...register("estado", { required: "El estado es obligatorio" })}
               >
                 {estados.map((e) => (

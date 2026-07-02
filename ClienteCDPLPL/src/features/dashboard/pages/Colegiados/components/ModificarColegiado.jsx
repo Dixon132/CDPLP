@@ -1,9 +1,10 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { TextField, Button, Box, MenuItem } from "@mui/material";
+import { TextField, Button, Box, MenuItem, Typography } from "@mui/material";
 import { getColegiadoById, modificarColegiados } from "../../../services/colegiados";
+import EspecialidadesSelect from "../../../components/EspecialidadesSelect";
 
-const ModificarColegiado = ({ id, onClose }) => {
+const ModificarColegiado = ({ id, onClose, onSuccess }) => {
     const {
         register,
         handleSubmit,
@@ -12,6 +13,7 @@ const ModificarColegiado = ({ id, onClose }) => {
         reset
     } = useForm();
 
+    const [especialidades, setEspecialidades] = useState([]);
     const today = new Date().toISOString().split("T")[0];
 
     // Carga de datos del colegiado existente
@@ -25,11 +27,14 @@ const ModificarColegiado = ({ id, onClose }) => {
                     apellido: data.apellido || "",
                     correo: data.correo || "",
                     telefono: data.telefono || "",
-                    especialidades: data.especialidades || "",
                     fecha_inscripcion: data.fecha_inscripcion?.split("T")[0] || "",
                     fecha_renovacion: data.fecha_renovacion?.split("T")[0] || "",
                     estado: data.estado || "",
                 });
+                // Parsear el string de especialidades al array de selección
+                setEspecialidades(
+                    (data.especialidades || "").split(", ").filter(Boolean)
+                );
             } catch (error) {
                 console.error("Error al obtener el colegiado:", error);
             }
@@ -39,8 +44,13 @@ const ModificarColegiado = ({ id, onClose }) => {
 
     const onSubmit = async (formData) => {
         try {
-            await modificarColegiados(id, formData);
-            if (onClose) onClose();
+            const payload = {
+                ...formData,
+                especialidades: especialidades.join(", "),
+            };
+            await modificarColegiados(id, payload);
+            if (onSuccess) onSuccess();
+            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al modificar:", error);
         }
@@ -103,13 +113,16 @@ const ModificarColegiado = ({ id, onClose }) => {
                     helperText={errors.telefono?.message}
                 />
 
-                <TextField
-                    label="Especialidades"
-                    InputLabelProps={{ shrink: true }}
-                    {...register("especialidades", { required: "Campo obligatorio" })}
-                    error={!!errors.especialidades}
-                    helperText={errors.especialidades?.message}
-                />
+                <Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                        Especialidades
+                    </Typography>
+                    <EspecialidadesSelect
+                        value={especialidades}
+                        onChange={setEspecialidades}
+                        allowCreate
+                    />
+                </Box>
 
                 <TextField
                     label="Fecha de Inscripción"

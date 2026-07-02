@@ -38,6 +38,18 @@ export const getConfigPago = async (_req: Request, res: Response) => {
     return res.json(resultado);
 };
 
+/** Normaliza un nombre de documento para comparación:
+ *  minúsculas, sin tildes, sin espacios múltiples, recortado.
+ */
+function normalizarNombre(nombre: string): string {
+    return nombre
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
 /** POST /api/postulaciones
  *  Crea una nueva postulación.
  *  Espera multipart/form-data con campos:
@@ -56,6 +68,24 @@ export const crearPostulacion = async (req: Request, res: Response) => {
         const files = req.files as { [fieldname: string]: Express.Multer.File[] };
         const docsFiles: Express.Multer.File[] = files?.['documentos'] ?? [];
         const comprFiles: Express.Multer.File[] = files?.['comprobante'] ?? [];
+
+        // ── Validación dinámica de documentos requeridos (REQ 10.6, 10.7) ──────
+        const requeridos = await prismaClient.documentos_requeridos.findMany({
+            where: { activo: true, es_opcional: false },
+            orderBy: { orden: 'asc' },
+        });
+
+        // Los archivos subidos se identifican por su originalname normalizado
+        const nombresSubidos = docsFiles.map(f => normalizarNombre(f.originalname));
+
+        const faltantes = requeridos
+            .filter(doc => !nombresSubidos.includes(normalizarNombre(doc.nombre)))
+            .map(doc => doc.nombre);
+
+        if (faltantes.length > 0) {
+            return res.status(400).json({ error: "Documentos faltantes", faltantes });
+        }
+        // ────────────────────────────────────────────────────────────────────────
 
         // Crear nombre de subcarpeta personalizado: iniciales + hash corto
         const iniciales = `${nombre.charAt(0).toUpperCase()}${apellido.charAt(0).toUpperCase()}`;

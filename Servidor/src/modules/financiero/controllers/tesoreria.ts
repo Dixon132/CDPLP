@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 import { Prisma } from "../../../../generated/prisma";
 import prismaClient from "../../../utils/prismaClient";
 import puppeteer from "puppeteer";
+import { subirArchivo } from "../../../utils/uploadS3";
 
 /**
  * Listar todos los presupuestos (paginado + búsqueda opcional).
@@ -239,6 +240,19 @@ export const createMovimientoFinanciero = async (req: Request, res: Response) =>
                 id_origen: null, // Lo dejamos null porque es “MANUAL”
             },
         });
+
+        // Si se adjuntó un comprobante, subirlo a Supabase Storage y guardar la ruta
+        if (req.file) {
+            const rutaComprobante = await subirArchivo(
+                req.file,
+                `movimientos/${nuevoMov.id_movimiento}`
+            );
+            const movActualizado = await prismaClient.movimientos_financieros.update({
+                where: { id_movimiento: nuevoMov.id_movimiento },
+                data: { comprobante: rutaComprobante },
+            });
+            return res.status(201).json(movActualizado);
+        }
 
         return res.status(201).json(nuevoMov);
     } catch (error) {

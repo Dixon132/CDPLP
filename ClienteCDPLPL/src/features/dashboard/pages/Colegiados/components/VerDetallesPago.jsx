@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { getPagoById, updatePago } from "../../../services/colegiados";
-import { AlertTriangle, XCircle, CheckCircle, Calendar, DollarSign, FileText, Ban } from "lucide-react";
+import { AlertTriangle, XCircle, CheckCircle, Calendar, DollarSign, FileText, Ban, Receipt } from "lucide-react";
 import parseDate from "../../../../../utils/parseData";
+
+const buildSupabaseUrl = (path) =>
+    `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/bucket/${path}`;
 
 const VerDetallesPago = ({ id_pago, onSuccess }) => {
     const [pago, setPago] = useState(null);
@@ -101,6 +104,16 @@ const VerDetallesPago = ({ id_pago, onSuccess }) => {
                         )}
                     </div>
                 </div>
+
+                {pago.comprobante !== null && (
+                    <button
+                        onClick={() => window.open(buildSupabaseUrl(pago.comprobante), '_blank')}
+                        className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors"
+                    >
+                        <Receipt className="w-4 h-4" />
+                        Ver comprobante
+                    </button>
+                )}
             </div>
 
             {/* Mensaje de error */}

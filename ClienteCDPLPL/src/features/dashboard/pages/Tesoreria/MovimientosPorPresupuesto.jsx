@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Edit3, Trash2, Plus, Calendar, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon } from "lucide-react";
+import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Edit3, Trash2, Plus, Calendar, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon, ExternalLink } from "lucide-react";
 
 import {
     getPresupuestoById,
@@ -22,6 +22,9 @@ import BarChart from "./components/charts/BarChart";
 import DonutChart from "./components/charts/DonutChart";
 import GroupedBarChart from "./components/charts/GroupedBarChart";
 
+const buildSupabaseUrl = (path) =>
+    `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/bucket/${path}`;
+
 export default function MovimientosPorPresupuesto() {
     const { id } = useParams();
     const presupuestoId = Number(id);
@@ -38,7 +41,7 @@ export default function MovimientosPorPresupuesto() {
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
-    
+
     // Filtros
     const [search, setSearch] = useState("");
     const [searchTemp, setSearchTemp] = useState(""); // Para el input antes de presionar buscar
@@ -50,7 +53,7 @@ export default function MovimientosPorPresupuesto() {
 
     // Modales
     const [showModalCrearMovimiento, setShowModalCrearMovimiento] = useState(false);
-    
+
     // Estado para Eliminar con timer
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [selectedMovId, setSelectedMovId] = useState(null);
@@ -173,7 +176,7 @@ export default function MovimientosPorPresupuesto() {
 
     return (
         <div className="min-h-screen bg-slate-50/50 p-6 space-y-6">
-            
+
             {/* --- HEADER --- */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
                 <div>
@@ -190,7 +193,7 @@ export default function MovimientosPorPresupuesto() {
                         </div>
                     </div>
                 </div>
-                <Button 
+                <Button
                     className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm flex items-center gap-2"
                     onClick={() => setShowModalCrearMovimiento(true)}
                 >
@@ -231,7 +234,7 @@ export default function MovimientosPorPresupuesto() {
                             </span>
                         </div>
                         <p className="text-2xl font-black text-slate-800">Bs. {formatMoney(presupuesto.saldo_restante)}</p>
-                        
+
                         <div className="mt-3 w-full bg-slate-100 rounded-full h-1.5 overflow-hidden">
                             <div className="bg-blue-500 h-full rounded-full transition-all duration-1000" style={{ width: `${calcProgreso()}%` }}></div>
                         </div>
@@ -269,7 +272,7 @@ export default function MovimientosPorPresupuesto() {
 
             {/* --- GRÁFICOS (ANALYTICS) --- */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
+
                 {/* Gráfico de Evolución Acumulada */}
                 <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm lg:col-span-2">
                     <div className="flex items-center gap-2 mb-6">
@@ -286,9 +289,9 @@ export default function MovimientosPorPresupuesto() {
                         <h2 className="text-lg font-bold text-slate-700">Proporción</h2>
                     </div>
                     <div className="flex justify-center items-center h-[240px]">
-                        <DonutChart 
-                            ingresos={analytics.resumen.total_ingresos} 
-                            egresos={analytics.resumen.total_egresos} 
+                        <DonutChart
+                            ingresos={analytics.resumen.total_ingresos}
+                            egresos={analytics.resumen.total_egresos}
                         />
                     </div>
                 </div>
@@ -331,7 +334,7 @@ export default function MovimientosPorPresupuesto() {
                         <form onSubmit={handleSearch} className="flex flex-wrap items-center gap-3 w-full xl:w-auto">
                             <div className="relative">
                                 <Filter className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <select 
+                                <select
                                     className="pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                     value={filtroTipo}
                                     onChange={e => { setFiltroTipo(e.target.value); setPage(1); }}
@@ -342,7 +345,7 @@ export default function MovimientosPorPresupuesto() {
                                 </select>
                             </div>
 
-                            <select 
+                            <select
                                 className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                 value={filtroCategoria}
                                 onChange={e => { setFiltroCategoria(e.target.value); setPage(1); }}
@@ -353,7 +356,7 @@ export default function MovimientosPorPresupuesto() {
                                 ))}
                             </select>
 
-                            <select 
+                            <select
                                 className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                 value={sortOrder}
                                 onChange={e => { setSortOrder(e.target.value); setPage(1); }}
@@ -364,16 +367,16 @@ export default function MovimientosPorPresupuesto() {
 
                             <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-1">
                                 <Calendar className="w-4 h-4 text-slate-400" />
-                                <input 
-                                    type="date" 
-                                    className="text-sm outline-none bg-transparent" 
+                                <input
+                                    type="date"
+                                    className="text-sm outline-none bg-transparent"
                                     value={fechaDesde}
                                     onChange={e => { setFechaDesde(e.target.value); setPage(1); }}
                                     title="Fecha Desde"
                                 />
                                 <span className="text-slate-300">-</span>
-                                <input 
-                                    type="date" 
+                                <input
+                                    type="date"
                                     className="text-sm outline-none bg-transparent"
                                     value={fechaHasta}
                                     onChange={e => { setFechaHasta(e.target.value); setPage(1); }}
@@ -383,15 +386,15 @@ export default function MovimientosPorPresupuesto() {
 
                             <div className="relative flex-1 min-w-[200px]">
                                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                                <input 
-                                    type="text" 
-                                    placeholder="Buscar descripción..." 
+                                <input
+                                    type="text"
+                                    placeholder="Buscar descripción..."
                                     className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                     value={searchTemp}
                                     onChange={e => setSearchTemp(e.target.value)}
                                 />
                             </div>
-                            
+
                             <Button type="submit" className="bg-slate-800 hover:bg-slate-900 text-white shadow-sm text-sm py-2">
                                 Buscar
                             </Button>
@@ -418,14 +421,12 @@ export default function MovimientosPorPresupuesto() {
                                 label: "Tipo",
                                 key: "tipo_movimiento",
                                 render: (m) => (
-                                    <div className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider border ${
-                                        m.tipo_movimiento === 'INGRESO'
-                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
-                                            : 'bg-rose-50 text-rose-700 border-rose-100'
+                                    <div className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wider border ${m.tipo_movimiento === 'INGRESO'
+                                        ? 'bg-emerald-50 text-emerald-700 border-emerald-100'
+                                        : 'bg-rose-50 text-rose-700 border-rose-100'
                                         }`}>
-                                        <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${
-                                            m.tipo_movimiento === 'INGRESO' ? 'bg-emerald-500' : 'bg-rose-500'
-                                        }`}></div>
+                                        <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${m.tipo_movimiento === 'INGRESO' ? 'bg-emerald-500' : 'bg-rose-500'
+                                            }`}></div>
                                         {m.tipo_movimiento}
                                     </div>
                                 )
@@ -465,6 +466,20 @@ export default function MovimientosPorPresupuesto() {
                                         <Calendar className="w-4 h-4 text-slate-400" />
                                         <span>{m.fecha_movimiento ? new Date(m.fecha_movimiento).toLocaleDateString('es-ES') : "-"}</span>
                                     </div>
+                                )
+                            },
+                            {
+                                label: "Comprobante",
+                                key: "comprobante",
+                                render: (m) => m.comprobante ? (
+                                    <button
+                                        onClick={() => window.open(buildSupabaseUrl(m.comprobante), '_blank')}
+                                        className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors"
+                                    >
+                                        <ExternalLink className="w-3 h-3" /> Ver comprobante
+                                    </button>
+                                ) : (
+                                    <span className="text-slate-300 text-xs">—</span>
                                 )
                             }
                         ]}

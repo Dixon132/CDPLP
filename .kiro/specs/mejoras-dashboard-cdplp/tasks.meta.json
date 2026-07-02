@@ -1,0 +1,874 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Agregar props opcionales al componente ConfirmDeleteModal": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915795755
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915806170
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915868190
+      }
+    ],
+    "1.2 Escribir property test para ConfirmDeleteModal": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796539
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915874003
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916231376
+      }
+    ],
+    "1.3 Actualizar módulos que usan ConfirmDeleteModal para activar/desactivar": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796638
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916240177
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916301814
+      }
+    ],
+    "1.4 Corregir z-index del componente Alerts": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796705
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916307873
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916346937
+      }
+    ],
+    "2.1 Limpiar EditarCorrespondencia": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796754
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916355656
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916399814
+      }
+    ],
+    "2.2 Limpiar CreateMemoria y EditMemoria": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796862
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916408073
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916554269
+      }
+    ],
+    "2.3 Limpiar EditActInstitucional y CreateActInstitucional": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915796992
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916558500
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916569098
+      }
+    ],
+    "2.4 Escribir property test para dispatch inmediato de onSuccess": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797055
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916572474
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916995257
+      }
+    ],
+    "3. Checkpoint — Verificar que las correcciones de UX funcionan": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797107
+      },
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782917002712
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922472537
+      }
+    ],
+    "4.1 Actualizar estados en backend": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797222
+      },
+      {
+        "executionId": "d9857c0e-ed19-432c-9a6b-82cd5f529d75",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782917142823
+      },
+      {
+        "executionId": "d9857c0e-ed19-432c-9a6b-82cd5f529d75",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782917311983
+      }
+    ],
+    "4.2 Actualizar estados en frontend": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797260
+      },
+      {
+        "executionId": "d9857c0e-ed19-432c-9a6b-82cd5f529d75",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782917317577
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922473843
+      }
+    ],
+    "4.3 Escribir property test para badge de actividades": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797311
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918169754
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918364709
+      }
+    ],
+    "4.4 Corregir autenticación en RegisterColegiadoInst": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797371
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918370761
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918472364
+      }
+    ],
+    "5.1 Reestilizar ModificarActividadSocial": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797410
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918479227
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918577453
+      }
+    ],
+    "5.2 Reestilizar ModificarPasante con validaciones": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797449
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918584885
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918690297
+      }
+    ],
+    "5.3 Reestilizar ModificarInvitado con validaciones": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797537
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918696956
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918798995
+      }
+    ],
+    "6.1 Agregar botón Ver comprobante en VerDetallesPago": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797589
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918806277
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918875289
+      }
+    ],
+    "6.2 Escribir property tests para visibilidad y construcción de URL": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797629
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918879172
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919040820
+      }
+    ],
+    "7. Checkpoint — Verificar correcciones de UX avanzadas": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797667
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919048360
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919137856
+      }
+    ],
+    "8.1 Actualizar schema.prisma": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797704
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919145017
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919195592
+      }
+    ],
+    "8.2 Correr migración": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797742
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919207090
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782920182461
+      }
+    ],
+    "8.3 Crear seed de documentos_requeridos": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797782
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782920190708
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782920264398
+      }
+    ],
+    "9.1 Crear controller de especialidades": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797822
+      },
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782920273326
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922474293
+      }
+    ],
+    "9.2 Crear router de especialidades y registrar en rutas globales": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797865
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922478558
+      }
+    ],
+    "10.1 Crear controller de documentos-requeridos": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797898
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922479593
+      }
+    ],
+    "10.2 Crear router y registrar": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915797937
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922480458
+      }
+    ],
+    "11.1 Actualizar controller de movimientos financieros para soportar comprobante": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798239
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922481628
+      }
+    ],
+    "12. Checkpoint — Verificar nuevos endpoints del backend": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798324
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922490381
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922584364
+      }
+    ],
+    "13.1 Crear servicio de especialidades": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798366
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922588455
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922640137
+      }
+    ],
+    "13.2 Crear servicio de documentos requeridos": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798397
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922589292
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922640893
+      }
+    ],
+    "13.3 Crear componente EspecialidadesSelect": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798424
+      },
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922646358
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923608027
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923825602
+      }
+    ],
+    "13.4 Escribir property tests para EspecialidadesSelect y serialización": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798459
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782922996932
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923360560
+      }
+    ],
+    "14.1 Reemplazar campo de especialidades en CreateColegiado y ModificarColegiado": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798503
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923366979
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923601255
+      }
+    ],
+    "14.2 Reemplazar campo de especialidades en CreatePasante y ModificarPasante": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798537
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923835966
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782924125473
+      }
+    ],
+    "15.1 Crear EspecialidadesCRUD component": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798588
+      },
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782924132328
+      }
+    ],
+    "15.2 Crear DocumentosRequeridosCRUD component": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798636
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929047155
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929238304
+      }
+    ],
+    "15.3 Agregar ambas subsecciones a Ajustes.jsx": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798676
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929245639
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929285958
+      }
+    ],
+    "16.1 Cargar documentos requeridos dinámicamente en PostularPage": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798714
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929293046
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929406101
+      }
+    ],
+    "16.2 Agregar campo de comprobante en el form de crear movimiento de tesorería": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798751
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929422335
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929533611
+      }
+    ],
+    "16.3 Mostrar botón Ver comprobante en historial de tesorería": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798789
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929540320
+      },
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929625265
+      }
+    ],
+    "17. Checkpoint — Verificar integración frontend completa hasta aquí": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798826
+      },
+      {
+        "executionId": "a3bdff1b-ce82-401c-abe5-4cc97dd84675",
+        "chatSessionId": "sess_758695da-95da-4531-8980-547c61e7f72e",
+        "timestamp": 1782929756170
+      }
+    ],
+    "18.1 Agregar validación dinámica al endpoint POST /api/postulaciones": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798862
+      },
+      {
+        "executionId": "1a6d1e97-b6f6-4cf9-8be4-93b18d710371",
+        "chatSessionId": "sess_773816ef-7edc-4e3d-b5be-80740ae2faa2",
+        "timestamp": 1782932437105
+      },
+      {
+        "executionId": "1a6d1e97-b6f6-4cf9-8be4-93b18d710371",
+        "chatSessionId": "sess_773816ef-7edc-4e3d-b5be-80740ae2faa2",
+        "timestamp": 1782932564292
+      }
+    ],
+    "18.2 Escribir property test para validación de documentos faltantes": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798891
+      },
+      {
+        "executionId": "1a6d1e97-b6f6-4cf9-8be4-93b18d710371",
+        "chatSessionId": "sess_773816ef-7edc-4e3d-b5be-80740ae2faa2",
+        "timestamp": 1782932571756
+      }
+    ],
+    "19.1 Implementar función generarPIN4Digitos": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798926
+      }
+    ],
+    "19.2 Escribir property test para generarPIN4Digitos": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915798965
+      }
+    ],
+    "19.3 Implementar flujo de aceptar postulación": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799036
+      }
+    ],
+    "19.4 Implementar flujo de rechazar postulación": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799085
+      }
+    ],
+    "19.5 Implementar eliminación definitiva de postulación": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799124
+      }
+    ],
+    "20.1 Crear estructura de carpetas y componentes base": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799168
+      }
+    ],
+    "20.2 Agregar ruta e ítem de menú": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799204
+      }
+    ],
+    "20.3 Implementar tabla de postulaciones con filtros y buscador": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799241
+      }
+    ],
+    "20.4 Implementar acciones de tabla": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799278
+      }
+    ],
+    "20.5 Implementar modal PostulacionDetalle": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799310
+      }
+    ],
+    "21. Integrar EspecialidadesSelect en PostularPage Step3": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799357
+      }
+    ],
+    "22. Checkpoint final — Verificar flujo completo de postulaciones": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782915799428
+      }
+    ],
+    "1. Correcciones de UX: ConfirmDeleteModal flexible y z-index de alertas": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916347225
+      }
+    ],
+    "2. Eliminar doble alerta y `setTimeout` en formularios": [
+      {
+        "executionId": "784a1e3f-7fca-43d9-b136-a6b887bfbc3c",
+        "chatSessionId": "sess_435e12a7-4e35-4d3d-b560-61b26d348ded",
+        "timestamp": 1782916995554
+      }
+    ],
+    "5. Reestilizar formularios de modificación": [
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782918799089
+      }
+    ],
+    "6. Ver comprobante desde historial de pagos y tesorería": [
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782919040918
+      }
+    ],
+    "8. Migración Prisma — nuevos modelos y campo comprobante": [
+      {
+        "executionId": "636a1cc3-454a-4edf-aa64-6ffac2497b8a",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782920264929
+      }
+    ],
+    "4. Actividades Institucionales — estados y corrección 401": [
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922474209
+      }
+    ],
+    "9. Backend — módulo especialidades": [
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922478861
+      }
+    ],
+    "10. Backend — módulo documentos-requeridos": [
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922480547
+      }
+    ],
+    "11. Backend — comprobante en movimientos financieros": [
+      {
+        "executionId": "5498704e-d3b6-473d-ac83-3717c4c9cc8c",
+        "chatSessionId": "sess_36b0c364-95ad-4902-b670-077f64d43d14",
+        "timestamp": 1782922481712
+      }
+    ],
+    "13. Frontend — servicios y componente EspecialidadesSelect": [
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782923826240
+      }
+    ],
+    "14. Frontend — integrar EspecialidadesSelect en formularios de colegiados y pasantes": [
+      {
+        "executionId": "38cad048-21fc-42f4-b6ea-26c828b8b72c",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782924125565
+      }
+    ],
+    "16. Frontend — PostularPage Step3 dinámico y comprobante en tesorería": [
+      {
+        "executionId": "9233b6cd-71b7-40d4-b02b-2c706c6e5658",
+        "chatSessionId": "sess_d93c7b45-4cf5-47f4-b96b-fc0fb4f09353",
+        "timestamp": 1782929625333
+      }
+    ]
+  }
+}

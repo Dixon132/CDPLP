@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, ContentCopy } from "@mui/icons-material";
 import { createPasante } from "../../../../services/pasantes";
+import EspecialidadesSelect from "../../../../components/EspecialidadesSelect";
 
 const CreatePasante = ({ onSuccess, onClose }) => {
     const {
@@ -32,10 +33,14 @@ const CreatePasante = ({ onSuccess, onClose }) => {
 
     const [pinGenerado, setPinGenerado] = useState(null);
     const [mostrarPin, setMostrarPin] = useState(false);
+    const [especialidades, setEspecialidades] = useState([]);
 
     const onSubmit = async (data) => {
         try {
-            const response = await createPasante(data)
+            const response = await createPasante({
+                ...data,
+                especialidades: especialidades.join(", "),
+            })
             const pin = response?.pin_temporal;
             if (pin) {
                 setPinGenerado(pin);
@@ -120,7 +125,7 @@ const CreatePasante = ({ onSuccess, onClose }) => {
                 />
 
                 {/* Carrera (Select con Controller) */}
-                    <FormControl fullWidth error={!!errors.institucion}>
+                <FormControl fullWidth error={!!errors.institucion}>
                     <InputLabel>Institucion</InputLabel>
                     <Controller
                         name="institucion"
@@ -141,6 +146,18 @@ const CreatePasante = ({ onSuccess, onClose }) => {
                         </Typography>
                     )}
                 </FormControl>
+
+                {/* Especialidades */}
+                <Box>
+                    <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
+                        Especialidades
+                    </Typography>
+                    <EspecialidadesSelect
+                        value={especialidades}
+                        onChange={setEspecialidades}
+                        allowCreate
+                    />
+                </Box>
 
                 {/* Botones */}
                 {pinGenerado && (

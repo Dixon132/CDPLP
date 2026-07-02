@@ -114,6 +114,16 @@ export type invitados = $Result.DefaultSelection<Prisma.$invitadosPayload>
  */
 export type postulaciones = $Result.DefaultSelection<Prisma.$postulacionesPayload>
 /**
+ * Model especialidades
+ * 
+ */
+export type especialidades = $Result.DefaultSelection<Prisma.$especialidadesPayload>
+/**
+ * Model documentos_requeridos
+ * 
+ */
+export type documentos_requeridos = $Result.DefaultSelection<Prisma.$documentos_requeridosPayload>
+/**
  * Model config_pago
  * 
  */
@@ -470,6 +480,26 @@ export class PrismaClient<
     * ```
     */
   get postulaciones(): Prisma.postulacionesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.especialidades`: Exposes CRUD operations for the **especialidades** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Especialidades
+    * const especialidades = await prisma.especialidades.findMany()
+    * ```
+    */
+  get especialidades(): Prisma.especialidadesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.documentos_requeridos`: Exposes CRUD operations for the **documentos_requeridos** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Documentos_requeridos
+    * const documentos_requeridos = await prisma.documentos_requeridos.findMany()
+    * ```
+    */
+  get documentos_requeridos(): Prisma.documentos_requeridosDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.config_pago`: Exposes CRUD operations for the **config_pago** model.
@@ -950,6 +980,8 @@ export namespace Prisma {
     usuarios: 'usuarios',
     invitados: 'invitados',
     postulaciones: 'postulaciones',
+    especialidades: 'especialidades',
+    documentos_requeridos: 'documentos_requeridos',
     config_pago: 'config_pago',
     memorias_balances: 'memorias_balances'
   };
@@ -970,7 +1002,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "config_pago" | "memorias_balances"
+      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "especialidades" | "documentos_requeridos" | "config_pago" | "memorias_balances"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2454,6 +2486,154 @@ export namespace Prisma {
           }
         }
       }
+      especialidades: {
+        payload: Prisma.$especialidadesPayload<ExtArgs>
+        fields: Prisma.especialidadesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.especialidadesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.especialidadesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          findFirst: {
+            args: Prisma.especialidadesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.especialidadesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          findMany: {
+            args: Prisma.especialidadesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>[]
+          }
+          create: {
+            args: Prisma.especialidadesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          createMany: {
+            args: Prisma.especialidadesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.especialidadesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>[]
+          }
+          delete: {
+            args: Prisma.especialidadesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          update: {
+            args: Prisma.especialidadesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          deleteMany: {
+            args: Prisma.especialidadesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.especialidadesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.especialidadesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>[]
+          }
+          upsert: {
+            args: Prisma.especialidadesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$especialidadesPayload>
+          }
+          aggregate: {
+            args: Prisma.EspecialidadesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEspecialidades>
+          }
+          groupBy: {
+            args: Prisma.especialidadesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EspecialidadesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.especialidadesCountArgs<ExtArgs>
+            result: $Utils.Optional<EspecialidadesCountAggregateOutputType> | number
+          }
+        }
+      }
+      documentos_requeridos: {
+        payload: Prisma.$documentos_requeridosPayload<ExtArgs>
+        fields: Prisma.documentos_requeridosFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.documentos_requeridosFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.documentos_requeridosFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          findFirst: {
+            args: Prisma.documentos_requeridosFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.documentos_requeridosFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          findMany: {
+            args: Prisma.documentos_requeridosFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>[]
+          }
+          create: {
+            args: Prisma.documentos_requeridosCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          createMany: {
+            args: Prisma.documentos_requeridosCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.documentos_requeridosCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>[]
+          }
+          delete: {
+            args: Prisma.documentos_requeridosDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          update: {
+            args: Prisma.documentos_requeridosUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          deleteMany: {
+            args: Prisma.documentos_requeridosDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.documentos_requeridosUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.documentos_requeridosUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>[]
+          }
+          upsert: {
+            args: Prisma.documentos_requeridosUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$documentos_requeridosPayload>
+          }
+          aggregate: {
+            args: Prisma.Documentos_requeridosAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocumentos_requeridos>
+          }
+          groupBy: {
+            args: Prisma.documentos_requeridosGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Documentos_requeridosGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.documentos_requeridosCountArgs<ExtArgs>
+            result: $Utils.Optional<Documentos_requeridosCountAggregateOutputType> | number
+          }
+        }
+      }
       config_pago: {
         payload: Prisma.$config_pagoPayload<ExtArgs>
         fields: Prisma.config_pagoFieldRefs
@@ -2706,6 +2886,8 @@ export namespace Prisma {
     usuarios?: usuariosOmit
     invitados?: invitadosOmit
     postulaciones?: postulacionesOmit
+    especialidades?: especialidadesOmit
+    documentos_requeridos?: documentos_requeridosOmit
     config_pago?: config_pagoOmit
     memorias_balances?: memorias_balancesOmit
   }
@@ -15301,6 +15483,7 @@ export namespace Prisma {
     descripcion: string | null
     monto: Decimal | null
     id_origen: number | null
+    comprobante: string | null
   }
 
   export type Movimientos_financierosMaxAggregateOutputType = {
@@ -15312,6 +15495,7 @@ export namespace Prisma {
     descripcion: string | null
     monto: Decimal | null
     id_origen: number | null
+    comprobante: string | null
   }
 
   export type Movimientos_financierosCountAggregateOutputType = {
@@ -15323,6 +15507,7 @@ export namespace Prisma {
     descripcion: number
     monto: number
     id_origen: number
+    comprobante: number
     _all: number
   }
 
@@ -15350,6 +15535,7 @@ export namespace Prisma {
     descripcion?: true
     monto?: true
     id_origen?: true
+    comprobante?: true
   }
 
   export type Movimientos_financierosMaxAggregateInputType = {
@@ -15361,6 +15547,7 @@ export namespace Prisma {
     descripcion?: true
     monto?: true
     id_origen?: true
+    comprobante?: true
   }
 
   export type Movimientos_financierosCountAggregateInputType = {
@@ -15372,6 +15559,7 @@ export namespace Prisma {
     descripcion?: true
     monto?: true
     id_origen?: true
+    comprobante?: true
     _all?: true
   }
 
@@ -15470,6 +15658,7 @@ export namespace Prisma {
     descripcion: string | null
     monto: Decimal | null
     id_origen: number | null
+    comprobante: string | null
     _count: Movimientos_financierosCountAggregateOutputType | null
     _avg: Movimientos_financierosAvgAggregateOutputType | null
     _sum: Movimientos_financierosSumAggregateOutputType | null
@@ -15500,6 +15689,7 @@ export namespace Prisma {
     descripcion?: boolean
     monto?: boolean
     id_origen?: boolean
+    comprobante?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
@@ -15513,6 +15703,7 @@ export namespace Prisma {
     descripcion?: boolean
     monto?: boolean
     id_origen?: boolean
+    comprobante?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
@@ -15526,6 +15717,7 @@ export namespace Prisma {
     descripcion?: boolean
     monto?: boolean
     id_origen?: boolean
+    comprobante?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
@@ -15539,9 +15731,10 @@ export namespace Prisma {
     descripcion?: boolean
     monto?: boolean
     id_origen?: boolean
+    comprobante?: boolean
   }
 
-  export type movimientos_financierosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_movimiento" | "id_presupuesto" | "fecha_movimiento" | "tipo_movimiento" | "categoria" | "descripcion" | "monto" | "id_origen", ExtArgs["result"]["movimientos_financieros"]>
+  export type movimientos_financierosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_movimiento" | "id_presupuesto" | "fecha_movimiento" | "tipo_movimiento" | "categoria" | "descripcion" | "monto" | "id_origen" | "comprobante", ExtArgs["result"]["movimientos_financieros"]>
   export type movimientos_financierosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
@@ -15570,6 +15763,7 @@ export namespace Prisma {
       descripcion: string | null
       monto: Prisma.Decimal | null
       id_origen: number | null
+      comprobante: string | null
     }, ExtArgs["result"]["movimientos_financieros"]>
     composites: {}
   }
@@ -16003,6 +16197,7 @@ export namespace Prisma {
     readonly descripcion: FieldRef<"movimientos_financieros", 'String'>
     readonly monto: FieldRef<"movimientos_financieros", 'Decimal'>
     readonly id_origen: FieldRef<"movimientos_financieros", 'Int'>
+    readonly comprobante: FieldRef<"movimientos_financieros", 'String'>
   }
     
 
@@ -26886,6 +27081,2094 @@ export namespace Prisma {
 
 
   /**
+   * Model especialidades
+   */
+
+  export type AggregateEspecialidades = {
+    _count: EspecialidadesCountAggregateOutputType | null
+    _avg: EspecialidadesAvgAggregateOutputType | null
+    _sum: EspecialidadesSumAggregateOutputType | null
+    _min: EspecialidadesMinAggregateOutputType | null
+    _max: EspecialidadesMaxAggregateOutputType | null
+  }
+
+  export type EspecialidadesAvgAggregateOutputType = {
+    id_especialidad: number | null
+  }
+
+  export type EspecialidadesSumAggregateOutputType = {
+    id_especialidad: number | null
+  }
+
+  export type EspecialidadesMinAggregateOutputType = {
+    id_especialidad: number | null
+    nombre: string | null
+    descripcion: string | null
+    activo: boolean | null
+    createdAt: Date | null
+  }
+
+  export type EspecialidadesMaxAggregateOutputType = {
+    id_especialidad: number | null
+    nombre: string | null
+    descripcion: string | null
+    activo: boolean | null
+    createdAt: Date | null
+  }
+
+  export type EspecialidadesCountAggregateOutputType = {
+    id_especialidad: number
+    nombre: number
+    descripcion: number
+    activo: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type EspecialidadesAvgAggregateInputType = {
+    id_especialidad?: true
+  }
+
+  export type EspecialidadesSumAggregateInputType = {
+    id_especialidad?: true
+  }
+
+  export type EspecialidadesMinAggregateInputType = {
+    id_especialidad?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+  }
+
+  export type EspecialidadesMaxAggregateInputType = {
+    id_especialidad?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+  }
+
+  export type EspecialidadesCountAggregateInputType = {
+    id_especialidad?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type EspecialidadesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which especialidades to aggregate.
+     */
+    where?: especialidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of especialidades to fetch.
+     */
+    orderBy?: especialidadesOrderByWithRelationInput | especialidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: especialidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` especialidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` especialidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned especialidades
+    **/
+    _count?: true | EspecialidadesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EspecialidadesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EspecialidadesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EspecialidadesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EspecialidadesMaxAggregateInputType
+  }
+
+  export type GetEspecialidadesAggregateType<T extends EspecialidadesAggregateArgs> = {
+        [P in keyof T & keyof AggregateEspecialidades]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEspecialidades[P]>
+      : GetScalarType<T[P], AggregateEspecialidades[P]>
+  }
+
+
+
+
+  export type especialidadesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: especialidadesWhereInput
+    orderBy?: especialidadesOrderByWithAggregationInput | especialidadesOrderByWithAggregationInput[]
+    by: EspecialidadesScalarFieldEnum[] | EspecialidadesScalarFieldEnum
+    having?: especialidadesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EspecialidadesCountAggregateInputType | true
+    _avg?: EspecialidadesAvgAggregateInputType
+    _sum?: EspecialidadesSumAggregateInputType
+    _min?: EspecialidadesMinAggregateInputType
+    _max?: EspecialidadesMaxAggregateInputType
+  }
+
+  export type EspecialidadesGroupByOutputType = {
+    id_especialidad: number
+    nombre: string
+    descripcion: string | null
+    activo: boolean
+    createdAt: Date
+    _count: EspecialidadesCountAggregateOutputType | null
+    _avg: EspecialidadesAvgAggregateOutputType | null
+    _sum: EspecialidadesSumAggregateOutputType | null
+    _min: EspecialidadesMinAggregateOutputType | null
+    _max: EspecialidadesMaxAggregateOutputType | null
+  }
+
+  type GetEspecialidadesGroupByPayload<T extends especialidadesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EspecialidadesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EspecialidadesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EspecialidadesGroupByOutputType[P]>
+            : GetScalarType<T[P], EspecialidadesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type especialidadesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_especialidad?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["especialidades"]>
+
+  export type especialidadesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_especialidad?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["especialidades"]>
+
+  export type especialidadesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_especialidad?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["especialidades"]>
+
+  export type especialidadesSelectScalar = {
+    id_especialidad?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    createdAt?: boolean
+  }
+
+  export type especialidadesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_especialidad" | "nombre" | "descripcion" | "activo" | "createdAt", ExtArgs["result"]["especialidades"]>
+
+  export type $especialidadesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "especialidades"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id_especialidad: number
+      nombre: string
+      descripcion: string | null
+      activo: boolean
+      createdAt: Date
+    }, ExtArgs["result"]["especialidades"]>
+    composites: {}
+  }
+
+  type especialidadesGetPayload<S extends boolean | null | undefined | especialidadesDefaultArgs> = $Result.GetResult<Prisma.$especialidadesPayload, S>
+
+  type especialidadesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<especialidadesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EspecialidadesCountAggregateInputType | true
+    }
+
+  export interface especialidadesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['especialidades'], meta: { name: 'especialidades' } }
+    /**
+     * Find zero or one Especialidades that matches the filter.
+     * @param {especialidadesFindUniqueArgs} args - Arguments to find a Especialidades
+     * @example
+     * // Get one Especialidades
+     * const especialidades = await prisma.especialidades.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends especialidadesFindUniqueArgs>(args: SelectSubset<T, especialidadesFindUniqueArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Especialidades that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {especialidadesFindUniqueOrThrowArgs} args - Arguments to find a Especialidades
+     * @example
+     * // Get one Especialidades
+     * const especialidades = await prisma.especialidades.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends especialidadesFindUniqueOrThrowArgs>(args: SelectSubset<T, especialidadesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Especialidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesFindFirstArgs} args - Arguments to find a Especialidades
+     * @example
+     * // Get one Especialidades
+     * const especialidades = await prisma.especialidades.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends especialidadesFindFirstArgs>(args?: SelectSubset<T, especialidadesFindFirstArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Especialidades that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesFindFirstOrThrowArgs} args - Arguments to find a Especialidades
+     * @example
+     * // Get one Especialidades
+     * const especialidades = await prisma.especialidades.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends especialidadesFindFirstOrThrowArgs>(args?: SelectSubset<T, especialidadesFindFirstOrThrowArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Especialidades that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Especialidades
+     * const especialidades = await prisma.especialidades.findMany()
+     * 
+     * // Get first 10 Especialidades
+     * const especialidades = await prisma.especialidades.findMany({ take: 10 })
+     * 
+     * // Only select the `id_especialidad`
+     * const especialidadesWithId_especialidadOnly = await prisma.especialidades.findMany({ select: { id_especialidad: true } })
+     * 
+     */
+    findMany<T extends especialidadesFindManyArgs>(args?: SelectSubset<T, especialidadesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Especialidades.
+     * @param {especialidadesCreateArgs} args - Arguments to create a Especialidades.
+     * @example
+     * // Create one Especialidades
+     * const Especialidades = await prisma.especialidades.create({
+     *   data: {
+     *     // ... data to create a Especialidades
+     *   }
+     * })
+     * 
+     */
+    create<T extends especialidadesCreateArgs>(args: SelectSubset<T, especialidadesCreateArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Especialidades.
+     * @param {especialidadesCreateManyArgs} args - Arguments to create many Especialidades.
+     * @example
+     * // Create many Especialidades
+     * const especialidades = await prisma.especialidades.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends especialidadesCreateManyArgs>(args?: SelectSubset<T, especialidadesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Especialidades and returns the data saved in the database.
+     * @param {especialidadesCreateManyAndReturnArgs} args - Arguments to create many Especialidades.
+     * @example
+     * // Create many Especialidades
+     * const especialidades = await prisma.especialidades.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Especialidades and only return the `id_especialidad`
+     * const especialidadesWithId_especialidadOnly = await prisma.especialidades.createManyAndReturn({
+     *   select: { id_especialidad: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends especialidadesCreateManyAndReturnArgs>(args?: SelectSubset<T, especialidadesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Especialidades.
+     * @param {especialidadesDeleteArgs} args - Arguments to delete one Especialidades.
+     * @example
+     * // Delete one Especialidades
+     * const Especialidades = await prisma.especialidades.delete({
+     *   where: {
+     *     // ... filter to delete one Especialidades
+     *   }
+     * })
+     * 
+     */
+    delete<T extends especialidadesDeleteArgs>(args: SelectSubset<T, especialidadesDeleteArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Especialidades.
+     * @param {especialidadesUpdateArgs} args - Arguments to update one Especialidades.
+     * @example
+     * // Update one Especialidades
+     * const especialidades = await prisma.especialidades.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends especialidadesUpdateArgs>(args: SelectSubset<T, especialidadesUpdateArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Especialidades.
+     * @param {especialidadesDeleteManyArgs} args - Arguments to filter Especialidades to delete.
+     * @example
+     * // Delete a few Especialidades
+     * const { count } = await prisma.especialidades.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends especialidadesDeleteManyArgs>(args?: SelectSubset<T, especialidadesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Especialidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Especialidades
+     * const especialidades = await prisma.especialidades.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends especialidadesUpdateManyArgs>(args: SelectSubset<T, especialidadesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Especialidades and returns the data updated in the database.
+     * @param {especialidadesUpdateManyAndReturnArgs} args - Arguments to update many Especialidades.
+     * @example
+     * // Update many Especialidades
+     * const especialidades = await prisma.especialidades.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Especialidades and only return the `id_especialidad`
+     * const especialidadesWithId_especialidadOnly = await prisma.especialidades.updateManyAndReturn({
+     *   select: { id_especialidad: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends especialidadesUpdateManyAndReturnArgs>(args: SelectSubset<T, especialidadesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Especialidades.
+     * @param {especialidadesUpsertArgs} args - Arguments to update or create a Especialidades.
+     * @example
+     * // Update or create a Especialidades
+     * const especialidades = await prisma.especialidades.upsert({
+     *   create: {
+     *     // ... data to create a Especialidades
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Especialidades we want to update
+     *   }
+     * })
+     */
+    upsert<T extends especialidadesUpsertArgs>(args: SelectSubset<T, especialidadesUpsertArgs<ExtArgs>>): Prisma__especialidadesClient<$Result.GetResult<Prisma.$especialidadesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Especialidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesCountArgs} args - Arguments to filter Especialidades to count.
+     * @example
+     * // Count the number of Especialidades
+     * const count = await prisma.especialidades.count({
+     *   where: {
+     *     // ... the filter for the Especialidades we want to count
+     *   }
+     * })
+    **/
+    count<T extends especialidadesCountArgs>(
+      args?: Subset<T, especialidadesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EspecialidadesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Especialidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EspecialidadesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EspecialidadesAggregateArgs>(args: Subset<T, EspecialidadesAggregateArgs>): Prisma.PrismaPromise<GetEspecialidadesAggregateType<T>>
+
+    /**
+     * Group by Especialidades.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {especialidadesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends especialidadesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: especialidadesGroupByArgs['orderBy'] }
+        : { orderBy?: especialidadesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, especialidadesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEspecialidadesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the especialidades model
+   */
+  readonly fields: especialidadesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for especialidades.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__especialidadesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the especialidades model
+   */
+  interface especialidadesFieldRefs {
+    readonly id_especialidad: FieldRef<"especialidades", 'Int'>
+    readonly nombre: FieldRef<"especialidades", 'String'>
+    readonly descripcion: FieldRef<"especialidades", 'String'>
+    readonly activo: FieldRef<"especialidades", 'Boolean'>
+    readonly createdAt: FieldRef<"especialidades", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * especialidades findUnique
+   */
+  export type especialidadesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter, which especialidades to fetch.
+     */
+    where: especialidadesWhereUniqueInput
+  }
+
+  /**
+   * especialidades findUniqueOrThrow
+   */
+  export type especialidadesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter, which especialidades to fetch.
+     */
+    where: especialidadesWhereUniqueInput
+  }
+
+  /**
+   * especialidades findFirst
+   */
+  export type especialidadesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter, which especialidades to fetch.
+     */
+    where?: especialidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of especialidades to fetch.
+     */
+    orderBy?: especialidadesOrderByWithRelationInput | especialidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for especialidades.
+     */
+    cursor?: especialidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` especialidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` especialidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of especialidades.
+     */
+    distinct?: EspecialidadesScalarFieldEnum | EspecialidadesScalarFieldEnum[]
+  }
+
+  /**
+   * especialidades findFirstOrThrow
+   */
+  export type especialidadesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter, which especialidades to fetch.
+     */
+    where?: especialidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of especialidades to fetch.
+     */
+    orderBy?: especialidadesOrderByWithRelationInput | especialidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for especialidades.
+     */
+    cursor?: especialidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` especialidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` especialidades.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of especialidades.
+     */
+    distinct?: EspecialidadesScalarFieldEnum | EspecialidadesScalarFieldEnum[]
+  }
+
+  /**
+   * especialidades findMany
+   */
+  export type especialidadesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter, which especialidades to fetch.
+     */
+    where?: especialidadesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of especialidades to fetch.
+     */
+    orderBy?: especialidadesOrderByWithRelationInput | especialidadesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing especialidades.
+     */
+    cursor?: especialidadesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` especialidades from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` especialidades.
+     */
+    skip?: number
+    distinct?: EspecialidadesScalarFieldEnum | EspecialidadesScalarFieldEnum[]
+  }
+
+  /**
+   * especialidades create
+   */
+  export type especialidadesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a especialidades.
+     */
+    data: XOR<especialidadesCreateInput, especialidadesUncheckedCreateInput>
+  }
+
+  /**
+   * especialidades createMany
+   */
+  export type especialidadesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many especialidades.
+     */
+    data: especialidadesCreateManyInput | especialidadesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * especialidades createManyAndReturn
+   */
+  export type especialidadesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * The data used to create many especialidades.
+     */
+    data: especialidadesCreateManyInput | especialidadesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * especialidades update
+   */
+  export type especialidadesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a especialidades.
+     */
+    data: XOR<especialidadesUpdateInput, especialidadesUncheckedUpdateInput>
+    /**
+     * Choose, which especialidades to update.
+     */
+    where: especialidadesWhereUniqueInput
+  }
+
+  /**
+   * especialidades updateMany
+   */
+  export type especialidadesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update especialidades.
+     */
+    data: XOR<especialidadesUpdateManyMutationInput, especialidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which especialidades to update
+     */
+    where?: especialidadesWhereInput
+    /**
+     * Limit how many especialidades to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * especialidades updateManyAndReturn
+   */
+  export type especialidadesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * The data used to update especialidades.
+     */
+    data: XOR<especialidadesUpdateManyMutationInput, especialidadesUncheckedUpdateManyInput>
+    /**
+     * Filter which especialidades to update
+     */
+    where?: especialidadesWhereInput
+    /**
+     * Limit how many especialidades to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * especialidades upsert
+   */
+  export type especialidadesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the especialidades to update in case it exists.
+     */
+    where: especialidadesWhereUniqueInput
+    /**
+     * In case the especialidades found by the `where` argument doesn't exist, create a new especialidades with this data.
+     */
+    create: XOR<especialidadesCreateInput, especialidadesUncheckedCreateInput>
+    /**
+     * In case the especialidades was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<especialidadesUpdateInput, especialidadesUncheckedUpdateInput>
+  }
+
+  /**
+   * especialidades delete
+   */
+  export type especialidadesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+    /**
+     * Filter which especialidades to delete.
+     */
+    where: especialidadesWhereUniqueInput
+  }
+
+  /**
+   * especialidades deleteMany
+   */
+  export type especialidadesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which especialidades to delete
+     */
+    where?: especialidadesWhereInput
+    /**
+     * Limit how many especialidades to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * especialidades without action
+   */
+  export type especialidadesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the especialidades
+     */
+    select?: especialidadesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the especialidades
+     */
+    omit?: especialidadesOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model documentos_requeridos
+   */
+
+  export type AggregateDocumentos_requeridos = {
+    _count: Documentos_requeridosCountAggregateOutputType | null
+    _avg: Documentos_requeridosAvgAggregateOutputType | null
+    _sum: Documentos_requeridosSumAggregateOutputType | null
+    _min: Documentos_requeridosMinAggregateOutputType | null
+    _max: Documentos_requeridosMaxAggregateOutputType | null
+  }
+
+  export type Documentos_requeridosAvgAggregateOutputType = {
+    id_doc_req: number | null
+    orden: number | null
+  }
+
+  export type Documentos_requeridosSumAggregateOutputType = {
+    id_doc_req: number | null
+    orden: number | null
+  }
+
+  export type Documentos_requeridosMinAggregateOutputType = {
+    id_doc_req: number | null
+    nombre: string | null
+    descripcion: string | null
+    activo: boolean | null
+    es_opcional: boolean | null
+    orden: number | null
+    createdAt: Date | null
+  }
+
+  export type Documentos_requeridosMaxAggregateOutputType = {
+    id_doc_req: number | null
+    nombre: string | null
+    descripcion: string | null
+    activo: boolean | null
+    es_opcional: boolean | null
+    orden: number | null
+    createdAt: Date | null
+  }
+
+  export type Documentos_requeridosCountAggregateOutputType = {
+    id_doc_req: number
+    nombre: number
+    descripcion: number
+    activo: number
+    es_opcional: number
+    orden: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type Documentos_requeridosAvgAggregateInputType = {
+    id_doc_req?: true
+    orden?: true
+  }
+
+  export type Documentos_requeridosSumAggregateInputType = {
+    id_doc_req?: true
+    orden?: true
+  }
+
+  export type Documentos_requeridosMinAggregateInputType = {
+    id_doc_req?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    es_opcional?: true
+    orden?: true
+    createdAt?: true
+  }
+
+  export type Documentos_requeridosMaxAggregateInputType = {
+    id_doc_req?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    es_opcional?: true
+    orden?: true
+    createdAt?: true
+  }
+
+  export type Documentos_requeridosCountAggregateInputType = {
+    id_doc_req?: true
+    nombre?: true
+    descripcion?: true
+    activo?: true
+    es_opcional?: true
+    orden?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type Documentos_requeridosAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which documentos_requeridos to aggregate.
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documentos_requeridos to fetch.
+     */
+    orderBy?: documentos_requeridosOrderByWithRelationInput | documentos_requeridosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: documentos_requeridosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documentos_requeridos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documentos_requeridos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned documentos_requeridos
+    **/
+    _count?: true | Documentos_requeridosCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Documentos_requeridosAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Documentos_requeridosSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Documentos_requeridosMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Documentos_requeridosMaxAggregateInputType
+  }
+
+  export type GetDocumentos_requeridosAggregateType<T extends Documentos_requeridosAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocumentos_requeridos]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocumentos_requeridos[P]>
+      : GetScalarType<T[P], AggregateDocumentos_requeridos[P]>
+  }
+
+
+
+
+  export type documentos_requeridosGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: documentos_requeridosWhereInput
+    orderBy?: documentos_requeridosOrderByWithAggregationInput | documentos_requeridosOrderByWithAggregationInput[]
+    by: Documentos_requeridosScalarFieldEnum[] | Documentos_requeridosScalarFieldEnum
+    having?: documentos_requeridosScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Documentos_requeridosCountAggregateInputType | true
+    _avg?: Documentos_requeridosAvgAggregateInputType
+    _sum?: Documentos_requeridosSumAggregateInputType
+    _min?: Documentos_requeridosMinAggregateInputType
+    _max?: Documentos_requeridosMaxAggregateInputType
+  }
+
+  export type Documentos_requeridosGroupByOutputType = {
+    id_doc_req: number
+    nombre: string
+    descripcion: string | null
+    activo: boolean
+    es_opcional: boolean
+    orden: number
+    createdAt: Date
+    _count: Documentos_requeridosCountAggregateOutputType | null
+    _avg: Documentos_requeridosAvgAggregateOutputType | null
+    _sum: Documentos_requeridosSumAggregateOutputType | null
+    _min: Documentos_requeridosMinAggregateOutputType | null
+    _max: Documentos_requeridosMaxAggregateOutputType | null
+  }
+
+  type GetDocumentos_requeridosGroupByPayload<T extends documentos_requeridosGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Documentos_requeridosGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Documentos_requeridosGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Documentos_requeridosGroupByOutputType[P]>
+            : GetScalarType<T[P], Documentos_requeridosGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type documentos_requeridosSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_doc_req?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["documentos_requeridos"]>
+
+  export type documentos_requeridosSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_doc_req?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["documentos_requeridos"]>
+
+  export type documentos_requeridosSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_doc_req?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["documentos_requeridos"]>
+
+  export type documentos_requeridosSelectScalar = {
+    id_doc_req?: boolean
+    nombre?: boolean
+    descripcion?: boolean
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: boolean
+    createdAt?: boolean
+  }
+
+  export type documentos_requeridosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_doc_req" | "nombre" | "descripcion" | "activo" | "es_opcional" | "orden" | "createdAt", ExtArgs["result"]["documentos_requeridos"]>
+
+  export type $documentos_requeridosPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "documentos_requeridos"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id_doc_req: number
+      nombre: string
+      descripcion: string | null
+      activo: boolean
+      es_opcional: boolean
+      orden: number
+      createdAt: Date
+    }, ExtArgs["result"]["documentos_requeridos"]>
+    composites: {}
+  }
+
+  type documentos_requeridosGetPayload<S extends boolean | null | undefined | documentos_requeridosDefaultArgs> = $Result.GetResult<Prisma.$documentos_requeridosPayload, S>
+
+  type documentos_requeridosCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<documentos_requeridosFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Documentos_requeridosCountAggregateInputType | true
+    }
+
+  export interface documentos_requeridosDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['documentos_requeridos'], meta: { name: 'documentos_requeridos' } }
+    /**
+     * Find zero or one Documentos_requeridos that matches the filter.
+     * @param {documentos_requeridosFindUniqueArgs} args - Arguments to find a Documentos_requeridos
+     * @example
+     * // Get one Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends documentos_requeridosFindUniqueArgs>(args: SelectSubset<T, documentos_requeridosFindUniqueArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Documentos_requeridos that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {documentos_requeridosFindUniqueOrThrowArgs} args - Arguments to find a Documentos_requeridos
+     * @example
+     * // Get one Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends documentos_requeridosFindUniqueOrThrowArgs>(args: SelectSubset<T, documentos_requeridosFindUniqueOrThrowArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documentos_requeridos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosFindFirstArgs} args - Arguments to find a Documentos_requeridos
+     * @example
+     * // Get one Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends documentos_requeridosFindFirstArgs>(args?: SelectSubset<T, documentos_requeridosFindFirstArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Documentos_requeridos that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosFindFirstOrThrowArgs} args - Arguments to find a Documentos_requeridos
+     * @example
+     * // Get one Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends documentos_requeridosFindFirstOrThrowArgs>(args?: SelectSubset<T, documentos_requeridosFindFirstOrThrowArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documentos_requeridos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findMany()
+     * 
+     * // Get first 10 Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.findMany({ take: 10 })
+     * 
+     * // Only select the `id_doc_req`
+     * const documentos_requeridosWithId_doc_reqOnly = await prisma.documentos_requeridos.findMany({ select: { id_doc_req: true } })
+     * 
+     */
+    findMany<T extends documentos_requeridosFindManyArgs>(args?: SelectSubset<T, documentos_requeridosFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Documentos_requeridos.
+     * @param {documentos_requeridosCreateArgs} args - Arguments to create a Documentos_requeridos.
+     * @example
+     * // Create one Documentos_requeridos
+     * const Documentos_requeridos = await prisma.documentos_requeridos.create({
+     *   data: {
+     *     // ... data to create a Documentos_requeridos
+     *   }
+     * })
+     * 
+     */
+    create<T extends documentos_requeridosCreateArgs>(args: SelectSubset<T, documentos_requeridosCreateArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Documentos_requeridos.
+     * @param {documentos_requeridosCreateManyArgs} args - Arguments to create many Documentos_requeridos.
+     * @example
+     * // Create many Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends documentos_requeridosCreateManyArgs>(args?: SelectSubset<T, documentos_requeridosCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Documentos_requeridos and returns the data saved in the database.
+     * @param {documentos_requeridosCreateManyAndReturnArgs} args - Arguments to create many Documentos_requeridos.
+     * @example
+     * // Create many Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Documentos_requeridos and only return the `id_doc_req`
+     * const documentos_requeridosWithId_doc_reqOnly = await prisma.documentos_requeridos.createManyAndReturn({
+     *   select: { id_doc_req: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends documentos_requeridosCreateManyAndReturnArgs>(args?: SelectSubset<T, documentos_requeridosCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Documentos_requeridos.
+     * @param {documentos_requeridosDeleteArgs} args - Arguments to delete one Documentos_requeridos.
+     * @example
+     * // Delete one Documentos_requeridos
+     * const Documentos_requeridos = await prisma.documentos_requeridos.delete({
+     *   where: {
+     *     // ... filter to delete one Documentos_requeridos
+     *   }
+     * })
+     * 
+     */
+    delete<T extends documentos_requeridosDeleteArgs>(args: SelectSubset<T, documentos_requeridosDeleteArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Documentos_requeridos.
+     * @param {documentos_requeridosUpdateArgs} args - Arguments to update one Documentos_requeridos.
+     * @example
+     * // Update one Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends documentos_requeridosUpdateArgs>(args: SelectSubset<T, documentos_requeridosUpdateArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Documentos_requeridos.
+     * @param {documentos_requeridosDeleteManyArgs} args - Arguments to filter Documentos_requeridos to delete.
+     * @example
+     * // Delete a few Documentos_requeridos
+     * const { count } = await prisma.documentos_requeridos.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends documentos_requeridosDeleteManyArgs>(args?: SelectSubset<T, documentos_requeridosDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documentos_requeridos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends documentos_requeridosUpdateManyArgs>(args: SelectSubset<T, documentos_requeridosUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documentos_requeridos and returns the data updated in the database.
+     * @param {documentos_requeridosUpdateManyAndReturnArgs} args - Arguments to update many Documentos_requeridos.
+     * @example
+     * // Update many Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Documentos_requeridos and only return the `id_doc_req`
+     * const documentos_requeridosWithId_doc_reqOnly = await prisma.documentos_requeridos.updateManyAndReturn({
+     *   select: { id_doc_req: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends documentos_requeridosUpdateManyAndReturnArgs>(args: SelectSubset<T, documentos_requeridosUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Documentos_requeridos.
+     * @param {documentos_requeridosUpsertArgs} args - Arguments to update or create a Documentos_requeridos.
+     * @example
+     * // Update or create a Documentos_requeridos
+     * const documentos_requeridos = await prisma.documentos_requeridos.upsert({
+     *   create: {
+     *     // ... data to create a Documentos_requeridos
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Documentos_requeridos we want to update
+     *   }
+     * })
+     */
+    upsert<T extends documentos_requeridosUpsertArgs>(args: SelectSubset<T, documentos_requeridosUpsertArgs<ExtArgs>>): Prisma__documentos_requeridosClient<$Result.GetResult<Prisma.$documentos_requeridosPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Documentos_requeridos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosCountArgs} args - Arguments to filter Documentos_requeridos to count.
+     * @example
+     * // Count the number of Documentos_requeridos
+     * const count = await prisma.documentos_requeridos.count({
+     *   where: {
+     *     // ... the filter for the Documentos_requeridos we want to count
+     *   }
+     * })
+    **/
+    count<T extends documentos_requeridosCountArgs>(
+      args?: Subset<T, documentos_requeridosCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Documentos_requeridosCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Documentos_requeridos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Documentos_requeridosAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Documentos_requeridosAggregateArgs>(args: Subset<T, Documentos_requeridosAggregateArgs>): Prisma.PrismaPromise<GetDocumentos_requeridosAggregateType<T>>
+
+    /**
+     * Group by Documentos_requeridos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {documentos_requeridosGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends documentos_requeridosGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: documentos_requeridosGroupByArgs['orderBy'] }
+        : { orderBy?: documentos_requeridosGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, documentos_requeridosGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentos_requeridosGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the documentos_requeridos model
+   */
+  readonly fields: documentos_requeridosFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for documentos_requeridos.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__documentos_requeridosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the documentos_requeridos model
+   */
+  interface documentos_requeridosFieldRefs {
+    readonly id_doc_req: FieldRef<"documentos_requeridos", 'Int'>
+    readonly nombre: FieldRef<"documentos_requeridos", 'String'>
+    readonly descripcion: FieldRef<"documentos_requeridos", 'String'>
+    readonly activo: FieldRef<"documentos_requeridos", 'Boolean'>
+    readonly es_opcional: FieldRef<"documentos_requeridos", 'Boolean'>
+    readonly orden: FieldRef<"documentos_requeridos", 'Int'>
+    readonly createdAt: FieldRef<"documentos_requeridos", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * documentos_requeridos findUnique
+   */
+  export type documentos_requeridosFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter, which documentos_requeridos to fetch.
+     */
+    where: documentos_requeridosWhereUniqueInput
+  }
+
+  /**
+   * documentos_requeridos findUniqueOrThrow
+   */
+  export type documentos_requeridosFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter, which documentos_requeridos to fetch.
+     */
+    where: documentos_requeridosWhereUniqueInput
+  }
+
+  /**
+   * documentos_requeridos findFirst
+   */
+  export type documentos_requeridosFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter, which documentos_requeridos to fetch.
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documentos_requeridos to fetch.
+     */
+    orderBy?: documentos_requeridosOrderByWithRelationInput | documentos_requeridosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for documentos_requeridos.
+     */
+    cursor?: documentos_requeridosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documentos_requeridos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documentos_requeridos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of documentos_requeridos.
+     */
+    distinct?: Documentos_requeridosScalarFieldEnum | Documentos_requeridosScalarFieldEnum[]
+  }
+
+  /**
+   * documentos_requeridos findFirstOrThrow
+   */
+  export type documentos_requeridosFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter, which documentos_requeridos to fetch.
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documentos_requeridos to fetch.
+     */
+    orderBy?: documentos_requeridosOrderByWithRelationInput | documentos_requeridosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for documentos_requeridos.
+     */
+    cursor?: documentos_requeridosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documentos_requeridos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documentos_requeridos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of documentos_requeridos.
+     */
+    distinct?: Documentos_requeridosScalarFieldEnum | Documentos_requeridosScalarFieldEnum[]
+  }
+
+  /**
+   * documentos_requeridos findMany
+   */
+  export type documentos_requeridosFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter, which documentos_requeridos to fetch.
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of documentos_requeridos to fetch.
+     */
+    orderBy?: documentos_requeridosOrderByWithRelationInput | documentos_requeridosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing documentos_requeridos.
+     */
+    cursor?: documentos_requeridosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` documentos_requeridos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` documentos_requeridos.
+     */
+    skip?: number
+    distinct?: Documentos_requeridosScalarFieldEnum | Documentos_requeridosScalarFieldEnum[]
+  }
+
+  /**
+   * documentos_requeridos create
+   */
+  export type documentos_requeridosCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * The data needed to create a documentos_requeridos.
+     */
+    data: XOR<documentos_requeridosCreateInput, documentos_requeridosUncheckedCreateInput>
+  }
+
+  /**
+   * documentos_requeridos createMany
+   */
+  export type documentos_requeridosCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many documentos_requeridos.
+     */
+    data: documentos_requeridosCreateManyInput | documentos_requeridosCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * documentos_requeridos createManyAndReturn
+   */
+  export type documentos_requeridosCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * The data used to create many documentos_requeridos.
+     */
+    data: documentos_requeridosCreateManyInput | documentos_requeridosCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * documentos_requeridos update
+   */
+  export type documentos_requeridosUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * The data needed to update a documentos_requeridos.
+     */
+    data: XOR<documentos_requeridosUpdateInput, documentos_requeridosUncheckedUpdateInput>
+    /**
+     * Choose, which documentos_requeridos to update.
+     */
+    where: documentos_requeridosWhereUniqueInput
+  }
+
+  /**
+   * documentos_requeridos updateMany
+   */
+  export type documentos_requeridosUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update documentos_requeridos.
+     */
+    data: XOR<documentos_requeridosUpdateManyMutationInput, documentos_requeridosUncheckedUpdateManyInput>
+    /**
+     * Filter which documentos_requeridos to update
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * Limit how many documentos_requeridos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * documentos_requeridos updateManyAndReturn
+   */
+  export type documentos_requeridosUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * The data used to update documentos_requeridos.
+     */
+    data: XOR<documentos_requeridosUpdateManyMutationInput, documentos_requeridosUncheckedUpdateManyInput>
+    /**
+     * Filter which documentos_requeridos to update
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * Limit how many documentos_requeridos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * documentos_requeridos upsert
+   */
+  export type documentos_requeridosUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * The filter to search for the documentos_requeridos to update in case it exists.
+     */
+    where: documentos_requeridosWhereUniqueInput
+    /**
+     * In case the documentos_requeridos found by the `where` argument doesn't exist, create a new documentos_requeridos with this data.
+     */
+    create: XOR<documentos_requeridosCreateInput, documentos_requeridosUncheckedCreateInput>
+    /**
+     * In case the documentos_requeridos was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<documentos_requeridosUpdateInput, documentos_requeridosUncheckedUpdateInput>
+  }
+
+  /**
+   * documentos_requeridos delete
+   */
+  export type documentos_requeridosDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+    /**
+     * Filter which documentos_requeridos to delete.
+     */
+    where: documentos_requeridosWhereUniqueInput
+  }
+
+  /**
+   * documentos_requeridos deleteMany
+   */
+  export type documentos_requeridosDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which documentos_requeridos to delete
+     */
+    where?: documentos_requeridosWhereInput
+    /**
+     * Limit how many documentos_requeridos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * documentos_requeridos without action
+   */
+  export type documentos_requeridosDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the documentos_requeridos
+     */
+    select?: documentos_requeridosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the documentos_requeridos
+     */
+    omit?: documentos_requeridosOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Model config_pago
    */
 
@@ -29151,7 +31434,8 @@ export namespace Prisma {
     categoria: 'categoria',
     descripcion: 'descripcion',
     monto: 'monto',
-    id_origen: 'id_origen'
+    id_origen: 'id_origen',
+    comprobante: 'comprobante'
   };
 
   export type Movimientos_financierosScalarFieldEnum = (typeof Movimientos_financierosScalarFieldEnum)[keyof typeof Movimientos_financierosScalarFieldEnum]
@@ -29279,6 +31563,30 @@ export namespace Prisma {
   };
 
   export type PostulacionesScalarFieldEnum = (typeof PostulacionesScalarFieldEnum)[keyof typeof PostulacionesScalarFieldEnum]
+
+
+  export const EspecialidadesScalarFieldEnum: {
+    id_especialidad: 'id_especialidad',
+    nombre: 'nombre',
+    descripcion: 'descripcion',
+    activo: 'activo',
+    createdAt: 'createdAt'
+  };
+
+  export type EspecialidadesScalarFieldEnum = (typeof EspecialidadesScalarFieldEnum)[keyof typeof EspecialidadesScalarFieldEnum]
+
+
+  export const Documentos_requeridosScalarFieldEnum: {
+    id_doc_req: 'id_doc_req',
+    nombre: 'nombre',
+    descripcion: 'descripcion',
+    activo: 'activo',
+    es_opcional: 'es_opcional',
+    orden: 'orden',
+    createdAt: 'createdAt'
+  };
+
+  export type Documentos_requeridosScalarFieldEnum = (typeof Documentos_requeridosScalarFieldEnum)[keyof typeof Documentos_requeridosScalarFieldEnum]
 
 
   export const Config_pagoScalarFieldEnum: {
@@ -30221,6 +32529,7 @@ export namespace Prisma {
     descripcion?: StringNullableFilter<"movimientos_financieros"> | string | null
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
+    comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
     origen_movimiento?: XOR<Origen_movimientoNullableScalarRelationFilter, origen_movimientoWhereInput> | null
     presupuestos?: XOR<PresupuestosNullableScalarRelationFilter, presupuestosWhereInput> | null
   }
@@ -30234,6 +32543,7 @@ export namespace Prisma {
     descripcion?: SortOrderInput | SortOrder
     monto?: SortOrderInput | SortOrder
     id_origen?: SortOrderInput | SortOrder
+    comprobante?: SortOrderInput | SortOrder
     origen_movimiento?: origen_movimientoOrderByWithRelationInput
     presupuestos?: presupuestosOrderByWithRelationInput
   }
@@ -30250,6 +32560,7 @@ export namespace Prisma {
     descripcion?: StringNullableFilter<"movimientos_financieros"> | string | null
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
+    comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
     origen_movimiento?: XOR<Origen_movimientoNullableScalarRelationFilter, origen_movimientoWhereInput> | null
     presupuestos?: XOR<PresupuestosNullableScalarRelationFilter, presupuestosWhereInput> | null
   }, "id_movimiento">
@@ -30263,6 +32574,7 @@ export namespace Prisma {
     descripcion?: SortOrderInput | SortOrder
     monto?: SortOrderInput | SortOrder
     id_origen?: SortOrderInput | SortOrder
+    comprobante?: SortOrderInput | SortOrder
     _count?: movimientos_financierosCountOrderByAggregateInput
     _avg?: movimientos_financierosAvgOrderByAggregateInput
     _max?: movimientos_financierosMaxOrderByAggregateInput
@@ -30282,6 +32594,7 @@ export namespace Prisma {
     descripcion?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
     monto?: DecimalNullableWithAggregatesFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableWithAggregatesFilter<"movimientos_financieros"> | number | null
+    comprobante?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
   }
 
   export type origen_movimientoWhereInput = {
@@ -30938,6 +33251,124 @@ export namespace Prisma {
     motivo_rechazo?: StringNullableWithAggregatesFilter<"postulaciones"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"postulaciones"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"postulaciones"> | Date | string
+  }
+
+  export type especialidadesWhereInput = {
+    AND?: especialidadesWhereInput | especialidadesWhereInput[]
+    OR?: especialidadesWhereInput[]
+    NOT?: especialidadesWhereInput | especialidadesWhereInput[]
+    id_especialidad?: IntFilter<"especialidades"> | number
+    nombre?: StringFilter<"especialidades"> | string
+    descripcion?: StringNullableFilter<"especialidades"> | string | null
+    activo?: BoolFilter<"especialidades"> | boolean
+    createdAt?: DateTimeFilter<"especialidades"> | Date | string
+  }
+
+  export type especialidadesOrderByWithRelationInput = {
+    id_especialidad?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type especialidadesWhereUniqueInput = Prisma.AtLeast<{
+    id_especialidad?: number
+    nombre?: string
+    AND?: especialidadesWhereInput | especialidadesWhereInput[]
+    OR?: especialidadesWhereInput[]
+    NOT?: especialidadesWhereInput | especialidadesWhereInput[]
+    descripcion?: StringNullableFilter<"especialidades"> | string | null
+    activo?: BoolFilter<"especialidades"> | boolean
+    createdAt?: DateTimeFilter<"especialidades"> | Date | string
+  }, "id_especialidad" | "nombre">
+
+  export type especialidadesOrderByWithAggregationInput = {
+    id_especialidad?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+    _count?: especialidadesCountOrderByAggregateInput
+    _avg?: especialidadesAvgOrderByAggregateInput
+    _max?: especialidadesMaxOrderByAggregateInput
+    _min?: especialidadesMinOrderByAggregateInput
+    _sum?: especialidadesSumOrderByAggregateInput
+  }
+
+  export type especialidadesScalarWhereWithAggregatesInput = {
+    AND?: especialidadesScalarWhereWithAggregatesInput | especialidadesScalarWhereWithAggregatesInput[]
+    OR?: especialidadesScalarWhereWithAggregatesInput[]
+    NOT?: especialidadesScalarWhereWithAggregatesInput | especialidadesScalarWhereWithAggregatesInput[]
+    id_especialidad?: IntWithAggregatesFilter<"especialidades"> | number
+    nombre?: StringWithAggregatesFilter<"especialidades"> | string
+    descripcion?: StringNullableWithAggregatesFilter<"especialidades"> | string | null
+    activo?: BoolWithAggregatesFilter<"especialidades"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"especialidades"> | Date | string
+  }
+
+  export type documentos_requeridosWhereInput = {
+    AND?: documentos_requeridosWhereInput | documentos_requeridosWhereInput[]
+    OR?: documentos_requeridosWhereInput[]
+    NOT?: documentos_requeridosWhereInput | documentos_requeridosWhereInput[]
+    id_doc_req?: IntFilter<"documentos_requeridos"> | number
+    nombre?: StringFilter<"documentos_requeridos"> | string
+    descripcion?: StringNullableFilter<"documentos_requeridos"> | string | null
+    activo?: BoolFilter<"documentos_requeridos"> | boolean
+    es_opcional?: BoolFilter<"documentos_requeridos"> | boolean
+    orden?: IntFilter<"documentos_requeridos"> | number
+    createdAt?: DateTimeFilter<"documentos_requeridos"> | Date | string
+  }
+
+  export type documentos_requeridosOrderByWithRelationInput = {
+    id_doc_req?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    es_opcional?: SortOrder
+    orden?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type documentos_requeridosWhereUniqueInput = Prisma.AtLeast<{
+    id_doc_req?: number
+    AND?: documentos_requeridosWhereInput | documentos_requeridosWhereInput[]
+    OR?: documentos_requeridosWhereInput[]
+    NOT?: documentos_requeridosWhereInput | documentos_requeridosWhereInput[]
+    nombre?: StringFilter<"documentos_requeridos"> | string
+    descripcion?: StringNullableFilter<"documentos_requeridos"> | string | null
+    activo?: BoolFilter<"documentos_requeridos"> | boolean
+    es_opcional?: BoolFilter<"documentos_requeridos"> | boolean
+    orden?: IntFilter<"documentos_requeridos"> | number
+    createdAt?: DateTimeFilter<"documentos_requeridos"> | Date | string
+  }, "id_doc_req">
+
+  export type documentos_requeridosOrderByWithAggregationInput = {
+    id_doc_req?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    activo?: SortOrder
+    es_opcional?: SortOrder
+    orden?: SortOrder
+    createdAt?: SortOrder
+    _count?: documentos_requeridosCountOrderByAggregateInput
+    _avg?: documentos_requeridosAvgOrderByAggregateInput
+    _max?: documentos_requeridosMaxOrderByAggregateInput
+    _min?: documentos_requeridosMinOrderByAggregateInput
+    _sum?: documentos_requeridosSumOrderByAggregateInput
+  }
+
+  export type documentos_requeridosScalarWhereWithAggregatesInput = {
+    AND?: documentos_requeridosScalarWhereWithAggregatesInput | documentos_requeridosScalarWhereWithAggregatesInput[]
+    OR?: documentos_requeridosScalarWhereWithAggregatesInput[]
+    NOT?: documentos_requeridosScalarWhereWithAggregatesInput | documentos_requeridosScalarWhereWithAggregatesInput[]
+    id_doc_req?: IntWithAggregatesFilter<"documentos_requeridos"> | number
+    nombre?: StringWithAggregatesFilter<"documentos_requeridos"> | string
+    descripcion?: StringNullableWithAggregatesFilter<"documentos_requeridos"> | string | null
+    activo?: BoolWithAggregatesFilter<"documentos_requeridos"> | boolean
+    es_opcional?: BoolWithAggregatesFilter<"documentos_requeridos"> | boolean
+    orden?: IntWithAggregatesFilter<"documentos_requeridos"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"documentos_requeridos"> | Date | string
   }
 
   export type config_pagoWhereInput = {
@@ -31861,6 +34292,7 @@ export namespace Prisma {
     categoria?: string | null
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
     origen_movimiento?: origen_movimientoCreateNestedOneWithoutMovimientos_financierosInput
     presupuestos?: presupuestosCreateNestedOneWithoutMovimientos_financierosInput
   }
@@ -31874,6 +34306,7 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosUpdateInput = {
@@ -31882,6 +34315,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput
     presupuestos?: presupuestosUpdateOneWithoutMovimientos_financierosNestedInput
   }
@@ -31895,6 +34329,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type movimientos_financierosCreateManyInput = {
@@ -31906,6 +34341,7 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosUpdateManyMutationInput = {
@@ -31914,6 +34350,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyInput = {
@@ -31925,6 +34362,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type origen_movimientoCreateInput = {
@@ -32612,6 +35050,126 @@ export namespace Prisma {
     motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type especialidadesCreateInput = {
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+  }
+
+  export type especialidadesUncheckedCreateInput = {
+    id_especialidad?: number
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+  }
+
+  export type especialidadesUpdateInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type especialidadesUncheckedUpdateInput = {
+    id_especialidad?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type especialidadesCreateManyInput = {
+    id_especialidad?: number
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    createdAt?: Date | string
+  }
+
+  export type especialidadesUpdateManyMutationInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type especialidadesUncheckedUpdateManyInput = {
+    id_especialidad?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type documentos_requeridosCreateInput = {
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: number
+    createdAt?: Date | string
+  }
+
+  export type documentos_requeridosUncheckedCreateInput = {
+    id_doc_req?: number
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: number
+    createdAt?: Date | string
+  }
+
+  export type documentos_requeridosUpdateInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    es_opcional?: BoolFieldUpdateOperationsInput | boolean
+    orden?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type documentos_requeridosUncheckedUpdateInput = {
+    id_doc_req?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    es_opcional?: BoolFieldUpdateOperationsInput | boolean
+    orden?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type documentos_requeridosCreateManyInput = {
+    id_doc_req?: number
+    nombre: string
+    descripcion?: string | null
+    activo?: boolean
+    es_opcional?: boolean
+    orden?: number
+    createdAt?: Date | string
+  }
+
+  export type documentos_requeridosUpdateManyMutationInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    es_opcional?: BoolFieldUpdateOperationsInput | boolean
+    orden?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type documentos_requeridosUncheckedUpdateManyInput = {
+    id_doc_req?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    activo?: BoolFieldUpdateOperationsInput | boolean
+    es_opcional?: BoolFieldUpdateOperationsInput | boolean
+    orden?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type config_pagoCreateInput = {
@@ -33537,6 +36095,7 @@ export namespace Prisma {
     descripcion?: SortOrder
     monto?: SortOrder
     id_origen?: SortOrder
+    comprobante?: SortOrder
   }
 
   export type movimientos_financierosAvgOrderByAggregateInput = {
@@ -33555,6 +36114,7 @@ export namespace Prisma {
     descripcion?: SortOrder
     monto?: SortOrder
     id_origen?: SortOrder
+    comprobante?: SortOrder
   }
 
   export type movimientos_financierosMinOrderByAggregateInput = {
@@ -33566,6 +36126,7 @@ export namespace Prisma {
     descripcion?: SortOrder
     monto?: SortOrder
     id_origen?: SortOrder
+    comprobante?: SortOrder
   }
 
   export type movimientos_financierosSumOrderByAggregateInput = {
@@ -34082,6 +36643,91 @@ export namespace Prisma {
 
   export type postulacionesSumOrderByAggregateInput = {
     id_postulacion?: SortOrder
+  }
+
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type especialidadesCountOrderByAggregateInput = {
+    id_especialidad?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type especialidadesAvgOrderByAggregateInput = {
+    id_especialidad?: SortOrder
+  }
+
+  export type especialidadesMaxOrderByAggregateInput = {
+    id_especialidad?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type especialidadesMinOrderByAggregateInput = {
+    id_especialidad?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type especialidadesSumOrderByAggregateInput = {
+    id_especialidad?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type documentos_requeridosCountOrderByAggregateInput = {
+    id_doc_req?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    es_opcional?: SortOrder
+    orden?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type documentos_requeridosAvgOrderByAggregateInput = {
+    id_doc_req?: SortOrder
+    orden?: SortOrder
+  }
+
+  export type documentos_requeridosMaxOrderByAggregateInput = {
+    id_doc_req?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    es_opcional?: SortOrder
+    orden?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type documentos_requeridosMinOrderByAggregateInput = {
+    id_doc_req?: SortOrder
+    nombre?: SortOrder
+    descripcion?: SortOrder
+    activo?: SortOrder
+    es_opcional?: SortOrder
+    orden?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type documentos_requeridosSumOrderByAggregateInput = {
+    id_doc_req?: SortOrder
+    orden?: SortOrder
   }
 
   export type config_pagoCountOrderByAggregateInput = {
@@ -35429,6 +38075,10 @@ export namespace Prisma {
     deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -35688,6 +38338,19 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
     _max?: NestedEnumRolUsuarioNullableFilter<$PrismaModel>
+  }
+
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type usuariosCreateWithoutActividades_institucionalesInput = {
@@ -37374,6 +40037,7 @@ export namespace Prisma {
     categoria?: string | null
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
     presupuestos?: presupuestosCreateNestedOneWithoutMovimientos_financierosInput
   }
 
@@ -37385,6 +40049,7 @@ export namespace Prisma {
     categoria?: string | null
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosCreateOrConnectWithoutOrigen_movimientoInput = {
@@ -37477,6 +40142,7 @@ export namespace Prisma {
     descripcion?: StringNullableFilter<"movimientos_financieros"> | string | null
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
+    comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpsertWithoutOrigen_movimientoInput = {
@@ -37676,6 +40342,7 @@ export namespace Prisma {
     categoria?: string | null
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
     origen_movimiento?: origen_movimientoCreateNestedOneWithoutMovimientos_financierosInput
   }
 
@@ -37687,6 +40354,7 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosCreateOrConnectWithoutPresupuestosInput = {
@@ -38653,6 +41321,7 @@ export namespace Prisma {
     categoria?: string | null
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosUpdateWithoutOrigen_movimientoInput = {
@@ -38661,6 +41330,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
     presupuestos?: presupuestosUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
@@ -38672,6 +41342,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoInput = {
@@ -38682,6 +41353,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type origen_movimientoCreateManyPagos_colegiadosInput = {
@@ -38721,6 +41393,7 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
+    comprobante?: string | null
   }
 
   export type movimientos_financierosUpdateWithoutPresupuestosInput = {
@@ -38729,6 +41402,7 @@ export namespace Prisma {
     categoria?: NullableStringFieldUpdateOperationsInput | string | null
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
@@ -38740,6 +41414,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyWithoutPresupuestosInput = {
@@ -38750,6 +41425,7 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiados_asignados_socialCreateManyPasantesInput = {

@@ -24,9 +24,15 @@ rootRouter.use('/auditorias', AuditoriasRoutes)
 rootRouter.use('/gds', gdsRouter)
 
 import memoriasRouter from '../modules/memorias/routes'
+import especialidadesRouter from '../modules/especialidades/routes/especialidades'
+import documentosRequeridosRouter from '../modules/documentos-requeridos/routes/documentos-requeridos'
 
 // Postulaciones públicas y admin
 rootRouter.use('/postulaciones', postulacionesRouter)
 rootRouter.use('/memorias', memoriasRouter)
+
+// Entidades centralizadas
+rootRouter.use('/especialidades', especialidadesRouter)
+rootRouter.use('/documentos-requeridos', documentosRequeridosRouter)
 
 export default rootRouter

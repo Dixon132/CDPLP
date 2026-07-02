@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem, Slider, Typography } from "@mui/material";
 import { Trash2, MapPin } from "lucide-react";
@@ -30,7 +30,7 @@ function MapClickHandler({ onLocationSelect }) {
     return null;
 }
 
-const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
+const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
     const {
         register,
         handleSubmit,
@@ -99,7 +99,8 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
         try {
             formData.id_convenio = formData.id_convenio ? parseInt(formData.id_convenio) : null;
             await updateActividadSocial(id, formData);
-            if (onClose) onClose();
+            if (onSuccess) onSuccess();
+            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al modificar la actividad:", error);
         }
@@ -126,142 +127,127 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
         <>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box display="flex" flexDirection="column" gap={2}>
-                    {/* Nombre */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Nombre</label>
-                        <TextField
-                            fullWidth
-                            {...register("nombre", { required: "Campo obligatorio" })}
-                            error={!!errors.nombre}
-                            helperText={errors.nombre?.message}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </div>
 
-                    {/* Descripción */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Descripción</label>
-                        <TextField fullWidth multiline rows={3} {...register("descripcion")} variant="outlined" size="small" />
-                    </div>
+                    <TextField
+                        label="Nombre"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("nombre", { required: "Campo obligatorio" })}
+                        error={!!errors.nombre}
+                        helperText={errors.nombre?.message}
+                    />
 
-                    {/* Ubicación */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Ubicación</label>
-                        <TextField
-                            fullWidth
-                            {...register("ubicacion", { required: "Campo obligatorio" })}
-                            error={!!errors.ubicacion}
-                            helperText={errors.ubicacion?.message}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </div>
+                    <TextField
+                        label="Descripción"
+                        InputLabelProps={{ shrink: true }}
+                        multiline
+                        rows={3}
+                        {...register("descripcion")}
+                    />
 
-                    {/* Motivo */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Motivo</label>
-                        <TextField
-                            fullWidth
-                            {...register("motivo", { required: "Campo obligatorio" })}
-                            error={!!errors.motivo}
-                            helperText={errors.motivo?.message}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </div>
+                    <TextField
+                        label="Ubicación"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("ubicacion", { required: "Campo obligatorio" })}
+                        error={!!errors.ubicacion}
+                        helperText={errors.ubicacion?.message}
+                    />
 
-                    {/* Convenio */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Convenio</label>
-                        <Controller
-                            name="id_convenio"
-                            control={control}
-                            defaultValue=""
-                            render={({ field }) => (
-                                <TextField {...field} select fullWidth variant="outlined" size="small">
-                                    <MenuItem value="">Sin convenio</MenuItem>
-                                    {convenios.map((c) => (
-                                        <MenuItem key={c.id_convenio} value={c.id_convenio}>{c.nombre}</MenuItem>
-                                    ))}
-                                </TextField>
-                            )}
-                        />
-                    </div>
+                    <TextField
+                        label="Motivo"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("motivo", { required: "Campo obligatorio" })}
+                        error={!!errors.motivo}
+                        helperText={errors.motivo?.message}
+                    />
 
-                    {/* Fechas */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Fecha de Inicio</label>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            InputLabelProps={{ shrink: true }}
-                            {...register("fecha_inicio", { required: "Campo obligatorio" })}
-                            error={!!errors.fecha_inicio}
-                            helperText={errors.fecha_inicio?.message}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </div>
-                    <div>
-                        <label className="block mb-1 font-semibold">Fecha de Fin</label>
-                        <TextField
-                            fullWidth
-                            type="date"
-                            InputLabelProps={{ shrink: true }}
-                            {...register("fecha_fin", {
-                                validate: (value) => {
-                                    if (!value) return true;
-                                    if (fechaInicioValue && value < fechaInicioValue) return "Debe ser posterior a la fecha de inicio";
-                                    return true;
-                                },
-                            })}
-                            error={!!errors.fecha_fin}
-                            helperText={errors.fecha_fin?.message}
-                            variant="outlined"
-                            size="small"
-                        />
-                    </div>
+                    <Controller
+                        name="id_convenio"
+                        control={control}
+                        defaultValue=""
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                select
+                                label="Convenio"
+                                InputLabelProps={{ shrink: true }}
+                            >
+                                <MenuItem value="">Sin convenio</MenuItem>
+                                {convenios.map((c) => (
+                                    <MenuItem key={c.id_convenio} value={c.id_convenio}>{c.nombre}</MenuItem>
+                                ))}
+                            </TextField>
+                        )}
+                    />
 
-                    {/* Estado */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Estado</label>
-                        <Controller
-                            name="estado"
-                            control={control}
-                            rules={{ required: "Campo obligatorio" }}
-                            render={({ field }) => (
-                                <TextField {...field} select fullWidth variant="outlined" size="small" error={!!errors.estado} helperText={errors.estado?.message}>
-                                    <MenuItem value="">Seleccione...</MenuItem>
-                                    <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                                    <MenuItem value="EN PROGRESO">EN PROGRESO</MenuItem>
-                                    <MenuItem value="FINALIZADO">FINALIZADO</MenuItem>
-                                    <MenuItem value="PENDIENTE">PENDIENTE</MenuItem>
-                                </TextField>
-                            )}
-                        />
-                    </div>
+                    <TextField
+                        label="Fecha de Inicio"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("fecha_inicio", { required: "Campo obligatorio" })}
+                        error={!!errors.fecha_inicio}
+                        helperText={errors.fecha_inicio?.message}
+                    />
 
-                    {/* Tipo */}
-                    <div>
-                        <label className="block mb-1 font-semibold">Tipo</label>
-                        <Controller
-                            name="tipo"
-                            control={control}
-                            rules={{ required: "Campo obligatorio" }}
-                            render={({ field }) => (
-                                <TextField {...field} select fullWidth variant="outlined" size="small" error={!!errors.tipo} helperText={errors.tipo?.message}>
-                                    <MenuItem value="">Seleccione...</MenuItem>
-                                    <MenuItem value="CULTURAL">CULTURAL</MenuItem>
-                                    <MenuItem value="DEPORTIVA">DEPORTIVA</MenuItem>
-                                    <MenuItem value="SOCIAL">SOCIAL</MenuItem>
-                                    <MenuItem value="RECREATIVA">RECREATIVA</MenuItem>
-                                    <MenuItem value="EDUCATIVA">EDUCATIVA</MenuItem>
-                                    <MenuItem value="BENEFICA">BENÉFICA</MenuItem>
-                                </TextField>
-                            )}
-                        />
-                    </div>
+                    <TextField
+                        label="Fecha de Fin"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register("fecha_fin", {
+                            validate: (value) => {
+                                if (!value) return true;
+                                if (fechaInicioValue && value < fechaInicioValue) return "Debe ser posterior a la fecha de inicio";
+                                return true;
+                            },
+                        })}
+                        error={!!errors.fecha_fin}
+                        helperText={errors.fecha_fin?.message}
+                    />
+
+                    <Controller
+                        name="estado"
+                        control={control}
+                        rules={{ required: "Campo obligatorio" }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                select
+                                label="Estado"
+                                InputLabelProps={{ shrink: true }}
+                                error={!!errors.estado}
+                                helperText={errors.estado?.message}
+                            >
+                                <MenuItem value="">Seleccione...</MenuItem>
+                                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
+                                <MenuItem value="EN PROGRESO">EN PROGRESO</MenuItem>
+                                <MenuItem value="FINALIZADO">FINALIZADO</MenuItem>
+                                <MenuItem value="PENDIENTE">PENDIENTE</MenuItem>
+                            </TextField>
+                        )}
+                    />
+
+                    <Controller
+                        name="tipo"
+                        control={control}
+                        rules={{ required: "Campo obligatorio" }}
+                        render={({ field }) => (
+                            <TextField
+                                {...field}
+                                select
+                                label="Tipo"
+                                InputLabelProps={{ shrink: true }}
+                                error={!!errors.tipo}
+                                helperText={errors.tipo?.message}
+                            >
+                                <MenuItem value="">Seleccione...</MenuItem>
+                                <MenuItem value="CULTURAL">CULTURAL</MenuItem>
+                                <MenuItem value="DEPORTIVA">DEPORTIVA</MenuItem>
+                                <MenuItem value="SOCIAL">SOCIAL</MenuItem>
+                                <MenuItem value="RECREATIVA">RECREATIVA</MenuItem>
+                                <MenuItem value="EDUCATIVA">EDUCATIVA</MenuItem>
+                                <MenuItem value="BENEFICA">BENÉFICA</MenuItem>
+                            </TextField>
+                        )}
+                    />
 
                     {/* ─── Sección Geolocalización ─── */}
                     <Box>
@@ -341,10 +327,11 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                             Eliminar
                         </Button>
                         <Box display="flex" gap={2}>
-                            <Button variant="outlined" color="secondary" onClick={onClose}>Cancelar</Button>
+                            <Button variant="outlined" onClick={onClose}>Cancelar</Button>
                             <Button type="submit" variant="contained" color="primary">Guardar Cambios</Button>
                         </Box>
                     </Box>
+
                 </Box>
             </form>
 
@@ -354,6 +341,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete }) => {
                 onConfirm={handleDelete}
                 onClose={() => setShowDeleteConfirm(false)}
                 confirmText="Eliminar"
+                waitSeconds={4}
             />
         </>
     );

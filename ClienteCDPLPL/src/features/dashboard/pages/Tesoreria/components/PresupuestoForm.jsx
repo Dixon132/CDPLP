@@ -17,6 +17,7 @@ import {
     CircularProgress,
     Container
 } from "@mui/material";
+import Alerts from "../../../components/Alerts";
 
 export default function PresupuestoForm({
     presupuestoId = null,
@@ -37,6 +38,11 @@ export default function PresupuestoForm({
 
     const [loading, setLoading] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
+
+    const showAlert = (type, message) => {
+        setAlert({ show: true, type, message });
+    };
 
     useEffect(() => {
         if (presupuestoId) {
@@ -78,16 +84,18 @@ export default function PresupuestoForm({
         try {
             if (presupuestoId) {
                 await updatePresupuesto(presupuestoId, payload);
-                alert("Presupuesto actualizado correctamente");
+                showAlert("success", "Presupuesto actualizado correctamente");
             } else {
                 await createPresupuesto(payload);
-                alert("Presupuesto creado correctamente");
+                showAlert("success", "Presupuesto creado correctamente");
             }
-            if (onSuccess) onSuccess();
-            if (onClose) onClose();
+            setTimeout(() => {
+                if (onSuccess) onSuccess();
+                if (onClose) onClose();
+            }, 2000);
         } catch (err) {
             console.error(err);
-            alert("Error al guardar el presupuesto");
+            showAlert("error", "Error al guardar el presupuesto");
         } finally {
             setIsSubmitting(false);
         }
@@ -103,6 +111,7 @@ export default function PresupuestoForm({
 
     return (
         <Container maxWidth="sm" sx={{ py: 2 }}>
+            <Alerts type={alert.type} message={alert.message} show={alert.show} duration={2000} onClose={() => setAlert((prev) => ({ ...prev, show: false }))} />
             <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     <TextField

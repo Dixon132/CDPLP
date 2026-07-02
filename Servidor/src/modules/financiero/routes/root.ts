@@ -1,4 +1,5 @@
 import { Router } from "express";
+import multer from "multer";
 import errorHandler from "../../../utils/error-handler";
 import {
     getAllPresupuestos,
@@ -19,6 +20,7 @@ import {
 } from "../controllers/tesoreria";
 
 const tesoreriaRoutes: Router = Router()
+const upload = multer({ storage: multer.memoryStorage() })
 
 //REPORTES
 tesoreriaRoutes.get("/report", errorHandler(getPresupuestosSummaryReport));
@@ -39,7 +41,7 @@ tesoreriaRoutes.get("/presupuestos/:id/movimientos-filtrados", errorHandler(getM
 
 // Rutas de MOVIMIENTOS FINANCIEROS
 tesoreriaRoutes.get("/presupuestos/:id/movimientos", errorHandler(getMovimientosByPresupuesto));
-tesoreriaRoutes.post("/movimientos", errorHandler(createMovimientoFinanciero));
+tesoreriaRoutes.post("/movimientos", upload.single("comprobante"), errorHandler(createMovimientoFinanciero));
 tesoreriaRoutes.patch("/movimientos/:id", errorHandler(updateMovimientoFinanciero));
 tesoreriaRoutes.delete("/movimientos/:id", errorHandler(deleteMovimientoFinanciero));
 

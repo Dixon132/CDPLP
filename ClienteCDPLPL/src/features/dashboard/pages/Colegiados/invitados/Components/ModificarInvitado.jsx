@@ -1,17 +1,19 @@
 // ✅ src/features/.../ModificarInvitado.jsx
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { TextField, Button, Box, Typography, Stack } from "@mui/material";
+import { TextField, Button, Box, Typography, Alert } from "@mui/material";
 import { getInvitadoById, updateInvitado } from "../../../../services/invitados";
 
 const ModificarInvitado = ({ id, onClose, onSuccess }) => {
     const {
         register,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isSubmitting },
         reset,
     } = useForm();
+
+    const [serverError, setServerError] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -25,6 +27,7 @@ const ModificarInvitado = ({ id, onClose, onSuccess }) => {
                 });
             } catch (error) {
                 console.error("Error al obtener invitado:", error);
+                setServerError("No se pudo cargar la información del invitado.");
             }
         };
         fetchData();
@@ -32,95 +35,105 @@ const ModificarInvitado = ({ id, onClose, onSuccess }) => {
 
     const onSubmit = async (formData) => {
         try {
+            setServerError(null);
             await updateInvitado(id, formData);
             if (onSuccess) onSuccess();
-            if (onClose) onClose();
+            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al actualizar invitado:", error);
+            setServerError("Ocurrió un error al guardar los cambios. Intente nuevamente.");
         }
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
-            <Typography variant="h5" fontWeight="bold" mb={2}>
-                Editar Invitado
-            </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Box display="flex" flexDirection="column" gap={2}>
 
-            <Stack spacing={2}>
+                <Typography variant="h5" fontWeight="bold">
+                    Editar Invitado
+                </Typography>
+
+                {serverError && (
+                    <Alert severity="error" onClose={() => setServerError(null)}>
+                        {serverError}
+                    </Alert>
+                )}
+
                 {/* Nombre */}
-                <div>
-                    <label className="block mb-1 font-semibold">Nombre</label>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        {...register("nombre", { required: "Campo obligatorio" })}
-                        error={!!errors.nombre}
-                        helperText={errors.nombre?.message}
-                        variant="outlined"
-                    />
-                </div>
+                <TextField
+                    label="Nombre"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("nombre", {
+                        required: "El nombre es obligatorio",
+                        minLength: {
+                            value: 2,
+                            message: "El nombre debe tener al menos 2 caracteres",
+                        },
+                    })}
+                    error={!!errors.nombre}
+                    helperText={errors.nombre?.message}
+                />
 
                 {/* Apellido */}
-                <div>
-                    <label className="block mb-1 font-semibold">Apellido</label>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        {...register("apellido", { required: "Campo obligatorio" })}
-                        error={!!errors.apellido}
-                        helperText={errors.apellido?.message}
-                        variant="outlined"
-                    />
-                </div>
+                <TextField
+                    label="Apellido"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("apellido", {
+                        required: "El apellido es obligatorio",
+                        minLength: {
+                            value: 2,
+                            message: "El apellido debe tener al menos 2 caracteres",
+                        },
+                    })}
+                    error={!!errors.apellido}
+                    helperText={errors.apellido?.message}
+                />
 
-                {/* Correo */}
-                <div>
-                    <label className="block mb-1 font-semibold">Correo (opcional)</label>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        type="email"
-                        {...register("correo", {
-                            pattern: {
-                                value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
-                                message: "Correo no válido",
-                            },
-                        })}
-                        error={!!errors.correo}
-                        helperText={errors.correo?.message}
-                        variant="outlined"
-                    />
-                </div>
+                {/* Correo (Opcional) */}
+                <TextField
+                    label="Correo electrónico (opcional)"
+                    type="email"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("correo", {
+                        pattern: {
+                            value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
+                            message: "Correo no válido",
+                        },
+                    })}
+                    error={!!errors.correo}
+                    helperText={errors.correo?.message}
+                />
 
-                {/* Teléfono */}
-                <div>
-                    <label className="block mb-1 font-semibold">Teléfono (opcional)</label>
-                    <TextField
-                        fullWidth
-                        size="small"
-                        {...register("telefono", {
-                            pattern: {
-                                value: /^[0-9]{7,15}$/,
-                                message: "Solo números (7-15 dígitos)",
-                            },
-                        })}
-                        error={!!errors.telefono}
-                        helperText={errors.telefono?.message}
-                        variant="outlined"
-                    />
-                </div>
+                {/* Teléfono (Opcional) */}
+                <TextField
+                    label="Teléfono (opcional)"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("telefono", {
+                        pattern: {
+                            value: /^[0-9]{7,15}$/,
+                            message: "Solo números (7 a 15 dígitos)",
+                        },
+                    })}
+                    error={!!errors.telefono}
+                    helperText={errors.telefono?.message}
+                />
 
                 {/* Botones */}
-                <Stack direction="row" justifyContent="flex-end" spacing={2} mt={2}>
-                    <Button variant="outlined" color="secondary" onClick={onClose}>
+                <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                    <Button variant="outlined" onClick={onClose} disabled={isSubmitting}>
                         Cancelar
                     </Button>
-                    <Button type="submit" variant="contained" color="primary">
-                        Guardar Cambios
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? "Guardando..." : "Guardar Cambios"}
                     </Button>
-                </Stack>
-            </Stack>
-        </Box>
+                </Box>
+            </Box>
+        </form>
     );
 };
 

@@ -1,0 +1,2 @@
+-- This migration is a baseline placeholder for the existing database schema.
+-- All tables were already created directly in the database prior to this migration history.

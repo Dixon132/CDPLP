@@ -89,31 +89,11 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
     };
 
     try {
-      const res = await fetch("/api/ac-institucionales/ac-ins/registrarColegiado", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (res.status === 409) {
-        const body = await res.json();
-        setErrorMsg(body.error || "Esta persona ya está registrada en la actividad.");
-        setLoading(false);
-        return;
-      }
-
-      if (!res.ok) {
-        setErrorMsg("Error al registrar. Intenta nuevamente.");
-        setLoading(false);
-        return;
-      }
+      await registerColegiadoInstitucional(payload);
 
       setShowSuccess(true);
       if (onSuccess) onSuccess();
-      
+
       setTimeout(() => {
         setShowSuccess(false);
         setValue("id_colegiado", null);
@@ -121,10 +101,15 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
         setValue("metodo_pago", "EFECTIVO");
         setLoading(false);
       }, 1500);
-      
+
     } catch (err) {
       console.error(err);
-      setErrorMsg("Error de conexión");
+      const status = err?.response?.status;
+      if (status === 409) {
+        setErrorMsg(err.response?.data?.error || "Esta persona ya está registrada en la actividad.");
+      } else {
+        setErrorMsg("Error al registrar. Intenta nuevamente.");
+      }
       setLoading(false);
     }
   };
@@ -141,7 +126,7 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
             Registrado correctamente
           </Alert>
         )}
-        
+
         {errorMsg && (
           <Alert severity="error" sx={{ mb: 2 }}>
             {errorMsg}
@@ -150,7 +135,7 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 3, mt: 3 }}>
-            
+
             <Controller
               name="id_colegiado"
               control={control}

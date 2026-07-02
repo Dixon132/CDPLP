@@ -31,7 +31,10 @@ export const getMovimientosByPresupuesto = async (id_presupuesto) => {
     return res.data;
 };
 export const createMovimientoFinanciero = async (payload) => {
-    const res = await axios.post(`${BASE_URL}/movimientos`, payload);
+    const isFormData = payload instanceof FormData;
+    const res = await axios.post(`${BASE_URL}/movimientos`, payload, {
+        headers: isFormData ? { "Content-Type": "multipart/form-data" } : {},
+    });
     return res.data;
 };
 export const updateMovimientoFinanciero = async (id, payload) => {

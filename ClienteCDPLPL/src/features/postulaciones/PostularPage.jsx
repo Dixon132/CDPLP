@@ -1,19 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { verificarCI, getConfigPago, crearPostulacion } from '../dashboard/services/postulaciones';
+import { getDocumentosRequeridos } from '../dashboard/services/documentosRequeridos';
 import {
     CheckCircle, ChevronRight, ChevronLeft, Upload, FileText,
     User, Phone, Mail, CreditCard, Loader2, AlertCircle, X
 } from 'lucide-react';
-
-const DOCUMENT_SLOTS = [
-    { key: 'carnet', label: 'Carnet de Identidad', accept: 'image/*,.pdf' },
-    { key: 'titulo', label: 'Título Profesional', accept: '.pdf,image/*' },
-    { key: 'antecedentes', label: 'Certificado de Antecedentes', accept: '.pdf,image/*' },
-    { key: 'foto', label: 'Foto Carnet (3×4)', accept: 'image/*' },
-    { key: 'nacimiento', label: 'Certificado de Nacimiento', accept: '.pdf,image/*' },
-    { key: 'respaldo', label: 'Documento de Respaldo Adicional (opcional)', accept: '.pdf,image/*', optional: true },
-];
 
 const STEPS = ['Verificación', 'Datos personales', 'Documentos', 'Pago'];
 
@@ -178,6 +170,29 @@ function Step3({ onNext, onBack }) {
     const [files, setFiles] = useState({});
     const [especialidades, setEspecialidades] = useState('');
     const [error, setError] = useState('');
+    const [documentSlots, setDocumentSlots] = useState([]);
+    const [loadingDocs, setLoadingDocs] = useState(true);
+    const [loadError, setLoadError] = useState('');
+
+    useEffect(() => {
+        setLoadingDocs(true);
+        getDocumentosRequeridos()
+            .then(res => {
+                const docs = res.data ?? [];
+                // Normalize each doc to the slot shape used in the form
+                const slots = docs.map(doc => ({
+                    key: String(doc.id_doc_req),
+                    label: doc.es_opcional
+                        ? `${doc.nombre} (opcional)`
+                        : doc.nombre,
+                    accept: '.pdf,image/*',
+                    optional: doc.es_opcional,
+                }));
+                setDocumentSlots(slots);
+            })
+            .catch(() => setLoadError('No se pudieron cargar los documentos requeridos. Recarga la página.'))
+            .finally(() => setLoadingDocs(false));
+    }, []);
 
     const handleFile = (key, file) => {
         setFiles(p => ({ ...p, [key]: file }));
@@ -186,7 +201,7 @@ function Step3({ onNext, onBack }) {
 
     const handleNext = (e) => {
         e.preventDefault();
-        const required = DOCUMENT_SLOTS.filter(s => !s.optional).map(s => s.key);
+        const required = documentSlots.filter(s => !s.optional).map(s => s.key);
         const missing = required.filter(k => !files[k]);
         if (missing.length) { setError('Por favor sube todos los documentos requeridos.'); return; }
         const docArray = Object.values(files).filter(Boolean);
@@ -200,37 +215,47 @@ function Step3({ onNext, onBack }) {
                 <p className="text-slate-500 text-sm mt-1">Sube los documentos requeridos para tu postulación.</p>
             </div>
 
-            <div className="space-y-3">
-                {DOCUMENT_SLOTS.map(slot => (
-                    <div key={slot.key} className={`flex items-center gap-4 p-3 rounded-lg border transition-all
-                        ${files[slot.key] ? 'border-black bg-slate-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}>
-                        <FileText className={`w-5 h-5 shrink-0 ${files[slot.key] ? 'text-black' : 'text-slate-400'}`} />
-                        <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-slate-700">
-                                {slot.label}
-                                {!slot.optional && <span className="text-red-500 ml-1">*</span>}
-                            </p>
-                            {files[slot.key] && (
-                                <p className="text-xs text-slate-500 truncate">{files[slot.key].name}</p>
-                            )}
+            {loadingDocs ? (
+                <div className="flex justify-center py-8">
+                    <Loader2 className="w-6 h-6 animate-spin text-slate-400" />
+                </div>
+            ) : loadError ? (
+                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+                    <AlertCircle className="w-4 h-4 shrink-0" /> {loadError}
+                </div>
+            ) : (
+                <div className="space-y-3">
+                    {documentSlots.map(slot => (
+                        <div key={slot.key} className={`flex items-center gap-4 p-3 rounded-lg border transition-all
+                            ${files[slot.key] ? 'border-black bg-slate-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}>
+                            <FileText className={`w-5 h-5 shrink-0 ${files[slot.key] ? 'text-black' : 'text-slate-400'}`} />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-slate-700">
+                                    {slot.label}
+                                    {!slot.optional && <span className="text-red-500 ml-1">*</span>}
+                                </p>
+                                {files[slot.key] && (
+                                    <p className="text-xs text-slate-500 truncate">{files[slot.key].name}</p>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                                <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 rounded-md transition-all">
+                                    <Upload className="w-3.5 h-3.5" />
+                                    {files[slot.key] ? 'Cambiar' : 'Subir'}
+                                    <input type="file" className="hidden" accept={slot.accept}
+                                        onChange={e => handleFile(slot.key, e.target.files[0])} />
+                                </label>
+                                {files[slot.key] && (
+                                    <button type="button" onClick={() => setFiles(p => { const n = { ...p }; delete n[slot.key]; return n; })}
+                                        className="p-1 text-slate-400 hover:text-red-500 transition-colors">
+                                        <X className="w-4 h-4" />
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0">
-                            <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 rounded-md transition-all">
-                                <Upload className="w-3.5 h-3.5" />
-                                {files[slot.key] ? 'Cambiar' : 'Subir'}
-                                <input type="file" className="hidden" accept={slot.accept}
-                                    onChange={e => handleFile(slot.key, e.target.files[0])} />
-                            </label>
-                            {files[slot.key] && (
-                                <button type="button" onClick={() => setFiles(p => { const n = { ...p }; delete n[slot.key]; return n; })}
-                                    className="p-1 text-slate-400 hover:text-red-500 transition-colors">
-                                    <X className="w-4 h-4" />
-                                </button>
-                            )}
-                        </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
+            )}
 
             <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Especialidades</label>
@@ -253,7 +278,7 @@ function Step3({ onNext, onBack }) {
                 <button type="button" onClick={onBack} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-all">
                     <ChevronLeft className="w-4 h-4" /> Atrás
                 </button>
-                <button type="submit" className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-slate-800 transition-all">
+                <button type="submit" disabled={loadingDocs} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-slate-800 disabled:opacity-60 transition-all">
                     Siguiente <ChevronRight className="w-4 h-4" />
                 </button>
             </div>

@@ -8,6 +8,7 @@
 // vista degrada de forma controlada: si el listado falla, muestra un aviso y un
 // estado vacío en vez de romperse.
 import { useCallback, useEffect, useState } from 'react';
+import ConfirmDeleteModal from '../../../components/ConfirmDeleteModal';
 import { InstitucionForm } from '../components/InstitucionForm.jsx';
 import {
     listInstituciones,
@@ -32,6 +33,7 @@ export default function GdsInstituciones() {
     const [vista, setVista] = useState('lista'); // 'lista' | 'form'
     const [enEdicion, setEnEdicion] = useState(null);
     const [guardando, setGuardando] = useState(false);
+    const [institucionToDelete, setInstitucionToDelete] = useState(null);
 
     const cargar = useCallback(async () => {
         setCargando(true);
@@ -88,12 +90,16 @@ export default function GdsInstituciones() {
         }
     };
 
-    const eliminar = async (inst) => {
+    const eliminar = (inst) => {
         if (!inst?.id) return;
-        // eslint-disable-next-line no-alert
-        if (!window.confirm(`¿Eliminar la institución "${inst.nombre}"?`)) return;
+        setInstitucionToDelete(inst);
+    };
+
+    const confirmarEliminar = async () => {
+        if (!institucionToDelete?.id) return;
         try {
-            await deleteInstitucion(inst.id);
+            await deleteInstitucion(institucionToDelete.id);
+            setInstitucionToDelete(null);
             await cargar();
         } catch (err) {
             setAviso(mensajeError(err));
@@ -199,6 +205,14 @@ export default function GdsInstituciones() {
                     )}
                 </div>
             )}
+            <ConfirmDeleteModal
+                isOpen={!!institucionToDelete}
+                onClose={() => setInstitucionToDelete(null)}
+                onConfirm={confirmarEliminar}
+                title="Eliminar institucion"
+                message={`Seguro que deseas eliminar ${institucionToDelete?.nombre || "esta institucion"}? Esta accion no se puede deshacer.`}
+                waitSeconds={4}
+            />
         </section>
     );
 }

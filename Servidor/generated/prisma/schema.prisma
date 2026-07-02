@@ -156,6 +156,7 @@ model movimientos_financieros {
   descripcion      String?
   monto            Decimal?  @db.Decimal(12, 2)
   id_origen        Int?
+  comprobante      String?   @db.VarChar(300)
 
   origen_movimiento origen_movimiento? @relation(fields: [id_origen], references: [id_origen], onDelete: NoAction, onUpdate: NoAction)
   presupuestos      presupuestos?      @relation(fields: [id_presupuesto], references: [id_presupuesto], onDelete: NoAction, onUpdate: NoAction)
@@ -285,6 +286,26 @@ model postulaciones {
   motivo_rechazo   String?  @db.Text
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+}
+
+// ─── ESPECIALIDADES ───────────────────────────────────────────
+model especialidades {
+  id_especialidad Int      @id @default(autoincrement())
+  nombre          String   @unique @db.VarChar(150)
+  descripcion     String?  @db.Text
+  activo          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
+// ─── DOCUMENTOS REQUERIDOS ────────────────────────────────────
+model documentos_requeridos {
+  id_doc_req  Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(200)
+  descripcion String?  @db.Text
+  activo      Boolean  @default(true)
+  es_opcional Boolean  @default(false)
+  orden       Int      @default(0)
+  createdAt   DateTime @default(now())
 }
 
 // ─── CONFIGURACIÓN DE PAGO ────────────────────────────────────

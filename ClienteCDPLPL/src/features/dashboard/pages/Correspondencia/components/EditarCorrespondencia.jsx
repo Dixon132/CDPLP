@@ -17,6 +17,7 @@ import {
     InputLabel,
     CircularProgress
 } from '@mui/material';
+import Alerts from "../../../components/Alerts";
 
 export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     const {
@@ -28,6 +29,11 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     } = useForm();
     const [loading, setLoading] = useState(true);
     const [usuarios, setUsuarios] = useState([]);
+    const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
+
+    const showAlert = (type, message) => {
+        setAlert({ show: true, type, message });
+    };
 
     const hoy = new Date().toISOString().split('T')[0];
 
@@ -64,10 +70,12 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     }, [id, reset]);
 
     const onSubmit = async (data) => {
-        await updateCorrespondenciaById(id, data);
-        alert("Correspondencia actualizada");
-        if (onSuccess) onSuccess();
-        if (onClose) onClose();
+        try {
+            await updateCorrespondenciaById(id, data);
+            if (onSuccess) onSuccess();
+        } catch (error) {
+            showAlert("error", "Error al actualizar correspondencia");
+        }
     };
 
     if (loading) {
@@ -80,6 +88,7 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
 
     return (
         <Container maxWidth="sm">
+            <Alerts type={alert.type} message={alert.message} show={alert.show} duration={2000} onClose={() => setAlert((prev) => ({ ...prev, show: false }))} />
             <Box sx={{ mt: 2, mb: 2 }}>
                 <Typography variant="h5" component="h2" gutterBottom>
                     Modificar Correspondencia

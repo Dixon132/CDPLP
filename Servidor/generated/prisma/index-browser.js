@@ -238,7 +238,8 @@ exports.Prisma.Movimientos_financierosScalarFieldEnum = {
   categoria: 'categoria',
   descripcion: 'descripcion',
   monto: 'monto',
-  id_origen: 'id_origen'
+  id_origen: 'id_origen',
+  comprobante: 'comprobante'
 };
 
 exports.Prisma.Origen_movimientoScalarFieldEnum = {
@@ -338,6 +339,24 @@ exports.Prisma.PostulacionesScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.EspecialidadesScalarFieldEnum = {
+  id_especialidad: 'id_especialidad',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  activo: 'activo',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.Documentos_requeridosScalarFieldEnum = {
+  id_doc_req: 'id_doc_req',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  activo: 'activo',
+  es_opcional: 'es_opcional',
+  orden: 'orden',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.Config_pagoScalarFieldEnum = {
   id: 'id',
   clave: 'clave',
@@ -402,6 +421,8 @@ exports.Prisma.ModelName = {
   usuarios: 'usuarios',
   invitados: 'invitados',
   postulaciones: 'postulaciones',
+  especialidades: 'especialidades',
+  documentos_requeridos: 'documentos_requeridos',
   config_pago: 'config_pago',
   memorias_balances: 'memorias_balances'
 };

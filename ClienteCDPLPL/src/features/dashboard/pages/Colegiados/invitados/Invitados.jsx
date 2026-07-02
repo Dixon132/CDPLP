@@ -191,6 +191,7 @@ const Invitados = () => {
                 onConfirm={handleDelete}
                 onClose={() => setShowDeleteConfirm(false)}
                 confirmText="Eliminar"
+                waitSeconds={4}
             />
 
             {/*  Modales */}

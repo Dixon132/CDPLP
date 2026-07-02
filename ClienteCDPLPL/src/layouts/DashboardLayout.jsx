@@ -4,6 +4,7 @@ import { useAxiosInterceptor } from '../hooks/useAxiosInterceptor';
 import { motion } from 'framer-motion';
 import Sidebar from './components/dashboard/Sidebar';
 import { HeaderDashboard } from './components/dashboard/HeaderDashboard';
+import GlobalAlerts from '../features/dashboard/components/GlobalAlerts';
 
 export const DashboardLayout = () => {
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -16,6 +17,7 @@ export const DashboardLayout = () => {
 
     return (
         <div className="flex h-screen overflow-hidden bg-gray-50">
+            <GlobalAlerts />
             {/* Sidebar “fijo” y ocupando toda la altura */}
             <Sidebar
                 collapsed={sidebarCollapsed}

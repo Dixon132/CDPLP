@@ -31,7 +31,7 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const tipos = ["Conferencia", "Taller", "Seminario", "Curso"];
-  const estados = ["ACTIVO", "INACTIVO"];
+  const estados = ["EN_INSCRIPCION", "EN_CURSO", "TERMINADO"];
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,9 +72,7 @@ export default function EditActInstitucional({ id, onClose, onSuccess }) {
 
     try {
       await updateActividadInstitucional(id, payload);
-      alert("Actividad institucional actualizada correctamente");
       if (onSuccess) onSuccess();
-      if (onClose) onClose();
     } catch (err) {
       console.error(err);
       alert("Error al actualizar actividad institucional");

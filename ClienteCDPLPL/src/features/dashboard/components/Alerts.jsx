@@ -1,6 +1,13 @@
+import { useEffect } from "react";
 import { CheckCircle, AlertCircle, AlertTriangle, X } from "lucide-react";
 
-const Alerts = ({ type = "success", message, onClose, show }) => {
+const Alerts = ({ type = "success", message, onClose, show, duration }) => {
+    useEffect(() => {
+        if (!show || !duration || !onClose) return undefined;
+        const timer = setTimeout(onClose, duration);
+        return () => clearTimeout(timer);
+    }, [duration, onClose, show]);
+
     if (!show) return null;
 
     const styles = {
@@ -26,7 +33,7 @@ const Alerts = ({ type = "success", message, onClose, show }) => {
     return (
         <div
             className={`
-                fixed top-5 right-5 z-50 px-5 py-4 border rounded-2xl shadow-lg 
+                fixed top-5 right-5 z-[9999] px-5 py-4 border rounded-2xl shadow-lg 
                 flex items-start gap-3 animate-fade-in-up transition-all duration-300
                 ${bg}
             `}

@@ -18,6 +18,7 @@ import {
     useEliminarInstitucion,
 } from '../hooks/useInstitucionesAdmin';
 import type { Institucion, InstitucionFormValues } from '../api/institucionesApi';
+import ConfirmDeleteModal from '../../../components/ConfirmDeleteModal';
 import { InstitucionFormulario } from '../components/InstitucionFormulario';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
@@ -41,6 +42,7 @@ function GestionInstituciones() {
     const [vista, setVista] = useState<Vista>('lista');
     const [enEdicion, setEnEdicion] = useState<Institucion | null>(null);
     const [errorForm, setErrorForm] = useState('');
+    const [institucionToDelete, setInstitucionToDelete] = useState<Institucion | null>(null);
 
     const listaQuery = useInstitucionesList();
     const crear = useCrearInstitucion();
@@ -83,12 +85,16 @@ function GestionInstituciones() {
         }
     };
 
-    const borrar = async (inst: Institucion) => {
+    const borrar = (inst: Institucion) => {
         if (!inst.id) return;
-        // eslint-disable-next-line no-alert
-        if (!window.confirm(`¿Eliminar la institución "${inst.nombre}"?`)) return;
+        setInstitucionToDelete(inst);
+    };
+
+    const confirmarBorrado = async () => {
+        if (!institucionToDelete?.id) return;
         try {
-            await eliminar.mutateAsync(inst.id);
+            await eliminar.mutateAsync(institucionToDelete.id);
+            setInstitucionToDelete(null);
         } catch (err) {
             setErrorForm(mensajeError(err));
         }
@@ -203,6 +209,14 @@ function GestionInstituciones() {
                     )}
                 </Card>
             )}
+            <ConfirmDeleteModal
+                isOpen={!!institucionToDelete}
+                onClose={() => setInstitucionToDelete(null)}
+                onConfirm={confirmarBorrado}
+                title="Eliminar institucion"
+                message={`Seguro que deseas eliminar ${institucionToDelete?.nombre || "esta institucion"}? Esta accion no se puede deshacer.`}
+                waitSeconds={4}
+            />
         </section>
     );
 }

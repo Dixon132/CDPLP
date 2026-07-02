@@ -12,6 +12,7 @@ import {
     InputLabel
 } from '@mui/material';
 import { createCorrespondencia, usuariosCorrespondencia } from "../../../services/correspondencia";
+import Alerts from "../../../components/Alerts";
 
 export default function CrearCorrespondencia({ onClose, onSuccess }) {
     const {
@@ -21,6 +22,11 @@ export default function CrearCorrespondencia({ onClose, onSuccess }) {
     } = useForm();
 
     const [usuarios, setUsuarios] = useState([]);
+    const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
+
+    const showAlert = (type, message) => {
+        setAlert({ show: true, type, message });
+    };
 
     const hoy = new Date().toISOString().split('T')[0];
 
@@ -33,10 +39,16 @@ export default function CrearCorrespondencia({ onClose, onSuccess }) {
         formData.append("remitente", data.remitente);
         formData.append("id_destinatario", data.id_destinatario);
 
-        await createCorrespondencia(formData);
-        alert("Correspondencia creada con éxito");
-        if (onSuccess) onSuccess();
-        if (onClose) onClose();
+        try {
+            await createCorrespondencia(formData);
+            showAlert("success", "Correspondencia creada con exito");
+            setTimeout(() => {
+                if (onSuccess) onSuccess();
+                if (onClose) onClose();
+            }, 2000);
+        } catch (error) {
+            showAlert("error", "Error al crear correspondencia");
+        }
     };
 
     useEffect(() => {
@@ -49,6 +61,7 @@ export default function CrearCorrespondencia({ onClose, onSuccess }) {
 
     return (
         <Container maxWidth="sm">
+            <Alerts type={alert.type} message={alert.message} show={alert.show} duration={2000} onClose={() => setAlert((prev) => ({ ...prev, show: false }))} />
             <Box sx={{ mt: 4, mb: 4 }}>
                 <Typography variant="h4" component="h1" gutterBottom>
                     Registrar Correspondencia

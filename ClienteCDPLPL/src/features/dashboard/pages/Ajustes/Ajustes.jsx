@@ -1,6 +1,8 @@
 import React from "react";
 import Header from "../../components/Header";
 import { Settings, User, Bell, Shield, Key } from "lucide-react";
+import EspecialidadesCRUD from "./components/EspecialidadesCRUD";
+import DocumentosRequeridosCRUD from "./components/DocumentosRequeridosCRUD";
 
 const Ajustes = () => {
     return (
@@ -94,6 +96,16 @@ const Ajustes = () => {
                     </div>
                 </div>
 
+            </div>
+
+            {/* Especialidades */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                <EspecialidadesCRUD />
+            </div>
+
+            {/* Documentos Requeridos */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                <DocumentosRequeridosCRUD />
             </div>
         </div>
     );
