@@ -9,10 +9,12 @@ import Alerts from "../../components/Alerts";
 import { getAllPresupuestos, deletePresupuesto } from "../../services/tesoreria";
 import PresupuestoForm from "./components/PresupuestoForm";
 import GenerarReporteTesoreria from "./components/GenerarReporteTesoreria";
+import { getPresupuestoActivo } from '../../services/configFinanciera';
 
 import {
     Wallet, Plus, Search, Calendar, DollarSign, TrendingUp, TrendingDown,
-    Activity, Edit3, Trash2, Download, CheckCircle, XCircle, Clock, AlertCircle
+    Activity, Edit3, Trash2, Download, CheckCircle, XCircle, Clock, AlertCircle,
+    Banknote
 } from 'lucide-react';
 
 export default function Tesoreria() {
@@ -26,6 +28,7 @@ export default function Tesoreria() {
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [presupuestoToDelete, setPresupuestoToDelete] = useState(null);
+    const [presupuestoActivoNombre, setPresupuestoActivoNombre] = useState(null);
 
     // Confirm que aparece DESPUÉS de que el form guarda exitosamente
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
@@ -38,7 +41,18 @@ export default function Tesoreria() {
         const { data, total, totalPages, page: cp } = await getAllPresupuestos({ page, search });
         setPresupuestos(data); setTotal(total); setTotalPage(totalPages); setPage(cp);
     };
-    useEffect(() => { fetchPresupuestos(); }, [page, search]);
+    useEffect(() => { 
+        fetchPresupuestos();
+        getPresupuestoActivo().then(res => {
+            const idActivo = res.valor;
+            if (idActivo) {
+                getAllPresupuestos({ limit: 100 }).then(data => {
+                    const found = (data.data || []).find(p => String(p.id_presupuesto) === String(idActivo));
+                    if (found) setPresupuestoActivoNombre(found.nombre_presupuesto);
+                }).catch(() => {});
+            }
+        }).catch(() => {});
+    }, [page, search]);
 
     const handleConfirmDelete = async () => {
         if (!presupuestoToDelete?.id_presupuesto) return;
@@ -96,6 +110,17 @@ export default function Tesoreria() {
                         <Download className="w-4 h-4" /> Generar Reporte
                     </button>
                 </div>
+                {presupuestoActivoNombre && (
+                    <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl">
+                        <div className="p-2 bg-emerald-100 rounded-lg">
+                            <Banknote className="w-5 h-5 text-emerald-600" />
+                        </div>
+                        <div>
+                            <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Presupuesto Activo Actual</p>
+                            <p className="text-sm font-bold text-emerald-800">{presupuestoActivoNombre}</p>
+                        </div>
+                    </div>
+                )}
                 <div className="flex flex-wrap items-center gap-3 mb-6">
                     {/* ✅ Abre el form DIRECTAMENTE */}
                     <button onClick={() => setShowModalCreate(true)}

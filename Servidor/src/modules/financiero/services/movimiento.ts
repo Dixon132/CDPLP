@@ -2,58 +2,85 @@ import { Origen } from "../../../types/movimientos";
 import prismaClient from "../../../utils/prismaClient";
 
 //CREAR
-export const registrarMovimientoPagoColegiatura = async (id: number, monto: number, Origen: Origen, descripcion: string, presupuesto: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            const origen = await tx.origen_movimiento.create({
-                data: {
-                    id_pago_colegiado: id,
-                    monto,
-                    tipo_origen: Origen,
-                },
-            });
+export const registrarMovimientoPagoColegiatura = async (id: number, monto: number, Origen: Origen, descripcion: string, presupuesto: number, id_usuario?: number, metodo_pago?: string, comprobante?: string, txClient: any = prismaClient) => {
+    const origen = await txClient.origen_movimiento.create({
+        data: {
+            id_pago_colegiado: id,
+            monto,
+            tipo_origen: Origen,
+        },
+    });
 
-            await tx.movimientos_financieros.create({
-                data: {
-                    id_presupuesto: presupuesto,
-                    tipo_movimiento: 'INGRESO',
-                    categoria: 'Colegiatura',
-                    descripcion,
-                    monto,
-                    id_origen: origen.id_origen,
-                },
-            });
-        });
-    } catch {
-        console.log('error al registrar pago de la colegiatura')
-    }
+    await txClient.movimientos_financieros.create({
+        data: {
+            id_presupuesto: presupuesto,
+            id_usuario: id_usuario ? Number(id_usuario) : undefined,
+            tipo_movimiento: 'INGRESO',
+            categoria: 'Colegiatura',
+            descripcion,
+            monto,
+            metodo_pago,
+            comprobante,
+            tipo_origen_label: 'COLEGIATURA',
+            id_origen: origen.id_origen,
+        },
+    });
 }
 
-export const registrarMovimientoPagoCurso = async (id: number, monto: number, Origen: Origen, descripcion: string, presupuesto: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            const origen = await tx.origen_movimiento.create({
-                data: {
-                    id_registro_actividad_institucional: id,
-                    monto,
-                    tipo_origen: Origen,
-                },
-            });
+export const registrarMovimientoPagoInvitado = async (id: number, monto: number, Origen: Origen, descripcion: string, presupuesto: number, id_usuario?: number, metodo_pago?: string, comprobante?: string, txClient: any = prismaClient) => {
+    const origen = await txClient.origen_movimiento.create({
+        data: {
+            id_pago_invitado: id,
+            monto,
+            tipo_origen: Origen,
+        },
+    });
 
-            await tx.movimientos_financieros.create({
-                data: {
-                    id_presupuesto: presupuesto,
-                    tipo_movimiento: 'INGRESO',
-                    categoria: 'Curso',
-                    descripcion,
-                    monto,
-                    id_origen: origen.id_origen,
-                },
-            });
-        });
-    } catch {
-        console.log('error al registrar pago del curso')
-    }
+    await txClient.movimientos_financieros.create({
+        data: {
+            id_presupuesto: presupuesto,
+            id_usuario: id_usuario ? Number(id_usuario) : undefined,
+            tipo_movimiento: 'INGRESO',
+            categoria: 'Pago Invitado',
+            descripcion,
+            monto,
+            metodo_pago,
+            comprobante,
+            tipo_origen_label: 'INVITADO',
+            id_origen: origen.id_origen,
+        },
+    });
+}
+
+export const registrarMovimientoPagoCurso = async (id: number, monto: number, Origen: Origen, descripcion: string, presupuesto: number, id_usuario?: number, metodo_pago?: string, comprobante?: string, txClient: any = prismaClient, id_pago_colegiado?: number, id_pago_invitado?: number) => {
+    const origen = await txClient.origen_movimiento.create({
+        data: {
+            id_registro_actividad_institucional: id,
+            id_pago_colegiado,
+            id_pago_invitado,
+            monto,
+            tipo_origen: Origen,
+        },
+    });
+
+    const desc_final = (metodo_pago && metodo_pago.toUpperCase() === 'EFECTIVO') 
+        ? `${descripcion} (Método: Efectivo)` 
+        : descripcion;
+
+    await txClient.movimientos_financieros.create({
+        data: {
+            id_presupuesto: presupuesto,
+            id_usuario: id_usuario ? Number(id_usuario) : undefined,
+            tipo_movimiento: 'INGRESO',
+            categoria: 'Curso',
+            descripcion: desc_final,
+            monto,
+            metodo_pago,
+            comprobante,
+            tipo_origen_label: 'ACTIVIDAD_INSTITUCIONAL',
+            id_origen: origen.id_origen,
+        },
+    });
 }
 
 
@@ -157,32 +184,36 @@ export const deleteMovimientoPagoCurso = async (id: number) => {
  * Registra un EGRESO de reversión cuando un pago es ANULADO.
  * El INGRESO original NO se borra — queda como trazabilidad de que el dinero entró y luego se revirtió.
  */
-export const registrarAnulacionPago = async (id_pago: number, monto: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            // Buscar el origen del movimiento original
-            const origen = await tx.origen_movimiento.findFirstOrThrow({
-                where: { id_pago_colegiado: id_pago }
-            })
+export const registrarAnulacionPago = async (id_pago: number, monto: number, id_usuario?: number, txClient: any = prismaClient, tipo: 'colegiado' | 'invitado' = 'colegiado') => {
+    // Buscar el origen del movimiento original
+    const origen = await txClient.origen_movimiento.findFirst({
+        where: tipo === 'colegiado' ? { id_pago_colegiado: id_pago } : { id_pago_invitado: id_pago },
+        orderBy: { id_origen: 'desc' }
+    })
 
-            // Buscar el movimiento de INGRESO original para saber a qué presupuesto pertenece
-            const movIngreso = await tx.movimientos_financieros.findFirstOrThrow({
-                where: { id_origen: origen.id_origen }
-            })
+    if (!origen) return;
 
-            // Crear nuevo registro de EGRESO (reversión) vinculado al mismo origen
-            await tx.movimientos_financieros.create({
-                data: {
-                    id_presupuesto: movIngreso.id_presupuesto,
-                    tipo_movimiento: 'EGRESO',
-                    categoria: 'Anulación de Colegiatura',
-                    descripcion: `Reversión por anulación de pago (ID: ${id_pago})`,
-                    monto,
-                    id_origen: origen.id_origen,
-                },
-            })
-        })
-    } catch (e) {
-        console.log('error al registrar la anulación del pago:', e)
+    // Buscar el movimiento de INGRESO original
+    const movIngreso = await txClient.movimientos_financieros.findFirst({
+        where: { id_origen: origen.id_origen }
+    })
+
+    if (!movIngreso) return;
+
+    // En lugar de crear un EGRESO, actualizamos el estado a ANULADO
+    await txClient.movimientos_financieros.update({
+        where: { id_movimiento: movIngreso.id_movimiento },
+        data: {
+            estado: 'ANULADO',
+            comprobante: null
+        }
+    });
+
+    // Si el pago proviene de una inscripción a una actividad institucional, anularla también
+    if (origen.id_registro_actividad_institucional) {
+        await txClient.colegiados_registrados_actividad_institucional.update({
+            where: { id_registro: origen.id_registro_actividad_institucional },
+            data: { estado_registro: 'ANULADO' }
+        });
     }
 }

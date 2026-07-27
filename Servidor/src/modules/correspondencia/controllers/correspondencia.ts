@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { Prisma } from "../../../../generated/prisma";
-import { subirAawsCorrespondencia, buildPublicUrl } from "../../../utils/uploadS3";
+import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
 import puppeteer from "puppeteer";
 import dotenv from "dotenv";
 dotenv.config();
@@ -54,7 +54,14 @@ export const createCorrespondencia = async (req: Request, res: Response) => {
     if (!req.file) {
         return res.status(400).json({ error: "Archivo no proporcionado" });
     }
-    const urlArchivo = await subirAawsCorrespondencia(req.file)
+
+    // Carpeta dinámica basada en la fecha de envío
+    const dateObj = new Date(fecha_envio);
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const folder = `correspondencia/${year}/${month}`;
+    const urlArchivo = await subirArchivo(req.file, folder);
+
     try {
         const newCorrespondencia = await prismaClient.correspondencia.create({
             data: {
@@ -217,11 +224,24 @@ export const deleteCorrespondencia = async (req: Request, res: Response) => {
     const id = req.params.id;
 
     try {
-        const correspondencia = await prismaClient.correspondencia.delete({
+        const correspondencia = await prismaClient.correspondencia.findUnique({
             where: { id_correspondencia: +id },
         });
 
-        res.status(200).json(correspondencia);
+        if (!correspondencia) {
+            return res.status(404).json({ error: "Correspondencia no encontrada" });
+        }
+
+        // Eliminar el archivo de Supabase si existe
+        if (correspondencia.contenido) {
+            await eliminarArchivo(correspondencia.contenido).catch(e => console.error("Error eliminando archivo de correspondencia de S3:", e));
+        }
+
+        const deletedCorrespondencia = await prismaClient.correspondencia.delete({
+            where: { id_correspondencia: +id },
+        });
+
+        res.status(200).json(deletedCorrespondencia);
     } catch (error) {
         console.error("Error al eliminar correspondencia:", error);
         res.status(500).json({ error: "Error al eliminar correspondencia" });

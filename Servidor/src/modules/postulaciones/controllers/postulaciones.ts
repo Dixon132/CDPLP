@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { subirArchivo, eliminarArchivos, buildPublicUrl, moverArchivo } from "../../../utils/uploadS3";
 import { enviarCorreoAceptacion, enviarCorreoRechazo } from "../../../utils/mailer";
+import { registrarMovimientoPagoColegiatura } from "../../financiero/services/movimiento";
+import { Origen } from "../../../types/movimientos";
 
 // ──────────────────────────────────────────────────────────────
 //  PÚBLICO — sin auth
@@ -34,7 +36,17 @@ export const verificarCI = async (req: Request, res: Response) => {
 export const getConfigPago = async (_req: Request, res: Response) => {
     const configs = await prismaClient.config_pago.findMany();
     const resultado: Record<string, string> = {};
-    configs.forEach(c => { resultado[c.clave] = c.valor; });
+    configs.forEach(c => { 
+        if (c.clave === 'QR' && c.valor) {
+            resultado['qr_url'] = buildPublicUrl(c.valor) || c.valor;
+        } else if (c.clave === 'INSTRUCCIONES') {
+            resultado['instrucciones'] = c.valor;
+        } else if (c.clave === 'CUENTA_BANCARIA') {
+            resultado['cuenta_bancaria'] = c.valor;
+        } else {
+            resultado[c.clave.toLowerCase()] = c.valor; 
+        }
+    });
     return res.json(resultado);
 };
 
@@ -59,7 +71,7 @@ function normalizarNombre(nombre: string): string {
  */
 export const crearPostulacion = async (req: Request, res: Response) => {
     try {
-        const { carnet_identidad, nombre, apellido, correo, telefono, especialidades } = req.body;
+        const { carnet_identidad, nombre, apellido, correo, telefono, especialidades, metodo_pago } = req.body;
 
         if (!carnet_identidad || !nombre || !apellido || !correo || !telefono) {
             return res.status(400).json({ error: "Faltan campos obligatorios." });
@@ -75,8 +87,11 @@ export const crearPostulacion = async (req: Request, res: Response) => {
             orderBy: { orden: 'asc' },
         });
 
-        // Los archivos subidos se identifican por su originalname normalizado
-        const nombresSubidos = docsFiles.map(f => normalizarNombre(f.originalname));
+        // Los archivos subidos se identifican por su originalname normalizado sin la extensión
+        const nombresSubidos = docsFiles.map(f => {
+            const nameWithoutExt = f.originalname.includes('.') ? f.originalname.substring(0, f.originalname.lastIndexOf('.')) : f.originalname;
+            return normalizarNombre(nameWithoutExt);
+        });
 
         const faltantes = requeridos
             .filter(doc => !nombresSubidos.includes(normalizarNombre(doc.nombre)))
@@ -93,10 +108,11 @@ export const crearPostulacion = async (req: Request, res: Response) => {
         const folderUser = `${iniciales}-${hash}`;
 
         // Subir documentos
-        const rutasDocs: string[] = [];
+        const rutasDocs: { ruta: string, nombre: string }[] = [];
         for (const f of docsFiles) {
             const ruta = await subirArchivo(f, `postulaciones/${folderUser}`);
-            rutasDocs.push(ruta);
+            const nombreDoc = f.originalname.includes('.') ? f.originalname.substring(0, f.originalname.lastIndexOf('.')) : f.originalname;
+            rutasDocs.push({ ruta, nombre: nombreDoc });
         }
 
         // Subir comprobante
@@ -113,8 +129,9 @@ export const crearPostulacion = async (req: Request, res: Response) => {
                 correo,
                 telefono,
                 especialidades: especialidades ?? null,
-                documentos: rutasDocs.join(','),
+                documentos: JSON.stringify(rutasDocs),
                 comprobante_pago: rutaComprobante,
+                metodo_pago: metodo_pago ?? null,
                 estado: 'EN_REVISION',
             }
         });
@@ -166,7 +183,16 @@ export const getPostulacionById = async (req: Request, res: Response) => {
     if (!p) return res.status(404).json({ error: "Postulación no encontrada." });
 
     // Expandir rutas a URLs completas
-    const docUrls = (p.documentos ?? '').split(',').filter(Boolean).map(r => buildPublicUrl(r));
+    let docUrls: { url: string | null, nombre: string }[] = [];
+    try {
+        const parsed = JSON.parse(p.documentos || '[]');
+        if (Array.isArray(parsed)) {
+            docUrls = parsed.map(d => ({ url: buildPublicUrl(d.ruta), nombre: d.nombre }));
+        }
+    } catch (e) {
+        const rutas = (p.documentos ?? '').split(',').filter(Boolean);
+        docUrls = rutas.map((r, i) => ({ url: buildPublicUrl(r), nombre: `Requisito_${i + 1}` }));
+    }
     const comprUrl = buildPublicUrl(p.comprobante_pago);
     return res.json({ ...p, doc_urls: docUrls, comprobante_url: comprUrl });
 };
@@ -203,11 +229,23 @@ export const aceptarPostulacion = async (req: Request, res: Response) => {
         const montoBase = parseFloat(configMonto?.valor || '0');
 
         // Mover documentos y registrar en BD
-        const docRutas = (p.documentos ?? '').split(',').filter(Boolean);
-        const nuevasRutasDocs: string[] = [];
+        let docRutas: { ruta: string, nombre: string }[] = [];
+        let isJson = false;
+        try {
+            const parsed = JSON.parse(p.documentos || '[]');
+            if (Array.isArray(parsed)) {
+                docRutas = parsed;
+                isJson = true;
+            }
+        } catch (e) {
+            const rutas = (p.documentos ?? '').split(',').filter(Boolean);
+            docRutas = rutas.map((r, i) => ({ ruta: r, nombre: `Requisito_${i + 1}` }));
+        }
+
+        const nuevasRutasDocs: { ruta: string, nombre: string }[] = [];
         
         // Extraer el nombre de la carpeta del usuario si existe, o usar uno nuevo
-        const firstDoc = docRutas[0] || '';
+        const firstDoc = docRutas[0]?.ruta || '';
         let folderUser = firstDoc.includes('/') ? firstDoc.split('/')[1] : '';
         if (!folderUser) {
             const iniciales = `${p.nombre.charAt(0).toUpperCase()}${p.apellido.charAt(0).toUpperCase()}`;
@@ -215,24 +253,24 @@ export const aceptarPostulacion = async (req: Request, res: Response) => {
             folderUser = `${iniciales}-${hash}`;
         }
 
-        for (const ruta of docRutas) {
-            const fileName = ruta.split('/').pop() || '';
+        for (const doc of docRutas) {
+            const fileName = doc.ruta.split('/').pop() || '';
             const nuevaRuta = `colegiados/${folderUser}/${fileName}`;
             try {
-                await moverArchivo(ruta, nuevaRuta);
-                nuevasRutasDocs.push(nuevaRuta);
+                await moverArchivo(doc.ruta, nuevaRuta);
+                nuevasRutasDocs.push({ ruta: nuevaRuta, nombre: doc.nombre });
             } catch (err) {
-                console.error("No se pudo mover el doc:", ruta);
-                nuevasRutasDocs.push(ruta); // Fallback: usar la original si falla
+                console.error("No se pudo mover el doc:", doc.ruta);
+                nuevasRutasDocs.push({ ruta: doc.ruta, nombre: doc.nombre }); // Fallback: usar la original si falla
             }
         }
 
         if (nuevasRutasDocs.length > 0) {
             await prismaClient.documentos_colegiados.createMany({
-                data: nuevasRutasDocs.map((ruta, i) => ({
+                data: nuevasRutasDocs.map((doc) => ({
                     id_colegiado: colegiado.id_colegiado,
-                    tipo_documento: `Requisito_${i + 1}`,
-                    archivo: ruta,
+                    tipo_documento: doc.nombre,
+                    archivo: doc.ruta,
                     fecha_entrega: new Date(),
                     estado: 'VIGENTE',
                 }))
@@ -253,33 +291,60 @@ export const aceptarPostulacion = async (req: Request, res: Response) => {
         }
 
         // Registrar Pago
-        await prismaClient.pagos_colegiados.create({
+        const pagoCreado = await prismaClient.pagos_colegiados.create({
             data: {
                 id_colegiado: colegiado.id_colegiado,
                 concepto: 'Inscripción Inicial',
                 fecha_pago: new Date(),
                 monto: montoBase,
                 estado_pago: 'REALIZADO',
-                comprobante: nuevaRutaComprobante
+                comprobante: nuevaRutaComprobante,
+                metodo_pago: p.metodo_pago
             }
         });
+
+        const configPresupuesto = await prismaClient.config_pago.findUnique({
+            where: { clave: 'PRESUPUESTO_ACTIVO' }
+        });
+        const activePresupuestoId = configPresupuesto ? Number(configPresupuesto.valor) : 1;
+
+        // @ts-ignore
+        await registrarMovimientoPagoColegiatura(pagoCreado.id_pago, montoBase, Origen.COLEGIATURA, `Inscripción inicial de ${colegiado.nombre} ${colegiado.apellido}`, activePresupuestoId, Number(req.user?.id_usuario || req.user), p.metodo_pago ?? undefined, nuevaRutaComprobante ?? undefined);
+
+        const origenModificado = await prismaClient.origen_movimiento.findFirst({
+            where: { id_pago_colegiado: pagoCreado.id_pago },
+            orderBy: { id_origen: 'desc' }
+        });
+
+        if (origenModificado) {
+            await prismaClient.origen_movimiento.update({
+                where: { id_origen: origenModificado.id_origen },
+                data: { id_postulacion: p.id_postulacion }
+            });
+            await prismaClient.movimientos_financieros.updateMany({
+                where: { id_origen: origenModificado.id_origen },
+                data: { tipo_origen_label: 'POSTULACION' }
+            });
+        }
 
         // Actualizar postulación
         await prismaClient.postulaciones.update({
             where: { id_postulacion: id },
             data: { 
                 estado: 'ACTIVO',
-                documentos: nuevasRutasDocs.join(','),
+                documentos: isJson ? JSON.stringify(nuevasRutasDocs) : nuevasRutasDocs.map(d => d.ruta).join(','),
                 comprobante_pago: nuevaRutaComprobante
             }
         });
 
-        // Correo
+        // Correo (Desactivado según requerimiento)
+        /*
         try {
             await enviarCorreoAceptacion({ correo: p.correo, nombre: p.nombre, apellido: p.apellido, pin });
         } catch (mailErr) {
             console.error("Error enviando correo de aceptación:", mailErr);
         }
+        */
 
         return res.json({ message: 'Postulación aceptada. Colegiado creado.', colegiado, pin_temporal: pin });
     } catch (error) {
@@ -298,24 +363,21 @@ export const rechazarPostulacion = async (req: Request, res: Response) => {
         const p = await prismaClient.postulaciones.findUnique({ where: { id_postulacion: id } });
         if (!p) return res.status(404).json({ error: "Postulación no encontrada." });
 
-        // Eliminar archivos de Supabase
-        const docRutas = (p.documentos ?? '').split(',').filter(Boolean);
-        const toDelete = [...docRutas];
-        if (p.comprobante_pago) toDelete.push(p.comprobante_pago);
-        await eliminarArchivos(toDelete);
-
         await prismaClient.postulaciones.update({
             where: { id_postulacion: id },
-            data: { estado: 'RECHAZADO', motivo_rechazo: motivo ?? null, documentos: null, comprobante_pago: null }
+            data: { estado: 'RECHAZADO', motivo_rechazo: motivo ?? null }
         });
 
+        // Correo de rechazo (Desactivado según requerimiento)
+        /*
         try {
             await enviarCorreoRechazo({ correo: p.correo, nombre: p.nombre, apellido: p.apellido, motivo });
         } catch (mailErr) {
             console.error("Error enviando correo de rechazo:", mailErr);
         }
+        */
 
-        return res.json({ message: 'Postulación rechazada y archivos eliminados.' });
+        return res.json({ message: 'Postulación rechazada. Los archivos se mantienen.' });
     } catch (error) {
         console.error("Error rechazarPostulacion:", error);
         return res.status(500).json({ error: "Error al rechazar la postulación." });
@@ -332,10 +394,21 @@ export const eliminarPostulacion = async (req: Request, res: Response) => {
         if (!p) return res.status(404).json({ error: "Postulación no encontrada." });
 
         // Si aún tiene archivos (por si acaso), eliminarlos
-        const docRutas = (p.documentos ?? '').split(',').filter(Boolean);
+        let docRutas: string[] = [];
+        try {
+            const parsed = JSON.parse(p.documentos || '[]');
+            if (Array.isArray(parsed)) docRutas = parsed.map(d => d.ruta);
+        } catch(e) {
+            docRutas = (p.documentos ?? '').split(',').filter(Boolean);
+        }
         const toDelete = [...docRutas];
         if (p.comprobante_pago) toDelete.push(p.comprobante_pago);
         if (toDelete.length) await eliminarArchivos(toDelete);
+
+        await prismaClient.origen_movimiento.updateMany({
+            where: { id_postulacion: id },
+            data: { id_postulacion: null }
+        });
 
         await prismaClient.postulaciones.delete({ where: { id_postulacion: id } });
         return res.json({ message: 'Postulación eliminada definitivamente.' });
@@ -385,6 +458,15 @@ export const uploadQr = async (req: Request, res: Response) => {
     try {
         const file = req.file;
         if (!file) return res.status(400).json({ error: "No se subió ningún archivo." });
+
+        const existingQR = await prismaClient.config_pago.findUnique({ where: { clave: 'QR' } });
+        if (existingQR && existingQR.valor) {
+            try {
+                await eliminarArchivos([existingQR.valor]);
+            } catch (e) {
+                console.error("Error eliminando QR anterior:", e);
+            }
+        }
 
         const rutaQR = await subirArchivo(file, 'config');
         

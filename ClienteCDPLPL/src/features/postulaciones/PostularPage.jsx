@@ -6,8 +6,9 @@ import {
     CheckCircle, ChevronRight, ChevronLeft, Upload, FileText,
     User, Phone, Mail, CreditCard, Loader2, AlertCircle, X
 } from 'lucide-react';
+import EspecialidadesSelect from '../dashboard/components/EspecialidadesSelect';
 
-const STEPS = ['Verificación', 'Datos personales', 'Documentos', 'Pago'];
+const STEPS = ['Verificación', 'Datos personales', 'Documentos y Pago'];
 
 function StepIndicator({ current }) {
     return (
@@ -63,7 +64,7 @@ function Step1({ onNext }) {
     const [ci, setCi] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [blocked, setBlocked] = useState(null); // {mensaje}
+    const [blocked, setBlocked] = useState(null);
 
     const handleCheck = async (e) => {
         e.preventDefault();
@@ -89,7 +90,6 @@ function Step1({ onNext }) {
         <form onSubmit={handleCheck} className="space-y-6">
             <div>
                 <h2 className="text-2xl font-black text-slate-900 tracking-tight">Verificar identidad</h2>
-                <p className="text-slate-500 text-sm mt-1">Primero verificamos que no tengas un registro previo.</p>
             </div>
 
             {blocked && (
@@ -165,26 +165,29 @@ function Step2({ onNext, onBack, inicial }) {
     );
 }
 
-// ─── STEP 3: Documentos ───────────────────────────────────────
-function Step3({ onNext, onBack }) {
+// ─── STEP 3: Documentos y Pago ───────────────────────────────────────
+function Step3({ onSubmit, onBack, loading }) {
     const [files, setFiles] = useState({});
-    const [especialidades, setEspecialidades] = useState('');
+    const [especialidades, setEspecialidades] = useState([]);
     const [error, setError] = useState('');
     const [documentSlots, setDocumentSlots] = useState([]);
     const [loadingDocs, setLoadingDocs] = useState(true);
     const [loadError, setLoadError] = useState('');
+    
+    // Pago states
+    const [config, setConfig] = useState(null);
+    const [comprobante, setComprobante] = useState(null);
+    const [metodoPago, setMetodoPago] = useState('TRANSFERENCIA');
 
     useEffect(() => {
         setLoadingDocs(true);
         getDocumentosRequeridos()
             .then(res => {
                 const docs = res.data ?? [];
-                // Normalize each doc to the slot shape used in the form
                 const slots = docs.map(doc => ({
                     key: String(doc.id_doc_req),
-                    label: doc.es_opcional
-                        ? `${doc.nombre} (opcional)`
-                        : doc.nombre,
+                    label: doc.es_opcional ? `${doc.nombre} (opcional)` : doc.nombre,
+                    name: doc.nombre,
                     accept: '.pdf,image/*',
                     optional: doc.es_opcional,
                 }));
@@ -192,6 +195,8 @@ function Step3({ onNext, onBack }) {
             })
             .catch(() => setLoadError('No se pudieron cargar los documentos requeridos. Recarga la página.'))
             .finally(() => setLoadingDocs(false));
+            
+        getConfigPago().then(setConfig).catch(() => setConfig({}));
     }, []);
 
     const handleFile = (key, file) => {
@@ -204,15 +209,23 @@ function Step3({ onNext, onBack }) {
         const required = documentSlots.filter(s => !s.optional).map(s => s.key);
         const missing = required.filter(k => !files[k]);
         if (missing.length) { setError('Por favor sube todos los documentos requeridos.'); return; }
-        const docArray = Object.values(files).filter(Boolean);
-        onNext({ documentos: docArray, especialidades });
+        if (metodoPago !== 'EFECTIVO' && !comprobante) { setError('Debes adjuntar el comprobante de pago.'); return; }
+        
+        const docArray = Object.entries(files).map(([key, file]) => {
+            if (!file) return null;
+            const slot = documentSlots.find(s => s.key === key);
+            const ext = file.name.includes('.') ? file.name.substring(file.name.lastIndexOf('.')) : '';
+            return new File([file], slot.name + ext, { type: file.type });
+        }).filter(Boolean);
+        
+        onSubmit({ documentos: docArray, especialidades: especialidades.join(", "), comprobante, metodoPago });
     };
 
     return (
-        <form onSubmit={handleNext} className="space-y-6">
+        <form onSubmit={handleNext} className="space-y-8">
             <div>
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Documentos</h2>
-                <p className="text-slate-500 text-sm mt-1">Sube los documentos requeridos para tu postulación.</p>
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Documentos y Pago</h2>
+                <p className="text-slate-500 text-sm mt-1">Sube los documentos requeridos y el comprobante de pago para finalizar tu postulación.</p>
             </div>
 
             {loadingDocs ? (
@@ -224,126 +237,112 @@ function Step3({ onNext, onBack }) {
                     <AlertCircle className="w-4 h-4 shrink-0" /> {loadError}
                 </div>
             ) : (
-                <div className="space-y-3">
-                    {documentSlots.map(slot => (
-                        <div key={slot.key} className={`flex items-center gap-4 p-3 rounded-lg border transition-all
-                            ${files[slot.key] ? 'border-black bg-slate-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}>
-                            <FileText className={`w-5 h-5 shrink-0 ${files[slot.key] ? 'text-black' : 'text-slate-400'}`} />
-                            <div className="flex-1 min-w-0">
-                                <p className="text-sm font-medium text-slate-700">
-                                    {slot.label}
-                                    {!slot.optional && <span className="text-red-500 ml-1">*</span>}
-                                </p>
-                                {files[slot.key] && (
-                                    <p className="text-xs text-slate-500 truncate">{files[slot.key].name}</p>
-                                )}
+                <div className="space-y-4">
+                    <div className="space-y-3">
+                        <p className="text-sm font-bold text-slate-700 border-b pb-2">Requisitos</p>
+                        {documentSlots.map(slot => (
+                            <div key={slot.key} className={`flex items-center gap-4 p-3 rounded-lg border transition-all ${files[slot.key] ? 'border-black bg-slate-50' : 'border-slate-200 bg-white hover:border-slate-400'}`}>
+                                <FileText className={`w-5 h-5 shrink-0 ${files[slot.key] ? 'text-black' : 'text-slate-400'}`} />
+                                <div className="flex-1 min-w-0">
+                                    <p className="text-sm font-medium text-slate-700">
+                                        {slot.label}
+                                        {!slot.optional && <span className="text-red-500 ml-1">*</span>}
+                                    </p>
+                                    {files[slot.key] && (
+                                        <p className="text-xs text-slate-500 truncate">{files[slot.key].name}</p>
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-2 shrink-0">
+                                    <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 rounded-md transition-all">
+                                        <Upload className="w-3.5 h-3.5" />
+                                        {files[slot.key] ? 'Cambiar' : 'Subir'}
+                                        <input type="file" className="hidden" accept={slot.accept}
+                                            onChange={e => handleFile(slot.key, e.target.files[0])} />
+                                    </label>
+                                    {files[slot.key] && (
+                                        <button type="button" onClick={() => setFiles(p => { const n = { ...p }; delete n[slot.key]; return n; })} className="p-1 text-slate-400 hover:text-red-500 transition-colors">
+                                            <X className="w-4 h-4" />
+                                        </button>
+                                    )}
+                                </div>
                             </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                                <label className="cursor-pointer flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 rounded-md transition-all">
-                                    <Upload className="w-3.5 h-3.5" />
-                                    {files[slot.key] ? 'Cambiar' : 'Subir'}
-                                    <input type="file" className="hidden" accept={slot.accept}
-                                        onChange={e => handleFile(slot.key, e.target.files[0])} />
-                                </label>
-                                {files[slot.key] && (
-                                    <button type="button" onClick={() => setFiles(p => { const n = { ...p }; delete n[slot.key]; return n; })}
-                                        className="p-1 text-slate-400 hover:text-red-500 transition-colors">
-                                        <X className="w-4 h-4" />
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             )}
 
             <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-1.5">Especialidades</label>
-                <textarea
-                    rows={3}
+                <EspecialidadesSelect
                     value={especialidades}
-                    onChange={e => setEspecialidades(e.target.value)}
-                    placeholder="Ej: Psicología clínica, Psicología educativa..."
-                    className="w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm outline-none focus:border-black focus:ring-2 focus:ring-black/10 resize-none"
+                    onChange={setEspecialidades}
+                    allowCreate={false}
                 />
             </div>
 
-            {error && (
-                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
-                    <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+            <div className="pt-4 border-t border-slate-200">
+                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Método de pago</label>
+                <select
+                    className="w-full px-4 py-2 mb-6 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-black/10 focus:border-black outline-none bg-white"
+                    value={metodoPago}
+                    onChange={(e) => {
+                        setMetodoPago(e.target.value);
+                        setError("");
+                    }}
+                >
+                    <option value="EFECTIVO">Efectivo (Presencial)</option>
+                    <option value="TRANSFERENCIA">Transferencia Bancaria</option>
+                    <option value="QR">Pago con QR</option>
+                </select>
+
+                <p className="text-sm font-bold text-slate-700 mb-4">Información de Pago</p>
+                <div className="border border-slate-200 rounded-xl p-5 space-y-4 bg-slate-50">
+                    {config ? (
+                        <>
+                            {metodoPago === 'EFECTIVO' && (
+                                <p className="text-sm text-slate-700 text-center py-4">Puedes realizar el pago en efectivo directamente en nuestras oficinas.</p>
+                            )}
+                            {metodoPago === 'TRANSFERENCIA' && (
+                                <>
+                                    {config.instrucciones && (
+                                        <div>
+                                            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Instrucciones</p>
+                                            <p className="text-sm text-slate-700">{config.instrucciones}</p>
+                                        </div>
+                                    )}
+                                    {(config.cuenta_bancaria || config.cuenta) ? (
+                                        <div>
+                                            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Cuenta Bancaria</p>
+                                            <p className="text-sm font-mono font-semibold text-slate-800 bg-white border border-slate-200 rounded-lg px-3 py-2 inline-block">{config.cuenta_bancaria || config.cuenta}</p>
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-slate-500 text-center py-4">Información de cuenta bancaria no disponible.</p>
+                                    )}
+                                </>
+                            )}
+                            {metodoPago === 'QR' && (
+                                <>
+                                    {config.qr_url ? (
+                                        <div className="flex flex-col items-center">
+                                            <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Código QR</p>
+                                            <img src={config.qr_url} alt="QR Pago" className="w-56 h-56 object-contain border border-slate-200 rounded-lg bg-white p-2 shadow-sm" />
+                                        </div>
+                                    ) : (
+                                        <p className="text-sm text-slate-500 text-center py-4">Código QR no disponible en este momento.</p>
+                                    )}
+                                </>
+                            )}
+                        </>
+                    ) : (
+                        <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-slate-400" /></div>
+                    )}
                 </div>
-            )}
-
-            <div className="flex gap-3 pt-2">
-                <button type="button" onClick={onBack} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-all">
-                    <ChevronLeft className="w-4 h-4" /> Atrás
-                </button>
-                <button type="submit" disabled={loadingDocs} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-slate-800 disabled:opacity-60 transition-all">
-                    Siguiente <ChevronRight className="w-4 h-4" />
-                </button>
-            </div>
-        </form>
-    );
-}
-
-// ─── STEP 4: Pago ────────────────────────────────────────────
-function Step4({ onSubmit, onBack, loading }) {
-    const [config, setConfig] = useState(null);
-    const [comprobante, setComprobante] = useState(null);
-    const [error, setError] = useState('');
-
-    useState(() => {
-        getConfigPago().then(setConfig).catch(() => setConfig({}));
-    }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!comprobante) { setError('Debes adjuntar el comprobante de pago.'); return; }
-        setError('');
-        onSubmit({ comprobante });
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight">Pago de registro</h2>
-                <p className="text-slate-500 text-sm mt-1">Realiza el pago y adjunta el comprobante para finalizar.</p>
-            </div>
-
-            {/* Payment Info */}
-            <div className="border border-slate-200 rounded-xl p-5 space-y-4 bg-slate-50">
-                {config ? (
-                    <>
-                        {config.instrucciones && (
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Instrucciones</p>
-                                <p className="text-sm text-slate-700">{config.instrucciones}</p>
-                            </div>
-                        )}
-                        {config.cuenta_bancaria && (
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Cuenta Bancaria</p>
-                                <p className="text-sm font-mono font-semibold text-slate-800 bg-white border border-slate-200 rounded-lg px-3 py-2">{config.cuenta_bancaria}</p>
-                            </div>
-                        )}
-                        {config.qr_url && (
-                            <div>
-                                <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-2">Código QR</p>
-                                <img src={config.qr_url} alt="QR Pago" className="w-48 h-48 object-contain border border-slate-200 rounded-lg bg-white p-2" />
-                            </div>
-                        )}
-                        {!config.instrucciones && !config.cuenta_bancaria && !config.qr_url && (
-                            <p className="text-sm text-slate-500 text-center py-4">Información de pago no disponible aún. Contacta a la secretaría.</p>
-                        )}
-                    </>
-                ) : (
-                    <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 animate-spin text-slate-400" /></div>
-                )}
             </div>
 
             {/* Comprobante upload */}
-            <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+            {metodoPago !== 'EFECTIVO' && (
+                <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">
                     Comprobante de pago <span className="text-red-500">*</span>
                 </label>
                 <label className={`flex items-center gap-3 cursor-pointer border-2 border-dashed rounded-xl p-5 transition-all
@@ -358,6 +357,7 @@ function Step4({ onSubmit, onBack, loading }) {
                     <input type="file" className="hidden" accept=".pdf,image/*" onChange={e => { setComprobante(e.target.files[0]); setError(''); }} />
                 </label>
             </div>
+            )}
 
             {error && (
                 <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
@@ -366,10 +366,10 @@ function Step4({ onSubmit, onBack, loading }) {
             )}
 
             <div className="flex gap-3 pt-2">
-                <button type="button" onClick={onBack} disabled={loading} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 disabled:opacity-60 transition-all">
+                <button type="button" onClick={onBack} disabled={loading} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 border border-slate-300 text-slate-700 font-semibold rounded-lg hover:bg-slate-50 transition-all">
                     <ChevronLeft className="w-4 h-4" /> Atrás
                 </button>
-                <button type="submit" disabled={loading} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-slate-800 disabled:opacity-60 transition-all">
+                <button type="submit" disabled={loading || loadingDocs} className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-black text-white font-semibold rounded-lg hover:bg-slate-800 disabled:opacity-60 transition-all">
                     {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Enviando...</> : <><span>Postular</span><ChevronRight className="w-4 h-4" /></>}
                 </button>
             </div>
@@ -377,7 +377,8 @@ function Step4({ onSubmit, onBack, loading }) {
     );
 }
 
-// ─── STEP 5: Éxito ────────────────────────────────────────────
+
+// ─── STEP 4 (Ex Éxito) ────────────────────────────────────────────
 function StepExito() {
     return (
         <div className="flex flex-col items-center text-center py-8 space-y-6">
@@ -414,9 +415,8 @@ export default function PostularPage() {
 
     const handleStep1 = (d) => { setDatos(p => ({ ...p, ...d })); setStep(1); };
     const handleStep2 = (d) => { setDatos(p => ({ ...p, ...d })); setStep(2); };
-    const handleStep3 = (d) => { setDatos(p => ({ ...p, ...d })); setStep(3); };
 
-    const handleStep4 = async ({ comprobante }) => {
+    const handleStep3 = async ({ documentos, especialidades, comprobante, metodoPago }) => {
         setSubmitting(true);
         setSubmitError('');
         try {
@@ -426,11 +426,13 @@ export default function PostularPage() {
             formData.append('apellido', datos.apellido);
             formData.append('correo', datos.correo);
             formData.append('telefono', datos.telefono);
-            formData.append('especialidades', datos.especialidades || '');
-            (datos.documentos || []).forEach(f => formData.append('documentos', f));
+            formData.append('especialidades', especialidades || '');
+            (documentos || []).forEach(f => formData.append('documentos', f));
             if (comprobante) formData.append('comprobante', comprobante);
+            formData.append('metodo_pago', metodoPago);
+            
             await crearPostulacion(formData);
-            setStep(4);
+            setStep(3); // Go to success step (which is now index 3)
         } catch (err) {
             setSubmitError(err?.response?.data?.error || 'Error al enviar. Inténtalo de nuevo.');
         } finally {
@@ -439,23 +441,10 @@ export default function PostularPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 font-sans">
-            {/* Header */}
-            <header className="bg-white border-b border-slate-200 sticky top-0 z-10">
-                <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                            <span className="text-white text-xs font-black">C</span>
-                        </div>
-                        <span className="font-black text-slate-900 tracking-tight text-sm uppercase">CDPLP</span>
-                    </Link>
-                    <span className="text-xs text-slate-500 font-medium uppercase tracking-widest">Portal de Postulación</span>
-                </div>
-            </header>
-
+        <div className="bg-slate-50 font-sans pb-12 w-full h-full flex flex-col justify-center items-center">
             {/* Main content */}
-            <main className="max-w-2xl mx-auto px-4 sm:px-6 py-10">
-                {step < 4 && (
+            <main className="w-full max-w-2xl mx-auto px-4 sm:px-6 py-10 mt-10">
+                {step < 3 && (
                     <div className="mb-6">
                         <h1 className="text-sm font-bold uppercase tracking-widest text-slate-500 mb-6 text-center">
                             Solicitud de Colegiatura
@@ -465,16 +454,15 @@ export default function PostularPage() {
                 )}
 
                 <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
-                    {submitError && step === 3 && (
+                    {submitError && step === 2 && (
                         <div className="mb-4 flex items-center gap-2 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
                             <AlertCircle className="w-4 h-4 shrink-0" /> {submitError}
                         </div>
                     )}
                     {step === 0 && <Step1 onNext={handleStep1} />}
                     {step === 1 && <Step2 onNext={handleStep2} onBack={() => setStep(0)} inicial={{ nombre: datos.nombre, apellido: datos.apellido, correo: datos.correo, telefono: datos.telefono }} />}
-                    {step === 2 && <Step3 onNext={handleStep3} onBack={() => setStep(1)} />}
-                    {step === 3 && <Step4 onSubmit={handleStep4} onBack={() => setStep(2)} loading={submitting} />}
-                    {step === 4 && <StepExito />}
+                    {step === 2 && <Step3 onSubmit={handleStep3} onBack={() => setStep(1)} loading={submitting} />}
+                    {step === 3 && <StepExito />}
                 </div>
 
                 <p className="text-center text-xs text-slate-400 mt-8">

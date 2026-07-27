@@ -127,6 +127,11 @@ export const deleteAsistenciaActividad = async (id_asistencia) => {
     return res.data;
 };
 
+export const anularRegistroActividadInst = async (id_registro) => {
+    const res = await axios.post(`${BASE_URL}/anularRegistro/${id_registro}`);
+    return res.data;
+};
+
 //REPORTES
 
 

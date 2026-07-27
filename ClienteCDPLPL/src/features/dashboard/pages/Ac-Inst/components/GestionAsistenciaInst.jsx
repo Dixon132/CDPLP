@@ -13,7 +13,8 @@ import {
     XCircle,
     UserPlus,
     ArrowLeft,
-    ListChecks
+    ListChecks,
+    Ban
 } from 'lucide-react';
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/Header";
@@ -59,18 +60,27 @@ export default function GestionAsistenciaInst() {
         fetchData();
     }, [id]);
 
-    const hasAssisted = (id_colegiado) => {
-        return asistencias.some((a) => a.id_colegiado === id_colegiado);
+    const hasAssisted = (r) => {
+        if (r.id_colegiado) return asistencias.some((a) => a.id_colegiado === r.id_colegiado);
+        if (r.id_invitado) return asistencias.some((a) => a.id_invitado === r.id_invitado);
+        return false;
     };
 
-    const findAsistenciaId = (id_colegiado) => {
-        const found = asistencias.find((a) => a.id_colegiado === id_colegiado);
-        return found ? found.id_asistencia : null;
+    const findAsistenciaId = (r) => {
+        if (r.id_colegiado) {
+            const found = asistencias.find((a) => a.id_colegiado === r.id_colegiado);
+            return found ? found.id_asistencia : null;
+        }
+        if (r.id_invitado) {
+            const found = asistencias.find((a) => a.id_invitado === r.id_invitado);
+            return found ? found.id_asistencia : null;
+        }
+        return null;
     };
 
-    const handleToggleClick = (id_colegiado) => {
-        const asistio = hasAssisted(id_colegiado);
-        setSelectedColegiado(id_colegiado);
+    const handleToggleClick = (r) => {
+        const asistio = hasAssisted(r);
+        setSelectedColegiado(r);
         setConfirmAction(asistio ? "DESMARCAR" : "MARCAR");
         setShowConfirm(true);
     };
@@ -85,7 +95,8 @@ export default function GestionAsistenciaInst() {
             } else {
                 await createAsistenciaActividad({
                     id_actividad: id,
-                    id_colegiado: selectedColegiado,
+                    id_colegiado: selectedColegiado.id_colegiado || null,
+                    id_invitado: selectedColegiado.id_invitado || null,
                 });
             }
             await fetchData();
@@ -105,25 +116,45 @@ export default function GestionAsistenciaInst() {
         );
     }
 
-    const registrosColegiados = registros.filter((r) => r.id_colegiado !== null);
+    const registrosTotales = registros.filter((r) => r.id_colegiado !== null || r.id_invitado !== null);
+    const handleAnularRegistro = async (registro) => {
+        if (window.confirm(`¿Estás seguro de que deseas anular el registro de ${registro.colegiados ? registro.colegiados.nombre + ' ' + registro.colegiados.apellido : registro.invitados?.nombre + ' ' + registro.invitados?.apellido}? Esta acción anulará el pago asociado y eliminará el comprobante.`)) {
+            try {
+                const { anularRegistroActividadInst } = await import('../../../services/ac-institucionales');
+                await anularRegistroActividadInst(registro.id_registro);
+                fetchData();
+            } catch (error) {
+                console.error("Error al anular registro:", error);
+                alert("Error al anular el registro");
+            }
+        }
+    };
 
     const columns = [
         {
-            label: "Colegiado",
-            key: "colegiado",
-            render: (r) => (
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center font-bold">
-                        {r.colegiados?.nombre?.charAt(0)?.toUpperCase() || 'N'}
+            label: "Asistente",
+            key: "asistente",
+            render: (r) => {
+                const persona = r.colegiados || r.invitados;
+                const esColegiado = r.id_colegiado !== null;
+                const initial = persona?.nombre?.charAt(0)?.toUpperCase() || 'N';
+                
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${esColegiado ? 'bg-indigo-50 text-indigo-600' : 'bg-orange-50 text-orange-600'}`}>
+                            {initial}
+                        </div>
+                        <div>
+                            <p className="font-bold text-slate-800">
+                                {persona?.nombre} {persona?.apellido}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                                {esColegiado ? `Colegiado ID: ${r.id_colegiado}` : 'Invitado'}
+                            </p>
+                        </div>
                     </div>
-                    <div>
-                        <p className="font-bold text-slate-800">
-                            {r.colegiados?.nombre} {r.colegiados?.apellido}
-                        </p>
-                        <p className="text-xs text-slate-500">ID: {r.id_colegiado}</p>
-                    </div>
-                </div>
-            )
+                );
+            }
         },
         {
             label: "Estado Registro",
@@ -146,7 +177,7 @@ export default function GestionAsistenciaInst() {
             label: "Asistencia",
             key: "asistencia",
             render: (r) => {
-                const asistio = hasAssisted(r.id_colegiado);
+                const asistio = hasAssisted(r);
                 return (
                     <div className="flex items-center gap-2">
                         {asistio ? (
@@ -166,12 +197,20 @@ export default function GestionAsistenciaInst() {
 
     const actions = [
         {
-            label: (r) => hasAssisted(r.id_colegiado) ? "Desmarcar" : "Marcar Asistencia",
-            icon: (r) => hasAssisted(r.id_colegiado) ? UserX : UserCheck,
-            className: (r) => hasAssisted(r.id_colegiado) 
+            label: (r) => hasAssisted(r) ? "Desmarcar" : "Marcar Asistencia",
+            icon: (r) => hasAssisted(r) ? UserX : UserCheck,
+            show: (r) => r.estado_registro !== 'ANULADO',
+            className: (r) => hasAssisted(r) 
                 ? "text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100" 
                 : "text-emerald-600 bg-emerald-50 border-emerald-100 hover:bg-emerald-100",
-            onClick: (r) => handleToggleClick(r.id_colegiado)
+            onClick: (r) => handleToggleClick(r)
+        },
+        {
+            label: "Anular",
+            icon: Ban,
+            show: (r) => r.estado_registro !== 'ANULADO',
+            className: "text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100",
+            onClick: (r) => handleAnularRegistro(r)
         }
     ];
 
@@ -182,9 +221,9 @@ export default function GestionAsistenciaInst() {
                 icon={<Users className="w-8 h-8" />}
                 showSearch={false}
                 stats={[
-                    { label: "Inscritos", value: registrosColegiados.length, color: "blue" },
+                    { label: "Inscritos", value: registrosTotales.length, color: "blue" },
                     { label: "Asistieron", value: asistencias.length, color: "emerald" },
-                    { label: "Pendientes", value: registrosColegiados.length - asistencias.length, color: "amber" }
+                    { label: "Pendientes", value: registrosTotales.length - asistencias.length, color: "amber" }
                 ]}
                 buttons={[
                     {
@@ -212,9 +251,9 @@ export default function GestionAsistenciaInst() {
                 
                 <Table 
                     columns={columns}
-                    data={registrosColegiados}
+                    data={registrosTotales}
                     actions={actions}
-                    emptyMessage="No hay colegiados inscritos para esta actividad"
+                    emptyMessage="No hay inscritos para esta actividad"
                 />
             </div>
 
@@ -222,8 +261,8 @@ export default function GestionAsistenciaInst() {
             <ConfirmDialog
                 isOpen={showConfirm}
                 message={confirmAction === "MARCAR" 
-                    ? "¿Estás seguro de que deseas MARCAR la asistencia de este colegiado?" 
-                    : "¿Estás seguro de que deseas DESMARCAR la asistencia de este colegiado?"}
+                    ? "¿Estás seguro de que deseas MARCAR la asistencia de este inscrito?" 
+                    : "¿Estás seguro de que deseas DESMARCAR la asistencia de este inscrito?"}
                 onConfirm={confirmToggle}
                 onClose={() => setShowConfirm(false)}
                 confirmText={confirmAction === "MARCAR" ? "Marcar" : "Desmarcar"}
@@ -243,22 +282,27 @@ export default function GestionAsistenciaInst() {
                         </Box>
                     ) : (
                         <div className="grid grid-cols-1 gap-3">
-                            {asistencias.map(a => (
+                            {asistencias.map(a => {
+                                const persona = a.colegiados || a.invitados;
+                                return (
                                 <div key={a.id_asistencia} className="flex items-center gap-3 p-3 bg-emerald-50 border border-emerald-100 rounded-xl">
                                     <div className="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold">
-                                        {a.colegiados?.nombre?.charAt(0)?.toUpperCase() || 'N'}
+                                        {persona?.nombre?.charAt(0)?.toUpperCase() || 'N'}
                                     </div>
                                     <div>
                                         <p className="font-semibold text-slate-800">
-                                            {a.colegiados?.nombre} {a.colegiados?.apellido}
+                                            {persona?.nombre} {persona?.apellido}
                                         </p>
-                                        <p className="text-xs text-slate-500">CI: {a.colegiados?.carnet_identidad || "N/A"}</p>
+                                        <p className="text-xs text-slate-500">
+                                            {a.id_colegiado ? `CI: ${persona?.carnet_identidad || "N/A"}` : 'Invitado'}
+                                        </p>
                                     </div>
                                     <div className="ml-auto">
                                         <CheckCircle className="w-5 h-5 text-emerald-500" />
                                     </div>
                                 </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     )}
                 </div>

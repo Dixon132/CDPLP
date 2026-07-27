@@ -43,6 +43,9 @@ const CreateColegiado = ({ onSuccess }) => {
                 ...data,
                 especialidades: especialidades.join(", "),
             };
+            if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
+            if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
+            
             const response = await createColegiado(payload);
             const pin = response?.pin_temporal;
             if (pin) {

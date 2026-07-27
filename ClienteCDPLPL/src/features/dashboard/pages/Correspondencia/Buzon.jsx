@@ -61,7 +61,7 @@ export default function BuzonCorrespondencia() {
     };
 
     return (
-        <div className="space-y-6 p-6 min-h-screen bg-gradient-to-br from-indigo-50/50 via-purple-50/30 to-blue-50/40">
+        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
             {/* Header Reutilizable */}
             <Header
                 title="Buzón de Correspondencia"
@@ -107,7 +107,7 @@ export default function BuzonCorrespondencia() {
                     </div>
                 </div>
             ) : data.length === 0 ? (
-                <div className="text-center p-12 bg-white/80 rounded-3xl border border-slate-200 shadow-sm">
+                <div className="text-center p-12 bg-white/80 rounded-xl border border-slate-200 shadow-sm">
                     <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
                         <Mail className="w-10 h-10 text-slate-400" />
                     </div>
@@ -115,96 +115,62 @@ export default function BuzonCorrespondencia() {
                     <p className="text-slate-500">No se encontraron elementos que coincidan con tu búsqueda</p>
                 </div>
             ) : (
-                <div className="space-y-4">
-                    {data.map((item, index) => {
-                        const isReviewed = item.fecha_recibido !== null;
-                        return (
-                            <div
-                                key={item.id_correspondencia}
-                                className={`
-                                    group relative bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-slate-200 
-                                    hover:shadow-md hover:border-slate-300 transition-all duration-300
-                                    ${isReviewed ? 'opacity-90' : ''}
-                                `}
-                            >
-                                <div className="p-6">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1 min-w-0">
-                                            {/* Header */}
-                                            <div className="flex items-center gap-3 mb-3">
-                                                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isReviewed ? 'bg-slate-100' : 'bg-indigo-50'}`}>
-                                                    {isReviewed ?
-                                                        <MailOpen className="w-5 h-5 text-slate-500" /> :
-                                                        <Mail className="w-5 h-5 text-indigo-600" />
-                                                    }
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h3 className={`text-lg font-semibold mb-1 line-clamp-2 ${isReviewed ? 'text-slate-600' : 'text-slate-800'}`}>
-                                                        {item.asunto}
-                                                    </h3>
-                                                    <div className="flex items-center gap-4 text-sm text-slate-500 flex-wrap">
-                                                        <div className="flex items-center gap-1">
-                                                            <User className="w-4 h-4" />
-                                                            <span>De: <strong className="text-slate-700">{item.remitente}</strong></span>
-                                                        </div>
-                                                        <div className="flex items-center gap-1">
-                                                            <Send className="w-4 h-4" />
-                                                            <span>Para: <strong className="text-slate-700">{item.destinatario?.nombre} {item.destinatario?.apellido}</strong></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Footer */}
-                                            <div className="flex items-center justify-between flex-wrap gap-3 mt-4">
-                                                <div className="flex items-center gap-4 text-sm text-slate-500 flex-wrap">
-                                                    <div className="flex items-center gap-1">
-                                                        <Clock className="w-4 h-4" />
-                                                        <span>Envío: {new Date(item.fecha_envio).toLocaleDateString()}</span>
-                                                    </div>
-                                                    {isReviewed ? (
-                                                        <div className="flex items-center gap-1">
-                                                            <MailOpen className="w-4 h-4" />
-                                                            <span>Visto: {new Date(item.fecha_recibido).toLocaleDateString()}</span>
-                                                        </div>
-                                                    ) : (
-                                                        <div className="flex items-center gap-1 text-rose-500">
-                                                            <Mail className="w-4 h-4" />
-                                                            <span className="font-medium">No visto</span>
-                                                        </div>
-                                                    )}
-                                                </div>
-
-                                                <div className="flex items-center gap-3">
-                                                    <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${getStatusColor(item.estado)}`}>
-                                                        {item.estado}
-                                                    </span>
-
-                                                    <Link to={`/dashboard/buzon/${item.id_correspondencia}`}>
-                                                        <button
-                                                            className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm transition-all duration-200 ${
-                                                                isReviewed 
-                                                                    ? "bg-slate-100 text-slate-600 hover:bg-slate-200" 
-                                                                    : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"
-                                                            }`}
-                                                        >
-                                                            {isReviewed ? 'Ver detalles' : 'Revisar'}
-                                                            <ChevronRight className="w-4 h-4" />
-                                                        </button>
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
+                <div className="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                    <div className="divide-y divide-slate-100">
+                        {data.map((item) => {
+                            const isReviewed = item.fecha_recibido !== null;
+                            return (
+                                <Link
+                                    to={`/dashboard/buzon/${item.id_correspondencia}`}
+                                    key={item.id_correspondencia}
+                                    className={`
+                                        group flex items-center gap-3 p-4 transition-colors duration-150 cursor-pointer
+                                        ${!isReviewed ? 'bg-blue-50/40 hover:bg-blue-50/80' : 'bg-white hover:bg-slate-50'}
+                                    `}
+                                >
+                                    {/* Indicador de nuevo */}
+                                    <div className="flex-shrink-0 w-3 flex justify-center">
+                                        {!isReviewed ? (
+                                            <div className="w-2.5 h-2.5 rounded-full bg-blue-600"></div>
+                                        ) : (
+                                            <MailOpen className="w-4 h-4 text-slate-300" />
+                                        )}
                                     </div>
-                                </div>
+                                    
+                                    {/* Remitente */}
+                                    <div className="flex-shrink-0 w-32 sm:w-48 md:w-56 flex flex-col">
+                                        <span className={`truncate text-sm ${!isReviewed ? 'font-bold text-slate-900' : 'font-medium text-slate-700'}`}>
+                                            {item.remitente}
+                                        </span>
+                                        <span className="truncate text-xs text-slate-500">
+                                            Para: {item.destinatario?.nombre} {item.destinatario?.apellido}
+                                        </span>
+                                    </div>
 
-                                {/* Indicator de no leído */}
-                                {!isReviewed && (
-                                    <div className="absolute left-0 top-6 w-1 h-12 bg-indigo-500 rounded-r-full"></div>
-                                )}
-                            </div>
-                        );
-                    })}
+                                    {/* Asunto y Resumen */}
+                                    <div className="flex-grow min-w-0 flex items-center gap-2">
+                                        <span className={`truncate text-sm ${!isReviewed ? 'font-bold text-slate-900' : 'text-slate-800'}`}>
+                                            {item.asunto}
+                                        </span>
+                                        <span className="hidden md:inline text-slate-400 text-sm">-</span>
+                                        <span className="truncate text-sm text-slate-500 hidden md:inline">
+                                            {item.resumen}
+                                        </span>
+                                    </div>
+
+                                    {/* Badge y Fecha */}
+                                    <div className="flex-shrink-0 flex items-center gap-4 justify-end">
+                                        <span className={`hidden lg:inline-flex px-2 py-0.5 text-[11px] font-semibold rounded-full border ${getStatusColor(item.estado)}`}>
+                                            {item.estado}
+                                        </span>
+                                        <span className={`text-xs w-20 text-right ${!isReviewed ? 'font-bold text-blue-700' : 'font-medium text-slate-500'}`}>
+                                            {new Date(item.fecha_envio).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
                 </div>
             )}
         </div>

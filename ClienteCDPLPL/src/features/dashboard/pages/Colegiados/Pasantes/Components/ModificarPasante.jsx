@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem, Typography } from "@mui/material";
 import { getPasanteById, modificarPasante } from "../../../../services/pasantes";
-import EspecialidadesSelect from "../../../../components/EspecialidadesSelect";
+import InstitucionesSelect from "../../../../components/InstitucionesSelect";
 
 const ModificarPasante = ({ id, onClose, onSuccess }) => {
     const {
@@ -17,7 +17,7 @@ const ModificarPasante = ({ id, onClose, onSuccess }) => {
         },
     });
 
-    const [especialidades, setEspecialidades] = useState([]);
+    const [institucionSeleccionada, setInstitucionSeleccionada] = useState("");
 
     // Carga de datos al abrir el modal
     useEffect(() => {
@@ -30,9 +30,8 @@ const ModificarPasante = ({ id, onClose, onSuccess }) => {
                     carnet_identidad: data.carnet_identidad || "",
                     correo: data.correo || "",
                     telefono: data.telefono || "",
-                    institucion: data.institucion || "",
                 });
-                setEspecialidades((data.especialidades || "").split(", ").filter(Boolean));
+                setInstitucionSeleccionada(data.institucion || "");
             } catch (error) {
                 console.error("Error al obtener el pasante:", error);
             }
@@ -45,7 +44,7 @@ const ModificarPasante = ({ id, onClose, onSuccess }) => {
         try {
             await modificarPasante(id, {
                 ...formData,
-                especialidades: especialidades.join(", "),
+                institucion: institucionSeleccionada,
             });
             if (onSuccess) onSuccess();
             else if (onClose) onClose();
@@ -123,35 +122,13 @@ const ModificarPasante = ({ id, onClose, onSuccess }) => {
                     helperText={errors.telefono?.message}
                 />
 
-                <Controller
-                    name="institucion"
-                    control={control}
-                    rules={{ required: "Seleccione una institución" }}
-                    render={({ field }) => (
-                        <TextField
-                            {...field}
-                            select
-                            label="Institución"
-                            InputLabelProps={{ shrink: true }}
-                            error={!!errors.institucion}
-                            helperText={errors.institucion?.message}
-                        >
-                            <MenuItem value="">-- Seleccione --</MenuItem>
-                            <MenuItem value="Ingeniería de Sistemas">Ingeniería de Sistemas</MenuItem>
-                            <MenuItem value="Derecho">Derecho</MenuItem>
-                            <MenuItem value="Administración">Administración</MenuItem>
-                            <MenuItem value="Contaduría Pública">Contaduría Pública</MenuItem>
-                        </TextField>
-                    )}
-                />
-
                 <Box>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                        Especialidades
+                        Institución
                     </Typography>
-                    <EspecialidadesSelect
-                        value={especialidades}
-                        onChange={setEspecialidades}
+                    <InstitucionesSelect
+                        value={institucionSeleccionada}
+                        onChange={setInstitucionSeleccionada}
                         allowCreate
                     />
                 </Box>

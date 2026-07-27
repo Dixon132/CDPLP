@@ -16,7 +16,7 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff, ContentCopy } from "@mui/icons-material";
 import { createPasante } from "../../../../services/pasantes";
-import EspecialidadesSelect from "../../../../components/EspecialidadesSelect";
+import InstitucionesSelect from "../../../../components/InstitucionesSelect";
 
 const CreatePasante = ({ onSuccess, onClose }) => {
     const {
@@ -33,13 +33,13 @@ const CreatePasante = ({ onSuccess, onClose }) => {
 
     const [pinGenerado, setPinGenerado] = useState(null);
     const [mostrarPin, setMostrarPin] = useState(false);
-    const [especialidades, setEspecialidades] = useState([]);
+    const [institucionSeleccionada, setInstitucionSeleccionada] = useState("");
 
     const onSubmit = async (data) => {
         try {
             const response = await createPasante({
                 ...data,
-                especialidades: especialidades.join(", "),
+                institucion: institucionSeleccionada,
             })
             const pin = response?.pin_temporal;
             if (pin) {
@@ -54,6 +54,7 @@ const CreatePasante = ({ onSuccess, onClose }) => {
             alert("Error al crear pasante")
         }
     }
+
     return (
         <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ p: 2 }}>
             <Typography variant="h5" fontWeight="bold" mb={2}>
@@ -124,37 +125,14 @@ const CreatePasante = ({ onSuccess, onClose }) => {
                     fullWidth
                 />
 
-                {/* Carrera (Select con Controller) */}
-                <FormControl fullWidth error={!!errors.institucion}>
-                    <InputLabel>Institucion</InputLabel>
-                    <Controller
-                        name="institucion"
-                        control={control}
-                        rules={{ required: "Seleccione una institucion" }}
-                        render={({ field }) => (
-                            <Select {...field} label="Institucion">
-                                <MenuItem value="Ingeniería de Sistemas">Ingeniería de Sistemas</MenuItem>
-                                <MenuItem value="Derecho">Derecho</MenuItem>
-                                <MenuItem value="Administración">Administración</MenuItem>
-                                <MenuItem value="Contaduría Pública">Contaduría Pública</MenuItem>
-                            </Select>
-                        )}
-                    />
-                    {errors.institucion && (
-                        <Typography variant="caption" color="error">
-                            {errors.institucion.message}
-                        </Typography>
-                    )}
-                </FormControl>
-
-                {/* Especialidades */}
+                {/* Institución */}
                 <Box>
                     <Typography variant="body2" color="text.secondary" sx={{ mb: 0.5 }}>
-                        Especialidades
+                        Institución
                     </Typography>
-                    <EspecialidadesSelect
-                        value={especialidades}
-                        onChange={setEspecialidades}
+                    <InstitucionesSelect
+                        value={institucionSeleccionada}
+                        onChange={setInstitucionSeleccionada}
                         allowCreate
                     />
                 </Box>

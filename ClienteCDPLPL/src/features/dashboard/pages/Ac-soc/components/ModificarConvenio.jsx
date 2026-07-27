@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { getConvenioById, updateConvenioById } from "../../../services/convenios";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import {
     Button,
     TextField,
@@ -27,9 +28,10 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
     const [loadingFetch, setLoadingFetch] = useState(true);
     const [loadingSubmit, setLoadingSubmit] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [formData, setFormData] = useState(null);
 
     const hoy = new Date().toISOString().split("T")[0];
-    const fechaInicio = watch("fecha_inicio");
 
     // Cargar datos del convenio
     useEffect(() => {
@@ -40,7 +42,6 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
                     nombre: res.nombre || "",
                     descripcion: res.descripcion || "",
                     fecha_inicio: res.fecha_inicio?.slice(0, 10) || "",
-                    fecha_fin: res.fecha_fin?.slice(0, 10) || "",
                     estado: res.estado || "",
                 });
             } catch (error) {
@@ -53,14 +54,19 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
         if (id) fetch();
     }, [id, reset]);
 
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
+        setFormData(data);
+        setConfirmOpen(true);
+    };
+
+    const handleUpdate = async () => {
+        setConfirmOpen(false);
         setLoadingSubmit(true);
         setErrorMsg("");
         
         try {
-            await updateConvenioById(id, data);
+            await updateConvenioById(id, formData);
             if (onSuccess) onSuccess();
-            if (onClose) onClose();
         } catch (error) {
             console.error("Error al actualizar convenio:", error);
             setErrorMsg("Ocurrió un error al actualizar. Inténtalo nuevamente.");
@@ -122,34 +128,7 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
                                 helperText={errors.fecha_inicio?.message}
                                 fullWidth
                             />
-
-                            <TextField
-                                label="Fecha de Fin (opcional)"
-                                type="date"
-                                InputLabelProps={{ shrink: true }}
-                                {...register("fecha_fin", {
-                                    validate: (value) =>
-                                        !value || value >= (fechaInicio || hoy) || "No puedes escoger una fecha anterior al inicio",
-                                })}
-                                error={!!errors.fecha_fin}
-                                helperText={errors.fecha_fin?.message}
-                                fullWidth
-                            />
                         </Box>
-
-                        <FormControl fullWidth error={!!errors.estado}>
-                            <InputLabel shrink id="estado-label">Estado</InputLabel>
-                            <Select
-                                labelId="estado-label"
-                                label="Estado"
-                                displayEmpty
-                                value={watch("estado") || ""}
-                                {...register("estado", { required: "El estado es obligatorio" })}
-                            >
-                                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                                <MenuItem value="INACTIVO">INACTIVO</MenuItem>
-                            </Select>
-                        </FormControl>
 
                         <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
                             {onClose && (
@@ -164,6 +143,15 @@ export default function ModificarConvenio({ id, onClose, onSuccess }) {
                     </Box>
                 </form>
             </Box>
+
+            <ConfirmActionModal
+                isOpen={confirmOpen}
+                variant="edit"
+                title="¿Confirmar cambios?"
+                message="¿Estás seguro que deseas actualizar este convenio? Revisa que los datos modificados sean correctos."
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleUpdate}
+            />
         </Container>
     );
 }

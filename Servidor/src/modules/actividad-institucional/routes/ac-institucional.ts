@@ -1,12 +1,13 @@
 import { Router } from "express";
 import errorHandler from "../../../utils/error-handler";
-import { createActInst, createAsistenciaInst, createRegistroInst, deleteAsistenciaInst, getActInst, getActInstById, getActividadesInstSummaryReport, getActividadInstDetailReport, getAsistenciasInstByActividad, getRegistrosInstByActividad, getRegistrosByUser, listarActividadesInstMinimal, updateActInstById, updateEstadoActInst, getCertificadoParticipacion } from "../controllers/ac-institucional";
+import { createActInst, createAsistenciaInst, createRegistroInst, deleteAsistenciaInst, getActInst, getActInstById, getActividadesInstSummaryReport, getActividadInstDetailReport, getAsistenciasInstByActividad, getRegistrosInstByActividad, getRegistrosByUser, listarActividadesInstMinimal, updateActInstById, updateEstadoActInst, getCertificadoParticipacion, anularRegistroInst } from "../controllers/ac-institucional";
 import { authMiddleware } from "../../../middlewares/auth";
+import { upload } from "../../../middlewares/multer";
 
 const actividadInstitucionalRouter: Router = Router()
 
 actividadInstitucionalRouter.get('/', errorHandler(getActInst))
-actividadInstitucionalRouter.post('/registrarColegiado', [authMiddleware], errorHandler(createRegistroInst))
+actividadInstitucionalRouter.post('/registrarColegiado', [authMiddleware, upload.single("comprobante")], errorHandler(createRegistroInst))
 actividadInstitucionalRouter.get('/lista-minimal', [authMiddleware], errorHandler(listarActividadesInstMinimal))
 actividadInstitucionalRouter.get('/:id/report', [authMiddleware], errorHandler(getActividadInstDetailReport))
 actividadInstitucionalRouter.get('/report', [authMiddleware], errorHandler(getActividadesInstSummaryReport))
@@ -19,6 +20,7 @@ actividadInstitucionalRouter.delete('/deleteAsistencia/:id', [authMiddleware], e
 actividadInstitucionalRouter.get('/:id', [authMiddleware], errorHandler(getActInstById))
 actividadInstitucionalRouter.patch('/:id', [authMiddleware], errorHandler(updateActInstById))
 actividadInstitucionalRouter.patch('/:id/estado', [authMiddleware], errorHandler(updateEstadoActInst))
+actividadInstitucionalRouter.post('/anularRegistro/:id', [authMiddleware], errorHandler(anularRegistroInst))
 actividadInstitucionalRouter.post('/', errorHandler(createActInst))
 
 export default actividadInstitucionalRouter

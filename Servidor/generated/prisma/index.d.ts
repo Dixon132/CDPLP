@@ -133,6 +133,16 @@ export type config_pago = $Result.DefaultSelection<Prisma.$config_pagoPayload>
  * 
  */
 export type memorias_balances = $Result.DefaultSelection<Prisma.$memorias_balancesPayload>
+/**
+ * Model pagos_invitados
+ * 
+ */
+export type pagos_invitados = $Result.DefaultSelection<Prisma.$pagos_invitadosPayload>
+/**
+ * Model instituciones
+ * 
+ */
+export type instituciones = $Result.DefaultSelection<Prisma.$institucionesPayload>
 
 /**
  * Enums
@@ -520,6 +530,26 @@ export class PrismaClient<
     * ```
     */
   get memorias_balances(): Prisma.memorias_balancesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.pagos_invitados`: Exposes CRUD operations for the **pagos_invitados** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pagos_invitados
+    * const pagos_invitados = await prisma.pagos_invitados.findMany()
+    * ```
+    */
+  get pagos_invitados(): Prisma.pagos_invitadosDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.instituciones`: Exposes CRUD operations for the **instituciones** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Instituciones
+    * const instituciones = await prisma.instituciones.findMany()
+    * ```
+    */
+  get instituciones(): Prisma.institucionesDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -983,7 +1013,9 @@ export namespace Prisma {
     especialidades: 'especialidades',
     documentos_requeridos: 'documentos_requeridos',
     config_pago: 'config_pago',
-    memorias_balances: 'memorias_balances'
+    memorias_balances: 'memorias_balances',
+    pagos_invitados: 'pagos_invitados',
+    instituciones: 'instituciones'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1002,7 +1034,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "especialidades" | "documentos_requeridos" | "config_pago" | "memorias_balances"
+      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "especialidades" | "documentos_requeridos" | "config_pago" | "memorias_balances" | "pagos_invitados" | "instituciones"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2782,6 +2814,154 @@ export namespace Prisma {
           }
         }
       }
+      pagos_invitados: {
+        payload: Prisma.$pagos_invitadosPayload<ExtArgs>
+        fields: Prisma.pagos_invitadosFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.pagos_invitadosFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.pagos_invitadosFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          findFirst: {
+            args: Prisma.pagos_invitadosFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.pagos_invitadosFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          findMany: {
+            args: Prisma.pagos_invitadosFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>[]
+          }
+          create: {
+            args: Prisma.pagos_invitadosCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          createMany: {
+            args: Prisma.pagos_invitadosCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.pagos_invitadosCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>[]
+          }
+          delete: {
+            args: Prisma.pagos_invitadosDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          update: {
+            args: Prisma.pagos_invitadosUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          deleteMany: {
+            args: Prisma.pagos_invitadosDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.pagos_invitadosUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.pagos_invitadosUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>[]
+          }
+          upsert: {
+            args: Prisma.pagos_invitadosUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$pagos_invitadosPayload>
+          }
+          aggregate: {
+            args: Prisma.Pagos_invitadosAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePagos_invitados>
+          }
+          groupBy: {
+            args: Prisma.pagos_invitadosGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Pagos_invitadosGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.pagos_invitadosCountArgs<ExtArgs>
+            result: $Utils.Optional<Pagos_invitadosCountAggregateOutputType> | number
+          }
+        }
+      }
+      instituciones: {
+        payload: Prisma.$institucionesPayload<ExtArgs>
+        fields: Prisma.institucionesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.institucionesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.institucionesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          findFirst: {
+            args: Prisma.institucionesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.institucionesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          findMany: {
+            args: Prisma.institucionesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>[]
+          }
+          create: {
+            args: Prisma.institucionesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          createMany: {
+            args: Prisma.institucionesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.institucionesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>[]
+          }
+          delete: {
+            args: Prisma.institucionesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          update: {
+            args: Prisma.institucionesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          deleteMany: {
+            args: Prisma.institucionesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.institucionesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.institucionesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>[]
+          }
+          upsert: {
+            args: Prisma.institucionesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$institucionesPayload>
+          }
+          aggregate: {
+            args: Prisma.InstitucionesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInstituciones>
+          }
+          groupBy: {
+            args: Prisma.institucionesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InstitucionesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.institucionesCountArgs<ExtArgs>
+            result: $Utils.Optional<InstitucionesCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2890,6 +3070,8 @@ export namespace Prisma {
     documentos_requeridos?: documentos_requeridosOmit
     config_pago?: config_pagoOmit
     memorias_balances?: memorias_balancesOmit
+    pagos_invitados?: pagos_invitadosOmit
+    instituciones?: institucionesOmit
   }
 
   /* Types for Logging */
@@ -3119,17 +3301,17 @@ export namespace Prisma {
   export type ColegiadosCountOutputType = {
     asistencias_actividad: number
     colegiados_asignados_social: number
+    colegiados_registrados_actividad_institucional: number
     documentos_colegiados: number
     pagos_colegiados: number
-    colegiados_registrados_actividad_institucional: number
   }
 
   export type ColegiadosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asistencias_actividad?: boolean | ColegiadosCountOutputTypeCountAsistencias_actividadArgs
     colegiados_asignados_social?: boolean | ColegiadosCountOutputTypeCountColegiados_asignados_socialArgs
+    colegiados_registrados_actividad_institucional?: boolean | ColegiadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs
     documentos_colegiados?: boolean | ColegiadosCountOutputTypeCountDocumentos_colegiadosArgs
     pagos_colegiados?: boolean | ColegiadosCountOutputTypeCountPagos_colegiadosArgs
-    colegiados_registrados_actividad_institucional?: boolean | ColegiadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs
   }
 
   // Custom InputTypes
@@ -3160,6 +3342,13 @@ export namespace Prisma {
   /**
    * ColegiadosCountOutputType without action
    */
+  export type ColegiadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: colegiados_registrados_actividad_institucionalWhereInput
+  }
+
+  /**
+   * ColegiadosCountOutputType without action
+   */
   export type ColegiadosCountOutputTypeCountDocumentos_colegiadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: documentos_colegiadosWhereInput
   }
@@ -3169,13 +3358,6 @@ export namespace Prisma {
    */
   export type ColegiadosCountOutputTypeCountPagos_colegiadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: pagos_colegiadosWhereInput
-  }
-
-  /**
-   * ColegiadosCountOutputType without action
-   */
-  export type ColegiadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: colegiados_registrados_actividad_institucionalWhereInput
   }
 
 
@@ -3340,16 +3522,18 @@ export namespace Prisma {
 
   export type UsuariosCountOutputType = {
     actividades_institucionales: number
-    roles: number
-    destinatario: number
     auditoria: number
+    destinatario: number
+    movimientos_financieros: number
+    roles: number
   }
 
   export type UsuariosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | UsuariosCountOutputTypeCountActividades_institucionalesArgs
-    roles?: boolean | UsuariosCountOutputTypeCountRolesArgs
-    destinatario?: boolean | UsuariosCountOutputTypeCountDestinatarioArgs
     auditoria?: boolean | UsuariosCountOutputTypeCountAuditoriaArgs
+    destinatario?: boolean | UsuariosCountOutputTypeCountDestinatarioArgs
+    movimientos_financieros?: boolean | UsuariosCountOutputTypeCountMovimientos_financierosArgs
+    roles?: boolean | UsuariosCountOutputTypeCountRolesArgs
   }
 
   // Custom InputTypes
@@ -3373,8 +3557,8 @@ export namespace Prisma {
   /**
    * UsuariosCountOutputType without action
    */
-  export type UsuariosCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: rolesWhereInput
+  export type UsuariosCountOutputTypeCountAuditoriaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: auditoriaWhereInput
   }
 
   /**
@@ -3387,8 +3571,15 @@ export namespace Prisma {
   /**
    * UsuariosCountOutputType without action
    */
-  export type UsuariosCountOutputTypeCountAuditoriaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: auditoriaWhereInput
+  export type UsuariosCountOutputTypeCountMovimientos_financierosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: movimientos_financierosWhereInput
+  }
+
+  /**
+   * UsuariosCountOutputType without action
+   */
+  export type UsuariosCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: rolesWhereInput
   }
 
 
@@ -3397,13 +3588,15 @@ export namespace Prisma {
    */
 
   export type InvitadosCountOutputType = {
-    colegiados_asignados_social: number
+    asistencias_actividad: number
     colegiados_registrados_actividad_institucional: number
+    pagos_invitados: number
   }
 
   export type InvitadosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    colegiados_asignados_social?: boolean | InvitadosCountOutputTypeCountColegiados_asignados_socialArgs
+    asistencias_actividad?: boolean | InvitadosCountOutputTypeCountAsistencias_actividadArgs
     colegiados_registrados_actividad_institucional?: boolean | InvitadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs
+    pagos_invitados?: boolean | InvitadosCountOutputTypeCountPagos_invitadosArgs
   }
 
   // Custom InputTypes
@@ -3420,8 +3613,8 @@ export namespace Prisma {
   /**
    * InvitadosCountOutputType without action
    */
-  export type InvitadosCountOutputTypeCountColegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    where?: colegiados_asignados_socialWhereInput
+  export type InvitadosCountOutputTypeCountAsistencias_actividadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: asistencias_actividadWhereInput
   }
 
   /**
@@ -3429,6 +3622,75 @@ export namespace Prisma {
    */
   export type InvitadosCountOutputTypeCountColegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: colegiados_registrados_actividad_institucionalWhereInput
+  }
+
+  /**
+   * InvitadosCountOutputType without action
+   */
+  export type InvitadosCountOutputTypeCountPagos_invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pagos_invitadosWhereInput
+  }
+
+
+  /**
+   * Count Type PostulacionesCountOutputType
+   */
+
+  export type PostulacionesCountOutputType = {
+    origen_movimiento: number
+  }
+
+  export type PostulacionesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    origen_movimiento?: boolean | PostulacionesCountOutputTypeCountOrigen_movimientoArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PostulacionesCountOutputType without action
+   */
+  export type PostulacionesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PostulacionesCountOutputType
+     */
+    select?: PostulacionesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PostulacionesCountOutputType without action
+   */
+  export type PostulacionesCountOutputTypeCountOrigen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: origen_movimientoWhereInput
+  }
+
+
+  /**
+   * Count Type Pagos_invitadosCountOutputType
+   */
+
+  export type Pagos_invitadosCountOutputType = {
+    origen_movimiento: number
+  }
+
+  export type Pagos_invitadosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    origen_movimiento?: boolean | Pagos_invitadosCountOutputTypeCountOrigen_movimientoArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * Pagos_invitadosCountOutputType without action
+   */
+  export type Pagos_invitadosCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pagos_invitadosCountOutputType
+     */
+    select?: Pagos_invitadosCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * Pagos_invitadosCountOutputType without action
+   */
+  export type Pagos_invitadosCountOutputTypeCountOrigen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: origen_movimientoWhereInput
   }
 
 
@@ -4681,30 +4943,35 @@ export namespace Prisma {
     id_asistencia: number | null
     id_actividad: number | null
     id_colegiado: number | null
+    id_invitado: number | null
   }
 
   export type Asistencias_actividadSumAggregateOutputType = {
     id_asistencia: number | null
     id_actividad: number | null
     id_colegiado: number | null
+    id_invitado: number | null
   }
 
   export type Asistencias_actividadMinAggregateOutputType = {
     id_asistencia: number | null
     id_actividad: number | null
     id_colegiado: number | null
+    id_invitado: number | null
   }
 
   export type Asistencias_actividadMaxAggregateOutputType = {
     id_asistencia: number | null
     id_actividad: number | null
     id_colegiado: number | null
+    id_invitado: number | null
   }
 
   export type Asistencias_actividadCountAggregateOutputType = {
     id_asistencia: number
     id_actividad: number
     id_colegiado: number
+    id_invitado: number
     _all: number
   }
 
@@ -4713,30 +4980,35 @@ export namespace Prisma {
     id_asistencia?: true
     id_actividad?: true
     id_colegiado?: true
+    id_invitado?: true
   }
 
   export type Asistencias_actividadSumAggregateInputType = {
     id_asistencia?: true
     id_actividad?: true
     id_colegiado?: true
+    id_invitado?: true
   }
 
   export type Asistencias_actividadMinAggregateInputType = {
     id_asistencia?: true
     id_actividad?: true
     id_colegiado?: true
+    id_invitado?: true
   }
 
   export type Asistencias_actividadMaxAggregateInputType = {
     id_asistencia?: true
     id_actividad?: true
     id_colegiado?: true
+    id_invitado?: true
   }
 
   export type Asistencias_actividadCountAggregateInputType = {
     id_asistencia?: true
     id_actividad?: true
     id_colegiado?: true
+    id_invitado?: true
     _all?: true
   }
 
@@ -4830,6 +5102,7 @@ export namespace Prisma {
     id_asistencia: number
     id_actividad: number | null
     id_colegiado: number | null
+    id_invitado: number | null
     _count: Asistencias_actividadCountAggregateOutputType | null
     _avg: Asistencias_actividadAvgAggregateOutputType | null
     _sum: Asistencias_actividadSumAggregateOutputType | null
@@ -4855,44 +5128,54 @@ export namespace Prisma {
     id_asistencia?: boolean
     id_actividad?: boolean
     id_colegiado?: boolean
+    id_invitado?: boolean
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }, ExtArgs["result"]["asistencias_actividad"]>
 
   export type asistencias_actividadSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id_asistencia?: boolean
     id_actividad?: boolean
     id_colegiado?: boolean
+    id_invitado?: boolean
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }, ExtArgs["result"]["asistencias_actividad"]>
 
   export type asistencias_actividadSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id_asistencia?: boolean
     id_actividad?: boolean
     id_colegiado?: boolean
+    id_invitado?: boolean
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }, ExtArgs["result"]["asistencias_actividad"]>
 
   export type asistencias_actividadSelectScalar = {
     id_asistencia?: boolean
     id_actividad?: boolean
     id_colegiado?: boolean
+    id_invitado?: boolean
   }
 
-  export type asistencias_actividadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asistencia" | "id_actividad" | "id_colegiado", ExtArgs["result"]["asistencias_actividad"]>
+  export type asistencias_actividadOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asistencia" | "id_actividad" | "id_colegiado" | "id_invitado", ExtArgs["result"]["asistencias_actividad"]>
   export type asistencias_actividadInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }
   export type asistencias_actividadIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }
   export type asistencias_actividadIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | asistencias_actividad$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | asistencias_actividad$colegiadosArgs<ExtArgs>
+    invitados?: boolean | asistencias_actividad$invitadosArgs<ExtArgs>
   }
 
   export type $asistencias_actividadPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4900,11 +5183,13 @@ export namespace Prisma {
     objects: {
       actividades_institucionales: Prisma.$actividades_institucionalesPayload<ExtArgs> | null
       colegiados: Prisma.$colegiadosPayload<ExtArgs> | null
+      invitados: Prisma.$invitadosPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id_asistencia: number
       id_actividad: number | null
       id_colegiado: number | null
+      id_invitado: number | null
     }, ExtArgs["result"]["asistencias_actividad"]>
     composites: {}
   }
@@ -5301,6 +5586,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     actividades_institucionales<T extends asistencias_actividad$actividades_institucionalesArgs<ExtArgs> = {}>(args?: Subset<T, asistencias_actividad$actividades_institucionalesArgs<ExtArgs>>): Prisma__actividades_institucionalesClient<$Result.GetResult<Prisma.$actividades_institucionalesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     colegiados<T extends asistencias_actividad$colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, asistencias_actividad$colegiadosArgs<ExtArgs>>): Prisma__colegiadosClient<$Result.GetResult<Prisma.$colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invitados<T extends asistencias_actividad$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, asistencias_actividad$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5333,6 +5619,7 @@ export namespace Prisma {
     readonly id_asistencia: FieldRef<"asistencias_actividad", 'Int'>
     readonly id_actividad: FieldRef<"asistencias_actividad", 'Int'>
     readonly id_colegiado: FieldRef<"asistencias_actividad", 'Int'>
+    readonly id_invitado: FieldRef<"asistencias_actividad", 'Int'>
   }
     
 
@@ -5767,6 +6054,25 @@ export namespace Prisma {
   }
 
   /**
+   * asistencias_actividad.invitados
+   */
+  export type asistencias_actividad$invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the invitados
+     */
+    select?: invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the invitados
+     */
+    omit?: invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: invitadosInclude<ExtArgs> | null
+    where?: invitadosWhereInput
+  }
+
+  /**
    * asistencias_actividad without action
    */
   export type asistencias_actividadDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -6027,10 +6333,10 @@ export namespace Prisma {
     id_invitado?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    origen_movimiento?: boolean | colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
+    origen_movimiento?: boolean | colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>
     _count?: boolean | Colegiados_registrados_actividad_institucionalCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_registrados_actividad_institucional"]>
 
@@ -6044,9 +6350,9 @@ export namespace Prisma {
     id_invitado?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_registrados_actividad_institucional"]>
 
   export type colegiados_registrados_actividad_institucionalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -6059,9 +6365,9 @@ export namespace Prisma {
     id_invitado?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_registrados_actividad_institucional"]>
 
   export type colegiados_registrados_actividad_institucionalSelectScalar = {
@@ -6078,30 +6384,30 @@ export namespace Prisma {
 
   export type colegiados_registrados_actividad_institucionalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_registro" | "id_actividad" | "id_colegiado" | "fecha_registro" | "estado_registro" | "metodo_pago" | "id_invitado" | "createdAt" | "updatedAt", ExtArgs["result"]["colegiados_registrados_actividad_institucional"]>
   export type colegiados_registrados_actividad_institucionalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    origen_movimiento?: boolean | colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
+    origen_movimiento?: boolean | colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>
     _count?: boolean | Colegiados_registrados_actividad_institucionalCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type colegiados_registrados_actividad_institucionalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
   }
   export type colegiados_registrados_actividad_institucionalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
     actividades_institucionales?: boolean | colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>
     colegiados?: boolean | colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>
+    invitados?: boolean | colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>
   }
 
   export type $colegiados_registrados_actividad_institucionalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "colegiados_registrados_actividad_institucional"
     objects: {
-      origen_movimiento: Prisma.$origen_movimientoPayload<ExtArgs>[]
-      invitados: Prisma.$invitadosPayload<ExtArgs> | null
       actividades_institucionales: Prisma.$actividades_institucionalesPayload<ExtArgs> | null
       colegiados: Prisma.$colegiadosPayload<ExtArgs> | null
+      invitados: Prisma.$invitadosPayload<ExtArgs> | null
+      origen_movimiento: Prisma.$origen_movimientoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_registro: number
@@ -6507,10 +6813,10 @@ export namespace Prisma {
    */
   export interface Prisma__colegiados_registrados_actividad_institucionalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    origen_movimiento<T extends colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$origen_movimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    invitados<T extends colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     actividades_institucionales<T extends colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs>>): Prisma__actividades_institucionalesClient<$Result.GetResult<Prisma.$actividades_institucionalesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     colegiados<T extends colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$colegiadosArgs<ExtArgs>>): Prisma__colegiadosClient<$Result.GetResult<Prisma.$colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    invitados<T extends colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    origen_movimiento<T extends colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$origen_movimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6945,49 +7251,6 @@ export namespace Prisma {
   }
 
   /**
-   * colegiados_registrados_actividad_institucional.origen_movimiento
-   */
-  export type colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the origen_movimiento
-     */
-    select?: origen_movimientoSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the origen_movimiento
-     */
-    omit?: origen_movimientoOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: origen_movimientoInclude<ExtArgs> | null
-    where?: origen_movimientoWhereInput
-    orderBy?: origen_movimientoOrderByWithRelationInput | origen_movimientoOrderByWithRelationInput[]
-    cursor?: origen_movimientoWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Origen_movimientoScalarFieldEnum | Origen_movimientoScalarFieldEnum[]
-  }
-
-  /**
-   * colegiados_registrados_actividad_institucional.invitados
-   */
-  export type colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the invitados
-     */
-    select?: invitadosSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the invitados
-     */
-    omit?: invitadosOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: invitadosInclude<ExtArgs> | null
-    where?: invitadosWhereInput
-  }
-
-  /**
    * colegiados_registrados_actividad_institucional.actividades_institucionales
    */
   export type colegiados_registrados_actividad_institucional$actividades_institucionalesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -7023,6 +7286,49 @@ export namespace Prisma {
      */
     include?: colegiadosInclude<ExtArgs> | null
     where?: colegiadosWhereInput
+  }
+
+  /**
+   * colegiados_registrados_actividad_institucional.invitados
+   */
+  export type colegiados_registrados_actividad_institucional$invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the invitados
+     */
+    select?: invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the invitados
+     */
+    omit?: invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: invitadosInclude<ExtArgs> | null
+    where?: invitadosWhereInput
+  }
+
+  /**
+   * colegiados_registrados_actividad_institucional.origen_movimiento
+   */
+  export type colegiados_registrados_actividad_institucional$origen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the origen_movimiento
+     */
+    select?: origen_movimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the origen_movimiento
+     */
+    omit?: origen_movimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: origen_movimientoInclude<ExtArgs> | null
+    where?: origen_movimientoWhereInput
+    orderBy?: origen_movimientoOrderByWithRelationInput | origen_movimientoOrderByWithRelationInput[]
+    cursor?: origen_movimientoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Origen_movimientoScalarFieldEnum | Origen_movimientoScalarFieldEnum[]
   }
 
   /**
@@ -10876,9 +11182,9 @@ export namespace Prisma {
     pin_acceso?: boolean
     asistencias_actividad?: boolean | colegiados$asistencias_actividadArgs<ExtArgs>
     colegiados_asignados_social?: boolean | colegiados$colegiados_asignados_socialArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     documentos_colegiados?: boolean | colegiados$documentos_colegiadosArgs<ExtArgs>
     pagos_colegiados?: boolean | colegiados$pagos_colegiadosArgs<ExtArgs>
-    colegiados_registrados_actividad_institucional?: boolean | colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     _count?: boolean | ColegiadosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados"]>
 
@@ -10928,9 +11234,9 @@ export namespace Prisma {
   export type colegiadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     asistencias_actividad?: boolean | colegiados$asistencias_actividadArgs<ExtArgs>
     colegiados_asignados_social?: boolean | colegiados$colegiados_asignados_socialArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     documentos_colegiados?: boolean | colegiados$documentos_colegiadosArgs<ExtArgs>
     pagos_colegiados?: boolean | colegiados$pagos_colegiadosArgs<ExtArgs>
-    colegiados_registrados_actividad_institucional?: boolean | colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     _count?: boolean | ColegiadosCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type colegiadosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -10941,9 +11247,9 @@ export namespace Prisma {
     objects: {
       asistencias_actividad: Prisma.$asistencias_actividadPayload<ExtArgs>[]
       colegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>[]
+      colegiados_registrados_actividad_institucional: Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>[]
       documentos_colegiados: Prisma.$documentos_colegiadosPayload<ExtArgs>[]
       pagos_colegiados: Prisma.$pagos_colegiadosPayload<ExtArgs>[]
-      colegiados_registrados_actividad_institucional: Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_colegiado: number
@@ -11353,9 +11659,9 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     asistencias_actividad<T extends colegiados$asistencias_actividadArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$asistencias_actividadArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencias_actividadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     colegiados_asignados_social<T extends colegiados$colegiados_asignados_socialArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$colegiados_asignados_socialArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    colegiados_registrados_actividad_institucional<T extends colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     documentos_colegiados<T extends colegiados$documentos_colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$documentos_colegiadosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$documentos_colegiadosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pagos_colegiados<T extends colegiados$pagos_colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$pagos_colegiadosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pagos_colegiadosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    colegiados_registrados_actividad_institucional<T extends colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs> = {}>(args?: Subset<T, colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -11832,6 +12138,30 @@ export namespace Prisma {
   }
 
   /**
+   * colegiados.colegiados_registrados_actividad_institucional
+   */
+  export type colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the colegiados_registrados_actividad_institucional
+     */
+    select?: colegiados_registrados_actividad_institucionalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the colegiados_registrados_actividad_institucional
+     */
+    omit?: colegiados_registrados_actividad_institucionalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: colegiados_registrados_actividad_institucionalInclude<ExtArgs> | null
+    where?: colegiados_registrados_actividad_institucionalWhereInput
+    orderBy?: colegiados_registrados_actividad_institucionalOrderByWithRelationInput | colegiados_registrados_actividad_institucionalOrderByWithRelationInput[]
+    cursor?: colegiados_registrados_actividad_institucionalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Colegiados_registrados_actividad_institucionalScalarFieldEnum | Colegiados_registrados_actividad_institucionalScalarFieldEnum[]
+  }
+
+  /**
    * colegiados.documentos_colegiados
    */
   export type colegiados$documentos_colegiadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11880,30 +12210,6 @@ export namespace Prisma {
   }
 
   /**
-   * colegiados.colegiados_registrados_actividad_institucional
-   */
-  export type colegiados$colegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the colegiados_registrados_actividad_institucional
-     */
-    select?: colegiados_registrados_actividad_institucionalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the colegiados_registrados_actividad_institucional
-     */
-    omit?: colegiados_registrados_actividad_institucionalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: colegiados_registrados_actividad_institucionalInclude<ExtArgs> | null
-    where?: colegiados_registrados_actividad_institucionalWhereInput
-    orderBy?: colegiados_registrados_actividad_institucionalOrderByWithRelationInput | colegiados_registrados_actividad_institucionalOrderByWithRelationInput[]
-    cursor?: colegiados_registrados_actividad_institucionalWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Colegiados_registrados_actividad_institucionalScalarFieldEnum | Colegiados_registrados_actividad_institucionalScalarFieldEnum[]
-  }
-
-  /**
    * colegiados without action
    */
   export type colegiadosDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -11938,7 +12244,6 @@ export namespace Prisma {
     id_asignacion: number | null
     id_actividad_social: number | null
     id_colegiado: number | null
-    id_invitado: number | null
     id_pasante: number | null
     total_horas: number | null
     horas_meta: number | null
@@ -11948,7 +12253,6 @@ export namespace Prisma {
     id_asignacion: number | null
     id_actividad_social: number | null
     id_colegiado: number | null
-    id_invitado: number | null
     id_pasante: number | null
     total_horas: number | null
     horas_meta: number | null
@@ -11958,30 +12262,30 @@ export namespace Prisma {
     id_asignacion: number | null
     id_actividad_social: number | null
     id_colegiado: number | null
-    id_invitado: number | null
     id_pasante: number | null
     total_horas: number | null
     horas_meta: number | null
+    estado: string | null
   }
 
   export type Colegiados_asignados_socialMaxAggregateOutputType = {
     id_asignacion: number | null
     id_actividad_social: number | null
     id_colegiado: number | null
-    id_invitado: number | null
     id_pasante: number | null
     total_horas: number | null
     horas_meta: number | null
+    estado: string | null
   }
 
   export type Colegiados_asignados_socialCountAggregateOutputType = {
     id_asignacion: number
     id_actividad_social: number
     id_colegiado: number
-    id_invitado: number
     id_pasante: number
     total_horas: number
     horas_meta: number
+    estado: number
     _all: number
   }
 
@@ -11990,7 +12294,6 @@ export namespace Prisma {
     id_asignacion?: true
     id_actividad_social?: true
     id_colegiado?: true
-    id_invitado?: true
     id_pasante?: true
     total_horas?: true
     horas_meta?: true
@@ -12000,7 +12303,6 @@ export namespace Prisma {
     id_asignacion?: true
     id_actividad_social?: true
     id_colegiado?: true
-    id_invitado?: true
     id_pasante?: true
     total_horas?: true
     horas_meta?: true
@@ -12010,30 +12312,30 @@ export namespace Prisma {
     id_asignacion?: true
     id_actividad_social?: true
     id_colegiado?: true
-    id_invitado?: true
     id_pasante?: true
     total_horas?: true
     horas_meta?: true
+    estado?: true
   }
 
   export type Colegiados_asignados_socialMaxAggregateInputType = {
     id_asignacion?: true
     id_actividad_social?: true
     id_colegiado?: true
-    id_invitado?: true
     id_pasante?: true
     total_horas?: true
     horas_meta?: true
+    estado?: true
   }
 
   export type Colegiados_asignados_socialCountAggregateInputType = {
     id_asignacion?: true
     id_actividad_social?: true
     id_colegiado?: true
-    id_invitado?: true
     id_pasante?: true
     total_horas?: true
     horas_meta?: true
+    estado?: true
     _all?: true
   }
 
@@ -12127,10 +12429,10 @@ export namespace Prisma {
     id_asignacion: number
     id_actividad_social: number | null
     id_colegiado: number | null
-    id_invitado: number | null
     id_pasante: number | null
     total_horas: number | null
     horas_meta: number | null
+    estado: string | null
     _count: Colegiados_asignados_socialCountAggregateOutputType | null
     _avg: Colegiados_asignados_socialAvgAggregateOutputType | null
     _sum: Colegiados_asignados_socialSumAggregateOutputType | null
@@ -12156,15 +12458,14 @@ export namespace Prisma {
     id_asignacion?: boolean
     id_actividad_social?: boolean
     id_colegiado?: boolean
-    id_invitado?: boolean
     id_pasante?: boolean
     total_horas?: boolean
     horas_meta?: boolean
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
+    estado?: boolean
+    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
-    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
     _count?: boolean | Colegiados_asignados_socialCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["colegiados_asignados_social"]>
 
@@ -12172,11 +12473,10 @@ export namespace Prisma {
     id_asignacion?: boolean
     id_actividad_social?: boolean
     id_colegiado?: boolean
-    id_invitado?: boolean
     id_pasante?: boolean
     total_horas?: boolean
     horas_meta?: boolean
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
+    estado?: boolean
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
@@ -12186,11 +12486,10 @@ export namespace Prisma {
     id_asignacion?: boolean
     id_actividad_social?: boolean
     id_colegiado?: boolean
-    id_invitado?: boolean
     id_pasante?: boolean
     total_horas?: boolean
     horas_meta?: boolean
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
+    estado?: boolean
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
@@ -12200,29 +12499,26 @@ export namespace Prisma {
     id_asignacion?: boolean
     id_actividad_social?: boolean
     id_colegiado?: boolean
-    id_invitado?: boolean
     id_pasante?: boolean
     total_horas?: boolean
     horas_meta?: boolean
+    estado?: boolean
   }
 
-  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_invitado" | "id_pasante" | "total_horas" | "horas_meta", ExtArgs["result"]["colegiados_asignados_social"]>
+  export type colegiados_asignados_socialOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_asignacion" | "id_actividad_social" | "id_colegiado" | "id_pasante" | "total_horas" | "horas_meta" | "estado", ExtArgs["result"]["colegiados_asignados_social"]>
   export type colegiados_asignados_socialInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
+    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
-    asistencia_social_diaria?: boolean | colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>
     _count?: boolean | Colegiados_asignados_socialCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type colegiados_asignados_socialIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
   }
   export type colegiados_asignados_socialIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    invitados?: boolean | colegiados_asignados_social$invitadosArgs<ExtArgs>
     actividades_sociales?: boolean | colegiados_asignados_social$actividades_socialesArgs<ExtArgs>
     colegiados?: boolean | colegiados_asignados_social$colegiadosArgs<ExtArgs>
     pasantes?: boolean | colegiados_asignados_social$pasantesArgs<ExtArgs>
@@ -12231,20 +12527,19 @@ export namespace Prisma {
   export type $colegiados_asignados_socialPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "colegiados_asignados_social"
     objects: {
-      invitados: Prisma.$invitadosPayload<ExtArgs> | null
+      asistencia_social_diaria: Prisma.$asistencia_social_diariaPayload<ExtArgs>[]
       actividades_sociales: Prisma.$actividades_socialesPayload<ExtArgs> | null
       colegiados: Prisma.$colegiadosPayload<ExtArgs> | null
       pasantes: Prisma.$pasantesPayload<ExtArgs> | null
-      asistencia_social_diaria: Prisma.$asistencia_social_diariaPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_asignacion: number
       id_actividad_social: number | null
       id_colegiado: number | null
-      id_invitado: number | null
       id_pasante: number | null
       total_horas: number | null
       horas_meta: number | null
+      estado: string | null
     }, ExtArgs["result"]["colegiados_asignados_social"]>
     composites: {}
   }
@@ -12639,11 +12934,10 @@ export namespace Prisma {
    */
   export interface Prisma__colegiados_asignados_socialClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    invitados<T extends colegiados_asignados_social$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    asistencia_social_diaria<T extends colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     actividades_sociales<T extends colegiados_asignados_social$actividades_socialesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$actividades_socialesArgs<ExtArgs>>): Prisma__actividades_socialesClient<$Result.GetResult<Prisma.$actividades_socialesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     colegiados<T extends colegiados_asignados_social$colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$colegiadosArgs<ExtArgs>>): Prisma__colegiadosClient<$Result.GetResult<Prisma.$colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pasantes<T extends colegiados_asignados_social$pasantesArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$pasantesArgs<ExtArgs>>): Prisma__pasantesClient<$Result.GetResult<Prisma.$pasantesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-    asistencia_social_diaria<T extends colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs> = {}>(args?: Subset<T, colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencia_social_diariaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -12676,10 +12970,10 @@ export namespace Prisma {
     readonly id_asignacion: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_actividad_social: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_colegiado: FieldRef<"colegiados_asignados_social", 'Int'>
-    readonly id_invitado: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly id_pasante: FieldRef<"colegiados_asignados_social", 'Int'>
     readonly total_horas: FieldRef<"colegiados_asignados_social", 'Float'>
     readonly horas_meta: FieldRef<"colegiados_asignados_social", 'Float'>
+    readonly estado: FieldRef<"colegiados_asignados_social", 'String'>
   }
     
 
@@ -13076,22 +13370,27 @@ export namespace Prisma {
   }
 
   /**
-   * colegiados_asignados_social.invitados
+   * colegiados_asignados_social.asistencia_social_diaria
    */
-  export type colegiados_asignados_social$invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the invitados
+     * Select specific fields to fetch from the asistencia_social_diaria
      */
-    select?: invitadosSelect<ExtArgs> | null
+    select?: asistencia_social_diariaSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the invitados
+     * Omit specific fields from the asistencia_social_diaria
      */
-    omit?: invitadosOmit<ExtArgs> | null
+    omit?: asistencia_social_diariaOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: invitadosInclude<ExtArgs> | null
-    where?: invitadosWhereInput
+    include?: asistencia_social_diariaInclude<ExtArgs> | null
+    where?: asistencia_social_diariaWhereInput
+    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
+    cursor?: asistencia_social_diariaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
   }
 
   /**
@@ -13149,30 +13448,6 @@ export namespace Prisma {
      */
     include?: pasantesInclude<ExtArgs> | null
     where?: pasantesWhereInput
-  }
-
-  /**
-   * colegiados_asignados_social.asistencia_social_diaria
-   */
-  export type colegiados_asignados_social$asistencia_social_diariaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the asistencia_social_diaria
-     */
-    select?: asistencia_social_diariaSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the asistencia_social_diaria
-     */
-    omit?: asistencia_social_diariaOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: asistencia_social_diariaInclude<ExtArgs> | null
-    where?: asistencia_social_diariaWhereInput
-    orderBy?: asistencia_social_diariaOrderByWithRelationInput | asistencia_social_diariaOrderByWithRelationInput[]
-    cursor?: asistencia_social_diariaWhereUniqueInput
-    take?: number
-    skip?: number
-    distinct?: Asistencia_social_diariaScalarFieldEnum | Asistencia_social_diariaScalarFieldEnum[]
   }
 
   /**
@@ -15465,6 +15740,7 @@ export namespace Prisma {
     id_presupuesto: number | null
     monto: Decimal | null
     id_origen: number | null
+    id_usuario: number | null
   }
 
   export type Movimientos_financierosSumAggregateOutputType = {
@@ -15472,6 +15748,7 @@ export namespace Prisma {
     id_presupuesto: number | null
     monto: Decimal | null
     id_origen: number | null
+    id_usuario: number | null
   }
 
   export type Movimientos_financierosMinAggregateOutputType = {
@@ -15484,6 +15761,12 @@ export namespace Prisma {
     monto: Decimal | null
     id_origen: number | null
     comprobante: string | null
+    id_usuario: number | null
+    createdAt: Date | null
+    estado: string | null
+    metodo_pago: string | null
+    tipo_origen_label: string | null
+    updatedAt: Date | null
   }
 
   export type Movimientos_financierosMaxAggregateOutputType = {
@@ -15496,6 +15779,12 @@ export namespace Prisma {
     monto: Decimal | null
     id_origen: number | null
     comprobante: string | null
+    id_usuario: number | null
+    createdAt: Date | null
+    estado: string | null
+    metodo_pago: string | null
+    tipo_origen_label: string | null
+    updatedAt: Date | null
   }
 
   export type Movimientos_financierosCountAggregateOutputType = {
@@ -15508,6 +15797,12 @@ export namespace Prisma {
     monto: number
     id_origen: number
     comprobante: number
+    id_usuario: number
+    createdAt: number
+    estado: number
+    metodo_pago: number
+    tipo_origen_label: number
+    updatedAt: number
     _all: number
   }
 
@@ -15517,6 +15812,7 @@ export namespace Prisma {
     id_presupuesto?: true
     monto?: true
     id_origen?: true
+    id_usuario?: true
   }
 
   export type Movimientos_financierosSumAggregateInputType = {
@@ -15524,6 +15820,7 @@ export namespace Prisma {
     id_presupuesto?: true
     monto?: true
     id_origen?: true
+    id_usuario?: true
   }
 
   export type Movimientos_financierosMinAggregateInputType = {
@@ -15536,6 +15833,12 @@ export namespace Prisma {
     monto?: true
     id_origen?: true
     comprobante?: true
+    id_usuario?: true
+    createdAt?: true
+    estado?: true
+    metodo_pago?: true
+    tipo_origen_label?: true
+    updatedAt?: true
   }
 
   export type Movimientos_financierosMaxAggregateInputType = {
@@ -15548,6 +15851,12 @@ export namespace Prisma {
     monto?: true
     id_origen?: true
     comprobante?: true
+    id_usuario?: true
+    createdAt?: true
+    estado?: true
+    metodo_pago?: true
+    tipo_origen_label?: true
+    updatedAt?: true
   }
 
   export type Movimientos_financierosCountAggregateInputType = {
@@ -15560,6 +15869,12 @@ export namespace Prisma {
     monto?: true
     id_origen?: true
     comprobante?: true
+    id_usuario?: true
+    createdAt?: true
+    estado?: true
+    metodo_pago?: true
+    tipo_origen_label?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -15659,6 +15974,12 @@ export namespace Prisma {
     monto: Decimal | null
     id_origen: number | null
     comprobante: string | null
+    id_usuario: number | null
+    createdAt: Date | null
+    estado: string | null
+    metodo_pago: string | null
+    tipo_origen_label: string | null
+    updatedAt: Date | null
     _count: Movimientos_financierosCountAggregateOutputType | null
     _avg: Movimientos_financierosAvgAggregateOutputType | null
     _sum: Movimientos_financierosSumAggregateOutputType | null
@@ -15690,8 +16011,15 @@ export namespace Prisma {
     monto?: boolean
     id_origen?: boolean
     comprobante?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    estado?: boolean
+    metodo_pago?: boolean
+    tipo_origen_label?: boolean
+    updatedAt?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
 
   export type movimientos_financierosSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15704,8 +16032,15 @@ export namespace Prisma {
     monto?: boolean
     id_origen?: boolean
     comprobante?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    estado?: boolean
+    metodo_pago?: boolean
+    tipo_origen_label?: boolean
+    updatedAt?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
 
   export type movimientos_financierosSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -15718,8 +16053,15 @@ export namespace Prisma {
     monto?: boolean
     id_origen?: boolean
     comprobante?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    estado?: boolean
+    metodo_pago?: boolean
+    tipo_origen_label?: boolean
+    updatedAt?: boolean
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }, ExtArgs["result"]["movimientos_financieros"]>
 
   export type movimientos_financierosSelectScalar = {
@@ -15732,20 +16074,29 @@ export namespace Prisma {
     monto?: boolean
     id_origen?: boolean
     comprobante?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    estado?: boolean
+    metodo_pago?: boolean
+    tipo_origen_label?: boolean
+    updatedAt?: boolean
   }
 
-  export type movimientos_financierosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_movimiento" | "id_presupuesto" | "fecha_movimiento" | "tipo_movimiento" | "categoria" | "descripcion" | "monto" | "id_origen" | "comprobante", ExtArgs["result"]["movimientos_financieros"]>
+  export type movimientos_financierosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_movimiento" | "id_presupuesto" | "fecha_movimiento" | "tipo_movimiento" | "categoria" | "descripcion" | "monto" | "id_origen" | "comprobante" | "id_usuario" | "createdAt" | "estado" | "metodo_pago" | "tipo_origen_label" | "updatedAt", ExtArgs["result"]["movimientos_financieros"]>
   export type movimientos_financierosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }
   export type movimientos_financierosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }
   export type movimientos_financierosIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     origen_movimiento?: boolean | movimientos_financieros$origen_movimientoArgs<ExtArgs>
     presupuestos?: boolean | movimientos_financieros$presupuestosArgs<ExtArgs>
+    usuario?: boolean | movimientos_financieros$usuarioArgs<ExtArgs>
   }
 
   export type $movimientos_financierosPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -15753,6 +16104,7 @@ export namespace Prisma {
     objects: {
       origen_movimiento: Prisma.$origen_movimientoPayload<ExtArgs> | null
       presupuestos: Prisma.$presupuestosPayload<ExtArgs> | null
+      usuario: Prisma.$usuariosPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id_movimiento: number
@@ -15764,6 +16116,12 @@ export namespace Prisma {
       monto: Prisma.Decimal | null
       id_origen: number | null
       comprobante: string | null
+      id_usuario: number | null
+      createdAt: Date | null
+      estado: string | null
+      metodo_pago: string | null
+      tipo_origen_label: string | null
+      updatedAt: Date | null
     }, ExtArgs["result"]["movimientos_financieros"]>
     composites: {}
   }
@@ -16160,6 +16518,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     origen_movimiento<T extends movimientos_financieros$origen_movimientoArgs<ExtArgs> = {}>(args?: Subset<T, movimientos_financieros$origen_movimientoArgs<ExtArgs>>): Prisma__origen_movimientoClient<$Result.GetResult<Prisma.$origen_movimientoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     presupuestos<T extends movimientos_financieros$presupuestosArgs<ExtArgs> = {}>(args?: Subset<T, movimientos_financieros$presupuestosArgs<ExtArgs>>): Prisma__presupuestosClient<$Result.GetResult<Prisma.$presupuestosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends movimientos_financieros$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, movimientos_financieros$usuarioArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16198,6 +16557,12 @@ export namespace Prisma {
     readonly monto: FieldRef<"movimientos_financieros", 'Decimal'>
     readonly id_origen: FieldRef<"movimientos_financieros", 'Int'>
     readonly comprobante: FieldRef<"movimientos_financieros", 'String'>
+    readonly id_usuario: FieldRef<"movimientos_financieros", 'Int'>
+    readonly createdAt: FieldRef<"movimientos_financieros", 'DateTime'>
+    readonly estado: FieldRef<"movimientos_financieros", 'String'>
+    readonly metodo_pago: FieldRef<"movimientos_financieros", 'String'>
+    readonly tipo_origen_label: FieldRef<"movimientos_financieros", 'String'>
+    readonly updatedAt: FieldRef<"movimientos_financieros", 'DateTime'>
   }
     
 
@@ -16632,6 +16997,25 @@ export namespace Prisma {
   }
 
   /**
+   * movimientos_financieros.usuario
+   */
+  export type movimientos_financieros$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuarios
+     */
+    select?: usuariosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuarios
+     */
+    omit?: usuariosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuariosInclude<ExtArgs> | null
+    where?: usuariosWhereInput
+  }
+
+  /**
    * movimientos_financieros without action
    */
   export type movimientos_financierosDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16667,6 +17051,8 @@ export namespace Prisma {
     id_pago_colegiado: number | null
     id_registro_actividad_institucional: number | null
     monto: Decimal | null
+    id_postulacion: number | null
+    id_pago_invitado: number | null
   }
 
   export type Origen_movimientoSumAggregateOutputType = {
@@ -16674,6 +17060,8 @@ export namespace Prisma {
     id_pago_colegiado: number | null
     id_registro_actividad_institucional: number | null
     monto: Decimal | null
+    id_postulacion: number | null
+    id_pago_invitado: number | null
   }
 
   export type Origen_movimientoMinAggregateOutputType = {
@@ -16682,6 +17070,8 @@ export namespace Prisma {
     id_pago_colegiado: number | null
     id_registro_actividad_institucional: number | null
     monto: Decimal | null
+    id_postulacion: number | null
+    id_pago_invitado: number | null
   }
 
   export type Origen_movimientoMaxAggregateOutputType = {
@@ -16690,6 +17080,8 @@ export namespace Prisma {
     id_pago_colegiado: number | null
     id_registro_actividad_institucional: number | null
     monto: Decimal | null
+    id_postulacion: number | null
+    id_pago_invitado: number | null
   }
 
   export type Origen_movimientoCountAggregateOutputType = {
@@ -16698,6 +17090,8 @@ export namespace Prisma {
     id_pago_colegiado: number
     id_registro_actividad_institucional: number
     monto: number
+    id_postulacion: number
+    id_pago_invitado: number
     _all: number
   }
 
@@ -16707,6 +17101,8 @@ export namespace Prisma {
     id_pago_colegiado?: true
     id_registro_actividad_institucional?: true
     monto?: true
+    id_postulacion?: true
+    id_pago_invitado?: true
   }
 
   export type Origen_movimientoSumAggregateInputType = {
@@ -16714,6 +17110,8 @@ export namespace Prisma {
     id_pago_colegiado?: true
     id_registro_actividad_institucional?: true
     monto?: true
+    id_postulacion?: true
+    id_pago_invitado?: true
   }
 
   export type Origen_movimientoMinAggregateInputType = {
@@ -16722,6 +17120,8 @@ export namespace Prisma {
     id_pago_colegiado?: true
     id_registro_actividad_institucional?: true
     monto?: true
+    id_postulacion?: true
+    id_pago_invitado?: true
   }
 
   export type Origen_movimientoMaxAggregateInputType = {
@@ -16730,6 +17130,8 @@ export namespace Prisma {
     id_pago_colegiado?: true
     id_registro_actividad_institucional?: true
     monto?: true
+    id_postulacion?: true
+    id_pago_invitado?: true
   }
 
   export type Origen_movimientoCountAggregateInputType = {
@@ -16738,6 +17140,8 @@ export namespace Prisma {
     id_pago_colegiado?: true
     id_registro_actividad_institucional?: true
     monto?: true
+    id_postulacion?: true
+    id_pago_invitado?: true
     _all?: true
   }
 
@@ -16833,6 +17237,8 @@ export namespace Prisma {
     id_pago_colegiado: number | null
     id_registro_actividad_institucional: number | null
     monto: Decimal | null
+    id_postulacion: number | null
+    id_pago_invitado: number | null
     _count: Origen_movimientoCountAggregateOutputType | null
     _avg: Origen_movimientoAvgAggregateOutputType | null
     _sum: Origen_movimientoSumAggregateOutputType | null
@@ -16860,9 +17266,13 @@ export namespace Prisma {
     id_pago_colegiado?: boolean
     id_registro_actividad_institucional?: boolean
     monto?: boolean
+    id_postulacion?: boolean
+    id_pago_invitado?: boolean
     movimientos_financieros?: boolean | origen_movimiento$movimientos_financierosArgs<ExtArgs>
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     _count?: boolean | Origen_movimientoCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["origen_movimiento"]>
 
@@ -16872,8 +17282,12 @@ export namespace Prisma {
     id_pago_colegiado?: boolean
     id_registro_actividad_institucional?: boolean
     monto?: boolean
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
+    id_postulacion?: boolean
+    id_pago_invitado?: boolean
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
   }, ExtArgs["result"]["origen_movimiento"]>
 
   export type origen_movimientoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16882,8 +17296,12 @@ export namespace Prisma {
     id_pago_colegiado?: boolean
     id_registro_actividad_institucional?: boolean
     monto?: boolean
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
+    id_postulacion?: boolean
+    id_pago_invitado?: boolean
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
   }, ExtArgs["result"]["origen_movimiento"]>
 
   export type origen_movimientoSelectScalar = {
@@ -16892,30 +17310,40 @@ export namespace Prisma {
     id_pago_colegiado?: boolean
     id_registro_actividad_institucional?: boolean
     monto?: boolean
+    id_postulacion?: boolean
+    id_pago_invitado?: boolean
   }
 
-  export type origen_movimientoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_origen" | "tipo_origen" | "id_pago_colegiado" | "id_registro_actividad_institucional" | "monto", ExtArgs["result"]["origen_movimiento"]>
+  export type origen_movimientoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_origen" | "tipo_origen" | "id_pago_colegiado" | "id_registro_actividad_institucional" | "monto" | "id_postulacion" | "id_pago_invitado", ExtArgs["result"]["origen_movimiento"]>
   export type origen_movimientoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     movimientos_financieros?: boolean | origen_movimiento$movimientos_financierosArgs<ExtArgs>
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     _count?: boolean | Origen_movimientoCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type origen_movimientoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
   }
   export type origen_movimientoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
     pagos_colegiados?: boolean | origen_movimiento$pagos_colegiadosArgs<ExtArgs>
+    pagos_invitados?: boolean | origen_movimiento$pagos_invitadosArgs<ExtArgs>
+    postulaciones?: boolean | origen_movimiento$postulacionesArgs<ExtArgs>
+    colegiados_registrados_actividad_institucional?: boolean | origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
   }
 
   export type $origen_movimientoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "origen_movimiento"
     objects: {
       movimientos_financieros: Prisma.$movimientos_financierosPayload<ExtArgs>[]
-      colegiados_registrados_actividad_institucional: Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs> | null
       pagos_colegiados: Prisma.$pagos_colegiadosPayload<ExtArgs> | null
+      pagos_invitados: Prisma.$pagos_invitadosPayload<ExtArgs> | null
+      postulaciones: Prisma.$postulacionesPayload<ExtArgs> | null
+      colegiados_registrados_actividad_institucional: Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id_origen: number
@@ -16923,6 +17351,8 @@ export namespace Prisma {
       id_pago_colegiado: number | null
       id_registro_actividad_institucional: number | null
       monto: Prisma.Decimal | null
+      id_postulacion: number | null
+      id_pago_invitado: number | null
     }, ExtArgs["result"]["origen_movimiento"]>
     composites: {}
   }
@@ -17318,8 +17748,10 @@ export namespace Prisma {
   export interface Prisma__origen_movimientoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     movimientos_financieros<T extends origen_movimiento$movimientos_financierosArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$movimientos_financierosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$movimientos_financierosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    colegiados_registrados_actividad_institucional<T extends origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>>): Prisma__colegiados_registrados_actividad_institucionalClient<$Result.GetResult<Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pagos_colegiados<T extends origen_movimiento$pagos_colegiadosArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$pagos_colegiadosArgs<ExtArgs>>): Prisma__pagos_colegiadosClient<$Result.GetResult<Prisma.$pagos_colegiadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    pagos_invitados<T extends origen_movimiento$pagos_invitadosArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$pagos_invitadosArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    postulaciones<T extends origen_movimiento$postulacionesArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$postulacionesArgs<ExtArgs>>): Prisma__postulacionesClient<$Result.GetResult<Prisma.$postulacionesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    colegiados_registrados_actividad_institucional<T extends origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs> = {}>(args?: Subset<T, origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs>>): Prisma__colegiados_registrados_actividad_institucionalClient<$Result.GetResult<Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -17354,6 +17786,8 @@ export namespace Prisma {
     readonly id_pago_colegiado: FieldRef<"origen_movimiento", 'Int'>
     readonly id_registro_actividad_institucional: FieldRef<"origen_movimiento", 'Int'>
     readonly monto: FieldRef<"origen_movimiento", 'Decimal'>
+    readonly id_postulacion: FieldRef<"origen_movimiento", 'Int'>
+    readonly id_pago_invitado: FieldRef<"origen_movimiento", 'Int'>
   }
     
 
@@ -17774,25 +18208,6 @@ export namespace Prisma {
   }
 
   /**
-   * origen_movimiento.colegiados_registrados_actividad_institucional
-   */
-  export type origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    /**
-     * Select specific fields to fetch from the colegiados_registrados_actividad_institucional
-     */
-    select?: colegiados_registrados_actividad_institucionalSelect<ExtArgs> | null
-    /**
-     * Omit specific fields from the colegiados_registrados_actividad_institucional
-     */
-    omit?: colegiados_registrados_actividad_institucionalOmit<ExtArgs> | null
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: colegiados_registrados_actividad_institucionalInclude<ExtArgs> | null
-    where?: colegiados_registrados_actividad_institucionalWhereInput
-  }
-
-  /**
    * origen_movimiento.pagos_colegiados
    */
   export type origen_movimiento$pagos_colegiadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17809,6 +18224,63 @@ export namespace Prisma {
      */
     include?: pagos_colegiadosInclude<ExtArgs> | null
     where?: pagos_colegiadosWhereInput
+  }
+
+  /**
+   * origen_movimiento.pagos_invitados
+   */
+  export type origen_movimiento$pagos_invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    where?: pagos_invitadosWhereInput
+  }
+
+  /**
+   * origen_movimiento.postulaciones
+   */
+  export type origen_movimiento$postulacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the postulaciones
+     */
+    select?: postulacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the postulaciones
+     */
+    omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    where?: postulacionesWhereInput
+  }
+
+  /**
+   * origen_movimiento.colegiados_registrados_actividad_institucional
+   */
+  export type origen_movimiento$colegiados_registrados_actividad_institucionalArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the colegiados_registrados_actividad_institucional
+     */
+    select?: colegiados_registrados_actividad_institucionalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the colegiados_registrados_actividad_institucional
+     */
+    omit?: colegiados_registrados_actividad_institucionalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: colegiados_registrados_actividad_institucionalInclude<ExtArgs> | null
+    where?: colegiados_registrados_actividad_institucionalWhereInput
   }
 
   /**
@@ -17862,6 +18334,7 @@ export namespace Prisma {
     monto: Decimal | null
     estado_pago: string | null
     comprobante: string | null
+    metodo_pago: string | null
   }
 
   export type Pagos_colegiadosMaxAggregateOutputType = {
@@ -17872,6 +18345,7 @@ export namespace Prisma {
     monto: Decimal | null
     estado_pago: string | null
     comprobante: string | null
+    metodo_pago: string | null
   }
 
   export type Pagos_colegiadosCountAggregateOutputType = {
@@ -17882,6 +18356,7 @@ export namespace Prisma {
     monto: number
     estado_pago: number
     comprobante: number
+    metodo_pago: number
     _all: number
   }
 
@@ -17906,6 +18381,7 @@ export namespace Prisma {
     monto?: true
     estado_pago?: true
     comprobante?: true
+    metodo_pago?: true
   }
 
   export type Pagos_colegiadosMaxAggregateInputType = {
@@ -17916,6 +18392,7 @@ export namespace Prisma {
     monto?: true
     estado_pago?: true
     comprobante?: true
+    metodo_pago?: true
   }
 
   export type Pagos_colegiadosCountAggregateInputType = {
@@ -17926,6 +18403,7 @@ export namespace Prisma {
     monto?: true
     estado_pago?: true
     comprobante?: true
+    metodo_pago?: true
     _all?: true
   }
 
@@ -18023,6 +18501,7 @@ export namespace Prisma {
     monto: Decimal | null
     estado_pago: string | null
     comprobante: string | null
+    metodo_pago: string | null
     _count: Pagos_colegiadosCountAggregateOutputType | null
     _avg: Pagos_colegiadosAvgAggregateOutputType | null
     _sum: Pagos_colegiadosSumAggregateOutputType | null
@@ -18052,6 +18531,7 @@ export namespace Prisma {
     monto?: boolean
     estado_pago?: boolean
     comprobante?: boolean
+    metodo_pago?: boolean
     origen_movimiento?: boolean | pagos_colegiados$origen_movimientoArgs<ExtArgs>
     colegiados?: boolean | pagos_colegiados$colegiadosArgs<ExtArgs>
     _count?: boolean | Pagos_colegiadosCountOutputTypeDefaultArgs<ExtArgs>
@@ -18065,6 +18545,7 @@ export namespace Prisma {
     monto?: boolean
     estado_pago?: boolean
     comprobante?: boolean
+    metodo_pago?: boolean
     colegiados?: boolean | pagos_colegiados$colegiadosArgs<ExtArgs>
   }, ExtArgs["result"]["pagos_colegiados"]>
 
@@ -18076,6 +18557,7 @@ export namespace Prisma {
     monto?: boolean
     estado_pago?: boolean
     comprobante?: boolean
+    metodo_pago?: boolean
     colegiados?: boolean | pagos_colegiados$colegiadosArgs<ExtArgs>
   }, ExtArgs["result"]["pagos_colegiados"]>
 
@@ -18087,9 +18569,10 @@ export namespace Prisma {
     monto?: boolean
     estado_pago?: boolean
     comprobante?: boolean
+    metodo_pago?: boolean
   }
 
-  export type pagos_colegiadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pago" | "id_colegiado" | "concepto" | "fecha_pago" | "monto" | "estado_pago" | "comprobante", ExtArgs["result"]["pagos_colegiados"]>
+  export type pagos_colegiadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pago" | "id_colegiado" | "concepto" | "fecha_pago" | "monto" | "estado_pago" | "comprobante" | "metodo_pago", ExtArgs["result"]["pagos_colegiados"]>
   export type pagos_colegiadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     origen_movimiento?: boolean | pagos_colegiados$origen_movimientoArgs<ExtArgs>
     colegiados?: boolean | pagos_colegiados$colegiadosArgs<ExtArgs>
@@ -18116,6 +18599,7 @@ export namespace Prisma {
       monto: Prisma.Decimal | null
       estado_pago: string | null
       comprobante: string | null
+      metodo_pago: string | null
     }, ExtArgs["result"]["pagos_colegiados"]>
     composites: {}
   }
@@ -18548,6 +19032,7 @@ export namespace Prisma {
     readonly monto: FieldRef<"pagos_colegiados", 'Decimal'>
     readonly estado_pago: FieldRef<"pagos_colegiados", 'String'>
     readonly comprobante: FieldRef<"pagos_colegiados", 'String'>
+    readonly metodo_pago: FieldRef<"pagos_colegiados", 'String'>
   }
     
 
@@ -23801,9 +24286,10 @@ export namespace Prisma {
     estado?: boolean
     fecha_actualizacion?: boolean
     actividades_institucionales?: boolean | usuarios$actividades_institucionalesArgs<ExtArgs>
-    roles?: boolean | usuarios$rolesArgs<ExtArgs>
-    destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
     auditoria?: boolean | usuarios$auditoriaArgs<ExtArgs>
+    destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
+    movimientos_financieros?: boolean | usuarios$movimientos_financierosArgs<ExtArgs>
+    roles?: boolean | usuarios$rolesArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -23849,9 +24335,10 @@ export namespace Prisma {
   export type usuariosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_usuario" | "nombre" | "apellido" | "correo" | "contrase_a" | "telefono" | "direccion" | "fecha_registro" | "estado" | "fecha_actualizacion", ExtArgs["result"]["usuarios"]>
   export type usuariosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     actividades_institucionales?: boolean | usuarios$actividades_institucionalesArgs<ExtArgs>
-    roles?: boolean | usuarios$rolesArgs<ExtArgs>
-    destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
     auditoria?: boolean | usuarios$auditoriaArgs<ExtArgs>
+    destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
+    movimientos_financieros?: boolean | usuarios$movimientos_financierosArgs<ExtArgs>
+    roles?: boolean | usuarios$rolesArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usuariosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -23861,9 +24348,10 @@ export namespace Prisma {
     name: "usuarios"
     objects: {
       actividades_institucionales: Prisma.$actividades_institucionalesPayload<ExtArgs>[]
-      roles: Prisma.$rolesPayload<ExtArgs>[]
-      destinatario: Prisma.$correspondenciaPayload<ExtArgs>[]
       auditoria: Prisma.$auditoriaPayload<ExtArgs>[]
+      destinatario: Prisma.$correspondenciaPayload<ExtArgs>[]
+      movimientos_financieros: Prisma.$movimientos_financierosPayload<ExtArgs>[]
+      roles: Prisma.$rolesPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_usuario: number
@@ -24271,9 +24759,10 @@ export namespace Prisma {
   export interface Prisma__usuariosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     actividades_institucionales<T extends usuarios$actividades_institucionalesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$actividades_institucionalesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$actividades_institucionalesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    roles<T extends usuarios$rolesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$rolesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-    destinatario<T extends usuarios$destinatarioArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$destinatarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$correspondenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     auditoria<T extends usuarios$auditoriaArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$auditoriaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$auditoriaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    destinatario<T extends usuarios$destinatarioArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$destinatarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$correspondenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    movimientos_financieros<T extends usuarios$movimientos_financierosArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$movimientos_financierosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$movimientos_financierosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    roles<T extends usuarios$rolesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$rolesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -24725,27 +25214,27 @@ export namespace Prisma {
   }
 
   /**
-   * usuarios.roles
+   * usuarios.auditoria
    */
-  export type usuarios$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type usuarios$auditoriaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the roles
+     * Select specific fields to fetch from the auditoria
      */
-    select?: rolesSelect<ExtArgs> | null
+    select?: auditoriaSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the roles
+     * Omit specific fields from the auditoria
      */
-    omit?: rolesOmit<ExtArgs> | null
+    omit?: auditoriaOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: rolesInclude<ExtArgs> | null
-    where?: rolesWhereInput
-    orderBy?: rolesOrderByWithRelationInput | rolesOrderByWithRelationInput[]
-    cursor?: rolesWhereUniqueInput
+    include?: auditoriaInclude<ExtArgs> | null
+    where?: auditoriaWhereInput
+    orderBy?: auditoriaOrderByWithRelationInput | auditoriaOrderByWithRelationInput[]
+    cursor?: auditoriaWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: RolesScalarFieldEnum | RolesScalarFieldEnum[]
+    distinct?: AuditoriaScalarFieldEnum | AuditoriaScalarFieldEnum[]
   }
 
   /**
@@ -24773,27 +25262,51 @@ export namespace Prisma {
   }
 
   /**
-   * usuarios.auditoria
+   * usuarios.movimientos_financieros
    */
-  export type usuarios$auditoriaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type usuarios$movimientos_financierosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the auditoria
+     * Select specific fields to fetch from the movimientos_financieros
      */
-    select?: auditoriaSelect<ExtArgs> | null
+    select?: movimientos_financierosSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the auditoria
+     * Omit specific fields from the movimientos_financieros
      */
-    omit?: auditoriaOmit<ExtArgs> | null
+    omit?: movimientos_financierosOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: auditoriaInclude<ExtArgs> | null
-    where?: auditoriaWhereInput
-    orderBy?: auditoriaOrderByWithRelationInput | auditoriaOrderByWithRelationInput[]
-    cursor?: auditoriaWhereUniqueInput
+    include?: movimientos_financierosInclude<ExtArgs> | null
+    where?: movimientos_financierosWhereInput
+    orderBy?: movimientos_financierosOrderByWithRelationInput | movimientos_financierosOrderByWithRelationInput[]
+    cursor?: movimientos_financierosWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: AuditoriaScalarFieldEnum | AuditoriaScalarFieldEnum[]
+    distinct?: Movimientos_financierosScalarFieldEnum | Movimientos_financierosScalarFieldEnum[]
+  }
+
+  /**
+   * usuarios.roles
+   */
+  export type usuarios$rolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the roles
+     */
+    select?: rolesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the roles
+     */
+    omit?: rolesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: rolesInclude<ExtArgs> | null
+    where?: rolesWhereInput
+    orderBy?: rolesOrderByWithRelationInput | rolesOrderByWithRelationInput[]
+    cursor?: rolesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: RolesScalarFieldEnum | RolesScalarFieldEnum[]
   }
 
   /**
@@ -24841,6 +25354,7 @@ export namespace Prisma {
     apellido: string | null
     correo: string | null
     telefono: string | null
+    estado: string | null
   }
 
   export type InvitadosMaxAggregateOutputType = {
@@ -24849,6 +25363,7 @@ export namespace Prisma {
     apellido: string | null
     correo: string | null
     telefono: string | null
+    estado: string | null
   }
 
   export type InvitadosCountAggregateOutputType = {
@@ -24857,6 +25372,7 @@ export namespace Prisma {
     apellido: number
     correo: number
     telefono: number
+    estado: number
     _all: number
   }
 
@@ -24875,6 +25391,7 @@ export namespace Prisma {
     apellido?: true
     correo?: true
     telefono?: true
+    estado?: true
   }
 
   export type InvitadosMaxAggregateInputType = {
@@ -24883,6 +25400,7 @@ export namespace Prisma {
     apellido?: true
     correo?: true
     telefono?: true
+    estado?: true
   }
 
   export type InvitadosCountAggregateInputType = {
@@ -24891,6 +25409,7 @@ export namespace Prisma {
     apellido?: true
     correo?: true
     telefono?: true
+    estado?: true
     _all?: true
   }
 
@@ -24986,6 +25505,7 @@ export namespace Prisma {
     apellido: string
     correo: string | null
     telefono: string | null
+    estado: string | null
     _count: InvitadosCountAggregateOutputType | null
     _avg: InvitadosAvgAggregateOutputType | null
     _sum: InvitadosSumAggregateOutputType | null
@@ -25013,8 +25533,10 @@ export namespace Prisma {
     apellido?: boolean
     correo?: boolean
     telefono?: boolean
-    colegiados_asignados_social?: boolean | invitados$colegiados_asignados_socialArgs<ExtArgs>
+    estado?: boolean
+    asistencias_actividad?: boolean | invitados$asistencias_actividadArgs<ExtArgs>
     colegiados_registrados_actividad_institucional?: boolean | invitados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
+    pagos_invitados?: boolean | invitados$pagos_invitadosArgs<ExtArgs>
     _count?: boolean | InvitadosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["invitados"]>
 
@@ -25024,6 +25546,7 @@ export namespace Prisma {
     apellido?: boolean
     correo?: boolean
     telefono?: boolean
+    estado?: boolean
   }, ExtArgs["result"]["invitados"]>
 
   export type invitadosSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -25032,6 +25555,7 @@ export namespace Prisma {
     apellido?: boolean
     correo?: boolean
     telefono?: boolean
+    estado?: boolean
   }, ExtArgs["result"]["invitados"]>
 
   export type invitadosSelectScalar = {
@@ -25040,12 +25564,14 @@ export namespace Prisma {
     apellido?: boolean
     correo?: boolean
     telefono?: boolean
+    estado?: boolean
   }
 
-  export type invitadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_invitado" | "nombre" | "apellido" | "correo" | "telefono", ExtArgs["result"]["invitados"]>
+  export type invitadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_invitado" | "nombre" | "apellido" | "correo" | "telefono" | "estado", ExtArgs["result"]["invitados"]>
   export type invitadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    colegiados_asignados_social?: boolean | invitados$colegiados_asignados_socialArgs<ExtArgs>
+    asistencias_actividad?: boolean | invitados$asistencias_actividadArgs<ExtArgs>
     colegiados_registrados_actividad_institucional?: boolean | invitados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>
+    pagos_invitados?: boolean | invitados$pagos_invitadosArgs<ExtArgs>
     _count?: boolean | InvitadosCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type invitadosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -25054,8 +25580,9 @@ export namespace Prisma {
   export type $invitadosPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "invitados"
     objects: {
-      colegiados_asignados_social: Prisma.$colegiados_asignados_socialPayload<ExtArgs>[]
+      asistencias_actividad: Prisma.$asistencias_actividadPayload<ExtArgs>[]
       colegiados_registrados_actividad_institucional: Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>[]
+      pagos_invitados: Prisma.$pagos_invitadosPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_invitado: number
@@ -25063,6 +25590,7 @@ export namespace Prisma {
       apellido: string
       correo: string | null
       telefono: string | null
+      estado: string | null
     }, ExtArgs["result"]["invitados"]>
     composites: {}
   }
@@ -25457,8 +25985,9 @@ export namespace Prisma {
    */
   export interface Prisma__invitadosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    colegiados_asignados_social<T extends invitados$colegiados_asignados_socialArgs<ExtArgs> = {}>(args?: Subset<T, invitados$colegiados_asignados_socialArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_asignados_socialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    asistencias_actividad<T extends invitados$asistencias_actividadArgs<ExtArgs> = {}>(args?: Subset<T, invitados$asistencias_actividadArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$asistencias_actividadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     colegiados_registrados_actividad_institucional<T extends invitados$colegiados_registrados_actividad_institucionalArgs<ExtArgs> = {}>(args?: Subset<T, invitados$colegiados_registrados_actividad_institucionalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$colegiados_registrados_actividad_institucionalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    pagos_invitados<T extends invitados$pagos_invitadosArgs<ExtArgs> = {}>(args?: Subset<T, invitados$pagos_invitadosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25493,6 +26022,7 @@ export namespace Prisma {
     readonly apellido: FieldRef<"invitados", 'String'>
     readonly correo: FieldRef<"invitados", 'String'>
     readonly telefono: FieldRef<"invitados", 'String'>
+    readonly estado: FieldRef<"invitados", 'String'>
   }
     
 
@@ -25881,27 +26411,27 @@ export namespace Prisma {
   }
 
   /**
-   * invitados.colegiados_asignados_social
+   * invitados.asistencias_actividad
    */
-  export type invitados$colegiados_asignados_socialArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type invitados$asistencias_actividadArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
-     * Select specific fields to fetch from the colegiados_asignados_social
+     * Select specific fields to fetch from the asistencias_actividad
      */
-    select?: colegiados_asignados_socialSelect<ExtArgs> | null
+    select?: asistencias_actividadSelect<ExtArgs> | null
     /**
-     * Omit specific fields from the colegiados_asignados_social
+     * Omit specific fields from the asistencias_actividad
      */
-    omit?: colegiados_asignados_socialOmit<ExtArgs> | null
+    omit?: asistencias_actividadOmit<ExtArgs> | null
     /**
      * Choose, which related nodes to fetch as well
      */
-    include?: colegiados_asignados_socialInclude<ExtArgs> | null
-    where?: colegiados_asignados_socialWhereInput
-    orderBy?: colegiados_asignados_socialOrderByWithRelationInput | colegiados_asignados_socialOrderByWithRelationInput[]
-    cursor?: colegiados_asignados_socialWhereUniqueInput
+    include?: asistencias_actividadInclude<ExtArgs> | null
+    where?: asistencias_actividadWhereInput
+    orderBy?: asistencias_actividadOrderByWithRelationInput | asistencias_actividadOrderByWithRelationInput[]
+    cursor?: asistencias_actividadWhereUniqueInput
     take?: number
     skip?: number
-    distinct?: Colegiados_asignados_socialScalarFieldEnum | Colegiados_asignados_socialScalarFieldEnum[]
+    distinct?: Asistencias_actividadScalarFieldEnum | Asistencias_actividadScalarFieldEnum[]
   }
 
   /**
@@ -25926,6 +26456,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: Colegiados_registrados_actividad_institucionalScalarFieldEnum | Colegiados_registrados_actividad_institucionalScalarFieldEnum[]
+  }
+
+  /**
+   * invitados.pagos_invitados
+   */
+  export type invitados$pagos_invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    where?: pagos_invitadosWhereInput
+    orderBy?: pagos_invitadosOrderByWithRelationInput | pagos_invitadosOrderByWithRelationInput[]
+    cursor?: pagos_invitadosWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Pagos_invitadosScalarFieldEnum | Pagos_invitadosScalarFieldEnum[]
   }
 
   /**
@@ -25981,6 +26535,7 @@ export namespace Prisma {
     motivo_rechazo: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    metodo_pago: string | null
   }
 
   export type PostulacionesMaxAggregateOutputType = {
@@ -25997,6 +26552,7 @@ export namespace Prisma {
     motivo_rechazo: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    metodo_pago: string | null
   }
 
   export type PostulacionesCountAggregateOutputType = {
@@ -26013,6 +26569,7 @@ export namespace Prisma {
     motivo_rechazo: number
     createdAt: number
     updatedAt: number
+    metodo_pago: number
     _all: number
   }
 
@@ -26039,6 +26596,7 @@ export namespace Prisma {
     motivo_rechazo?: true
     createdAt?: true
     updatedAt?: true
+    metodo_pago?: true
   }
 
   export type PostulacionesMaxAggregateInputType = {
@@ -26055,6 +26613,7 @@ export namespace Prisma {
     motivo_rechazo?: true
     createdAt?: true
     updatedAt?: true
+    metodo_pago?: true
   }
 
   export type PostulacionesCountAggregateInputType = {
@@ -26071,6 +26630,7 @@ export namespace Prisma {
     motivo_rechazo?: true
     createdAt?: true
     updatedAt?: true
+    metodo_pago?: true
     _all?: true
   }
 
@@ -26174,6 +26734,7 @@ export namespace Prisma {
     motivo_rechazo: string | null
     createdAt: Date
     updatedAt: Date
+    metodo_pago: string | null
     _count: PostulacionesCountAggregateOutputType | null
     _avg: PostulacionesAvgAggregateOutputType | null
     _sum: PostulacionesSumAggregateOutputType | null
@@ -26209,6 +26770,9 @@ export namespace Prisma {
     motivo_rechazo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    metodo_pago?: boolean
+    origen_movimiento?: boolean | postulaciones$origen_movimientoArgs<ExtArgs>
+    _count?: boolean | PostulacionesCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["postulaciones"]>
 
   export type postulacionesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -26225,6 +26789,7 @@ export namespace Prisma {
     motivo_rechazo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    metodo_pago?: boolean
   }, ExtArgs["result"]["postulaciones"]>
 
   export type postulacionesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -26241,6 +26806,7 @@ export namespace Prisma {
     motivo_rechazo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    metodo_pago?: boolean
   }, ExtArgs["result"]["postulaciones"]>
 
   export type postulacionesSelectScalar = {
@@ -26257,13 +26823,22 @@ export namespace Prisma {
     motivo_rechazo?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    metodo_pago?: boolean
   }
 
-  export type postulacionesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_postulacion" | "carnet_identidad" | "nombre" | "apellido" | "correo" | "telefono" | "especialidades" | "documentos" | "comprobante_pago" | "estado" | "motivo_rechazo" | "createdAt" | "updatedAt", ExtArgs["result"]["postulaciones"]>
+  export type postulacionesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_postulacion" | "carnet_identidad" | "nombre" | "apellido" | "correo" | "telefono" | "especialidades" | "documentos" | "comprobante_pago" | "estado" | "motivo_rechazo" | "createdAt" | "updatedAt" | "metodo_pago", ExtArgs["result"]["postulaciones"]>
+  export type postulacionesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    origen_movimiento?: boolean | postulaciones$origen_movimientoArgs<ExtArgs>
+    _count?: boolean | PostulacionesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type postulacionesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type postulacionesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $postulacionesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "postulaciones"
-    objects: {}
+    objects: {
+      origen_movimiento: Prisma.$origen_movimientoPayload<ExtArgs>[]
+    }
     scalars: $Extensions.GetPayloadResult<{
       id_postulacion: number
       carnet_identidad: string
@@ -26278,6 +26853,7 @@ export namespace Prisma {
       motivo_rechazo: string | null
       createdAt: Date
       updatedAt: Date
+      metodo_pago: string | null
     }, ExtArgs["result"]["postulaciones"]>
     composites: {}
   }
@@ -26672,6 +27248,7 @@ export namespace Prisma {
    */
   export interface Prisma__postulacionesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    origen_movimiento<T extends postulaciones$origen_movimientoArgs<ExtArgs> = {}>(args?: Subset<T, postulaciones$origen_movimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$origen_movimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -26714,6 +27291,7 @@ export namespace Prisma {
     readonly motivo_rechazo: FieldRef<"postulaciones", 'String'>
     readonly createdAt: FieldRef<"postulaciones", 'DateTime'>
     readonly updatedAt: FieldRef<"postulaciones", 'DateTime'>
+    readonly metodo_pago: FieldRef<"postulaciones", 'String'>
   }
     
 
@@ -26730,6 +27308,10 @@ export namespace Prisma {
      * Omit specific fields from the postulaciones
      */
     omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
     /**
      * Filter, which postulaciones to fetch.
      */
@@ -26749,6 +27331,10 @@ export namespace Prisma {
      */
     omit?: postulacionesOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    /**
      * Filter, which postulaciones to fetch.
      */
     where: postulacionesWhereUniqueInput
@@ -26766,6 +27352,10 @@ export namespace Prisma {
      * Omit specific fields from the postulaciones
      */
     omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
     /**
      * Filter, which postulaciones to fetch.
      */
@@ -26815,6 +27405,10 @@ export namespace Prisma {
      */
     omit?: postulacionesOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    /**
      * Filter, which postulaciones to fetch.
      */
     where?: postulacionesWhereInput
@@ -26863,6 +27457,10 @@ export namespace Prisma {
      */
     omit?: postulacionesOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    /**
      * Filter, which postulaciones to fetch.
      */
     where?: postulacionesWhereInput
@@ -26905,6 +27503,10 @@ export namespace Prisma {
      * Omit specific fields from the postulaciones
      */
     omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
     /**
      * The data needed to create a postulaciones.
      */
@@ -26953,6 +27555,10 @@ export namespace Prisma {
      * Omit specific fields from the postulaciones
      */
     omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
     /**
      * The data needed to update a postulaciones.
      */
@@ -27020,6 +27626,10 @@ export namespace Prisma {
      */
     omit?: postulacionesOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    /**
      * The filter to search for the postulaciones to update in case it exists.
      */
     where: postulacionesWhereUniqueInput
@@ -27046,6 +27656,10 @@ export namespace Prisma {
      */
     omit?: postulacionesOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
+    /**
      * Filter which postulaciones to delete.
      */
     where: postulacionesWhereUniqueInput
@@ -27066,6 +27680,30 @@ export namespace Prisma {
   }
 
   /**
+   * postulaciones.origen_movimiento
+   */
+  export type postulaciones$origen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the origen_movimiento
+     */
+    select?: origen_movimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the origen_movimiento
+     */
+    omit?: origen_movimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: origen_movimientoInclude<ExtArgs> | null
+    where?: origen_movimientoWhereInput
+    orderBy?: origen_movimientoOrderByWithRelationInput | origen_movimientoOrderByWithRelationInput[]
+    cursor?: origen_movimientoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Origen_movimientoScalarFieldEnum | Origen_movimientoScalarFieldEnum[]
+  }
+
+  /**
    * postulaciones without action
    */
   export type postulacionesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -27077,6 +27715,10 @@ export namespace Prisma {
      * Omit specific fields from the postulaciones
      */
     omit?: postulacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: postulacionesInclude<ExtArgs> | null
   }
 
 
@@ -31270,6 +31912,2184 @@ export namespace Prisma {
 
 
   /**
+   * Model pagos_invitados
+   */
+
+  export type AggregatePagos_invitados = {
+    _count: Pagos_invitadosCountAggregateOutputType | null
+    _avg: Pagos_invitadosAvgAggregateOutputType | null
+    _sum: Pagos_invitadosSumAggregateOutputType | null
+    _min: Pagos_invitadosMinAggregateOutputType | null
+    _max: Pagos_invitadosMaxAggregateOutputType | null
+  }
+
+  export type Pagos_invitadosAvgAggregateOutputType = {
+    id_pago: number | null
+    id_invitado: number | null
+    monto: Decimal | null
+  }
+
+  export type Pagos_invitadosSumAggregateOutputType = {
+    id_pago: number | null
+    id_invitado: number | null
+    monto: Decimal | null
+  }
+
+  export type Pagos_invitadosMinAggregateOutputType = {
+    id_pago: number | null
+    id_invitado: number | null
+    concepto: string | null
+    fecha_pago: Date | null
+    monto: Decimal | null
+    estado_pago: string | null
+    comprobante: string | null
+    metodo_pago: string | null
+  }
+
+  export type Pagos_invitadosMaxAggregateOutputType = {
+    id_pago: number | null
+    id_invitado: number | null
+    concepto: string | null
+    fecha_pago: Date | null
+    monto: Decimal | null
+    estado_pago: string | null
+    comprobante: string | null
+    metodo_pago: string | null
+  }
+
+  export type Pagos_invitadosCountAggregateOutputType = {
+    id_pago: number
+    id_invitado: number
+    concepto: number
+    fecha_pago: number
+    monto: number
+    estado_pago: number
+    comprobante: number
+    metodo_pago: number
+    _all: number
+  }
+
+
+  export type Pagos_invitadosAvgAggregateInputType = {
+    id_pago?: true
+    id_invitado?: true
+    monto?: true
+  }
+
+  export type Pagos_invitadosSumAggregateInputType = {
+    id_pago?: true
+    id_invitado?: true
+    monto?: true
+  }
+
+  export type Pagos_invitadosMinAggregateInputType = {
+    id_pago?: true
+    id_invitado?: true
+    concepto?: true
+    fecha_pago?: true
+    monto?: true
+    estado_pago?: true
+    comprobante?: true
+    metodo_pago?: true
+  }
+
+  export type Pagos_invitadosMaxAggregateInputType = {
+    id_pago?: true
+    id_invitado?: true
+    concepto?: true
+    fecha_pago?: true
+    monto?: true
+    estado_pago?: true
+    comprobante?: true
+    metodo_pago?: true
+  }
+
+  export type Pagos_invitadosCountAggregateInputType = {
+    id_pago?: true
+    id_invitado?: true
+    concepto?: true
+    fecha_pago?: true
+    monto?: true
+    estado_pago?: true
+    comprobante?: true
+    metodo_pago?: true
+    _all?: true
+  }
+
+  export type Pagos_invitadosAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pagos_invitados to aggregate.
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pagos_invitados to fetch.
+     */
+    orderBy?: pagos_invitadosOrderByWithRelationInput | pagos_invitadosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: pagos_invitadosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pagos_invitados from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pagos_invitados.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned pagos_invitados
+    **/
+    _count?: true | Pagos_invitadosCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Pagos_invitadosAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Pagos_invitadosSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Pagos_invitadosMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Pagos_invitadosMaxAggregateInputType
+  }
+
+  export type GetPagos_invitadosAggregateType<T extends Pagos_invitadosAggregateArgs> = {
+        [P in keyof T & keyof AggregatePagos_invitados]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePagos_invitados[P]>
+      : GetScalarType<T[P], AggregatePagos_invitados[P]>
+  }
+
+
+
+
+  export type pagos_invitadosGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: pagos_invitadosWhereInput
+    orderBy?: pagos_invitadosOrderByWithAggregationInput | pagos_invitadosOrderByWithAggregationInput[]
+    by: Pagos_invitadosScalarFieldEnum[] | Pagos_invitadosScalarFieldEnum
+    having?: pagos_invitadosScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Pagos_invitadosCountAggregateInputType | true
+    _avg?: Pagos_invitadosAvgAggregateInputType
+    _sum?: Pagos_invitadosSumAggregateInputType
+    _min?: Pagos_invitadosMinAggregateInputType
+    _max?: Pagos_invitadosMaxAggregateInputType
+  }
+
+  export type Pagos_invitadosGroupByOutputType = {
+    id_pago: number
+    id_invitado: number | null
+    concepto: string | null
+    fecha_pago: Date | null
+    monto: Decimal | null
+    estado_pago: string | null
+    comprobante: string | null
+    metodo_pago: string | null
+    _count: Pagos_invitadosCountAggregateOutputType | null
+    _avg: Pagos_invitadosAvgAggregateOutputType | null
+    _sum: Pagos_invitadosSumAggregateOutputType | null
+    _min: Pagos_invitadosMinAggregateOutputType | null
+    _max: Pagos_invitadosMaxAggregateOutputType | null
+  }
+
+  type GetPagos_invitadosGroupByPayload<T extends pagos_invitadosGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Pagos_invitadosGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Pagos_invitadosGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Pagos_invitadosGroupByOutputType[P]>
+            : GetScalarType<T[P], Pagos_invitadosGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type pagos_invitadosSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pago?: boolean
+    id_invitado?: boolean
+    concepto?: boolean
+    fecha_pago?: boolean
+    monto?: boolean
+    estado_pago?: boolean
+    comprobante?: boolean
+    metodo_pago?: boolean
+    origen_movimiento?: boolean | pagos_invitados$origen_movimientoArgs<ExtArgs>
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+    _count?: boolean | Pagos_invitadosCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pagos_invitados"]>
+
+  export type pagos_invitadosSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pago?: boolean
+    id_invitado?: boolean
+    concepto?: boolean
+    fecha_pago?: boolean
+    monto?: boolean
+    estado_pago?: boolean
+    comprobante?: boolean
+    metodo_pago?: boolean
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+  }, ExtArgs["result"]["pagos_invitados"]>
+
+  export type pagos_invitadosSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_pago?: boolean
+    id_invitado?: boolean
+    concepto?: boolean
+    fecha_pago?: boolean
+    monto?: boolean
+    estado_pago?: boolean
+    comprobante?: boolean
+    metodo_pago?: boolean
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+  }, ExtArgs["result"]["pagos_invitados"]>
+
+  export type pagos_invitadosSelectScalar = {
+    id_pago?: boolean
+    id_invitado?: boolean
+    concepto?: boolean
+    fecha_pago?: boolean
+    monto?: boolean
+    estado_pago?: boolean
+    comprobante?: boolean
+    metodo_pago?: boolean
+  }
+
+  export type pagos_invitadosOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_pago" | "id_invitado" | "concepto" | "fecha_pago" | "monto" | "estado_pago" | "comprobante" | "metodo_pago", ExtArgs["result"]["pagos_invitados"]>
+  export type pagos_invitadosInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    origen_movimiento?: boolean | pagos_invitados$origen_movimientoArgs<ExtArgs>
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+    _count?: boolean | Pagos_invitadosCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type pagos_invitadosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+  }
+  export type pagos_invitadosIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    invitados?: boolean | pagos_invitados$invitadosArgs<ExtArgs>
+  }
+
+  export type $pagos_invitadosPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "pagos_invitados"
+    objects: {
+      origen_movimiento: Prisma.$origen_movimientoPayload<ExtArgs>[]
+      invitados: Prisma.$invitadosPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_pago: number
+      id_invitado: number | null
+      concepto: string | null
+      fecha_pago: Date | null
+      monto: Prisma.Decimal | null
+      estado_pago: string | null
+      comprobante: string | null
+      metodo_pago: string | null
+    }, ExtArgs["result"]["pagos_invitados"]>
+    composites: {}
+  }
+
+  type pagos_invitadosGetPayload<S extends boolean | null | undefined | pagos_invitadosDefaultArgs> = $Result.GetResult<Prisma.$pagos_invitadosPayload, S>
+
+  type pagos_invitadosCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<pagos_invitadosFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Pagos_invitadosCountAggregateInputType | true
+    }
+
+  export interface pagos_invitadosDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['pagos_invitados'], meta: { name: 'pagos_invitados' } }
+    /**
+     * Find zero or one Pagos_invitados that matches the filter.
+     * @param {pagos_invitadosFindUniqueArgs} args - Arguments to find a Pagos_invitados
+     * @example
+     * // Get one Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends pagos_invitadosFindUniqueArgs>(args: SelectSubset<T, pagos_invitadosFindUniqueArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Pagos_invitados that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {pagos_invitadosFindUniqueOrThrowArgs} args - Arguments to find a Pagos_invitados
+     * @example
+     * // Get one Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends pagos_invitadosFindUniqueOrThrowArgs>(args: SelectSubset<T, pagos_invitadosFindUniqueOrThrowArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pagos_invitados that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosFindFirstArgs} args - Arguments to find a Pagos_invitados
+     * @example
+     * // Get one Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends pagos_invitadosFindFirstArgs>(args?: SelectSubset<T, pagos_invitadosFindFirstArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pagos_invitados that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosFindFirstOrThrowArgs} args - Arguments to find a Pagos_invitados
+     * @example
+     * // Get one Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends pagos_invitadosFindFirstOrThrowArgs>(args?: SelectSubset<T, pagos_invitadosFindFirstOrThrowArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Pagos_invitados that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findMany()
+     * 
+     * // Get first 10 Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.findMany({ take: 10 })
+     * 
+     * // Only select the `id_pago`
+     * const pagos_invitadosWithId_pagoOnly = await prisma.pagos_invitados.findMany({ select: { id_pago: true } })
+     * 
+     */
+    findMany<T extends pagos_invitadosFindManyArgs>(args?: SelectSubset<T, pagos_invitadosFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Pagos_invitados.
+     * @param {pagos_invitadosCreateArgs} args - Arguments to create a Pagos_invitados.
+     * @example
+     * // Create one Pagos_invitados
+     * const Pagos_invitados = await prisma.pagos_invitados.create({
+     *   data: {
+     *     // ... data to create a Pagos_invitados
+     *   }
+     * })
+     * 
+     */
+    create<T extends pagos_invitadosCreateArgs>(args: SelectSubset<T, pagos_invitadosCreateArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Pagos_invitados.
+     * @param {pagos_invitadosCreateManyArgs} args - Arguments to create many Pagos_invitados.
+     * @example
+     * // Create many Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends pagos_invitadosCreateManyArgs>(args?: SelectSubset<T, pagos_invitadosCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Pagos_invitados and returns the data saved in the database.
+     * @param {pagos_invitadosCreateManyAndReturnArgs} args - Arguments to create many Pagos_invitados.
+     * @example
+     * // Create many Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Pagos_invitados and only return the `id_pago`
+     * const pagos_invitadosWithId_pagoOnly = await prisma.pagos_invitados.createManyAndReturn({
+     *   select: { id_pago: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends pagos_invitadosCreateManyAndReturnArgs>(args?: SelectSubset<T, pagos_invitadosCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Pagos_invitados.
+     * @param {pagos_invitadosDeleteArgs} args - Arguments to delete one Pagos_invitados.
+     * @example
+     * // Delete one Pagos_invitados
+     * const Pagos_invitados = await prisma.pagos_invitados.delete({
+     *   where: {
+     *     // ... filter to delete one Pagos_invitados
+     *   }
+     * })
+     * 
+     */
+    delete<T extends pagos_invitadosDeleteArgs>(args: SelectSubset<T, pagos_invitadosDeleteArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Pagos_invitados.
+     * @param {pagos_invitadosUpdateArgs} args - Arguments to update one Pagos_invitados.
+     * @example
+     * // Update one Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends pagos_invitadosUpdateArgs>(args: SelectSubset<T, pagos_invitadosUpdateArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Pagos_invitados.
+     * @param {pagos_invitadosDeleteManyArgs} args - Arguments to filter Pagos_invitados to delete.
+     * @example
+     * // Delete a few Pagos_invitados
+     * const { count } = await prisma.pagos_invitados.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends pagos_invitadosDeleteManyArgs>(args?: SelectSubset<T, pagos_invitadosDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pagos_invitados.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends pagos_invitadosUpdateManyArgs>(args: SelectSubset<T, pagos_invitadosUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pagos_invitados and returns the data updated in the database.
+     * @param {pagos_invitadosUpdateManyAndReturnArgs} args - Arguments to update many Pagos_invitados.
+     * @example
+     * // Update many Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Pagos_invitados and only return the `id_pago`
+     * const pagos_invitadosWithId_pagoOnly = await prisma.pagos_invitados.updateManyAndReturn({
+     *   select: { id_pago: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends pagos_invitadosUpdateManyAndReturnArgs>(args: SelectSubset<T, pagos_invitadosUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Pagos_invitados.
+     * @param {pagos_invitadosUpsertArgs} args - Arguments to update or create a Pagos_invitados.
+     * @example
+     * // Update or create a Pagos_invitados
+     * const pagos_invitados = await prisma.pagos_invitados.upsert({
+     *   create: {
+     *     // ... data to create a Pagos_invitados
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pagos_invitados we want to update
+     *   }
+     * })
+     */
+    upsert<T extends pagos_invitadosUpsertArgs>(args: SelectSubset<T, pagos_invitadosUpsertArgs<ExtArgs>>): Prisma__pagos_invitadosClient<$Result.GetResult<Prisma.$pagos_invitadosPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Pagos_invitados.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosCountArgs} args - Arguments to filter Pagos_invitados to count.
+     * @example
+     * // Count the number of Pagos_invitados
+     * const count = await prisma.pagos_invitados.count({
+     *   where: {
+     *     // ... the filter for the Pagos_invitados we want to count
+     *   }
+     * })
+    **/
+    count<T extends pagos_invitadosCountArgs>(
+      args?: Subset<T, pagos_invitadosCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Pagos_invitadosCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pagos_invitados.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Pagos_invitadosAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Pagos_invitadosAggregateArgs>(args: Subset<T, Pagos_invitadosAggregateArgs>): Prisma.PrismaPromise<GetPagos_invitadosAggregateType<T>>
+
+    /**
+     * Group by Pagos_invitados.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {pagos_invitadosGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends pagos_invitadosGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: pagos_invitadosGroupByArgs['orderBy'] }
+        : { orderBy?: pagos_invitadosGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, pagos_invitadosGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPagos_invitadosGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the pagos_invitados model
+   */
+  readonly fields: pagos_invitadosFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for pagos_invitados.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__pagos_invitadosClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    origen_movimiento<T extends pagos_invitados$origen_movimientoArgs<ExtArgs> = {}>(args?: Subset<T, pagos_invitados$origen_movimientoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$origen_movimientoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    invitados<T extends pagos_invitados$invitadosArgs<ExtArgs> = {}>(args?: Subset<T, pagos_invitados$invitadosArgs<ExtArgs>>): Prisma__invitadosClient<$Result.GetResult<Prisma.$invitadosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the pagos_invitados model
+   */
+  interface pagos_invitadosFieldRefs {
+    readonly id_pago: FieldRef<"pagos_invitados", 'Int'>
+    readonly id_invitado: FieldRef<"pagos_invitados", 'Int'>
+    readonly concepto: FieldRef<"pagos_invitados", 'String'>
+    readonly fecha_pago: FieldRef<"pagos_invitados", 'DateTime'>
+    readonly monto: FieldRef<"pagos_invitados", 'Decimal'>
+    readonly estado_pago: FieldRef<"pagos_invitados", 'String'>
+    readonly comprobante: FieldRef<"pagos_invitados", 'String'>
+    readonly metodo_pago: FieldRef<"pagos_invitados", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * pagos_invitados findUnique
+   */
+  export type pagos_invitadosFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter, which pagos_invitados to fetch.
+     */
+    where: pagos_invitadosWhereUniqueInput
+  }
+
+  /**
+   * pagos_invitados findUniqueOrThrow
+   */
+  export type pagos_invitadosFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter, which pagos_invitados to fetch.
+     */
+    where: pagos_invitadosWhereUniqueInput
+  }
+
+  /**
+   * pagos_invitados findFirst
+   */
+  export type pagos_invitadosFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter, which pagos_invitados to fetch.
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pagos_invitados to fetch.
+     */
+    orderBy?: pagos_invitadosOrderByWithRelationInput | pagos_invitadosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pagos_invitados.
+     */
+    cursor?: pagos_invitadosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pagos_invitados from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pagos_invitados.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pagos_invitados.
+     */
+    distinct?: Pagos_invitadosScalarFieldEnum | Pagos_invitadosScalarFieldEnum[]
+  }
+
+  /**
+   * pagos_invitados findFirstOrThrow
+   */
+  export type pagos_invitadosFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter, which pagos_invitados to fetch.
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pagos_invitados to fetch.
+     */
+    orderBy?: pagos_invitadosOrderByWithRelationInput | pagos_invitadosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for pagos_invitados.
+     */
+    cursor?: pagos_invitadosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pagos_invitados from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pagos_invitados.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of pagos_invitados.
+     */
+    distinct?: Pagos_invitadosScalarFieldEnum | Pagos_invitadosScalarFieldEnum[]
+  }
+
+  /**
+   * pagos_invitados findMany
+   */
+  export type pagos_invitadosFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter, which pagos_invitados to fetch.
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of pagos_invitados to fetch.
+     */
+    orderBy?: pagos_invitadosOrderByWithRelationInput | pagos_invitadosOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing pagos_invitados.
+     */
+    cursor?: pagos_invitadosWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` pagos_invitados from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` pagos_invitados.
+     */
+    skip?: number
+    distinct?: Pagos_invitadosScalarFieldEnum | Pagos_invitadosScalarFieldEnum[]
+  }
+
+  /**
+   * pagos_invitados create
+   */
+  export type pagos_invitadosCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * The data needed to create a pagos_invitados.
+     */
+    data?: XOR<pagos_invitadosCreateInput, pagos_invitadosUncheckedCreateInput>
+  }
+
+  /**
+   * pagos_invitados createMany
+   */
+  export type pagos_invitadosCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many pagos_invitados.
+     */
+    data: pagos_invitadosCreateManyInput | pagos_invitadosCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * pagos_invitados createManyAndReturn
+   */
+  export type pagos_invitadosCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * The data used to create many pagos_invitados.
+     */
+    data: pagos_invitadosCreateManyInput | pagos_invitadosCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pagos_invitados update
+   */
+  export type pagos_invitadosUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * The data needed to update a pagos_invitados.
+     */
+    data: XOR<pagos_invitadosUpdateInput, pagos_invitadosUncheckedUpdateInput>
+    /**
+     * Choose, which pagos_invitados to update.
+     */
+    where: pagos_invitadosWhereUniqueInput
+  }
+
+  /**
+   * pagos_invitados updateMany
+   */
+  export type pagos_invitadosUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update pagos_invitados.
+     */
+    data: XOR<pagos_invitadosUpdateManyMutationInput, pagos_invitadosUncheckedUpdateManyInput>
+    /**
+     * Filter which pagos_invitados to update
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * Limit how many pagos_invitados to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * pagos_invitados updateManyAndReturn
+   */
+  export type pagos_invitadosUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * The data used to update pagos_invitados.
+     */
+    data: XOR<pagos_invitadosUpdateManyMutationInput, pagos_invitadosUncheckedUpdateManyInput>
+    /**
+     * Filter which pagos_invitados to update
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * Limit how many pagos_invitados to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * pagos_invitados upsert
+   */
+  export type pagos_invitadosUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * The filter to search for the pagos_invitados to update in case it exists.
+     */
+    where: pagos_invitadosWhereUniqueInput
+    /**
+     * In case the pagos_invitados found by the `where` argument doesn't exist, create a new pagos_invitados with this data.
+     */
+    create: XOR<pagos_invitadosCreateInput, pagos_invitadosUncheckedCreateInput>
+    /**
+     * In case the pagos_invitados was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<pagos_invitadosUpdateInput, pagos_invitadosUncheckedUpdateInput>
+  }
+
+  /**
+   * pagos_invitados delete
+   */
+  export type pagos_invitadosDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+    /**
+     * Filter which pagos_invitados to delete.
+     */
+    where: pagos_invitadosWhereUniqueInput
+  }
+
+  /**
+   * pagos_invitados deleteMany
+   */
+  export type pagos_invitadosDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which pagos_invitados to delete
+     */
+    where?: pagos_invitadosWhereInput
+    /**
+     * Limit how many pagos_invitados to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * pagos_invitados.origen_movimiento
+   */
+  export type pagos_invitados$origen_movimientoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the origen_movimiento
+     */
+    select?: origen_movimientoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the origen_movimiento
+     */
+    omit?: origen_movimientoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: origen_movimientoInclude<ExtArgs> | null
+    where?: origen_movimientoWhereInput
+    orderBy?: origen_movimientoOrderByWithRelationInput | origen_movimientoOrderByWithRelationInput[]
+    cursor?: origen_movimientoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Origen_movimientoScalarFieldEnum | Origen_movimientoScalarFieldEnum[]
+  }
+
+  /**
+   * pagos_invitados.invitados
+   */
+  export type pagos_invitados$invitadosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the invitados
+     */
+    select?: invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the invitados
+     */
+    omit?: invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: invitadosInclude<ExtArgs> | null
+    where?: invitadosWhereInput
+  }
+
+  /**
+   * pagos_invitados without action
+   */
+  export type pagos_invitadosDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the pagos_invitados
+     */
+    select?: pagos_invitadosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the pagos_invitados
+     */
+    omit?: pagos_invitadosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: pagos_invitadosInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model instituciones
+   */
+
+  export type AggregateInstituciones = {
+    _count: InstitucionesCountAggregateOutputType | null
+    _avg: InstitucionesAvgAggregateOutputType | null
+    _sum: InstitucionesSumAggregateOutputType | null
+    _min: InstitucionesMinAggregateOutputType | null
+    _max: InstitucionesMaxAggregateOutputType | null
+  }
+
+  export type InstitucionesAvgAggregateOutputType = {
+    id_institucion: number | null
+  }
+
+  export type InstitucionesSumAggregateOutputType = {
+    id_institucion: number | null
+  }
+
+  export type InstitucionesMinAggregateOutputType = {
+    id_institucion: number | null
+    nombre: string | null
+  }
+
+  export type InstitucionesMaxAggregateOutputType = {
+    id_institucion: number | null
+    nombre: string | null
+  }
+
+  export type InstitucionesCountAggregateOutputType = {
+    id_institucion: number
+    nombre: number
+    _all: number
+  }
+
+
+  export type InstitucionesAvgAggregateInputType = {
+    id_institucion?: true
+  }
+
+  export type InstitucionesSumAggregateInputType = {
+    id_institucion?: true
+  }
+
+  export type InstitucionesMinAggregateInputType = {
+    id_institucion?: true
+    nombre?: true
+  }
+
+  export type InstitucionesMaxAggregateInputType = {
+    id_institucion?: true
+    nombre?: true
+  }
+
+  export type InstitucionesCountAggregateInputType = {
+    id_institucion?: true
+    nombre?: true
+    _all?: true
+  }
+
+  export type InstitucionesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which instituciones to aggregate.
+     */
+    where?: institucionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of instituciones to fetch.
+     */
+    orderBy?: institucionesOrderByWithRelationInput | institucionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: institucionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` instituciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` instituciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned instituciones
+    **/
+    _count?: true | InstitucionesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InstitucionesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InstitucionesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InstitucionesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InstitucionesMaxAggregateInputType
+  }
+
+  export type GetInstitucionesAggregateType<T extends InstitucionesAggregateArgs> = {
+        [P in keyof T & keyof AggregateInstituciones]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInstituciones[P]>
+      : GetScalarType<T[P], AggregateInstituciones[P]>
+  }
+
+
+
+
+  export type institucionesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: institucionesWhereInput
+    orderBy?: institucionesOrderByWithAggregationInput | institucionesOrderByWithAggregationInput[]
+    by: InstitucionesScalarFieldEnum[] | InstitucionesScalarFieldEnum
+    having?: institucionesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InstitucionesCountAggregateInputType | true
+    _avg?: InstitucionesAvgAggregateInputType
+    _sum?: InstitucionesSumAggregateInputType
+    _min?: InstitucionesMinAggregateInputType
+    _max?: InstitucionesMaxAggregateInputType
+  }
+
+  export type InstitucionesGroupByOutputType = {
+    id_institucion: number
+    nombre: string
+    _count: InstitucionesCountAggregateOutputType | null
+    _avg: InstitucionesAvgAggregateOutputType | null
+    _sum: InstitucionesSumAggregateOutputType | null
+    _min: InstitucionesMinAggregateOutputType | null
+    _max: InstitucionesMaxAggregateOutputType | null
+  }
+
+  type GetInstitucionesGroupByPayload<T extends institucionesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InstitucionesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InstitucionesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InstitucionesGroupByOutputType[P]>
+            : GetScalarType<T[P], InstitucionesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type institucionesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_institucion?: boolean
+    nombre?: boolean
+  }, ExtArgs["result"]["instituciones"]>
+
+  export type institucionesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_institucion?: boolean
+    nombre?: boolean
+  }, ExtArgs["result"]["instituciones"]>
+
+  export type institucionesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_institucion?: boolean
+    nombre?: boolean
+  }, ExtArgs["result"]["instituciones"]>
+
+  export type institucionesSelectScalar = {
+    id_institucion?: boolean
+    nombre?: boolean
+  }
+
+  export type institucionesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_institucion" | "nombre", ExtArgs["result"]["instituciones"]>
+
+  export type $institucionesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "instituciones"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id_institucion: number
+      nombre: string
+    }, ExtArgs["result"]["instituciones"]>
+    composites: {}
+  }
+
+  type institucionesGetPayload<S extends boolean | null | undefined | institucionesDefaultArgs> = $Result.GetResult<Prisma.$institucionesPayload, S>
+
+  type institucionesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<institucionesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InstitucionesCountAggregateInputType | true
+    }
+
+  export interface institucionesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['instituciones'], meta: { name: 'instituciones' } }
+    /**
+     * Find zero or one Instituciones that matches the filter.
+     * @param {institucionesFindUniqueArgs} args - Arguments to find a Instituciones
+     * @example
+     * // Get one Instituciones
+     * const instituciones = await prisma.instituciones.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends institucionesFindUniqueArgs>(args: SelectSubset<T, institucionesFindUniqueArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Instituciones that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {institucionesFindUniqueOrThrowArgs} args - Arguments to find a Instituciones
+     * @example
+     * // Get one Instituciones
+     * const instituciones = await prisma.instituciones.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends institucionesFindUniqueOrThrowArgs>(args: SelectSubset<T, institucionesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Instituciones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesFindFirstArgs} args - Arguments to find a Instituciones
+     * @example
+     * // Get one Instituciones
+     * const instituciones = await prisma.instituciones.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends institucionesFindFirstArgs>(args?: SelectSubset<T, institucionesFindFirstArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Instituciones that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesFindFirstOrThrowArgs} args - Arguments to find a Instituciones
+     * @example
+     * // Get one Instituciones
+     * const instituciones = await prisma.instituciones.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends institucionesFindFirstOrThrowArgs>(args?: SelectSubset<T, institucionesFindFirstOrThrowArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Instituciones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Instituciones
+     * const instituciones = await prisma.instituciones.findMany()
+     * 
+     * // Get first 10 Instituciones
+     * const instituciones = await prisma.instituciones.findMany({ take: 10 })
+     * 
+     * // Only select the `id_institucion`
+     * const institucionesWithId_institucionOnly = await prisma.instituciones.findMany({ select: { id_institucion: true } })
+     * 
+     */
+    findMany<T extends institucionesFindManyArgs>(args?: SelectSubset<T, institucionesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Instituciones.
+     * @param {institucionesCreateArgs} args - Arguments to create a Instituciones.
+     * @example
+     * // Create one Instituciones
+     * const Instituciones = await prisma.instituciones.create({
+     *   data: {
+     *     // ... data to create a Instituciones
+     *   }
+     * })
+     * 
+     */
+    create<T extends institucionesCreateArgs>(args: SelectSubset<T, institucionesCreateArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Instituciones.
+     * @param {institucionesCreateManyArgs} args - Arguments to create many Instituciones.
+     * @example
+     * // Create many Instituciones
+     * const instituciones = await prisma.instituciones.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends institucionesCreateManyArgs>(args?: SelectSubset<T, institucionesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Instituciones and returns the data saved in the database.
+     * @param {institucionesCreateManyAndReturnArgs} args - Arguments to create many Instituciones.
+     * @example
+     * // Create many Instituciones
+     * const instituciones = await prisma.instituciones.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Instituciones and only return the `id_institucion`
+     * const institucionesWithId_institucionOnly = await prisma.instituciones.createManyAndReturn({
+     *   select: { id_institucion: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends institucionesCreateManyAndReturnArgs>(args?: SelectSubset<T, institucionesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Instituciones.
+     * @param {institucionesDeleteArgs} args - Arguments to delete one Instituciones.
+     * @example
+     * // Delete one Instituciones
+     * const Instituciones = await prisma.instituciones.delete({
+     *   where: {
+     *     // ... filter to delete one Instituciones
+     *   }
+     * })
+     * 
+     */
+    delete<T extends institucionesDeleteArgs>(args: SelectSubset<T, institucionesDeleteArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Instituciones.
+     * @param {institucionesUpdateArgs} args - Arguments to update one Instituciones.
+     * @example
+     * // Update one Instituciones
+     * const instituciones = await prisma.instituciones.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends institucionesUpdateArgs>(args: SelectSubset<T, institucionesUpdateArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Instituciones.
+     * @param {institucionesDeleteManyArgs} args - Arguments to filter Instituciones to delete.
+     * @example
+     * // Delete a few Instituciones
+     * const { count } = await prisma.instituciones.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends institucionesDeleteManyArgs>(args?: SelectSubset<T, institucionesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Instituciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Instituciones
+     * const instituciones = await prisma.instituciones.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends institucionesUpdateManyArgs>(args: SelectSubset<T, institucionesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Instituciones and returns the data updated in the database.
+     * @param {institucionesUpdateManyAndReturnArgs} args - Arguments to update many Instituciones.
+     * @example
+     * // Update many Instituciones
+     * const instituciones = await prisma.instituciones.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Instituciones and only return the `id_institucion`
+     * const institucionesWithId_institucionOnly = await prisma.instituciones.updateManyAndReturn({
+     *   select: { id_institucion: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends institucionesUpdateManyAndReturnArgs>(args: SelectSubset<T, institucionesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Instituciones.
+     * @param {institucionesUpsertArgs} args - Arguments to update or create a Instituciones.
+     * @example
+     * // Update or create a Instituciones
+     * const instituciones = await prisma.instituciones.upsert({
+     *   create: {
+     *     // ... data to create a Instituciones
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Instituciones we want to update
+     *   }
+     * })
+     */
+    upsert<T extends institucionesUpsertArgs>(args: SelectSubset<T, institucionesUpsertArgs<ExtArgs>>): Prisma__institucionesClient<$Result.GetResult<Prisma.$institucionesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Instituciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesCountArgs} args - Arguments to filter Instituciones to count.
+     * @example
+     * // Count the number of Instituciones
+     * const count = await prisma.instituciones.count({
+     *   where: {
+     *     // ... the filter for the Instituciones we want to count
+     *   }
+     * })
+    **/
+    count<T extends institucionesCountArgs>(
+      args?: Subset<T, institucionesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InstitucionesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Instituciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstitucionesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InstitucionesAggregateArgs>(args: Subset<T, InstitucionesAggregateArgs>): Prisma.PrismaPromise<GetInstitucionesAggregateType<T>>
+
+    /**
+     * Group by Instituciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {institucionesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends institucionesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: institucionesGroupByArgs['orderBy'] }
+        : { orderBy?: institucionesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, institucionesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInstitucionesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the instituciones model
+   */
+  readonly fields: institucionesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for instituciones.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__institucionesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the instituciones model
+   */
+  interface institucionesFieldRefs {
+    readonly id_institucion: FieldRef<"instituciones", 'Int'>
+    readonly nombre: FieldRef<"instituciones", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * instituciones findUnique
+   */
+  export type institucionesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter, which instituciones to fetch.
+     */
+    where: institucionesWhereUniqueInput
+  }
+
+  /**
+   * instituciones findUniqueOrThrow
+   */
+  export type institucionesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter, which instituciones to fetch.
+     */
+    where: institucionesWhereUniqueInput
+  }
+
+  /**
+   * instituciones findFirst
+   */
+  export type institucionesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter, which instituciones to fetch.
+     */
+    where?: institucionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of instituciones to fetch.
+     */
+    orderBy?: institucionesOrderByWithRelationInput | institucionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for instituciones.
+     */
+    cursor?: institucionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` instituciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` instituciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of instituciones.
+     */
+    distinct?: InstitucionesScalarFieldEnum | InstitucionesScalarFieldEnum[]
+  }
+
+  /**
+   * instituciones findFirstOrThrow
+   */
+  export type institucionesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter, which instituciones to fetch.
+     */
+    where?: institucionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of instituciones to fetch.
+     */
+    orderBy?: institucionesOrderByWithRelationInput | institucionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for instituciones.
+     */
+    cursor?: institucionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` instituciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` instituciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of instituciones.
+     */
+    distinct?: InstitucionesScalarFieldEnum | InstitucionesScalarFieldEnum[]
+  }
+
+  /**
+   * instituciones findMany
+   */
+  export type institucionesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter, which instituciones to fetch.
+     */
+    where?: institucionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of instituciones to fetch.
+     */
+    orderBy?: institucionesOrderByWithRelationInput | institucionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing instituciones.
+     */
+    cursor?: institucionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` instituciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` instituciones.
+     */
+    skip?: number
+    distinct?: InstitucionesScalarFieldEnum | InstitucionesScalarFieldEnum[]
+  }
+
+  /**
+   * instituciones create
+   */
+  export type institucionesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * The data needed to create a instituciones.
+     */
+    data: XOR<institucionesCreateInput, institucionesUncheckedCreateInput>
+  }
+
+  /**
+   * instituciones createMany
+   */
+  export type institucionesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many instituciones.
+     */
+    data: institucionesCreateManyInput | institucionesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * instituciones createManyAndReturn
+   */
+  export type institucionesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * The data used to create many instituciones.
+     */
+    data: institucionesCreateManyInput | institucionesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * instituciones update
+   */
+  export type institucionesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * The data needed to update a instituciones.
+     */
+    data: XOR<institucionesUpdateInput, institucionesUncheckedUpdateInput>
+    /**
+     * Choose, which instituciones to update.
+     */
+    where: institucionesWhereUniqueInput
+  }
+
+  /**
+   * instituciones updateMany
+   */
+  export type institucionesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update instituciones.
+     */
+    data: XOR<institucionesUpdateManyMutationInput, institucionesUncheckedUpdateManyInput>
+    /**
+     * Filter which instituciones to update
+     */
+    where?: institucionesWhereInput
+    /**
+     * Limit how many instituciones to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * instituciones updateManyAndReturn
+   */
+  export type institucionesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * The data used to update instituciones.
+     */
+    data: XOR<institucionesUpdateManyMutationInput, institucionesUncheckedUpdateManyInput>
+    /**
+     * Filter which instituciones to update
+     */
+    where?: institucionesWhereInput
+    /**
+     * Limit how many instituciones to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * instituciones upsert
+   */
+  export type institucionesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * The filter to search for the instituciones to update in case it exists.
+     */
+    where: institucionesWhereUniqueInput
+    /**
+     * In case the instituciones found by the `where` argument doesn't exist, create a new instituciones with this data.
+     */
+    create: XOR<institucionesCreateInput, institucionesUncheckedCreateInput>
+    /**
+     * In case the instituciones was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<institucionesUpdateInput, institucionesUncheckedUpdateInput>
+  }
+
+  /**
+   * instituciones delete
+   */
+  export type institucionesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+    /**
+     * Filter which instituciones to delete.
+     */
+    where: institucionesWhereUniqueInput
+  }
+
+  /**
+   * instituciones deleteMany
+   */
+  export type institucionesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which instituciones to delete
+     */
+    where?: institucionesWhereInput
+    /**
+     * Limit how many instituciones to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * instituciones without action
+   */
+  export type institucionesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the instituciones
+     */
+    select?: institucionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the instituciones
+     */
+    omit?: institucionesOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -31301,7 +34121,8 @@ export namespace Prisma {
   export const Asistencias_actividadScalarFieldEnum: {
     id_asistencia: 'id_asistencia',
     id_actividad: 'id_actividad',
-    id_colegiado: 'id_colegiado'
+    id_colegiado: 'id_colegiado',
+    id_invitado: 'id_invitado'
   };
 
   export type Asistencias_actividadScalarFieldEnum = (typeof Asistencias_actividadScalarFieldEnum)[keyof typeof Asistencias_actividadScalarFieldEnum]
@@ -31392,10 +34213,10 @@ export namespace Prisma {
     id_asignacion: 'id_asignacion',
     id_actividad_social: 'id_actividad_social',
     id_colegiado: 'id_colegiado',
-    id_invitado: 'id_invitado',
     id_pasante: 'id_pasante',
     total_horas: 'total_horas',
-    horas_meta: 'horas_meta'
+    horas_meta: 'horas_meta',
+    estado: 'estado'
   };
 
   export type Colegiados_asignados_socialScalarFieldEnum = (typeof Colegiados_asignados_socialScalarFieldEnum)[keyof typeof Colegiados_asignados_socialScalarFieldEnum]
@@ -31435,7 +34256,13 @@ export namespace Prisma {
     descripcion: 'descripcion',
     monto: 'monto',
     id_origen: 'id_origen',
-    comprobante: 'comprobante'
+    comprobante: 'comprobante',
+    id_usuario: 'id_usuario',
+    createdAt: 'createdAt',
+    estado: 'estado',
+    metodo_pago: 'metodo_pago',
+    tipo_origen_label: 'tipo_origen_label',
+    updatedAt: 'updatedAt'
   };
 
   export type Movimientos_financierosScalarFieldEnum = (typeof Movimientos_financierosScalarFieldEnum)[keyof typeof Movimientos_financierosScalarFieldEnum]
@@ -31446,7 +34273,9 @@ export namespace Prisma {
     tipo_origen: 'tipo_origen',
     id_pago_colegiado: 'id_pago_colegiado',
     id_registro_actividad_institucional: 'id_registro_actividad_institucional',
-    monto: 'monto'
+    monto: 'monto',
+    id_postulacion: 'id_postulacion',
+    id_pago_invitado: 'id_pago_invitado'
   };
 
   export type Origen_movimientoScalarFieldEnum = (typeof Origen_movimientoScalarFieldEnum)[keyof typeof Origen_movimientoScalarFieldEnum]
@@ -31459,7 +34288,8 @@ export namespace Prisma {
     fecha_pago: 'fecha_pago',
     monto: 'monto',
     estado_pago: 'estado_pago',
-    comprobante: 'comprobante'
+    comprobante: 'comprobante',
+    metodo_pago: 'metodo_pago'
   };
 
   export type Pagos_colegiadosScalarFieldEnum = (typeof Pagos_colegiadosScalarFieldEnum)[keyof typeof Pagos_colegiadosScalarFieldEnum]
@@ -31540,7 +34370,8 @@ export namespace Prisma {
     nombre: 'nombre',
     apellido: 'apellido',
     correo: 'correo',
-    telefono: 'telefono'
+    telefono: 'telefono',
+    estado: 'estado'
   };
 
   export type InvitadosScalarFieldEnum = (typeof InvitadosScalarFieldEnum)[keyof typeof InvitadosScalarFieldEnum]
@@ -31559,7 +34390,8 @@ export namespace Prisma {
     estado: 'estado',
     motivo_rechazo: 'motivo_rechazo',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    metodo_pago: 'metodo_pago'
   };
 
   export type PostulacionesScalarFieldEnum = (typeof PostulacionesScalarFieldEnum)[keyof typeof PostulacionesScalarFieldEnum]
@@ -31612,6 +34444,28 @@ export namespace Prisma {
   };
 
   export type Memorias_balancesScalarFieldEnum = (typeof Memorias_balancesScalarFieldEnum)[keyof typeof Memorias_balancesScalarFieldEnum]
+
+
+  export const Pagos_invitadosScalarFieldEnum: {
+    id_pago: 'id_pago',
+    id_invitado: 'id_invitado',
+    concepto: 'concepto',
+    fecha_pago: 'fecha_pago',
+    monto: 'monto',
+    estado_pago: 'estado_pago',
+    comprobante: 'comprobante',
+    metodo_pago: 'metodo_pago'
+  };
+
+  export type Pagos_invitadosScalarFieldEnum = (typeof Pagos_invitadosScalarFieldEnum)[keyof typeof Pagos_invitadosScalarFieldEnum]
+
+
+  export const InstitucionesScalarFieldEnum: {
+    id_institucion: 'id_institucion',
+    nombre: 'nombre'
+  };
+
+  export type InstitucionesScalarFieldEnum = (typeof InstitucionesScalarFieldEnum)[keyof typeof InstitucionesScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -31827,16 +34681,20 @@ export namespace Prisma {
     id_asistencia?: IntFilter<"asistencias_actividad"> | number
     id_actividad?: IntNullableFilter<"asistencias_actividad"> | number | null
     id_colegiado?: IntNullableFilter<"asistencias_actividad"> | number | null
+    id_invitado?: IntNullableFilter<"asistencias_actividad"> | number | null
     actividades_institucionales?: XOR<Actividades_institucionalesNullableScalarRelationFilter, actividades_institucionalesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
   }
 
   export type asistencias_actividadOrderByWithRelationInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
+    id_invitado?: SortOrderInput | SortOrder
     actividades_institucionales?: actividades_institucionalesOrderByWithRelationInput
     colegiados?: colegiadosOrderByWithRelationInput
+    invitados?: invitadosOrderByWithRelationInput
   }
 
   export type asistencias_actividadWhereUniqueInput = Prisma.AtLeast<{
@@ -31846,14 +34704,17 @@ export namespace Prisma {
     NOT?: asistencias_actividadWhereInput | asistencias_actividadWhereInput[]
     id_actividad?: IntNullableFilter<"asistencias_actividad"> | number | null
     id_colegiado?: IntNullableFilter<"asistencias_actividad"> | number | null
+    id_invitado?: IntNullableFilter<"asistencias_actividad"> | number | null
     actividades_institucionales?: XOR<Actividades_institucionalesNullableScalarRelationFilter, actividades_institucionalesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
   }, "id_asistencia">
 
   export type asistencias_actividadOrderByWithAggregationInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
+    id_invitado?: SortOrderInput | SortOrder
     _count?: asistencias_actividadCountOrderByAggregateInput
     _avg?: asistencias_actividadAvgOrderByAggregateInput
     _max?: asistencias_actividadMaxOrderByAggregateInput
@@ -31868,6 +34729,7 @@ export namespace Prisma {
     id_asistencia?: IntWithAggregatesFilter<"asistencias_actividad"> | number
     id_actividad?: IntNullableWithAggregatesFilter<"asistencias_actividad"> | number | null
     id_colegiado?: IntNullableWithAggregatesFilter<"asistencias_actividad"> | number | null
+    id_invitado?: IntNullableWithAggregatesFilter<"asistencias_actividad"> | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalWhereInput = {
@@ -31883,10 +34745,10 @@ export namespace Prisma {
     id_invitado?: IntNullableFilter<"colegiados_registrados_actividad_institucional"> | number | null
     createdAt?: DateTimeNullableFilter<"colegiados_registrados_actividad_institucional"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"colegiados_registrados_actividad_institucional"> | Date | string | null
-    origen_movimiento?: Origen_movimientoListRelationFilter
-    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_institucionales?: XOR<Actividades_institucionalesNullableScalarRelationFilter, actividades_institucionalesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
   }
 
   export type colegiados_registrados_actividad_institucionalOrderByWithRelationInput = {
@@ -31899,10 +34761,10 @@ export namespace Prisma {
     id_invitado?: SortOrderInput | SortOrder
     createdAt?: SortOrderInput | SortOrder
     updatedAt?: SortOrderInput | SortOrder
-    origen_movimiento?: origen_movimientoOrderByRelationAggregateInput
-    invitados?: invitadosOrderByWithRelationInput
     actividades_institucionales?: actividades_institucionalesOrderByWithRelationInput
     colegiados?: colegiadosOrderByWithRelationInput
+    invitados?: invitadosOrderByWithRelationInput
+    origen_movimiento?: origen_movimientoOrderByRelationAggregateInput
   }
 
   export type colegiados_registrados_actividad_institucionalWhereUniqueInput = Prisma.AtLeast<{
@@ -31918,10 +34780,10 @@ export namespace Prisma {
     id_invitado?: IntNullableFilter<"colegiados_registrados_actividad_institucional"> | number | null
     createdAt?: DateTimeNullableFilter<"colegiados_registrados_actividad_institucional"> | Date | string | null
     updatedAt?: DateTimeNullableFilter<"colegiados_registrados_actividad_institucional"> | Date | string | null
-    origen_movimiento?: Origen_movimientoListRelationFilter
-    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
     actividades_institucionales?: XOR<Actividades_institucionalesNullableScalarRelationFilter, actividades_institucionalesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
   }, "id_registro">
 
   export type colegiados_registrados_actividad_institucionalOrderByWithAggregationInput = {
@@ -32227,9 +35089,9 @@ export namespace Prisma {
     pin_acceso?: StringNullableFilter<"colegiados"> | string | null
     asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
     documentos_colegiados?: Documentos_colegiadosListRelationFilter
     pagos_colegiados?: Pagos_colegiadosListRelationFilter
-    colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
   }
 
   export type colegiadosOrderByWithRelationInput = {
@@ -32246,9 +35108,9 @@ export namespace Prisma {
     pin_acceso?: SortOrderInput | SortOrder
     asistencias_actividad?: asistencias_actividadOrderByRelationAggregateInput
     colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalOrderByRelationAggregateInput
     documentos_colegiados?: documentos_colegiadosOrderByRelationAggregateInput
     pagos_colegiados?: pagos_colegiadosOrderByRelationAggregateInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalOrderByRelationAggregateInput
   }
 
   export type colegiadosWhereUniqueInput = Prisma.AtLeast<{
@@ -32268,9 +35130,9 @@ export namespace Prisma {
     pin_acceso?: StringNullableFilter<"colegiados"> | string | null
     asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
     documentos_colegiados?: Documentos_colegiadosListRelationFilter
     pagos_colegiados?: Pagos_colegiadosListRelationFilter
-    colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
   }, "id_colegiado" | "carnet_identidad">
 
   export type colegiadosOrderByWithAggregationInput = {
@@ -32316,30 +35178,28 @@ export namespace Prisma {
     id_asignacion?: IntFilter<"colegiados_asignados_social"> | number
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
-    id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
     horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
-    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+    estado?: StringNullableFilter<"colegiados_asignados_social"> | string | null
+    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
     pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
-    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
   }
 
   export type colegiados_asignados_socialOrderByWithRelationInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
-    id_invitado?: SortOrderInput | SortOrder
     id_pasante?: SortOrderInput | SortOrder
     total_horas?: SortOrderInput | SortOrder
     horas_meta?: SortOrderInput | SortOrder
-    invitados?: invitadosOrderByWithRelationInput
+    estado?: SortOrderInput | SortOrder
+    asistencia_social_diaria?: asistencia_social_diariaOrderByRelationAggregateInput
     actividades_sociales?: actividades_socialesOrderByWithRelationInput
     colegiados?: colegiadosOrderByWithRelationInput
     pasantes?: pasantesOrderByWithRelationInput
-    asistencia_social_diaria?: asistencia_social_diariaOrderByRelationAggregateInput
   }
 
   export type colegiados_asignados_socialWhereUniqueInput = Prisma.AtLeast<{
@@ -32349,25 +35209,24 @@ export namespace Prisma {
     NOT?: colegiados_asignados_socialWhereInput | colegiados_asignados_socialWhereInput[]
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
-    id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
     horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
-    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+    estado?: StringNullableFilter<"colegiados_asignados_social"> | string | null
+    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
     actividades_sociales?: XOR<Actividades_socialesNullableScalarRelationFilter, actividades_socialesWhereInput> | null
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
     pasantes?: XOR<PasantesNullableScalarRelationFilter, pasantesWhereInput> | null
-    asistencia_social_diaria?: Asistencia_social_diariaListRelationFilter
   }, "id_asignacion">
 
   export type colegiados_asignados_socialOrderByWithAggregationInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrderInput | SortOrder
     id_colegiado?: SortOrderInput | SortOrder
-    id_invitado?: SortOrderInput | SortOrder
     id_pasante?: SortOrderInput | SortOrder
     total_horas?: SortOrderInput | SortOrder
     horas_meta?: SortOrderInput | SortOrder
+    estado?: SortOrderInput | SortOrder
     _count?: colegiados_asignados_socialCountOrderByAggregateInput
     _avg?: colegiados_asignados_socialAvgOrderByAggregateInput
     _max?: colegiados_asignados_socialMaxOrderByAggregateInput
@@ -32382,10 +35241,10 @@ export namespace Prisma {
     id_asignacion?: IntWithAggregatesFilter<"colegiados_asignados_social"> | number
     id_actividad_social?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
-    id_invitado?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     total_horas?: FloatNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
     horas_meta?: FloatNullableWithAggregatesFilter<"colegiados_asignados_social"> | number | null
+    estado?: StringNullableWithAggregatesFilter<"colegiados_asignados_social"> | string | null
   }
 
   export type asistencia_social_diariaWhereInput = {
@@ -32530,8 +35389,15 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
     comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
+    id_usuario?: IntNullableFilter<"movimientos_financieros"> | number | null
+    createdAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
+    estado?: StringNullableFilter<"movimientos_financieros"> | string | null
+    metodo_pago?: StringNullableFilter<"movimientos_financieros"> | string | null
+    tipo_origen_label?: StringNullableFilter<"movimientos_financieros"> | string | null
+    updatedAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
     origen_movimiento?: XOR<Origen_movimientoNullableScalarRelationFilter, origen_movimientoWhereInput> | null
     presupuestos?: XOR<PresupuestosNullableScalarRelationFilter, presupuestosWhereInput> | null
+    usuario?: XOR<UsuariosNullableScalarRelationFilter, usuariosWhereInput> | null
   }
 
   export type movimientos_financierosOrderByWithRelationInput = {
@@ -32544,8 +35410,15 @@ export namespace Prisma {
     monto?: SortOrderInput | SortOrder
     id_origen?: SortOrderInput | SortOrder
     comprobante?: SortOrderInput | SortOrder
+    id_usuario?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    estado?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
+    tipo_origen_label?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
     origen_movimiento?: origen_movimientoOrderByWithRelationInput
     presupuestos?: presupuestosOrderByWithRelationInput
+    usuario?: usuariosOrderByWithRelationInput
   }
 
   export type movimientos_financierosWhereUniqueInput = Prisma.AtLeast<{
@@ -32561,8 +35434,15 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
     comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
+    id_usuario?: IntNullableFilter<"movimientos_financieros"> | number | null
+    createdAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
+    estado?: StringNullableFilter<"movimientos_financieros"> | string | null
+    metodo_pago?: StringNullableFilter<"movimientos_financieros"> | string | null
+    tipo_origen_label?: StringNullableFilter<"movimientos_financieros"> | string | null
+    updatedAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
     origen_movimiento?: XOR<Origen_movimientoNullableScalarRelationFilter, origen_movimientoWhereInput> | null
     presupuestos?: XOR<PresupuestosNullableScalarRelationFilter, presupuestosWhereInput> | null
+    usuario?: XOR<UsuariosNullableScalarRelationFilter, usuariosWhereInput> | null
   }, "id_movimiento">
 
   export type movimientos_financierosOrderByWithAggregationInput = {
@@ -32575,6 +35455,12 @@ export namespace Prisma {
     monto?: SortOrderInput | SortOrder
     id_origen?: SortOrderInput | SortOrder
     comprobante?: SortOrderInput | SortOrder
+    id_usuario?: SortOrderInput | SortOrder
+    createdAt?: SortOrderInput | SortOrder
+    estado?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
+    tipo_origen_label?: SortOrderInput | SortOrder
+    updatedAt?: SortOrderInput | SortOrder
     _count?: movimientos_financierosCountOrderByAggregateInput
     _avg?: movimientos_financierosAvgOrderByAggregateInput
     _max?: movimientos_financierosMaxOrderByAggregateInput
@@ -32595,6 +35481,12 @@ export namespace Prisma {
     monto?: DecimalNullableWithAggregatesFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableWithAggregatesFilter<"movimientos_financieros"> | number | null
     comprobante?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
+    id_usuario?: IntNullableWithAggregatesFilter<"movimientos_financieros"> | number | null
+    createdAt?: DateTimeNullableWithAggregatesFilter<"movimientos_financieros"> | Date | string | null
+    estado?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
+    metodo_pago?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
+    tipo_origen_label?: StringNullableWithAggregatesFilter<"movimientos_financieros"> | string | null
+    updatedAt?: DateTimeNullableWithAggregatesFilter<"movimientos_financieros"> | Date | string | null
   }
 
   export type origen_movimientoWhereInput = {
@@ -32606,9 +35498,13 @@ export namespace Prisma {
     id_pago_colegiado?: IntNullableFilter<"origen_movimiento"> | number | null
     id_registro_actividad_institucional?: IntNullableFilter<"origen_movimiento"> | number | null
     monto?: DecimalNullableFilter<"origen_movimiento"> | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: IntNullableFilter<"origen_movimiento"> | number | null
+    id_pago_invitado?: IntNullableFilter<"origen_movimiento"> | number | null
     movimientos_financieros?: Movimientos_financierosListRelationFilter
-    colegiados_registrados_actividad_institucional?: XOR<Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter, colegiados_registrados_actividad_institucionalWhereInput> | null
     pagos_colegiados?: XOR<Pagos_colegiadosNullableScalarRelationFilter, pagos_colegiadosWhereInput> | null
+    pagos_invitados?: XOR<Pagos_invitadosNullableScalarRelationFilter, pagos_invitadosWhereInput> | null
+    postulaciones?: XOR<PostulacionesNullableScalarRelationFilter, postulacionesWhereInput> | null
+    colegiados_registrados_actividad_institucional?: XOR<Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter, colegiados_registrados_actividad_institucionalWhereInput> | null
   }
 
   export type origen_movimientoOrderByWithRelationInput = {
@@ -32617,9 +35513,13 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrderInput | SortOrder
     id_registro_actividad_institucional?: SortOrderInput | SortOrder
     monto?: SortOrderInput | SortOrder
+    id_postulacion?: SortOrderInput | SortOrder
+    id_pago_invitado?: SortOrderInput | SortOrder
     movimientos_financieros?: movimientos_financierosOrderByRelationAggregateInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalOrderByWithRelationInput
     pagos_colegiados?: pagos_colegiadosOrderByWithRelationInput
+    pagos_invitados?: pagos_invitadosOrderByWithRelationInput
+    postulaciones?: postulacionesOrderByWithRelationInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalOrderByWithRelationInput
   }
 
   export type origen_movimientoWhereUniqueInput = Prisma.AtLeast<{
@@ -32631,9 +35531,13 @@ export namespace Prisma {
     id_pago_colegiado?: IntNullableFilter<"origen_movimiento"> | number | null
     id_registro_actividad_institucional?: IntNullableFilter<"origen_movimiento"> | number | null
     monto?: DecimalNullableFilter<"origen_movimiento"> | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: IntNullableFilter<"origen_movimiento"> | number | null
+    id_pago_invitado?: IntNullableFilter<"origen_movimiento"> | number | null
     movimientos_financieros?: Movimientos_financierosListRelationFilter
-    colegiados_registrados_actividad_institucional?: XOR<Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter, colegiados_registrados_actividad_institucionalWhereInput> | null
     pagos_colegiados?: XOR<Pagos_colegiadosNullableScalarRelationFilter, pagos_colegiadosWhereInput> | null
+    pagos_invitados?: XOR<Pagos_invitadosNullableScalarRelationFilter, pagos_invitadosWhereInput> | null
+    postulaciones?: XOR<PostulacionesNullableScalarRelationFilter, postulacionesWhereInput> | null
+    colegiados_registrados_actividad_institucional?: XOR<Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter, colegiados_registrados_actividad_institucionalWhereInput> | null
   }, "id_origen">
 
   export type origen_movimientoOrderByWithAggregationInput = {
@@ -32642,6 +35546,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrderInput | SortOrder
     id_registro_actividad_institucional?: SortOrderInput | SortOrder
     monto?: SortOrderInput | SortOrder
+    id_postulacion?: SortOrderInput | SortOrder
+    id_pago_invitado?: SortOrderInput | SortOrder
     _count?: origen_movimientoCountOrderByAggregateInput
     _avg?: origen_movimientoAvgOrderByAggregateInput
     _max?: origen_movimientoMaxOrderByAggregateInput
@@ -32658,6 +35564,8 @@ export namespace Prisma {
     id_pago_colegiado?: IntNullableWithAggregatesFilter<"origen_movimiento"> | number | null
     id_registro_actividad_institucional?: IntNullableWithAggregatesFilter<"origen_movimiento"> | number | null
     monto?: DecimalNullableWithAggregatesFilter<"origen_movimiento"> | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: IntNullableWithAggregatesFilter<"origen_movimiento"> | number | null
+    id_pago_invitado?: IntNullableWithAggregatesFilter<"origen_movimiento"> | number | null
   }
 
   export type pagos_colegiadosWhereInput = {
@@ -32671,6 +35579,7 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"pagos_colegiados"> | Decimal | DecimalJsLike | number | string | null
     estado_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
     comprobante?: StringNullableFilter<"pagos_colegiados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
     origen_movimiento?: Origen_movimientoListRelationFilter
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
   }
@@ -32683,6 +35592,7 @@ export namespace Prisma {
     monto?: SortOrderInput | SortOrder
     estado_pago?: SortOrderInput | SortOrder
     comprobante?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
     origen_movimiento?: origen_movimientoOrderByRelationAggregateInput
     colegiados?: colegiadosOrderByWithRelationInput
   }
@@ -32698,6 +35608,7 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"pagos_colegiados"> | Decimal | DecimalJsLike | number | string | null
     estado_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
     comprobante?: StringNullableFilter<"pagos_colegiados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
     origen_movimiento?: Origen_movimientoListRelationFilter
     colegiados?: XOR<ColegiadosNullableScalarRelationFilter, colegiadosWhereInput> | null
   }, "id_pago">
@@ -32710,6 +35621,7 @@ export namespace Prisma {
     monto?: SortOrderInput | SortOrder
     estado_pago?: SortOrderInput | SortOrder
     comprobante?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
     _count?: pagos_colegiadosCountOrderByAggregateInput
     _avg?: pagos_colegiadosAvgOrderByAggregateInput
     _max?: pagos_colegiadosMaxOrderByAggregateInput
@@ -32728,6 +35640,7 @@ export namespace Prisma {
     monto?: DecimalNullableWithAggregatesFilter<"pagos_colegiados"> | Decimal | DecimalJsLike | number | string | null
     estado_pago?: StringNullableWithAggregatesFilter<"pagos_colegiados"> | string | null
     comprobante?: StringNullableWithAggregatesFilter<"pagos_colegiados"> | string | null
+    metodo_pago?: StringNullableWithAggregatesFilter<"pagos_colegiados"> | string | null
   }
 
   export type presupuestosWhereInput = {
@@ -33023,9 +35936,10 @@ export namespace Prisma {
     estado?: StringNullableFilter<"usuarios"> | string | null
     fecha_actualizacion?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     actividades_institucionales?: Actividades_institucionalesListRelationFilter
-    roles?: RolesListRelationFilter
-    destinatario?: CorrespondenciaListRelationFilter
     auditoria?: AuditoriaListRelationFilter
+    destinatario?: CorrespondenciaListRelationFilter
+    movimientos_financieros?: Movimientos_financierosListRelationFilter
+    roles?: RolesListRelationFilter
   }
 
   export type usuariosOrderByWithRelationInput = {
@@ -33040,9 +35954,10 @@ export namespace Prisma {
     estado?: SortOrderInput | SortOrder
     fecha_actualizacion?: SortOrderInput | SortOrder
     actividades_institucionales?: actividades_institucionalesOrderByRelationAggregateInput
-    roles?: rolesOrderByRelationAggregateInput
-    destinatario?: correspondenciaOrderByRelationAggregateInput
     auditoria?: auditoriaOrderByRelationAggregateInput
+    destinatario?: correspondenciaOrderByRelationAggregateInput
+    movimientos_financieros?: movimientos_financierosOrderByRelationAggregateInput
+    roles?: rolesOrderByRelationAggregateInput
   }
 
   export type usuariosWhereUniqueInput = Prisma.AtLeast<{
@@ -33060,9 +35975,10 @@ export namespace Prisma {
     estado?: StringNullableFilter<"usuarios"> | string | null
     fecha_actualizacion?: DateTimeNullableFilter<"usuarios"> | Date | string | null
     actividades_institucionales?: Actividades_institucionalesListRelationFilter
-    roles?: RolesListRelationFilter
-    destinatario?: CorrespondenciaListRelationFilter
     auditoria?: AuditoriaListRelationFilter
+    destinatario?: CorrespondenciaListRelationFilter
+    movimientos_financieros?: Movimientos_financierosListRelationFilter
+    roles?: RolesListRelationFilter
   }, "id_usuario">
 
   export type usuariosOrderByWithAggregationInput = {
@@ -33108,8 +36024,10 @@ export namespace Prisma {
     apellido?: StringFilter<"invitados"> | string
     correo?: StringNullableFilter<"invitados"> | string | null
     telefono?: StringNullableFilter<"invitados"> | string | null
-    colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    estado?: StringNullableFilter<"invitados"> | string | null
+    asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
+    pagos_invitados?: Pagos_invitadosListRelationFilter
   }
 
   export type invitadosOrderByWithRelationInput = {
@@ -33118,8 +36036,10 @@ export namespace Prisma {
     apellido?: SortOrder
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
-    colegiados_asignados_social?: colegiados_asignados_socialOrderByRelationAggregateInput
+    estado?: SortOrderInput | SortOrder
+    asistencias_actividad?: asistencias_actividadOrderByRelationAggregateInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalOrderByRelationAggregateInput
+    pagos_invitados?: pagos_invitadosOrderByRelationAggregateInput
   }
 
   export type invitadosWhereUniqueInput = Prisma.AtLeast<{
@@ -33131,8 +36051,10 @@ export namespace Prisma {
     apellido?: StringFilter<"invitados"> | string
     correo?: StringNullableFilter<"invitados"> | string | null
     telefono?: StringNullableFilter<"invitados"> | string | null
-    colegiados_asignados_social?: Colegiados_asignados_socialListRelationFilter
+    estado?: StringNullableFilter<"invitados"> | string | null
+    asistencias_actividad?: Asistencias_actividadListRelationFilter
     colegiados_registrados_actividad_institucional?: Colegiados_registrados_actividad_institucionalListRelationFilter
+    pagos_invitados?: Pagos_invitadosListRelationFilter
   }, "id_invitado">
 
   export type invitadosOrderByWithAggregationInput = {
@@ -33141,6 +36063,7 @@ export namespace Prisma {
     apellido?: SortOrder
     correo?: SortOrderInput | SortOrder
     telefono?: SortOrderInput | SortOrder
+    estado?: SortOrderInput | SortOrder
     _count?: invitadosCountOrderByAggregateInput
     _avg?: invitadosAvgOrderByAggregateInput
     _max?: invitadosMaxOrderByAggregateInput
@@ -33157,6 +36080,7 @@ export namespace Prisma {
     apellido?: StringWithAggregatesFilter<"invitados"> | string
     correo?: StringNullableWithAggregatesFilter<"invitados"> | string | null
     telefono?: StringNullableWithAggregatesFilter<"invitados"> | string | null
+    estado?: StringNullableWithAggregatesFilter<"invitados"> | string | null
   }
 
   export type postulacionesWhereInput = {
@@ -33176,6 +36100,8 @@ export namespace Prisma {
     motivo_rechazo?: StringNullableFilter<"postulaciones"> | string | null
     createdAt?: DateTimeFilter<"postulaciones"> | Date | string
     updatedAt?: DateTimeFilter<"postulaciones"> | Date | string
+    metodo_pago?: StringNullableFilter<"postulaciones"> | string | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
   }
 
   export type postulacionesOrderByWithRelationInput = {
@@ -33192,6 +36118,8 @@ export namespace Prisma {
     motivo_rechazo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
+    origen_movimiento?: origen_movimientoOrderByRelationAggregateInput
   }
 
   export type postulacionesWhereUniqueInput = Prisma.AtLeast<{
@@ -33211,6 +36139,8 @@ export namespace Prisma {
     motivo_rechazo?: StringNullableFilter<"postulaciones"> | string | null
     createdAt?: DateTimeFilter<"postulaciones"> | Date | string
     updatedAt?: DateTimeFilter<"postulaciones"> | Date | string
+    metodo_pago?: StringNullableFilter<"postulaciones"> | string | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
   }, "id_postulacion">
 
   export type postulacionesOrderByWithAggregationInput = {
@@ -33227,6 +36157,7 @@ export namespace Prisma {
     motivo_rechazo?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
     _count?: postulacionesCountOrderByAggregateInput
     _avg?: postulacionesAvgOrderByAggregateInput
     _max?: postulacionesMaxOrderByAggregateInput
@@ -33251,6 +36182,7 @@ export namespace Prisma {
     motivo_rechazo?: StringNullableWithAggregatesFilter<"postulaciones"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"postulaciones"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"postulaciones"> | Date | string
+    metodo_pago?: StringNullableWithAggregatesFilter<"postulaciones"> | string | null
   }
 
   export type especialidadesWhereInput = {
@@ -33494,6 +36426,120 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"memorias_balances"> | Date | string
   }
 
+  export type pagos_invitadosWhereInput = {
+    AND?: pagos_invitadosWhereInput | pagos_invitadosWhereInput[]
+    OR?: pagos_invitadosWhereInput[]
+    NOT?: pagos_invitadosWhereInput | pagos_invitadosWhereInput[]
+    id_pago?: IntFilter<"pagos_invitados"> | number
+    id_invitado?: IntNullableFilter<"pagos_invitados"> | number | null
+    concepto?: StringNullableFilter<"pagos_invitados"> | string | null
+    fecha_pago?: DateTimeNullableFilter<"pagos_invitados"> | Date | string | null
+    monto?: DecimalNullableFilter<"pagos_invitados"> | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+    comprobante?: StringNullableFilter<"pagos_invitados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+  }
+
+  export type pagos_invitadosOrderByWithRelationInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrderInput | SortOrder
+    concepto?: SortOrderInput | SortOrder
+    fecha_pago?: SortOrderInput | SortOrder
+    monto?: SortOrderInput | SortOrder
+    estado_pago?: SortOrderInput | SortOrder
+    comprobante?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
+    origen_movimiento?: origen_movimientoOrderByRelationAggregateInput
+    invitados?: invitadosOrderByWithRelationInput
+  }
+
+  export type pagos_invitadosWhereUniqueInput = Prisma.AtLeast<{
+    id_pago?: number
+    AND?: pagos_invitadosWhereInput | pagos_invitadosWhereInput[]
+    OR?: pagos_invitadosWhereInput[]
+    NOT?: pagos_invitadosWhereInput | pagos_invitadosWhereInput[]
+    id_invitado?: IntNullableFilter<"pagos_invitados"> | number | null
+    concepto?: StringNullableFilter<"pagos_invitados"> | string | null
+    fecha_pago?: DateTimeNullableFilter<"pagos_invitados"> | Date | string | null
+    monto?: DecimalNullableFilter<"pagos_invitados"> | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+    comprobante?: StringNullableFilter<"pagos_invitados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+    origen_movimiento?: Origen_movimientoListRelationFilter
+    invitados?: XOR<InvitadosNullableScalarRelationFilter, invitadosWhereInput> | null
+  }, "id_pago">
+
+  export type pagos_invitadosOrderByWithAggregationInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrderInput | SortOrder
+    concepto?: SortOrderInput | SortOrder
+    fecha_pago?: SortOrderInput | SortOrder
+    monto?: SortOrderInput | SortOrder
+    estado_pago?: SortOrderInput | SortOrder
+    comprobante?: SortOrderInput | SortOrder
+    metodo_pago?: SortOrderInput | SortOrder
+    _count?: pagos_invitadosCountOrderByAggregateInput
+    _avg?: pagos_invitadosAvgOrderByAggregateInput
+    _max?: pagos_invitadosMaxOrderByAggregateInput
+    _min?: pagos_invitadosMinOrderByAggregateInput
+    _sum?: pagos_invitadosSumOrderByAggregateInput
+  }
+
+  export type pagos_invitadosScalarWhereWithAggregatesInput = {
+    AND?: pagos_invitadosScalarWhereWithAggregatesInput | pagos_invitadosScalarWhereWithAggregatesInput[]
+    OR?: pagos_invitadosScalarWhereWithAggregatesInput[]
+    NOT?: pagos_invitadosScalarWhereWithAggregatesInput | pagos_invitadosScalarWhereWithAggregatesInput[]
+    id_pago?: IntWithAggregatesFilter<"pagos_invitados"> | number
+    id_invitado?: IntNullableWithAggregatesFilter<"pagos_invitados"> | number | null
+    concepto?: StringNullableWithAggregatesFilter<"pagos_invitados"> | string | null
+    fecha_pago?: DateTimeNullableWithAggregatesFilter<"pagos_invitados"> | Date | string | null
+    monto?: DecimalNullableWithAggregatesFilter<"pagos_invitados"> | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: StringNullableWithAggregatesFilter<"pagos_invitados"> | string | null
+    comprobante?: StringNullableWithAggregatesFilter<"pagos_invitados"> | string | null
+    metodo_pago?: StringNullableWithAggregatesFilter<"pagos_invitados"> | string | null
+  }
+
+  export type institucionesWhereInput = {
+    AND?: institucionesWhereInput | institucionesWhereInput[]
+    OR?: institucionesWhereInput[]
+    NOT?: institucionesWhereInput | institucionesWhereInput[]
+    id_institucion?: IntFilter<"instituciones"> | number
+    nombre?: StringFilter<"instituciones"> | string
+  }
+
+  export type institucionesOrderByWithRelationInput = {
+    id_institucion?: SortOrder
+    nombre?: SortOrder
+  }
+
+  export type institucionesWhereUniqueInput = Prisma.AtLeast<{
+    id_institucion?: number
+    nombre?: string
+    AND?: institucionesWhereInput | institucionesWhereInput[]
+    OR?: institucionesWhereInput[]
+    NOT?: institucionesWhereInput | institucionesWhereInput[]
+  }, "id_institucion" | "nombre">
+
+  export type institucionesOrderByWithAggregationInput = {
+    id_institucion?: SortOrder
+    nombre?: SortOrder
+    _count?: institucionesCountOrderByAggregateInput
+    _avg?: institucionesAvgOrderByAggregateInput
+    _max?: institucionesMaxOrderByAggregateInput
+    _min?: institucionesMinOrderByAggregateInput
+    _sum?: institucionesSumOrderByAggregateInput
+  }
+
+  export type institucionesScalarWhereWithAggregatesInput = {
+    AND?: institucionesScalarWhereWithAggregatesInput | institucionesScalarWhereWithAggregatesInput[]
+    OR?: institucionesScalarWhereWithAggregatesInput[]
+    NOT?: institucionesScalarWhereWithAggregatesInput | institucionesScalarWhereWithAggregatesInput[]
+    id_institucion?: IntWithAggregatesFilter<"instituciones"> | number
+    nombre?: StringWithAggregatesFilter<"instituciones"> | string
+  }
+
   export type actividades_institucionalesCreateInput = {
     nombre?: string | null
     descripcion?: string | null
@@ -33585,29 +36631,34 @@ export namespace Prisma {
   export type asistencias_actividadCreateInput = {
     actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutAsistencias_actividadInput
     colegiados?: colegiadosCreateNestedOneWithoutAsistencias_actividadInput
+    invitados?: invitadosCreateNestedOneWithoutAsistencias_actividadInput
   }
 
   export type asistencias_actividadUncheckedCreateInput = {
     id_asistencia?: number
     id_actividad?: number | null
     id_colegiado?: number | null
+    id_invitado?: number | null
   }
 
   export type asistencias_actividadUpdateInput = {
     actividades_institucionales?: actividades_institucionalesUpdateOneWithoutAsistencias_actividadNestedInput
     colegiados?: colegiadosUpdateOneWithoutAsistencias_actividadNestedInput
+    invitados?: invitadosUpdateOneWithoutAsistencias_actividadNestedInput
   }
 
   export type asistencias_actividadUncheckedUpdateInput = {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type asistencias_actividadCreateManyInput = {
     id_asistencia?: number
     id_actividad?: number | null
     id_colegiado?: number | null
+    id_invitado?: number | null
   }
 
   export type asistencias_actividadUpdateManyMutationInput = {
@@ -33618,6 +36669,7 @@ export namespace Prisma {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalCreateInput = {
@@ -33626,10 +36678,10 @@ export namespace Prisma {
     metodo_pago?: string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
-    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
-    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedCreateInput = {
@@ -33651,10 +36703,10 @@ export namespace Prisma {
     metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
-    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
     actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedUpdateInput = {
@@ -33992,9 +37044,9 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUncheckedCreateInput = {
@@ -34011,9 +37063,9 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUpdateInput = {
@@ -34029,9 +37081,9 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosUncheckedUpdateInput = {
@@ -34048,9 +37100,9 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosCreateManyInput = {
@@ -34097,42 +37149,42 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateInput = {
     total_horas?: number | null
     horas_meta?: number | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    estado?: string | null
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
     pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
-    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUpdateInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
@@ -34140,25 +37192,26 @@ export namespace Prisma {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
   }
 
   export type colegiados_asignados_socialUpdateManyMutationInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type asistencia_social_diariaCreateInput = {
@@ -34293,8 +37346,14 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
     origen_movimiento?: origen_movimientoCreateNestedOneWithoutMovimientos_financierosInput
     presupuestos?: presupuestosCreateNestedOneWithoutMovimientos_financierosInput
+    usuario?: usuariosCreateNestedOneWithoutMovimientos_financierosInput
   }
 
   export type movimientos_financierosUncheckedCreateInput = {
@@ -34307,6 +37366,12 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosUpdateInput = {
@@ -34316,8 +37381,14 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     origen_movimiento?: origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput
     presupuestos?: presupuestosUpdateOneWithoutMovimientos_financierosNestedInput
+    usuario?: usuariosUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
   export type movimientos_financierosUncheckedUpdateInput = {
@@ -34330,6 +37401,12 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type movimientos_financierosCreateManyInput = {
@@ -34342,6 +37419,12 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosUpdateManyMutationInput = {
@@ -34351,6 +37434,11 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyInput = {
@@ -34363,14 +37451,22 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type origen_movimientoCreateInput = {
     tipo_origen?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
     pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+    pagos_invitados?: pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput
+    postulaciones?: postulacionesCreateNestedOneWithoutOrigen_movimientoInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
   }
 
   export type origen_movimientoUncheckedCreateInput = {
@@ -34379,6 +37475,8 @@ export namespace Prisma {
     id_pago_colegiado?: number | null
     id_registro_actividad_institucional?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
   }
 
@@ -34386,8 +37484,10 @@ export namespace Prisma {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutOrigen_movimientoNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput
+    pagos_invitados?: pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput
+    postulaciones?: postulacionesUpdateOneWithoutOrigen_movimientoNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
   }
 
   export type origen_movimientoUncheckedUpdateInput = {
@@ -34396,6 +37496,8 @@ export namespace Prisma {
     id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput
   }
 
@@ -34405,6 +37507,8 @@ export namespace Prisma {
     id_pago_colegiado?: number | null
     id_registro_actividad_institucional?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
   }
 
   export type origen_movimientoUpdateManyMutationInput = {
@@ -34418,6 +37522,8 @@ export namespace Prisma {
     id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type pagos_colegiadosCreateInput = {
@@ -34426,6 +37532,7 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
+    metodo_pago?: string | null
     origen_movimiento?: origen_movimientoCreateNestedManyWithoutPagos_colegiadosInput
     colegiados?: colegiadosCreateNestedOneWithoutPagos_colegiadosInput
   }
@@ -34438,6 +37545,7 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
+    metodo_pago?: string | null
     origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutPagos_colegiadosInput
   }
 
@@ -34447,6 +37555,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUpdateManyWithoutPagos_colegiadosNestedInput
     colegiados?: colegiadosUpdateOneWithoutPagos_colegiadosNestedInput
   }
@@ -34459,6 +37568,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutPagos_colegiadosNestedInput
   }
 
@@ -34470,6 +37580,7 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
+    metodo_pago?: string | null
   }
 
   export type pagos_colegiadosUpdateManyMutationInput = {
@@ -34478,6 +37589,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type pagos_colegiadosUncheckedUpdateManyInput = {
@@ -34488,6 +37600,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type presupuestosCreateInput = {
@@ -34789,9 +37902,10 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
-    roles?: rolesCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUncheckedCreateInput = {
@@ -34806,9 +37920,10 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
-    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUpdateInput = {
@@ -34822,9 +37937,10 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateInput = {
@@ -34839,9 +37955,10 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosCreateManyInput = {
@@ -34887,8 +38004,10 @@ export namespace Prisma {
     apellido: string
     correo?: string | null
     telefono?: string | null
-    colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutInvitadosInput
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutInvitadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosCreateNestedManyWithoutInvitadosInput
   }
 
   export type invitadosUncheckedCreateInput = {
@@ -34897,8 +38016,10 @@ export namespace Prisma {
     apellido: string
     correo?: string | null
     telefono?: string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutInvitadosInput
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutInvitadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosUncheckedCreateNestedManyWithoutInvitadosInput
   }
 
   export type invitadosUpdateInput = {
@@ -34906,8 +38027,10 @@ export namespace Prisma {
     apellido?: StringFieldUpdateOperationsInput | string
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutInvitadosNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUpdateManyWithoutInvitadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUpdateManyWithoutInvitadosNestedInput
   }
 
   export type invitadosUncheckedUpdateInput = {
@@ -34916,8 +38039,10 @@ export namespace Prisma {
     apellido?: StringFieldUpdateOperationsInput | string
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutInvitadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUncheckedUpdateManyWithoutInvitadosNestedInput
   }
 
   export type invitadosCreateManyInput = {
@@ -34926,6 +38051,7 @@ export namespace Prisma {
     apellido: string
     correo?: string | null
     telefono?: string | null
+    estado?: string | null
   }
 
   export type invitadosUpdateManyMutationInput = {
@@ -34933,6 +38059,7 @@ export namespace Prisma {
     apellido?: StringFieldUpdateOperationsInput | string
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type invitadosUncheckedUpdateManyInput = {
@@ -34941,6 +38068,7 @@ export namespace Prisma {
     apellido?: StringFieldUpdateOperationsInput | string
     correo?: NullableStringFieldUpdateOperationsInput | string | null
     telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type postulacionesCreateInput = {
@@ -34956,6 +38084,8 @@ export namespace Prisma {
     motivo_rechazo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutPostulacionesInput
   }
 
   export type postulacionesUncheckedCreateInput = {
@@ -34972,6 +38102,8 @@ export namespace Prisma {
     motivo_rechazo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutPostulacionesInput
   }
 
   export type postulacionesUpdateInput = {
@@ -34987,6 +38119,8 @@ export namespace Prisma {
     motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUpdateManyWithoutPostulacionesNestedInput
   }
 
   export type postulacionesUncheckedUpdateInput = {
@@ -35003,6 +38137,8 @@ export namespace Prisma {
     motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutPostulacionesNestedInput
   }
 
   export type postulacionesCreateManyInput = {
@@ -35019,6 +38155,7 @@ export namespace Prisma {
     motivo_rechazo?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    metodo_pago?: string | null
   }
 
   export type postulacionesUpdateManyMutationInput = {
@@ -35034,6 +38171,7 @@ export namespace Prisma {
     motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type postulacionesUncheckedUpdateManyInput = {
@@ -35050,6 +38188,7 @@ export namespace Prisma {
     motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type especialidadesCreateInput = {
@@ -35299,6 +38438,115 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type pagos_invitadosCreateInput = {
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutPagos_invitadosInput
+    invitados?: invitadosCreateNestedOneWithoutPagos_invitadosInput
+  }
+
+  export type pagos_invitadosUncheckedCreateInput = {
+    id_pago?: number
+    id_invitado?: number | null
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutPagos_invitadosInput
+  }
+
+  export type pagos_invitadosUpdateInput = {
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUpdateManyWithoutPagos_invitadosNestedInput
+    invitados?: invitadosUpdateOneWithoutPagos_invitadosNestedInput
+  }
+
+  export type pagos_invitadosUncheckedUpdateInput = {
+    id_pago?: IntFieldUpdateOperationsInput | number
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutPagos_invitadosNestedInput
+  }
+
+  export type pagos_invitadosCreateManyInput = {
+    id_pago?: number
+    id_invitado?: number | null
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+  }
+
+  export type pagos_invitadosUpdateManyMutationInput = {
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type pagos_invitadosUncheckedUpdateManyInput = {
+    id_pago?: IntFieldUpdateOperationsInput | number
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type institucionesCreateInput = {
+    nombre: string
+  }
+
+  export type institucionesUncheckedCreateInput = {
+    id_institucion?: number
+    nombre: string
+  }
+
+  export type institucionesUpdateInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type institucionesUncheckedUpdateInput = {
+    id_institucion?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type institucionesCreateManyInput = {
+    id_institucion?: number
+    nombre: string
+  }
+
+  export type institucionesUpdateManyMutationInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type institucionesUncheckedUpdateManyInput = {
+    id_institucion?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -35526,45 +38774,50 @@ export namespace Prisma {
     isNot?: colegiadosWhereInput | null
   }
 
+  export type InvitadosNullableScalarRelationFilter = {
+    is?: invitadosWhereInput | null
+    isNot?: invitadosWhereInput | null
+  }
+
   export type asistencias_actividadCountOrderByAggregateInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrder
     id_colegiado?: SortOrder
+    id_invitado?: SortOrder
   }
 
   export type asistencias_actividadAvgOrderByAggregateInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrder
     id_colegiado?: SortOrder
+    id_invitado?: SortOrder
   }
 
   export type asistencias_actividadMaxOrderByAggregateInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrder
     id_colegiado?: SortOrder
+    id_invitado?: SortOrder
   }
 
   export type asistencias_actividadMinOrderByAggregateInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrder
     id_colegiado?: SortOrder
+    id_invitado?: SortOrder
   }
 
   export type asistencias_actividadSumOrderByAggregateInput = {
     id_asistencia?: SortOrder
     id_actividad?: SortOrder
     id_colegiado?: SortOrder
+    id_invitado?: SortOrder
   }
 
   export type Origen_movimientoListRelationFilter = {
     every?: origen_movimientoWhereInput
     some?: origen_movimientoWhereInput
     none?: origen_movimientoWhereInput
-  }
-
-  export type InvitadosNullableScalarRelationFilter = {
-    is?: invitadosWhereInput | null
-    isNot?: invitadosWhereInput | null
   }
 
   export type origen_movimientoOrderByRelationAggregateInput = {
@@ -35897,6 +39150,12 @@ export namespace Prisma {
     id_colegiado?: SortOrder
   }
 
+  export type Asistencia_social_diariaListRelationFilter = {
+    every?: asistencia_social_diariaWhereInput
+    some?: asistencia_social_diariaWhereInput
+    none?: asistencia_social_diariaWhereInput
+  }
+
   export type Actividades_socialesNullableScalarRelationFilter = {
     is?: actividades_socialesWhereInput | null
     isNot?: actividades_socialesWhereInput | null
@@ -35907,12 +39166,6 @@ export namespace Prisma {
     isNot?: pasantesWhereInput | null
   }
 
-  export type Asistencia_social_diariaListRelationFilter = {
-    every?: asistencia_social_diariaWhereInput
-    some?: asistencia_social_diariaWhereInput
-    none?: asistencia_social_diariaWhereInput
-  }
-
   export type asistencia_social_diariaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -35921,17 +39174,16 @@ export namespace Prisma {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
-    id_invitado?: SortOrder
     id_pasante?: SortOrder
     total_horas?: SortOrder
     horas_meta?: SortOrder
+    estado?: SortOrder
   }
 
   export type colegiados_asignados_socialAvgOrderByAggregateInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
-    id_invitado?: SortOrder
     id_pasante?: SortOrder
     total_horas?: SortOrder
     horas_meta?: SortOrder
@@ -35941,27 +39193,26 @@ export namespace Prisma {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
-    id_invitado?: SortOrder
     id_pasante?: SortOrder
     total_horas?: SortOrder
     horas_meta?: SortOrder
+    estado?: SortOrder
   }
 
   export type colegiados_asignados_socialMinOrderByAggregateInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
-    id_invitado?: SortOrder
     id_pasante?: SortOrder
     total_horas?: SortOrder
     horas_meta?: SortOrder
+    estado?: SortOrder
   }
 
   export type colegiados_asignados_socialSumOrderByAggregateInput = {
     id_asignacion?: SortOrder
     id_actividad_social?: SortOrder
     id_colegiado?: SortOrder
-    id_invitado?: SortOrder
     id_pasante?: SortOrder
     total_horas?: SortOrder
     horas_meta?: SortOrder
@@ -36096,6 +39347,12 @@ export namespace Prisma {
     monto?: SortOrder
     id_origen?: SortOrder
     comprobante?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+    estado?: SortOrder
+    metodo_pago?: SortOrder
+    tipo_origen_label?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type movimientos_financierosAvgOrderByAggregateInput = {
@@ -36103,6 +39360,7 @@ export namespace Prisma {
     id_presupuesto?: SortOrder
     monto?: SortOrder
     id_origen?: SortOrder
+    id_usuario?: SortOrder
   }
 
   export type movimientos_financierosMaxOrderByAggregateInput = {
@@ -36115,6 +39373,12 @@ export namespace Prisma {
     monto?: SortOrder
     id_origen?: SortOrder
     comprobante?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+    estado?: SortOrder
+    metodo_pago?: SortOrder
+    tipo_origen_label?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type movimientos_financierosMinOrderByAggregateInput = {
@@ -36127,6 +39391,12 @@ export namespace Prisma {
     monto?: SortOrder
     id_origen?: SortOrder
     comprobante?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+    estado?: SortOrder
+    metodo_pago?: SortOrder
+    tipo_origen_label?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type movimientos_financierosSumOrderByAggregateInput = {
@@ -36134,6 +39404,7 @@ export namespace Prisma {
     id_presupuesto?: SortOrder
     monto?: SortOrder
     id_origen?: SortOrder
+    id_usuario?: SortOrder
   }
 
   export type Movimientos_financierosListRelationFilter = {
@@ -36142,14 +39413,24 @@ export namespace Prisma {
     none?: movimientos_financierosWhereInput
   }
 
-  export type Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter = {
-    is?: colegiados_registrados_actividad_institucionalWhereInput | null
-    isNot?: colegiados_registrados_actividad_institucionalWhereInput | null
-  }
-
   export type Pagos_colegiadosNullableScalarRelationFilter = {
     is?: pagos_colegiadosWhereInput | null
     isNot?: pagos_colegiadosWhereInput | null
+  }
+
+  export type Pagos_invitadosNullableScalarRelationFilter = {
+    is?: pagos_invitadosWhereInput | null
+    isNot?: pagos_invitadosWhereInput | null
+  }
+
+  export type PostulacionesNullableScalarRelationFilter = {
+    is?: postulacionesWhereInput | null
+    isNot?: postulacionesWhereInput | null
+  }
+
+  export type Colegiados_registrados_actividad_institucionalNullableScalarRelationFilter = {
+    is?: colegiados_registrados_actividad_institucionalWhereInput | null
+    isNot?: colegiados_registrados_actividad_institucionalWhereInput | null
   }
 
   export type movimientos_financierosOrderByRelationAggregateInput = {
@@ -36162,6 +39443,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrder
     id_registro_actividad_institucional?: SortOrder
     monto?: SortOrder
+    id_postulacion?: SortOrder
+    id_pago_invitado?: SortOrder
   }
 
   export type origen_movimientoAvgOrderByAggregateInput = {
@@ -36169,6 +39452,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrder
     id_registro_actividad_institucional?: SortOrder
     monto?: SortOrder
+    id_postulacion?: SortOrder
+    id_pago_invitado?: SortOrder
   }
 
   export type origen_movimientoMaxOrderByAggregateInput = {
@@ -36177,6 +39462,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrder
     id_registro_actividad_institucional?: SortOrder
     monto?: SortOrder
+    id_postulacion?: SortOrder
+    id_pago_invitado?: SortOrder
   }
 
   export type origen_movimientoMinOrderByAggregateInput = {
@@ -36185,6 +39472,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrder
     id_registro_actividad_institucional?: SortOrder
     monto?: SortOrder
+    id_postulacion?: SortOrder
+    id_pago_invitado?: SortOrder
   }
 
   export type origen_movimientoSumOrderByAggregateInput = {
@@ -36192,6 +39481,8 @@ export namespace Prisma {
     id_pago_colegiado?: SortOrder
     id_registro_actividad_institucional?: SortOrder
     monto?: SortOrder
+    id_postulacion?: SortOrder
+    id_pago_invitado?: SortOrder
   }
 
   export type pagos_colegiadosCountOrderByAggregateInput = {
@@ -36202,6 +39493,7 @@ export namespace Prisma {
     monto?: SortOrder
     estado_pago?: SortOrder
     comprobante?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type pagos_colegiadosAvgOrderByAggregateInput = {
@@ -36218,6 +39510,7 @@ export namespace Prisma {
     monto?: SortOrder
     estado_pago?: SortOrder
     comprobante?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type pagos_colegiadosMinOrderByAggregateInput = {
@@ -36228,6 +39521,7 @@ export namespace Prisma {
     monto?: SortOrder
     estado_pago?: SortOrder
     comprobante?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type pagos_colegiadosSumOrderByAggregateInput = {
@@ -36476,10 +39770,10 @@ export namespace Prisma {
     none?: actividades_institucionalesWhereInput
   }
 
-  export type RolesListRelationFilter = {
-    every?: rolesWhereInput
-    some?: rolesWhereInput
-    none?: rolesWhereInput
+  export type AuditoriaListRelationFilter = {
+    every?: auditoriaWhereInput
+    some?: auditoriaWhereInput
+    none?: auditoriaWhereInput
   }
 
   export type CorrespondenciaListRelationFilter = {
@@ -36488,17 +39782,17 @@ export namespace Prisma {
     none?: correspondenciaWhereInput
   }
 
-  export type AuditoriaListRelationFilter = {
-    every?: auditoriaWhereInput
-    some?: auditoriaWhereInput
-    none?: auditoriaWhereInput
+  export type RolesListRelationFilter = {
+    every?: rolesWhereInput
+    some?: rolesWhereInput
+    none?: rolesWhereInput
   }
 
   export type actividades_institucionalesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
-  export type rolesOrderByRelationAggregateInput = {
+  export type auditoriaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36506,7 +39800,7 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
-  export type auditoriaOrderByRelationAggregateInput = {
+  export type rolesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -36557,12 +39851,23 @@ export namespace Prisma {
     id_usuario?: SortOrder
   }
 
+  export type Pagos_invitadosListRelationFilter = {
+    every?: pagos_invitadosWhereInput
+    some?: pagos_invitadosWhereInput
+    none?: pagos_invitadosWhereInput
+  }
+
+  export type pagos_invitadosOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type invitadosCountOrderByAggregateInput = {
     id_invitado?: SortOrder
     nombre?: SortOrder
     apellido?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
+    estado?: SortOrder
   }
 
   export type invitadosAvgOrderByAggregateInput = {
@@ -36575,6 +39880,7 @@ export namespace Prisma {
     apellido?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
+    estado?: SortOrder
   }
 
   export type invitadosMinOrderByAggregateInput = {
@@ -36583,6 +39889,7 @@ export namespace Prisma {
     apellido?: SortOrder
     correo?: SortOrder
     telefono?: SortOrder
+    estado?: SortOrder
   }
 
   export type invitadosSumOrderByAggregateInput = {
@@ -36603,6 +39910,7 @@ export namespace Prisma {
     motivo_rechazo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type postulacionesAvgOrderByAggregateInput = {
@@ -36623,6 +39931,7 @@ export namespace Prisma {
     motivo_rechazo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type postulacionesMinOrderByAggregateInput = {
@@ -36639,6 +39948,7 @@ export namespace Prisma {
     motivo_rechazo?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    metodo_pago?: SortOrder
   }
 
   export type postulacionesSumOrderByAggregateInput = {
@@ -36805,6 +40115,74 @@ export namespace Prisma {
     anio?: SortOrder
   }
 
+  export type pagos_invitadosCountOrderByAggregateInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrder
+    concepto?: SortOrder
+    fecha_pago?: SortOrder
+    monto?: SortOrder
+    estado_pago?: SortOrder
+    comprobante?: SortOrder
+    metodo_pago?: SortOrder
+  }
+
+  export type pagos_invitadosAvgOrderByAggregateInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrder
+    monto?: SortOrder
+  }
+
+  export type pagos_invitadosMaxOrderByAggregateInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrder
+    concepto?: SortOrder
+    fecha_pago?: SortOrder
+    monto?: SortOrder
+    estado_pago?: SortOrder
+    comprobante?: SortOrder
+    metodo_pago?: SortOrder
+  }
+
+  export type pagos_invitadosMinOrderByAggregateInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrder
+    concepto?: SortOrder
+    fecha_pago?: SortOrder
+    monto?: SortOrder
+    estado_pago?: SortOrder
+    comprobante?: SortOrder
+    metodo_pago?: SortOrder
+  }
+
+  export type pagos_invitadosSumOrderByAggregateInput = {
+    id_pago?: SortOrder
+    id_invitado?: SortOrder
+    monto?: SortOrder
+  }
+
+  export type institucionesCountOrderByAggregateInput = {
+    id_institucion?: SortOrder
+    nombre?: SortOrder
+  }
+
+  export type institucionesAvgOrderByAggregateInput = {
+    id_institucion?: SortOrder
+  }
+
+  export type institucionesMaxOrderByAggregateInput = {
+    id_institucion?: SortOrder
+    nombre?: SortOrder
+  }
+
+  export type institucionesMinOrderByAggregateInput = {
+    id_institucion?: SortOrder
+    nombre?: SortOrder
+  }
+
+  export type institucionesSumOrderByAggregateInput = {
+    id_institucion?: SortOrder
+  }
+
   export type usuariosCreateNestedOneWithoutActividades_institucionalesInput = {
     create?: XOR<usuariosCreateWithoutActividades_institucionalesInput, usuariosUncheckedCreateWithoutActividades_institucionalesInput>
     connectOrCreate?: usuariosCreateOrConnectWithoutActividades_institucionalesInput
@@ -36949,6 +40327,12 @@ export namespace Prisma {
     connect?: colegiadosWhereUniqueInput
   }
 
+  export type invitadosCreateNestedOneWithoutAsistencias_actividadInput = {
+    create?: XOR<invitadosCreateWithoutAsistencias_actividadInput, invitadosUncheckedCreateWithoutAsistencias_actividadInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutAsistencias_actividadInput
+    connect?: invitadosWhereUniqueInput
+  }
+
   export type actividades_institucionalesUpdateOneWithoutAsistencias_actividadNestedInput = {
     create?: XOR<actividades_institucionalesCreateWithoutAsistencias_actividadInput, actividades_institucionalesUncheckedCreateWithoutAsistencias_actividadInput>
     connectOrCreate?: actividades_institucionalesCreateOrConnectWithoutAsistencias_actividadInput
@@ -36969,17 +40353,14 @@ export namespace Prisma {
     update?: XOR<XOR<colegiadosUpdateToOneWithWhereWithoutAsistencias_actividadInput, colegiadosUpdateWithoutAsistencias_actividadInput>, colegiadosUncheckedUpdateWithoutAsistencias_actividadInput>
   }
 
-  export type origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput = {
-    create?: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput> | origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput[] | origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput[]
-    connectOrCreate?: origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput[]
-    createMany?: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope
-    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-  }
-
-  export type invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput = {
-    create?: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
-    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput
+  export type invitadosUpdateOneWithoutAsistencias_actividadNestedInput = {
+    create?: XOR<invitadosCreateWithoutAsistencias_actividadInput, invitadosUncheckedCreateWithoutAsistencias_actividadInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutAsistencias_actividadInput
+    upsert?: invitadosUpsertWithoutAsistencias_actividadInput
+    disconnect?: invitadosWhereInput | boolean
+    delete?: invitadosWhereInput | boolean
     connect?: invitadosWhereUniqueInput
+    update?: XOR<XOR<invitadosUpdateToOneWithWhereWithoutAsistencias_actividadInput, invitadosUpdateWithoutAsistencias_actividadInput>, invitadosUncheckedUpdateWithoutAsistencias_actividadInput>
   }
 
   export type actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput = {
@@ -36994,35 +40375,24 @@ export namespace Prisma {
     connect?: colegiadosWhereUniqueInput
   }
 
+  export type invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput = {
+    create?: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput
+    connect?: invitadosWhereUniqueInput
+  }
+
+  export type origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput = {
+    create?: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput> | origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput[] | origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput[]
+    createMany?: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+  }
+
   export type origen_movimientoUncheckedCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput = {
     create?: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput> | origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput[] | origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput[]
     connectOrCreate?: origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput[]
     createMany?: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope
     connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-  }
-
-  export type origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput = {
-    create?: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput> | origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput[] | origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput[]
-    connectOrCreate?: origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput[]
-    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput[]
-    createMany?: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope
-    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
-    update?: origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput[]
-    updateMany?: origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput[]
-    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
-  }
-
-  export type invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput = {
-    create?: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
-    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput
-    upsert?: invitadosUpsertWithoutColegiados_registrados_actividad_institucionalInput
-    disconnect?: invitadosWhereInput | boolean
-    delete?: invitadosWhereInput | boolean
-    connect?: invitadosWhereUniqueInput
-    update?: XOR<XOR<invitadosUpdateToOneWithWhereWithoutColegiados_registrados_actividad_institucionalInput, invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput>, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
   }
 
   export type actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput = {
@@ -37043,6 +40413,30 @@ export namespace Prisma {
     delete?: colegiadosWhereInput | boolean
     connect?: colegiadosWhereUniqueInput
     update?: XOR<XOR<colegiadosUpdateToOneWithWhereWithoutColegiados_registrados_actividad_institucionalInput, colegiadosUpdateWithoutColegiados_registrados_actividad_institucionalInput>, colegiadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput = {
+    create?: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput
+    upsert?: invitadosUpsertWithoutColegiados_registrados_actividad_institucionalInput
+    disconnect?: invitadosWhereInput | boolean
+    delete?: invitadosWhereInput | boolean
+    connect?: invitadosWhereUniqueInput
+    update?: XOR<XOR<invitadosUpdateToOneWithWhereWithoutColegiados_registrados_actividad_institucionalInput, invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput>, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput = {
+    create?: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput> | origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput[] | origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput[]
+    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput[]
+    createMany?: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope
+    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    update?: origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput[]
+    updateMany?: origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput | origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput[]
+    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
   }
 
   export type origen_movimientoUncheckedUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput = {
@@ -37197,6 +40591,13 @@ export namespace Prisma {
     connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
   }
 
+  export type colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
+    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+  }
+
   export type documentos_colegiadosCreateNestedManyWithoutColegiadosInput = {
     create?: XOR<documentos_colegiadosCreateWithoutColegiadosInput, documentos_colegiadosUncheckedCreateWithoutColegiadosInput> | documentos_colegiadosCreateWithoutColegiadosInput[] | documentos_colegiadosUncheckedCreateWithoutColegiadosInput[]
     connectOrCreate?: documentos_colegiadosCreateOrConnectWithoutColegiadosInput | documentos_colegiadosCreateOrConnectWithoutColegiadosInput[]
@@ -37209,13 +40610,6 @@ export namespace Prisma {
     connectOrCreate?: pagos_colegiadosCreateOrConnectWithoutColegiadosInput | pagos_colegiadosCreateOrConnectWithoutColegiadosInput[]
     createMany?: pagos_colegiadosCreateManyColegiadosInputEnvelope
     connect?: pagos_colegiadosWhereUniqueInput | pagos_colegiadosWhereUniqueInput[]
-  }
-
-  export type colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
-    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
   }
 
   export type asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput = {
@@ -37232,6 +40626,13 @@ export namespace Prisma {
     connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
   }
 
+  export type colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
+    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+  }
+
   export type documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput = {
     create?: XOR<documentos_colegiadosCreateWithoutColegiadosInput, documentos_colegiadosUncheckedCreateWithoutColegiadosInput> | documentos_colegiadosCreateWithoutColegiadosInput[] | documentos_colegiadosUncheckedCreateWithoutColegiadosInput[]
     connectOrCreate?: documentos_colegiadosCreateOrConnectWithoutColegiadosInput | documentos_colegiadosCreateOrConnectWithoutColegiadosInput[]
@@ -37244,13 +40645,6 @@ export namespace Prisma {
     connectOrCreate?: pagos_colegiadosCreateOrConnectWithoutColegiadosInput | pagos_colegiadosCreateOrConnectWithoutColegiadosInput[]
     createMany?: pagos_colegiadosCreateManyColegiadosInputEnvelope
     connect?: pagos_colegiadosWhereUniqueInput | pagos_colegiadosWhereUniqueInput[]
-  }
-
-  export type colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
-    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
   }
 
   export type asistencias_actividadUpdateManyWithoutColegiadosNestedInput = {
@@ -37281,6 +40675,20 @@ export namespace Prisma {
     deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
   }
 
+  export type colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
+    upsert?: colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput[]
+    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
+    set?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    disconnect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    delete?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    update?: colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput[]
+    updateMany?: colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput[]
+    deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
+  }
+
   export type documentos_colegiadosUpdateManyWithoutColegiadosNestedInput = {
     create?: XOR<documentos_colegiadosCreateWithoutColegiadosInput, documentos_colegiadosUncheckedCreateWithoutColegiadosInput> | documentos_colegiadosCreateWithoutColegiadosInput[] | documentos_colegiadosUncheckedCreateWithoutColegiadosInput[]
     connectOrCreate?: documentos_colegiadosCreateOrConnectWithoutColegiadosInput | documentos_colegiadosCreateOrConnectWithoutColegiadosInput[]
@@ -37307,20 +40715,6 @@ export namespace Prisma {
     update?: pagos_colegiadosUpdateWithWhereUniqueWithoutColegiadosInput | pagos_colegiadosUpdateWithWhereUniqueWithoutColegiadosInput[]
     updateMany?: pagos_colegiadosUpdateManyWithWhereWithoutColegiadosInput | pagos_colegiadosUpdateManyWithWhereWithoutColegiadosInput[]
     deleteMany?: pagos_colegiadosScalarWhereInput | pagos_colegiadosScalarWhereInput[]
-  }
-
-  export type colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
-    upsert?: colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput[]
-    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
-    set?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    disconnect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    delete?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    update?: colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput[]
-    updateMany?: colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput[]
-    deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
   }
 
   export type asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput = {
@@ -37351,6 +40745,20 @@ export namespace Prisma {
     deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
   }
 
+  export type colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
+    upsert?: colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput[]
+    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
+    set?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    disconnect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    delete?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
+    update?: colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput[]
+    updateMany?: colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput[]
+    deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
+  }
+
   export type documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput = {
     create?: XOR<documentos_colegiadosCreateWithoutColegiadosInput, documentos_colegiadosUncheckedCreateWithoutColegiadosInput> | documentos_colegiadosCreateWithoutColegiadosInput[] | documentos_colegiadosUncheckedCreateWithoutColegiadosInput[]
     connectOrCreate?: documentos_colegiadosCreateOrConnectWithoutColegiadosInput | documentos_colegiadosCreateOrConnectWithoutColegiadosInput[]
@@ -37379,24 +40787,11 @@ export namespace Prisma {
     deleteMany?: pagos_colegiadosScalarWhereInput | pagos_colegiadosScalarWhereInput[]
   }
 
-  export type colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput> | colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput[] | colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput[]
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput | colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput[]
-    upsert?: colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput[]
-    createMany?: colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope
-    set?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    disconnect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    delete?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
-    update?: colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput[]
-    updateMany?: colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput | colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput[]
-    deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
-  }
-
-  export type invitadosCreateNestedOneWithoutColegiados_asignados_socialInput = {
-    create?: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
-    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_asignados_socialInput
-    connect?: invitadosWhereUniqueInput
+  export type asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
   }
 
   export type actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput = {
@@ -37417,13 +40812,6 @@ export namespace Prisma {
     connect?: pasantesWhereUniqueInput
   }
 
-  export type asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput = {
-    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
-    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
-    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
-    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
-  }
-
   export type asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput = {
     create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
     connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
@@ -37431,14 +40819,18 @@ export namespace Prisma {
     connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
   }
 
-  export type invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput = {
-    create?: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
-    connectOrCreate?: invitadosCreateOrConnectWithoutColegiados_asignados_socialInput
-    upsert?: invitadosUpsertWithoutColegiados_asignados_socialInput
-    disconnect?: invitadosWhereInput | boolean
-    delete?: invitadosWhereInput | boolean
-    connect?: invitadosWhereUniqueInput
-    update?: XOR<XOR<invitadosUpdateToOneWithWhereWithoutColegiados_asignados_socialInput, invitadosUpdateWithoutColegiados_asignados_socialInput>, invitadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
+  export type asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput = {
+    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
+    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
+    upsert?: asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
+    set?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    disconnect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    delete?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
+    update?: asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput[]
+    updateMany?: asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput[]
+    deleteMany?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
   }
 
   export type actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput = {
@@ -37469,20 +40861,6 @@ export namespace Prisma {
     delete?: pasantesWhereInput | boolean
     connect?: pasantesWhereUniqueInput
     update?: XOR<XOR<pasantesUpdateToOneWithWhereWithoutColegiados_asignados_socialInput, pasantesUpdateWithoutColegiados_asignados_socialInput>, pasantesUncheckedUpdateWithoutColegiados_asignados_socialInput>
-  }
-
-  export type asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput = {
-    create?: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput> | asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput[] | asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput[]
-    connectOrCreate?: asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput | asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput[]
-    upsert?: asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput[]
-    createMany?: asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope
-    set?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
-    disconnect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
-    delete?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
-    connect?: asistencia_social_diariaWhereUniqueInput | asistencia_social_diariaWhereUniqueInput[]
-    update?: asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput[]
-    updateMany?: asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput | asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput[]
-    deleteMany?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
   }
 
   export type asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput = {
@@ -37545,6 +40923,12 @@ export namespace Prisma {
     connect?: presupuestosWhereUniqueInput
   }
 
+  export type usuariosCreateNestedOneWithoutMovimientos_financierosInput = {
+    create?: XOR<usuariosCreateWithoutMovimientos_financierosInput, usuariosUncheckedCreateWithoutMovimientos_financierosInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutMovimientos_financierosInput
+    connect?: usuariosWhereUniqueInput
+  }
+
   export type origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput = {
     create?: XOR<origen_movimientoCreateWithoutMovimientos_financierosInput, origen_movimientoUncheckedCreateWithoutMovimientos_financierosInput>
     connectOrCreate?: origen_movimientoCreateOrConnectWithoutMovimientos_financierosInput
@@ -37565,6 +40949,16 @@ export namespace Prisma {
     update?: XOR<XOR<presupuestosUpdateToOneWithWhereWithoutMovimientos_financierosInput, presupuestosUpdateWithoutMovimientos_financierosInput>, presupuestosUncheckedUpdateWithoutMovimientos_financierosInput>
   }
 
+  export type usuariosUpdateOneWithoutMovimientos_financierosNestedInput = {
+    create?: XOR<usuariosCreateWithoutMovimientos_financierosInput, usuariosUncheckedCreateWithoutMovimientos_financierosInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutMovimientos_financierosInput
+    upsert?: usuariosUpsertWithoutMovimientos_financierosInput
+    disconnect?: usuariosWhereInput | boolean
+    delete?: usuariosWhereInput | boolean
+    connect?: usuariosWhereUniqueInput
+    update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutMovimientos_financierosInput, usuariosUpdateWithoutMovimientos_financierosInput>, usuariosUncheckedUpdateWithoutMovimientos_financierosInput>
+  }
+
   export type movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput = {
     create?: XOR<movimientos_financierosCreateWithoutOrigen_movimientoInput, movimientos_financierosUncheckedCreateWithoutOrigen_movimientoInput> | movimientos_financierosCreateWithoutOrigen_movimientoInput[] | movimientos_financierosUncheckedCreateWithoutOrigen_movimientoInput[]
     connectOrCreate?: movimientos_financierosCreateOrConnectWithoutOrigen_movimientoInput | movimientos_financierosCreateOrConnectWithoutOrigen_movimientoInput[]
@@ -37572,16 +40966,28 @@ export namespace Prisma {
     connect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
   }
 
-  export type colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutOrigen_movimientoInput
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput
-  }
-
   export type pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput = {
     create?: XOR<pagos_colegiadosCreateWithoutOrigen_movimientoInput, pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput>
     connectOrCreate?: pagos_colegiadosCreateOrConnectWithoutOrigen_movimientoInput
     connect?: pagos_colegiadosWhereUniqueInput
+  }
+
+  export type pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput = {
+    create?: XOR<pagos_invitadosCreateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutOrigen_movimientoInput
+    connect?: pagos_invitadosWhereUniqueInput
+  }
+
+  export type postulacionesCreateNestedOneWithoutOrigen_movimientoInput = {
+    create?: XOR<postulacionesCreateWithoutOrigen_movimientoInput, postulacionesUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: postulacionesCreateOrConnectWithoutOrigen_movimientoInput
+    connect?: postulacionesWhereUniqueInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutOrigen_movimientoInput
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput
   }
 
   export type movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput = {
@@ -37605,16 +41011,6 @@ export namespace Prisma {
     deleteMany?: movimientos_financierosScalarWhereInput | movimientos_financierosScalarWhereInput[]
   }
 
-  export type colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput = {
-    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
-    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutOrigen_movimientoInput
-    upsert?: colegiados_registrados_actividad_institucionalUpsertWithoutOrigen_movimientoInput
-    disconnect?: colegiados_registrados_actividad_institucionalWhereInput | boolean
-    delete?: colegiados_registrados_actividad_institucionalWhereInput | boolean
-    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput
-    update?: XOR<XOR<colegiados_registrados_actividad_institucionalUpdateToOneWithWhereWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput>, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
-  }
-
   export type pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput = {
     create?: XOR<pagos_colegiadosCreateWithoutOrigen_movimientoInput, pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput>
     connectOrCreate?: pagos_colegiadosCreateOrConnectWithoutOrigen_movimientoInput
@@ -37623,6 +41019,36 @@ export namespace Prisma {
     delete?: pagos_colegiadosWhereInput | boolean
     connect?: pagos_colegiadosWhereUniqueInput
     update?: XOR<XOR<pagos_colegiadosUpdateToOneWithWhereWithoutOrigen_movimientoInput, pagos_colegiadosUpdateWithoutOrigen_movimientoInput>, pagos_colegiadosUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput = {
+    create?: XOR<pagos_invitadosCreateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutOrigen_movimientoInput
+    upsert?: pagos_invitadosUpsertWithoutOrigen_movimientoInput
+    disconnect?: pagos_invitadosWhereInput | boolean
+    delete?: pagos_invitadosWhereInput | boolean
+    connect?: pagos_invitadosWhereUniqueInput
+    update?: XOR<XOR<pagos_invitadosUpdateToOneWithWhereWithoutOrigen_movimientoInput, pagos_invitadosUpdateWithoutOrigen_movimientoInput>, pagos_invitadosUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type postulacionesUpdateOneWithoutOrigen_movimientoNestedInput = {
+    create?: XOR<postulacionesCreateWithoutOrigen_movimientoInput, postulacionesUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: postulacionesCreateOrConnectWithoutOrigen_movimientoInput
+    upsert?: postulacionesUpsertWithoutOrigen_movimientoInput
+    disconnect?: postulacionesWhereInput | boolean
+    delete?: postulacionesWhereInput | boolean
+    connect?: postulacionesWhereUniqueInput
+    update?: XOR<XOR<postulacionesUpdateToOneWithWhereWithoutOrigen_movimientoInput, postulacionesUpdateWithoutOrigen_movimientoInput>, postulacionesUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput = {
+    create?: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
+    connectOrCreate?: colegiados_registrados_actividad_institucionalCreateOrConnectWithoutOrigen_movimientoInput
+    upsert?: colegiados_registrados_actividad_institucionalUpsertWithoutOrigen_movimientoInput
+    disconnect?: colegiados_registrados_actividad_institucionalWhereInput | boolean
+    delete?: colegiados_registrados_actividad_institucionalWhereInput | boolean
+    connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput
+    update?: XOR<XOR<colegiados_registrados_actividad_institucionalUpdateToOneWithWhereWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput>, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
   }
 
   export type movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput = {
@@ -37830,11 +41256,11 @@ export namespace Prisma {
     connect?: actividades_institucionalesWhereUniqueInput | actividades_institucionalesWhereUniqueInput[]
   }
 
-  export type rolesCreateNestedManyWithoutUsuariosInput = {
-    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
-    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
-    createMany?: rolesCreateManyUsuariosInputEnvelope
-    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+  export type auditoriaCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
+    createMany?: auditoriaCreateManyUsuarioInputEnvelope
+    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
   }
 
   export type correspondenciaCreateNestedManyWithoutDestinatarioInput = {
@@ -37844,11 +41270,18 @@ export namespace Prisma {
     connect?: correspondenciaWhereUniqueInput | correspondenciaWhereUniqueInput[]
   }
 
-  export type auditoriaCreateNestedManyWithoutUsuarioInput = {
-    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
-    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
-    createMany?: auditoriaCreateManyUsuarioInputEnvelope
-    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+  export type movimientos_financierosCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput> | movimientos_financierosCreateWithoutUsuarioInput[] | movimientos_financierosUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: movimientos_financierosCreateOrConnectWithoutUsuarioInput | movimientos_financierosCreateOrConnectWithoutUsuarioInput[]
+    createMany?: movimientos_financierosCreateManyUsuarioInputEnvelope
+    connect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+  }
+
+  export type rolesCreateNestedManyWithoutUsuariosInput = {
+    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
+    createMany?: rolesCreateManyUsuariosInputEnvelope
+    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
   }
 
   export type actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput = {
@@ -37858,11 +41291,11 @@ export namespace Prisma {
     connect?: actividades_institucionalesWhereUniqueInput | actividades_institucionalesWhereUniqueInput[]
   }
 
-  export type rolesUncheckedCreateNestedManyWithoutUsuariosInput = {
-    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
-    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
-    createMany?: rolesCreateManyUsuariosInputEnvelope
-    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+  export type auditoriaUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
+    createMany?: auditoriaCreateManyUsuarioInputEnvelope
+    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
   }
 
   export type correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput = {
@@ -37872,11 +41305,18 @@ export namespace Prisma {
     connect?: correspondenciaWhereUniqueInput | correspondenciaWhereUniqueInput[]
   }
 
-  export type auditoriaUncheckedCreateNestedManyWithoutUsuarioInput = {
-    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
-    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
-    createMany?: auditoriaCreateManyUsuarioInputEnvelope
-    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+  export type movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput> | movimientos_financierosCreateWithoutUsuarioInput[] | movimientos_financierosUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: movimientos_financierosCreateOrConnectWithoutUsuarioInput | movimientos_financierosCreateOrConnectWithoutUsuarioInput[]
+    createMany?: movimientos_financierosCreateManyUsuarioInputEnvelope
+    connect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+  }
+
+  export type rolesUncheckedCreateNestedManyWithoutUsuariosInput = {
+    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
+    createMany?: rolesCreateManyUsuariosInputEnvelope
+    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
   }
 
   export type actividades_institucionalesUpdateManyWithoutUsuariosNestedInput = {
@@ -37893,18 +41333,18 @@ export namespace Prisma {
     deleteMany?: actividades_institucionalesScalarWhereInput | actividades_institucionalesScalarWhereInput[]
   }
 
-  export type rolesUpdateManyWithoutUsuariosNestedInput = {
-    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
-    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
-    upsert?: rolesUpsertWithWhereUniqueWithoutUsuariosInput | rolesUpsertWithWhereUniqueWithoutUsuariosInput[]
-    createMany?: rolesCreateManyUsuariosInputEnvelope
-    set?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    disconnect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    delete?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    update?: rolesUpdateWithWhereUniqueWithoutUsuariosInput | rolesUpdateWithWhereUniqueWithoutUsuariosInput[]
-    updateMany?: rolesUpdateManyWithWhereWithoutUsuariosInput | rolesUpdateManyWithWhereWithoutUsuariosInput[]
-    deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
+  export type auditoriaUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
+    upsert?: auditoriaUpsertWithWhereUniqueWithoutUsuarioInput | auditoriaUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: auditoriaCreateManyUsuarioInputEnvelope
+    set?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    disconnect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    delete?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    update?: auditoriaUpdateWithWhereUniqueWithoutUsuarioInput | auditoriaUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: auditoriaUpdateManyWithWhereWithoutUsuarioInput | auditoriaUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
   }
 
   export type correspondenciaUpdateManyWithoutDestinatarioNestedInput = {
@@ -37921,18 +41361,32 @@ export namespace Prisma {
     deleteMany?: correspondenciaScalarWhereInput | correspondenciaScalarWhereInput[]
   }
 
-  export type auditoriaUpdateManyWithoutUsuarioNestedInput = {
-    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
-    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
-    upsert?: auditoriaUpsertWithWhereUniqueWithoutUsuarioInput | auditoriaUpsertWithWhereUniqueWithoutUsuarioInput[]
-    createMany?: auditoriaCreateManyUsuarioInputEnvelope
-    set?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    disconnect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    delete?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    update?: auditoriaUpdateWithWhereUniqueWithoutUsuarioInput | auditoriaUpdateWithWhereUniqueWithoutUsuarioInput[]
-    updateMany?: auditoriaUpdateManyWithWhereWithoutUsuarioInput | auditoriaUpdateManyWithWhereWithoutUsuarioInput[]
-    deleteMany?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
+  export type movimientos_financierosUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput> | movimientos_financierosCreateWithoutUsuarioInput[] | movimientos_financierosUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: movimientos_financierosCreateOrConnectWithoutUsuarioInput | movimientos_financierosCreateOrConnectWithoutUsuarioInput[]
+    upsert?: movimientos_financierosUpsertWithWhereUniqueWithoutUsuarioInput | movimientos_financierosUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: movimientos_financierosCreateManyUsuarioInputEnvelope
+    set?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    disconnect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    delete?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    connect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    update?: movimientos_financierosUpdateWithWhereUniqueWithoutUsuarioInput | movimientos_financierosUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: movimientos_financierosUpdateManyWithWhereWithoutUsuarioInput | movimientos_financierosUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: movimientos_financierosScalarWhereInput | movimientos_financierosScalarWhereInput[]
+  }
+
+  export type rolesUpdateManyWithoutUsuariosNestedInput = {
+    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
+    upsert?: rolesUpsertWithWhereUniqueWithoutUsuariosInput | rolesUpsertWithWhereUniqueWithoutUsuariosInput[]
+    createMany?: rolesCreateManyUsuariosInputEnvelope
+    set?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    disconnect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    delete?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    update?: rolesUpdateWithWhereUniqueWithoutUsuariosInput | rolesUpdateWithWhereUniqueWithoutUsuariosInput[]
+    updateMany?: rolesUpdateManyWithWhereWithoutUsuariosInput | rolesUpdateManyWithWhereWithoutUsuariosInput[]
+    deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
   }
 
   export type actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput = {
@@ -37949,18 +41403,18 @@ export namespace Prisma {
     deleteMany?: actividades_institucionalesScalarWhereInput | actividades_institucionalesScalarWhereInput[]
   }
 
-  export type rolesUncheckedUpdateManyWithoutUsuariosNestedInput = {
-    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
-    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
-    upsert?: rolesUpsertWithWhereUniqueWithoutUsuariosInput | rolesUpsertWithWhereUniqueWithoutUsuariosInput[]
-    createMany?: rolesCreateManyUsuariosInputEnvelope
-    set?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    disconnect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    delete?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
-    update?: rolesUpdateWithWhereUniqueWithoutUsuariosInput | rolesUpdateWithWhereUniqueWithoutUsuariosInput[]
-    updateMany?: rolesUpdateManyWithWhereWithoutUsuariosInput | rolesUpdateManyWithWhereWithoutUsuariosInput[]
-    deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
+  export type auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
+    upsert?: auditoriaUpsertWithWhereUniqueWithoutUsuarioInput | auditoriaUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: auditoriaCreateManyUsuarioInputEnvelope
+    set?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    disconnect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    delete?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
+    update?: auditoriaUpdateWithWhereUniqueWithoutUsuarioInput | auditoriaUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: auditoriaUpdateManyWithWhereWithoutUsuarioInput | auditoriaUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
   }
 
   export type correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput = {
@@ -37977,25 +41431,39 @@ export namespace Prisma {
     deleteMany?: correspondenciaScalarWhereInput | correspondenciaScalarWhereInput[]
   }
 
-  export type auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput = {
-    create?: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput> | auditoriaCreateWithoutUsuarioInput[] | auditoriaUncheckedCreateWithoutUsuarioInput[]
-    connectOrCreate?: auditoriaCreateOrConnectWithoutUsuarioInput | auditoriaCreateOrConnectWithoutUsuarioInput[]
-    upsert?: auditoriaUpsertWithWhereUniqueWithoutUsuarioInput | auditoriaUpsertWithWhereUniqueWithoutUsuarioInput[]
-    createMany?: auditoriaCreateManyUsuarioInputEnvelope
-    set?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    disconnect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    delete?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    connect?: auditoriaWhereUniqueInput | auditoriaWhereUniqueInput[]
-    update?: auditoriaUpdateWithWhereUniqueWithoutUsuarioInput | auditoriaUpdateWithWhereUniqueWithoutUsuarioInput[]
-    updateMany?: auditoriaUpdateManyWithWhereWithoutUsuarioInput | auditoriaUpdateManyWithWhereWithoutUsuarioInput[]
-    deleteMany?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
+  export type movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput> | movimientos_financierosCreateWithoutUsuarioInput[] | movimientos_financierosUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: movimientos_financierosCreateOrConnectWithoutUsuarioInput | movimientos_financierosCreateOrConnectWithoutUsuarioInput[]
+    upsert?: movimientos_financierosUpsertWithWhereUniqueWithoutUsuarioInput | movimientos_financierosUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: movimientos_financierosCreateManyUsuarioInputEnvelope
+    set?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    disconnect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    delete?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    connect?: movimientos_financierosWhereUniqueInput | movimientos_financierosWhereUniqueInput[]
+    update?: movimientos_financierosUpdateWithWhereUniqueWithoutUsuarioInput | movimientos_financierosUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: movimientos_financierosUpdateManyWithWhereWithoutUsuarioInput | movimientos_financierosUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: movimientos_financierosScalarWhereInput | movimientos_financierosScalarWhereInput[]
   }
 
-  export type colegiados_asignados_socialCreateNestedManyWithoutInvitadosInput = {
-    create?: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput> | colegiados_asignados_socialCreateWithoutInvitadosInput[] | colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput[]
-    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput | colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput[]
-    createMany?: colegiados_asignados_socialCreateManyInvitadosInputEnvelope
-    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+  export type rolesUncheckedUpdateManyWithoutUsuariosNestedInput = {
+    create?: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput> | rolesCreateWithoutUsuariosInput[] | rolesUncheckedCreateWithoutUsuariosInput[]
+    connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
+    upsert?: rolesUpsertWithWhereUniqueWithoutUsuariosInput | rolesUpsertWithWhereUniqueWithoutUsuariosInput[]
+    createMany?: rolesCreateManyUsuariosInputEnvelope
+    set?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    disconnect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    delete?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+    update?: rolesUpdateWithWhereUniqueWithoutUsuariosInput | rolesUpdateWithWhereUniqueWithoutUsuariosInput[]
+    updateMany?: rolesUpdateManyWithWhereWithoutUsuariosInput | rolesUpdateManyWithWhereWithoutUsuariosInput[]
+    deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
+  }
+
+  export type asistencias_actividadCreateNestedManyWithoutInvitadosInput = {
+    create?: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput> | asistencias_actividadCreateWithoutInvitadosInput[] | asistencias_actividadUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: asistencias_actividadCreateOrConnectWithoutInvitadosInput | asistencias_actividadCreateOrConnectWithoutInvitadosInput[]
+    createMany?: asistencias_actividadCreateManyInvitadosInputEnvelope
+    connect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
   }
 
   export type colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput = {
@@ -38005,11 +41473,18 @@ export namespace Prisma {
     connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
   }
 
-  export type colegiados_asignados_socialUncheckedCreateNestedManyWithoutInvitadosInput = {
-    create?: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput> | colegiados_asignados_socialCreateWithoutInvitadosInput[] | colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput[]
-    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput | colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput[]
-    createMany?: colegiados_asignados_socialCreateManyInvitadosInputEnvelope
-    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
+  export type pagos_invitadosCreateNestedManyWithoutInvitadosInput = {
+    create?: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput> | pagos_invitadosCreateWithoutInvitadosInput[] | pagos_invitadosUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutInvitadosInput | pagos_invitadosCreateOrConnectWithoutInvitadosInput[]
+    createMany?: pagos_invitadosCreateManyInvitadosInputEnvelope
+    connect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+  }
+
+  export type asistencias_actividadUncheckedCreateNestedManyWithoutInvitadosInput = {
+    create?: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput> | asistencias_actividadCreateWithoutInvitadosInput[] | asistencias_actividadUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: asistencias_actividadCreateOrConnectWithoutInvitadosInput | asistencias_actividadCreateOrConnectWithoutInvitadosInput[]
+    createMany?: asistencias_actividadCreateManyInvitadosInputEnvelope
+    connect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput = {
@@ -38019,18 +41494,25 @@ export namespace Prisma {
     connect?: colegiados_registrados_actividad_institucionalWhereUniqueInput | colegiados_registrados_actividad_institucionalWhereUniqueInput[]
   }
 
-  export type colegiados_asignados_socialUpdateManyWithoutInvitadosNestedInput = {
-    create?: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput> | colegiados_asignados_socialCreateWithoutInvitadosInput[] | colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput[]
-    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput | colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput[]
-    upsert?: colegiados_asignados_socialUpsertWithWhereUniqueWithoutInvitadosInput | colegiados_asignados_socialUpsertWithWhereUniqueWithoutInvitadosInput[]
-    createMany?: colegiados_asignados_socialCreateManyInvitadosInputEnvelope
-    set?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    disconnect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    delete?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    update?: colegiados_asignados_socialUpdateWithWhereUniqueWithoutInvitadosInput | colegiados_asignados_socialUpdateWithWhereUniqueWithoutInvitadosInput[]
-    updateMany?: colegiados_asignados_socialUpdateManyWithWhereWithoutInvitadosInput | colegiados_asignados_socialUpdateManyWithWhereWithoutInvitadosInput[]
-    deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
+  export type pagos_invitadosUncheckedCreateNestedManyWithoutInvitadosInput = {
+    create?: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput> | pagos_invitadosCreateWithoutInvitadosInput[] | pagos_invitadosUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutInvitadosInput | pagos_invitadosCreateOrConnectWithoutInvitadosInput[]
+    createMany?: pagos_invitadosCreateManyInvitadosInputEnvelope
+    connect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+  }
+
+  export type asistencias_actividadUpdateManyWithoutInvitadosNestedInput = {
+    create?: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput> | asistencias_actividadCreateWithoutInvitadosInput[] | asistencias_actividadUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: asistencias_actividadCreateOrConnectWithoutInvitadosInput | asistencias_actividadCreateOrConnectWithoutInvitadosInput[]
+    upsert?: asistencias_actividadUpsertWithWhereUniqueWithoutInvitadosInput | asistencias_actividadUpsertWithWhereUniqueWithoutInvitadosInput[]
+    createMany?: asistencias_actividadCreateManyInvitadosInputEnvelope
+    set?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    disconnect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    delete?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    connect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    update?: asistencias_actividadUpdateWithWhereUniqueWithoutInvitadosInput | asistencias_actividadUpdateWithWhereUniqueWithoutInvitadosInput[]
+    updateMany?: asistencias_actividadUpdateManyWithWhereWithoutInvitadosInput | asistencias_actividadUpdateManyWithWhereWithoutInvitadosInput[]
+    deleteMany?: asistencias_actividadScalarWhereInput | asistencias_actividadScalarWhereInput[]
   }
 
   export type colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput = {
@@ -38047,18 +41529,32 @@ export namespace Prisma {
     deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
   }
 
-  export type colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosNestedInput = {
-    create?: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput> | colegiados_asignados_socialCreateWithoutInvitadosInput[] | colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput[]
-    connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput | colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput[]
-    upsert?: colegiados_asignados_socialUpsertWithWhereUniqueWithoutInvitadosInput | colegiados_asignados_socialUpsertWithWhereUniqueWithoutInvitadosInput[]
-    createMany?: colegiados_asignados_socialCreateManyInvitadosInputEnvelope
-    set?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    disconnect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    delete?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    connect?: colegiados_asignados_socialWhereUniqueInput | colegiados_asignados_socialWhereUniqueInput[]
-    update?: colegiados_asignados_socialUpdateWithWhereUniqueWithoutInvitadosInput | colegiados_asignados_socialUpdateWithWhereUniqueWithoutInvitadosInput[]
-    updateMany?: colegiados_asignados_socialUpdateManyWithWhereWithoutInvitadosInput | colegiados_asignados_socialUpdateManyWithWhereWithoutInvitadosInput[]
-    deleteMany?: colegiados_asignados_socialScalarWhereInput | colegiados_asignados_socialScalarWhereInput[]
+  export type pagos_invitadosUpdateManyWithoutInvitadosNestedInput = {
+    create?: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput> | pagos_invitadosCreateWithoutInvitadosInput[] | pagos_invitadosUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutInvitadosInput | pagos_invitadosCreateOrConnectWithoutInvitadosInput[]
+    upsert?: pagos_invitadosUpsertWithWhereUniqueWithoutInvitadosInput | pagos_invitadosUpsertWithWhereUniqueWithoutInvitadosInput[]
+    createMany?: pagos_invitadosCreateManyInvitadosInputEnvelope
+    set?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    disconnect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    delete?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    connect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    update?: pagos_invitadosUpdateWithWhereUniqueWithoutInvitadosInput | pagos_invitadosUpdateWithWhereUniqueWithoutInvitadosInput[]
+    updateMany?: pagos_invitadosUpdateManyWithWhereWithoutInvitadosInput | pagos_invitadosUpdateManyWithWhereWithoutInvitadosInput[]
+    deleteMany?: pagos_invitadosScalarWhereInput | pagos_invitadosScalarWhereInput[]
+  }
+
+  export type asistencias_actividadUncheckedUpdateManyWithoutInvitadosNestedInput = {
+    create?: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput> | asistencias_actividadCreateWithoutInvitadosInput[] | asistencias_actividadUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: asistencias_actividadCreateOrConnectWithoutInvitadosInput | asistencias_actividadCreateOrConnectWithoutInvitadosInput[]
+    upsert?: asistencias_actividadUpsertWithWhereUniqueWithoutInvitadosInput | asistencias_actividadUpsertWithWhereUniqueWithoutInvitadosInput[]
+    createMany?: asistencias_actividadCreateManyInvitadosInputEnvelope
+    set?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    disconnect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    delete?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    connect?: asistencias_actividadWhereUniqueInput | asistencias_actividadWhereUniqueInput[]
+    update?: asistencias_actividadUpdateWithWhereUniqueWithoutInvitadosInput | asistencias_actividadUpdateWithWhereUniqueWithoutInvitadosInput[]
+    updateMany?: asistencias_actividadUpdateManyWithWhereWithoutInvitadosInput | asistencias_actividadUpdateManyWithWhereWithoutInvitadosInput[]
+    deleteMany?: asistencias_actividadScalarWhereInput | asistencias_actividadScalarWhereInput[]
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput = {
@@ -38075,8 +41571,122 @@ export namespace Prisma {
     deleteMany?: colegiados_registrados_actividad_institucionalScalarWhereInput | colegiados_registrados_actividad_institucionalScalarWhereInput[]
   }
 
+  export type pagos_invitadosUncheckedUpdateManyWithoutInvitadosNestedInput = {
+    create?: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput> | pagos_invitadosCreateWithoutInvitadosInput[] | pagos_invitadosUncheckedCreateWithoutInvitadosInput[]
+    connectOrCreate?: pagos_invitadosCreateOrConnectWithoutInvitadosInput | pagos_invitadosCreateOrConnectWithoutInvitadosInput[]
+    upsert?: pagos_invitadosUpsertWithWhereUniqueWithoutInvitadosInput | pagos_invitadosUpsertWithWhereUniqueWithoutInvitadosInput[]
+    createMany?: pagos_invitadosCreateManyInvitadosInputEnvelope
+    set?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    disconnect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    delete?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    connect?: pagos_invitadosWhereUniqueInput | pagos_invitadosWhereUniqueInput[]
+    update?: pagos_invitadosUpdateWithWhereUniqueWithoutInvitadosInput | pagos_invitadosUpdateWithWhereUniqueWithoutInvitadosInput[]
+    updateMany?: pagos_invitadosUpdateManyWithWhereWithoutInvitadosInput | pagos_invitadosUpdateManyWithWhereWithoutInvitadosInput[]
+    deleteMany?: pagos_invitadosScalarWhereInput | pagos_invitadosScalarWhereInput[]
+  }
+
+  export type origen_movimientoCreateNestedManyWithoutPostulacionesInput = {
+    create?: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput> | origen_movimientoCreateWithoutPostulacionesInput[] | origen_movimientoUncheckedCreateWithoutPostulacionesInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPostulacionesInput | origen_movimientoCreateOrConnectWithoutPostulacionesInput[]
+    createMany?: origen_movimientoCreateManyPostulacionesInputEnvelope
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+  }
+
+  export type origen_movimientoUncheckedCreateNestedManyWithoutPostulacionesInput = {
+    create?: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput> | origen_movimientoCreateWithoutPostulacionesInput[] | origen_movimientoUncheckedCreateWithoutPostulacionesInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPostulacionesInput | origen_movimientoCreateOrConnectWithoutPostulacionesInput[]
+    createMany?: origen_movimientoCreateManyPostulacionesInputEnvelope
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+  }
+
+  export type origen_movimientoUpdateManyWithoutPostulacionesNestedInput = {
+    create?: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput> | origen_movimientoCreateWithoutPostulacionesInput[] | origen_movimientoUncheckedCreateWithoutPostulacionesInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPostulacionesInput | origen_movimientoCreateOrConnectWithoutPostulacionesInput[]
+    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutPostulacionesInput | origen_movimientoUpsertWithWhereUniqueWithoutPostulacionesInput[]
+    createMany?: origen_movimientoCreateManyPostulacionesInputEnvelope
+    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    update?: origen_movimientoUpdateWithWhereUniqueWithoutPostulacionesInput | origen_movimientoUpdateWithWhereUniqueWithoutPostulacionesInput[]
+    updateMany?: origen_movimientoUpdateManyWithWhereWithoutPostulacionesInput | origen_movimientoUpdateManyWithWhereWithoutPostulacionesInput[]
+    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
+  }
+
+  export type origen_movimientoUncheckedUpdateManyWithoutPostulacionesNestedInput = {
+    create?: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput> | origen_movimientoCreateWithoutPostulacionesInput[] | origen_movimientoUncheckedCreateWithoutPostulacionesInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPostulacionesInput | origen_movimientoCreateOrConnectWithoutPostulacionesInput[]
+    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutPostulacionesInput | origen_movimientoUpsertWithWhereUniqueWithoutPostulacionesInput[]
+    createMany?: origen_movimientoCreateManyPostulacionesInputEnvelope
+    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    update?: origen_movimientoUpdateWithWhereUniqueWithoutPostulacionesInput | origen_movimientoUpdateWithWhereUniqueWithoutPostulacionesInput[]
+    updateMany?: origen_movimientoUpdateManyWithWhereWithoutPostulacionesInput | origen_movimientoUpdateManyWithWhereWithoutPostulacionesInput[]
+    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
+  }
+
   export type BoolFieldUpdateOperationsInput = {
     set?: boolean
+  }
+
+  export type origen_movimientoCreateNestedManyWithoutPagos_invitadosInput = {
+    create?: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput> | origen_movimientoCreateWithoutPagos_invitadosInput[] | origen_movimientoUncheckedCreateWithoutPagos_invitadosInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPagos_invitadosInput | origen_movimientoCreateOrConnectWithoutPagos_invitadosInput[]
+    createMany?: origen_movimientoCreateManyPagos_invitadosInputEnvelope
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+  }
+
+  export type invitadosCreateNestedOneWithoutPagos_invitadosInput = {
+    create?: XOR<invitadosCreateWithoutPagos_invitadosInput, invitadosUncheckedCreateWithoutPagos_invitadosInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutPagos_invitadosInput
+    connect?: invitadosWhereUniqueInput
+  }
+
+  export type origen_movimientoUncheckedCreateNestedManyWithoutPagos_invitadosInput = {
+    create?: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput> | origen_movimientoCreateWithoutPagos_invitadosInput[] | origen_movimientoUncheckedCreateWithoutPagos_invitadosInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPagos_invitadosInput | origen_movimientoCreateOrConnectWithoutPagos_invitadosInput[]
+    createMany?: origen_movimientoCreateManyPagos_invitadosInputEnvelope
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+  }
+
+  export type origen_movimientoUpdateManyWithoutPagos_invitadosNestedInput = {
+    create?: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput> | origen_movimientoCreateWithoutPagos_invitadosInput[] | origen_movimientoUncheckedCreateWithoutPagos_invitadosInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPagos_invitadosInput | origen_movimientoCreateOrConnectWithoutPagos_invitadosInput[]
+    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutPagos_invitadosInput | origen_movimientoUpsertWithWhereUniqueWithoutPagos_invitadosInput[]
+    createMany?: origen_movimientoCreateManyPagos_invitadosInputEnvelope
+    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    update?: origen_movimientoUpdateWithWhereUniqueWithoutPagos_invitadosInput | origen_movimientoUpdateWithWhereUniqueWithoutPagos_invitadosInput[]
+    updateMany?: origen_movimientoUpdateManyWithWhereWithoutPagos_invitadosInput | origen_movimientoUpdateManyWithWhereWithoutPagos_invitadosInput[]
+    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
+  }
+
+  export type invitadosUpdateOneWithoutPagos_invitadosNestedInput = {
+    create?: XOR<invitadosCreateWithoutPagos_invitadosInput, invitadosUncheckedCreateWithoutPagos_invitadosInput>
+    connectOrCreate?: invitadosCreateOrConnectWithoutPagos_invitadosInput
+    upsert?: invitadosUpsertWithoutPagos_invitadosInput
+    disconnect?: invitadosWhereInput | boolean
+    delete?: invitadosWhereInput | boolean
+    connect?: invitadosWhereUniqueInput
+    update?: XOR<XOR<invitadosUpdateToOneWithWhereWithoutPagos_invitadosInput, invitadosUpdateWithoutPagos_invitadosInput>, invitadosUncheckedUpdateWithoutPagos_invitadosInput>
+  }
+
+  export type origen_movimientoUncheckedUpdateManyWithoutPagos_invitadosNestedInput = {
+    create?: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput> | origen_movimientoCreateWithoutPagos_invitadosInput[] | origen_movimientoUncheckedCreateWithoutPagos_invitadosInput[]
+    connectOrCreate?: origen_movimientoCreateOrConnectWithoutPagos_invitadosInput | origen_movimientoCreateOrConnectWithoutPagos_invitadosInput[]
+    upsert?: origen_movimientoUpsertWithWhereUniqueWithoutPagos_invitadosInput | origen_movimientoUpsertWithWhereUniqueWithoutPagos_invitadosInput[]
+    createMany?: origen_movimientoCreateManyPagos_invitadosInputEnvelope
+    set?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    disconnect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    delete?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    connect?: origen_movimientoWhereUniqueInput | origen_movimientoWhereUniqueInput[]
+    update?: origen_movimientoUpdateWithWhereUniqueWithoutPagos_invitadosInput | origen_movimientoUpdateWithWhereUniqueWithoutPagos_invitadosInput[]
+    updateMany?: origen_movimientoUpdateManyWithWhereWithoutPagos_invitadosInput | origen_movimientoUpdateManyWithWhereWithoutPagos_invitadosInput[]
+    deleteMany?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -38363,9 +41973,10 @@ export namespace Prisma {
     fecha_registro?: Date | string | null
     estado?: string | null
     fecha_actualizacion?: Date | string | null
-    roles?: rolesCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUncheckedCreateWithoutActividades_institucionalesInput = {
@@ -38379,9 +41990,10 @@ export namespace Prisma {
     fecha_registro?: Date | string | null
     estado?: string | null
     fecha_actualizacion?: Date | string | null
-    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosCreateOrConnectWithoutActividades_institucionalesInput = {
@@ -38391,11 +42003,13 @@ export namespace Prisma {
 
   export type asistencias_actividadCreateWithoutActividades_institucionalesInput = {
     colegiados?: colegiadosCreateNestedOneWithoutAsistencias_actividadInput
+    invitados?: invitadosCreateNestedOneWithoutAsistencias_actividadInput
   }
 
   export type asistencias_actividadUncheckedCreateWithoutActividades_institucionalesInput = {
     id_asistencia?: number
     id_colegiado?: number | null
+    id_invitado?: number | null
   }
 
   export type asistencias_actividadCreateOrConnectWithoutActividades_institucionalesInput = {
@@ -38414,9 +42028,9 @@ export namespace Prisma {
     metodo_pago?: string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
-    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
-    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedCreateWithoutActividades_institucionalesInput = {
@@ -38462,9 +42076,10 @@ export namespace Prisma {
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    roles?: rolesUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutActividades_institucionalesInput = {
@@ -38478,9 +42093,10 @@ export namespace Prisma {
     fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type asistencias_actividadUpsertWithWhereUniqueWithoutActividades_institucionalesInput = {
@@ -38506,6 +42122,7 @@ export namespace Prisma {
     id_asistencia?: IntFilter<"asistencias_actividad"> | number
     id_actividad?: IntNullableFilter<"asistencias_actividad"> | number | null
     id_colegiado?: IntNullableFilter<"asistencias_actividad"> | number | null
+    id_invitado?: IntNullableFilter<"asistencias_actividad"> | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutActividades_institucionalesInput = {
@@ -38581,9 +42198,9 @@ export namespace Prisma {
     estado?: string | null
     pin_acceso?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUncheckedCreateWithoutAsistencias_actividadInput = {
@@ -38599,14 +42216,40 @@ export namespace Prisma {
     estado?: string | null
     pin_acceso?: string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosCreateOrConnectWithoutAsistencias_actividadInput = {
     where: colegiadosWhereUniqueInput
     create: XOR<colegiadosCreateWithoutAsistencias_actividadInput, colegiadosUncheckedCreateWithoutAsistencias_actividadInput>
+  }
+
+  export type invitadosCreateWithoutAsistencias_actividadInput = {
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosUncheckedCreateWithoutAsistencias_actividadInput = {
+    id_invitado?: number
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosUncheckedCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosCreateOrConnectWithoutAsistencias_actividadInput = {
+    where: invitadosWhereUniqueInput
+    create: XOR<invitadosCreateWithoutAsistencias_actividadInput, invitadosUncheckedCreateWithoutAsistencias_actividadInput>
   }
 
   export type actividades_institucionalesUpsertWithoutAsistencias_actividadInput = {
@@ -38668,9 +42311,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosUncheckedUpdateWithoutAsistencias_actividadInput = {
@@ -38686,56 +42329,41 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
-  export type origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput = {
-    tipo_origen?: string | null
-    monto?: Decimal | DecimalJsLike | number | string | null
-    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
-    pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+  export type invitadosUpsertWithoutAsistencias_actividadInput = {
+    update: XOR<invitadosUpdateWithoutAsistencias_actividadInput, invitadosUncheckedUpdateWithoutAsistencias_actividadInput>
+    create: XOR<invitadosCreateWithoutAsistencias_actividadInput, invitadosUncheckedCreateWithoutAsistencias_actividadInput>
+    where?: invitadosWhereInput
   }
 
-  export type origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput = {
-    id_origen?: number
-    tipo_origen?: string | null
-    id_pago_colegiado?: number | null
-    monto?: Decimal | DecimalJsLike | number | string | null
-    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
+  export type invitadosUpdateToOneWithWhereWithoutAsistencias_actividadInput = {
+    where?: invitadosWhereInput
+    data: XOR<invitadosUpdateWithoutAsistencias_actividadInput, invitadosUncheckedUpdateWithoutAsistencias_actividadInput>
   }
 
-  export type origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput = {
-    where: origen_movimientoWhereUniqueInput
-    create: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+  export type invitadosUpdateWithoutAsistencias_actividadInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUpdateManyWithoutInvitadosNestedInput
   }
 
-  export type origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope = {
-    data: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput = {
-    nombre: string
-    apellido: string
-    correo?: string | null
-    telefono?: string | null
-    colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutInvitadosInput
-  }
-
-  export type invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput = {
-    id_invitado?: number
-    nombre: string
-    apellido: string
-    correo?: string | null
-    telefono?: string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutInvitadosInput
-  }
-
-  export type invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput = {
-    where: invitadosWhereUniqueInput
-    create: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+  export type invitadosUncheckedUpdateWithoutAsistencias_actividadInput = {
+    id_invitado?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUncheckedUpdateManyWithoutInvitadosNestedInput
   }
 
   export type actividades_institucionalesCreateWithoutColegiados_registrados_actividad_institucionalInput = {
@@ -38808,59 +42436,59 @@ export namespace Prisma {
     create: XOR<colegiadosCreateWithoutColegiados_registrados_actividad_institucionalInput, colegiadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
   }
 
-  export type origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput = {
+  export type invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput = {
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput = {
+    id_invitado?: number
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutInvitadosInput
+    pagos_invitados?: pagos_invitadosUncheckedCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput = {
+    where: invitadosWhereUniqueInput
+    create: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput = {
+    tipo_origen?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
+    pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+    pagos_invitados?: pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput
+    postulaciones?: postulacionesCreateNestedOneWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput = {
+    id_origen?: number
+    tipo_origen?: string | null
+    id_pago_colegiado?: number | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoCreateOrConnectWithoutColegiados_registrados_actividad_institucionalInput = {
     where: origen_movimientoWhereUniqueInput
-    update: XOR<origen_movimientoUpdateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
     create: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
   }
 
-  export type origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput = {
-    where: origen_movimientoWhereUniqueInput
-    data: XOR<origen_movimientoUpdateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
-  }
-
-  export type origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput = {
-    where: origen_movimientoScalarWhereInput
-    data: XOR<origen_movimientoUpdateManyMutationInput, origen_movimientoUncheckedUpdateManyWithoutColegiados_registrados_actividad_institucionalInput>
-  }
-
-  export type origen_movimientoScalarWhereInput = {
-    AND?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
-    OR?: origen_movimientoScalarWhereInput[]
-    NOT?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
-    id_origen?: IntFilter<"origen_movimiento"> | number
-    tipo_origen?: StringNullableFilter<"origen_movimiento"> | string | null
-    id_pago_colegiado?: IntNullableFilter<"origen_movimiento"> | number | null
-    id_registro_actividad_institucional?: IntNullableFilter<"origen_movimiento"> | number | null
-    monto?: DecimalNullableFilter<"origen_movimiento"> | Decimal | DecimalJsLike | number | string | null
-  }
-
-  export type invitadosUpsertWithoutColegiados_registrados_actividad_institucionalInput = {
-    update: XOR<invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
-    create: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
-    where?: invitadosWhereInput
-  }
-
-  export type invitadosUpdateToOneWithWhereWithoutColegiados_registrados_actividad_institucionalInput = {
-    where?: invitadosWhereInput
-    data: XOR<invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
-  }
-
-  export type invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
-    nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutInvitadosNestedInput
-  }
-
-  export type invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
-    id_invitado?: IntFieldUpdateOperationsInput | number
-    nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosNestedInput
+  export type origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInputEnvelope = {
+    data: origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInput | origen_movimientoCreateManyColegiados_registrados_actividad_institucionalInput[]
+    skipDuplicates?: boolean
   }
 
   export type actividades_institucionalesUpsertWithoutColegiados_registrados_actividad_institucionalInput = {
@@ -38945,6 +42573,67 @@ export namespace Prisma {
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
+  export type invitadosUpsertWithoutColegiados_registrados_actividad_institucionalInput = {
+    update: XOR<invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+    create: XOR<invitadosCreateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+    where?: invitadosWhereInput
+  }
+
+  export type invitadosUpdateToOneWithWhereWithoutColegiados_registrados_actividad_institucionalInput = {
+    where?: invitadosWhereInput
+    data: XOR<invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput, invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type invitadosUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUpdateManyWithoutInvitadosNestedInput
+  }
+
+  export type invitadosUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
+    id_invitado?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutInvitadosNestedInput
+    pagos_invitados?: pagos_invitadosUncheckedUpdateManyWithoutInvitadosNestedInput
+  }
+
+  export type origen_movimientoUpsertWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput = {
+    where: origen_movimientoWhereUniqueInput
+    update: XOR<origen_movimientoUpdateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+    create: XOR<origen_movimientoCreateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedCreateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type origen_movimientoUpdateWithWhereUniqueWithoutColegiados_registrados_actividad_institucionalInput = {
+    where: origen_movimientoWhereUniqueInput
+    data: XOR<origen_movimientoUpdateWithoutColegiados_registrados_actividad_institucionalInput, origen_movimientoUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type origen_movimientoUpdateManyWithWhereWithoutColegiados_registrados_actividad_institucionalInput = {
+    where: origen_movimientoScalarWhereInput
+    data: XOR<origen_movimientoUpdateManyMutationInput, origen_movimientoUncheckedUpdateManyWithoutColegiados_registrados_actividad_institucionalInput>
+  }
+
+  export type origen_movimientoScalarWhereInput = {
+    AND?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
+    OR?: origen_movimientoScalarWhereInput[]
+    NOT?: origen_movimientoScalarWhereInput | origen_movimientoScalarWhereInput[]
+    id_origen?: IntFilter<"origen_movimiento"> | number
+    tipo_origen?: StringNullableFilter<"origen_movimiento"> | string | null
+    id_pago_colegiado?: IntNullableFilter<"origen_movimiento"> | number | null
+    id_registro_actividad_institucional?: IntNullableFilter<"origen_movimiento"> | number | null
+    monto?: DecimalNullableFilter<"origen_movimiento"> | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: IntNullableFilter<"origen_movimiento"> | number | null
+    id_pago_invitado?: IntNullableFilter<"origen_movimiento"> | number | null
+  }
+
   export type convenioCreateWithoutActividades_socialesInput = {
     nombre?: string | null
     descripcion?: string | null
@@ -38972,19 +42661,19 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateWithoutActividades_socialesInput = {
     total_horas?: number | null
     horas_meta?: number | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    estado?: string | null
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
     pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
-    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutActividades_socialesInput = {
     id_asignacion?: number
     id_colegiado?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
@@ -39051,10 +42740,10 @@ export namespace Prisma {
     id_asignacion?: IntFilter<"colegiados_asignados_social"> | number
     id_actividad_social?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_colegiado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
-    id_invitado?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     id_pasante?: IntNullableFilter<"colegiados_asignados_social"> | number | null
     total_horas?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
     horas_meta?: FloatNullableFilter<"colegiados_asignados_social"> | number | null
+    estado?: StringNullableFilter<"colegiados_asignados_social"> | string | null
   }
 
   export type actividades_socialesCreateWithoutConvenioInput = {
@@ -39144,8 +42833,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
-    roles?: rolesCreateNestedManyWithoutUsuariosInput
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUncheckedCreateWithoutDestinatarioInput = {
@@ -39160,8 +42850,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
-    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosCreateOrConnectWithoutDestinatarioInput = {
@@ -39191,8 +42882,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUpdateManyWithoutUsuariosNestedInput
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutDestinatarioInput = {
@@ -39207,17 +42899,20 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type asistencias_actividadCreateWithoutColegiadosInput = {
     actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutAsistencias_actividadInput
+    invitados?: invitadosCreateNestedOneWithoutAsistencias_actividadInput
   }
 
   export type asistencias_actividadUncheckedCreateWithoutColegiadosInput = {
     id_asistencia?: number
     id_actividad?: number | null
+    id_invitado?: number | null
   }
 
   export type asistencias_actividadCreateOrConnectWithoutColegiadosInput = {
@@ -39233,19 +42928,19 @@ export namespace Prisma {
   export type colegiados_asignados_socialCreateWithoutColegiadosInput = {
     total_horas?: number | null
     horas_meta?: number | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    estado?: string | null
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
-    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutColegiadosInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
@@ -39256,6 +42951,39 @@ export namespace Prisma {
 
   export type colegiados_asignados_socialCreateManyColegiadosInputEnvelope = {
     data: colegiados_asignados_socialCreateManyColegiadosInput | colegiados_asignados_socialCreateManyColegiadosInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput = {
+    fecha_registro?: Date | string | null
+    estado_registro?: string | null
+    metodo_pago?: string | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput = {
+    id_registro?: number
+    id_actividad?: number | null
+    fecha_registro?: Date | string | null
+    estado_registro?: string | null
+    metodo_pago?: string | null
+    id_invitado?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
+    origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput = {
+    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
+    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope = {
+    data: colegiados_registrados_actividad_institucionalCreateManyColegiadosInput | colegiados_registrados_actividad_institucionalCreateManyColegiadosInput[]
     skipDuplicates?: boolean
   }
 
@@ -39292,6 +43020,7 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
+    metodo_pago?: string | null
     origen_movimiento?: origen_movimientoCreateNestedManyWithoutPagos_colegiadosInput
   }
 
@@ -39302,6 +43031,7 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
+    metodo_pago?: string | null
     origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutPagos_colegiadosInput
   }
 
@@ -39312,39 +43042,6 @@ export namespace Prisma {
 
   export type pagos_colegiadosCreateManyColegiadosInputEnvelope = {
     data: pagos_colegiadosCreateManyColegiadosInput | pagos_colegiadosCreateManyColegiadosInput[]
-    skipDuplicates?: boolean
-  }
-
-  export type colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput = {
-    fecha_registro?: Date | string | null
-    estado_registro?: string | null
-    metodo_pago?: string | null
-    createdAt?: Date | string | null
-    updatedAt?: Date | string | null
-    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
-    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
-    actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput = {
-    id_registro?: number
-    id_actividad?: number | null
-    fecha_registro?: Date | string | null
-    estado_registro?: string | null
-    metodo_pago?: string | null
-    id_invitado?: number | null
-    createdAt?: Date | string | null
-    updatedAt?: Date | string | null
-    origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalCreateOrConnectWithoutColegiadosInput = {
-    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
-    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput>
-  }
-
-  export type colegiados_registrados_actividad_institucionalCreateManyColegiadosInputEnvelope = {
-    data: colegiados_registrados_actividad_institucionalCreateManyColegiadosInput | colegiados_registrados_actividad_institucionalCreateManyColegiadosInput[]
     skipDuplicates?: boolean
   }
 
@@ -39378,6 +43075,22 @@ export namespace Prisma {
   export type colegiados_asignados_socialUpdateManyWithWhereWithoutColegiadosInput = {
     where: colegiados_asignados_socialScalarWhereInput
     data: XOR<colegiados_asignados_socialUpdateManyMutationInput, colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput = {
+    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
+    update: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput>
+    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput = {
+    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
+    data: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput = {
+    where: colegiados_registrados_actividad_institucionalScalarWhereInput
+    data: XOR<colegiados_registrados_actividad_institucionalUpdateManyMutationInput, colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosInput>
   }
 
   export type documentos_colegiadosUpsertWithWhereUniqueWithoutColegiadosInput = {
@@ -39436,44 +43149,32 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"pagos_colegiados"> | Decimal | DecimalJsLike | number | string | null
     estado_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
     comprobante?: StringNullableFilter<"pagos_colegiados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_colegiados"> | string | null
   }
 
-  export type colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutColegiadosInput = {
-    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
-    update: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput>
-    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutColegiadosInput>
+  export type asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput = {
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
   }
 
-  export type colegiados_registrados_actividad_institucionalUpdateWithWhereUniqueWithoutColegiadosInput = {
-    where: colegiados_registrados_actividad_institucionalWhereUniqueInput
-    data: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput>
+  export type asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput = {
+    id_asistencia_diaria?: number
+    fecha_marcaje: Date | string
+    hora_entrada?: Date | string | null
+    hora_salida?: Date | string | null
+    horas_ganadas?: number | null
   }
 
-  export type colegiados_registrados_actividad_institucionalUpdateManyWithWhereWithoutColegiadosInput = {
-    where: colegiados_registrados_actividad_institucionalScalarWhereInput
-    data: XOR<colegiados_registrados_actividad_institucionalUpdateManyMutationInput, colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosInput>
+  export type asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaWhereUniqueInput
+    create: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput>
   }
 
-  export type invitadosCreateWithoutColegiados_asignados_socialInput = {
-    nombre: string
-    apellido: string
-    correo?: string | null
-    telefono?: string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput
-  }
-
-  export type invitadosUncheckedCreateWithoutColegiados_asignados_socialInput = {
-    id_invitado?: number
-    nombre: string
-    apellido: string
-    correo?: string | null
-    telefono?: string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput
-  }
-
-  export type invitadosCreateOrConnectWithoutColegiados_asignados_socialInput = {
-    where: invitadosWhereUniqueInput
-    create: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
+  export type asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope = {
+    data: asistencia_social_diariaCreateManyColegiados_asignados_socialInput | asistencia_social_diariaCreateManyColegiados_asignados_socialInput[]
+    skipDuplicates?: boolean
   }
 
   export type actividades_socialesCreateWithoutColegiados_asignados_socialInput = {
@@ -39524,9 +43225,9 @@ export namespace Prisma {
     estado?: string | null
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUncheckedCreateWithoutColegiados_asignados_socialInput = {
@@ -39542,9 +43243,9 @@ export namespace Prisma {
     estado?: string | null
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
     documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosCreateOrConnectWithoutColegiados_asignados_socialInput = {
@@ -39584,57 +43285,32 @@ export namespace Prisma {
     create: XOR<pasantesCreateWithoutColegiados_asignados_socialInput, pasantesUncheckedCreateWithoutColegiados_asignados_socialInput>
   }
 
-  export type asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput = {
-    fecha_marcaje: Date | string
-    hora_entrada?: Date | string | null
-    hora_salida?: Date | string | null
-    horas_ganadas?: number | null
-  }
-
-  export type asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput = {
-    id_asistencia_diaria?: number
-    fecha_marcaje: Date | string
-    hora_entrada?: Date | string | null
-    hora_salida?: Date | string | null
-    horas_ganadas?: number | null
-  }
-
-  export type asistencia_social_diariaCreateOrConnectWithoutColegiados_asignados_socialInput = {
+  export type asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput = {
     where: asistencia_social_diariaWhereUniqueInput
+    update: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
     create: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput>
   }
 
-  export type asistencia_social_diariaCreateManyColegiados_asignados_socialInputEnvelope = {
-    data: asistencia_social_diariaCreateManyColegiados_asignados_socialInput | asistencia_social_diariaCreateManyColegiados_asignados_socialInput[]
-    skipDuplicates?: boolean
+  export type asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaWhereUniqueInput
+    data: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
   }
 
-  export type invitadosUpsertWithoutColegiados_asignados_socialInput = {
-    update: XOR<invitadosUpdateWithoutColegiados_asignados_socialInput, invitadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
-    create: XOR<invitadosCreateWithoutColegiados_asignados_socialInput, invitadosUncheckedCreateWithoutColegiados_asignados_socialInput>
-    where?: invitadosWhereInput
+  export type asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput = {
+    where: asistencia_social_diariaScalarWhereInput
+    data: XOR<asistencia_social_diariaUpdateManyMutationInput, asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialInput>
   }
 
-  export type invitadosUpdateToOneWithWhereWithoutColegiados_asignados_socialInput = {
-    where?: invitadosWhereInput
-    data: XOR<invitadosUpdateWithoutColegiados_asignados_socialInput, invitadosUncheckedUpdateWithoutColegiados_asignados_socialInput>
-  }
-
-  export type invitadosUpdateWithoutColegiados_asignados_socialInput = {
-    nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput
-  }
-
-  export type invitadosUncheckedUpdateWithoutColegiados_asignados_socialInput = {
-    id_invitado?: IntFieldUpdateOperationsInput | number
-    nombre?: StringFieldUpdateOperationsInput | string
-    apellido?: StringFieldUpdateOperationsInput | string
-    correo?: NullableStringFieldUpdateOperationsInput | string | null
-    telefono?: NullableStringFieldUpdateOperationsInput | string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput
+  export type asistencia_social_diariaScalarWhereInput = {
+    AND?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+    OR?: asistencia_social_diariaScalarWhereInput[]
+    NOT?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
+    id_asistencia_diaria?: IntFilter<"asistencia_social_diaria"> | number
+    id_asignacion?: IntFilter<"asistencia_social_diaria"> | number
+    fecha_marcaje?: DateTimeFilter<"asistencia_social_diaria"> | Date | string
+    hora_entrada?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    hora_salida?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
+    horas_ganadas?: FloatNullableFilter<"asistencia_social_diaria"> | number | null
   }
 
   export type actividades_socialesUpsertWithoutColegiados_asignados_socialInput = {
@@ -39702,9 +43378,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosUncheckedUpdateWithoutColegiados_asignados_socialInput = {
@@ -39720,9 +43396,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
     documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
   export type pasantesUpsertWithoutColegiados_asignados_socialInput = {
@@ -39763,38 +43439,10 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type asistencia_social_diariaUpsertWithWhereUniqueWithoutColegiados_asignados_socialInput = {
-    where: asistencia_social_diariaWhereUniqueInput
-    update: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
-    create: XOR<asistencia_social_diariaCreateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedCreateWithoutColegiados_asignados_socialInput>
-  }
-
-  export type asistencia_social_diariaUpdateWithWhereUniqueWithoutColegiados_asignados_socialInput = {
-    where: asistencia_social_diariaWhereUniqueInput
-    data: XOR<asistencia_social_diariaUpdateWithoutColegiados_asignados_socialInput, asistencia_social_diariaUncheckedUpdateWithoutColegiados_asignados_socialInput>
-  }
-
-  export type asistencia_social_diariaUpdateManyWithWhereWithoutColegiados_asignados_socialInput = {
-    where: asistencia_social_diariaScalarWhereInput
-    data: XOR<asistencia_social_diariaUpdateManyMutationInput, asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialInput>
-  }
-
-  export type asistencia_social_diariaScalarWhereInput = {
-    AND?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
-    OR?: asistencia_social_diariaScalarWhereInput[]
-    NOT?: asistencia_social_diariaScalarWhereInput | asistencia_social_diariaScalarWhereInput[]
-    id_asistencia_diaria?: IntFilter<"asistencia_social_diaria"> | number
-    id_asignacion?: IntFilter<"asistencia_social_diaria"> | number
-    fecha_marcaje?: DateTimeFilter<"asistencia_social_diaria"> | Date | string
-    hora_entrada?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
-    hora_salida?: DateTimeNullableFilter<"asistencia_social_diaria"> | Date | string | null
-    horas_ganadas?: FloatNullableFilter<"asistencia_social_diaria"> | number | null
-  }
-
   export type colegiados_asignados_socialCreateWithoutAsistencia_social_diariaInput = {
     total_horas?: number | null
     horas_meta?: number | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    estado?: string | null
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
     pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
@@ -39804,10 +43452,10 @@ export namespace Prisma {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
   }
 
   export type colegiados_asignados_socialCreateOrConnectWithoutAsistencia_social_diariaInput = {
@@ -39829,7 +43477,7 @@ export namespace Prisma {
   export type colegiados_asignados_socialUpdateWithoutAsistencia_social_diariaInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
@@ -39839,10 +43487,10 @@ export namespace Prisma {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type colegiadosCreateWithoutDocumentos_colegiadosInput = {
@@ -39858,8 +43506,8 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
-    pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
+    pagos_colegiados?: pagos_colegiadosCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUncheckedCreateWithoutDocumentos_colegiadosInput = {
@@ -39876,8 +43524,8 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
-    pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
+    pagos_colegiados?: pagos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosCreateOrConnectWithoutDocumentos_colegiadosInput = {
@@ -39909,8 +43557,8 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
-    pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
+    pagos_colegiados?: pagos_colegiadosUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosUncheckedUpdateWithoutDocumentos_colegiadosInput = {
@@ -39927,15 +43575,17 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
-    pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
+    pagos_colegiados?: pagos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
   export type origen_movimientoCreateWithoutMovimientos_financierosInput = {
     tipo_origen?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
     pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+    pagos_invitados?: pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput
+    postulaciones?: postulacionesCreateNestedOneWithoutOrigen_movimientoInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
   }
 
   export type origen_movimientoUncheckedCreateWithoutMovimientos_financierosInput = {
@@ -39944,6 +43594,8 @@ export namespace Prisma {
     id_pago_colegiado?: number | null
     id_registro_actividad_institucional?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
   }
 
   export type origen_movimientoCreateOrConnectWithoutMovimientos_financierosInput = {
@@ -39975,6 +43627,44 @@ export namespace Prisma {
     create: XOR<presupuestosCreateWithoutMovimientos_financierosInput, presupuestosUncheckedCreateWithoutMovimientos_financierosInput>
   }
 
+  export type usuariosCreateWithoutMovimientos_financierosInput = {
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
+  }
+
+  export type usuariosUncheckedCreateWithoutMovimientos_financierosInput = {
+    id_usuario?: number
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+  }
+
+  export type usuariosCreateOrConnectWithoutMovimientos_financierosInput = {
+    where: usuariosWhereUniqueInput
+    create: XOR<usuariosCreateWithoutMovimientos_financierosInput, usuariosUncheckedCreateWithoutMovimientos_financierosInput>
+  }
+
   export type origen_movimientoUpsertWithoutMovimientos_financierosInput = {
     update: XOR<origen_movimientoUpdateWithoutMovimientos_financierosInput, origen_movimientoUncheckedUpdateWithoutMovimientos_financierosInput>
     create: XOR<origen_movimientoCreateWithoutMovimientos_financierosInput, origen_movimientoUncheckedCreateWithoutMovimientos_financierosInput>
@@ -39989,8 +43679,10 @@ export namespace Prisma {
   export type origen_movimientoUpdateWithoutMovimientos_financierosInput = {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
-    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput
+    pagos_invitados?: pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput
+    postulaciones?: postulacionesUpdateOneWithoutOrigen_movimientoNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
   }
 
   export type origen_movimientoUncheckedUpdateWithoutMovimientos_financierosInput = {
@@ -39999,6 +43691,8 @@ export namespace Prisma {
     id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type presupuestosUpsertWithoutMovimientos_financierosInput = {
@@ -40031,6 +43725,50 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type usuariosUpsertWithoutMovimientos_financierosInput = {
+    update: XOR<usuariosUpdateWithoutMovimientos_financierosInput, usuariosUncheckedUpdateWithoutMovimientos_financierosInput>
+    create: XOR<usuariosCreateWithoutMovimientos_financierosInput, usuariosUncheckedCreateWithoutMovimientos_financierosInput>
+    where?: usuariosWhereInput
+  }
+
+  export type usuariosUpdateToOneWithWhereWithoutMovimientos_financierosInput = {
+    where?: usuariosWhereInput
+    data: XOR<usuariosUpdateWithoutMovimientos_financierosInput, usuariosUncheckedUpdateWithoutMovimientos_financierosInput>
+  }
+
+  export type usuariosUpdateWithoutMovimientos_financierosInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
+  }
+
+  export type usuariosUncheckedUpdateWithoutMovimientos_financierosInput = {
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+  }
+
   export type movimientos_financierosCreateWithoutOrigen_movimientoInput = {
     fecha_movimiento?: Date | string | null
     tipo_movimiento?: string | null
@@ -40038,7 +43776,13 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
     presupuestos?: presupuestosCreateNestedOneWithoutMovimientos_financierosInput
+    usuario?: usuariosCreateNestedOneWithoutMovimientos_financierosInput
   }
 
   export type movimientos_financierosUncheckedCreateWithoutOrigen_movimientoInput = {
@@ -40050,6 +43794,12 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosCreateOrConnectWithoutOrigen_movimientoInput = {
@@ -40062,15 +43812,105 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type pagos_colegiadosCreateWithoutOrigen_movimientoInput = {
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    colegiados?: colegiadosCreateNestedOneWithoutPagos_colegiadosInput
+  }
+
+  export type pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput = {
+    id_pago?: number
+    id_colegiado?: number | null
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+  }
+
+  export type pagos_colegiadosCreateOrConnectWithoutOrigen_movimientoInput = {
+    where: pagos_colegiadosWhereUniqueInput
+    create: XOR<pagos_colegiadosCreateWithoutOrigen_movimientoInput, pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput>
+  }
+
+  export type pagos_invitadosCreateWithoutOrigen_movimientoInput = {
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    invitados?: invitadosCreateNestedOneWithoutPagos_invitadosInput
+  }
+
+  export type pagos_invitadosUncheckedCreateWithoutOrigen_movimientoInput = {
+    id_pago?: number
+    id_invitado?: number | null
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+  }
+
+  export type pagos_invitadosCreateOrConnectWithoutOrigen_movimientoInput = {
+    where: pagos_invitadosWhereUniqueInput
+    create: XOR<pagos_invitadosCreateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedCreateWithoutOrigen_movimientoInput>
+  }
+
+  export type postulacionesCreateWithoutOrigen_movimientoInput = {
+    carnet_identidad: string
+    nombre: string
+    apellido: string
+    correo: string
+    telefono: string
+    especialidades?: string | null
+    documentos?: string | null
+    comprobante_pago?: string | null
+    estado?: string
+    motivo_rechazo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    metodo_pago?: string | null
+  }
+
+  export type postulacionesUncheckedCreateWithoutOrigen_movimientoInput = {
+    id_postulacion?: number
+    carnet_identidad: string
+    nombre: string
+    apellido: string
+    correo: string
+    telefono: string
+    especialidades?: string | null
+    documentos?: string | null
+    comprobante_pago?: string | null
+    estado?: string
+    motivo_rechazo?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    metodo_pago?: string | null
+  }
+
+  export type postulacionesCreateOrConnectWithoutOrigen_movimientoInput = {
+    where: postulacionesWhereUniqueInput
+    create: XOR<postulacionesCreateWithoutOrigen_movimientoInput, postulacionesUncheckedCreateWithoutOrigen_movimientoInput>
+  }
+
   export type colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput = {
     fecha_registro?: Date | string | null
     estado_registro?: string | null
     metodo_pago?: string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    invitados?: invitadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput = {
@@ -40088,30 +43928,6 @@ export namespace Prisma {
   export type colegiados_registrados_actividad_institucionalCreateOrConnectWithoutOrigen_movimientoInput = {
     where: colegiados_registrados_actividad_institucionalWhereUniqueInput
     create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
-  }
-
-  export type pagos_colegiadosCreateWithoutOrigen_movimientoInput = {
-    concepto?: string | null
-    fecha_pago?: Date | string | null
-    monto?: Decimal | DecimalJsLike | number | string | null
-    estado_pago?: string | null
-    comprobante?: string | null
-    colegiados?: colegiadosCreateNestedOneWithoutPagos_colegiadosInput
-  }
-
-  export type pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput = {
-    id_pago?: number
-    id_colegiado?: number | null
-    concepto?: string | null
-    fecha_pago?: Date | string | null
-    monto?: Decimal | DecimalJsLike | number | string | null
-    estado_pago?: string | null
-    comprobante?: string | null
-  }
-
-  export type pagos_colegiadosCreateOrConnectWithoutOrigen_movimientoInput = {
-    where: pagos_colegiadosWhereUniqueInput
-    create: XOR<pagos_colegiadosCreateWithoutOrigen_movimientoInput, pagos_colegiadosUncheckedCreateWithoutOrigen_movimientoInput>
   }
 
   export type movimientos_financierosUpsertWithWhereUniqueWithoutOrigen_movimientoInput = {
@@ -40143,40 +43959,12 @@ export namespace Prisma {
     monto?: DecimalNullableFilter<"movimientos_financieros"> | Decimal | DecimalJsLike | number | string | null
     id_origen?: IntNullableFilter<"movimientos_financieros"> | number | null
     comprobante?: StringNullableFilter<"movimientos_financieros"> | string | null
-  }
-
-  export type colegiados_registrados_actividad_institucionalUpsertWithoutOrigen_movimientoInput = {
-    update: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
-    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
-    where?: colegiados_registrados_actividad_institucionalWhereInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalUpdateToOneWithWhereWithoutOrigen_movimientoInput = {
-    where?: colegiados_registrados_actividad_institucionalWhereInput
-    data: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
-  }
-
-  export type colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput = {
-    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
-    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
-    actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
-    colegiados?: colegiadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput = {
-    id_registro?: IntFieldUpdateOperationsInput | number
-    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
-    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
-    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    id_usuario?: IntNullableFilter<"movimientos_financieros"> | number | null
+    createdAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
+    estado?: StringNullableFilter<"movimientos_financieros"> | string | null
+    metodo_pago?: StringNullableFilter<"movimientos_financieros"> | string | null
+    tipo_origen_label?: StringNullableFilter<"movimientos_financieros"> | string | null
+    updatedAt?: DateTimeNullableFilter<"movimientos_financieros"> | Date | string | null
   }
 
   export type pagos_colegiadosUpsertWithoutOrigen_movimientoInput = {
@@ -40196,6 +43984,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     colegiados?: colegiadosUpdateOneWithoutPagos_colegiadosNestedInput
   }
 
@@ -40207,12 +43996,125 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type pagos_invitadosUpsertWithoutOrigen_movimientoInput = {
+    update: XOR<pagos_invitadosUpdateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedUpdateWithoutOrigen_movimientoInput>
+    create: XOR<pagos_invitadosCreateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedCreateWithoutOrigen_movimientoInput>
+    where?: pagos_invitadosWhereInput
+  }
+
+  export type pagos_invitadosUpdateToOneWithWhereWithoutOrigen_movimientoInput = {
+    where?: pagos_invitadosWhereInput
+    data: XOR<pagos_invitadosUpdateWithoutOrigen_movimientoInput, pagos_invitadosUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type pagos_invitadosUpdateWithoutOrigen_movimientoInput = {
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    invitados?: invitadosUpdateOneWithoutPagos_invitadosNestedInput
+  }
+
+  export type pagos_invitadosUncheckedUpdateWithoutOrigen_movimientoInput = {
+    id_pago?: IntFieldUpdateOperationsInput | number
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type postulacionesUpsertWithoutOrigen_movimientoInput = {
+    update: XOR<postulacionesUpdateWithoutOrigen_movimientoInput, postulacionesUncheckedUpdateWithoutOrigen_movimientoInput>
+    create: XOR<postulacionesCreateWithoutOrigen_movimientoInput, postulacionesUncheckedCreateWithoutOrigen_movimientoInput>
+    where?: postulacionesWhereInput
+  }
+
+  export type postulacionesUpdateToOneWithWhereWithoutOrigen_movimientoInput = {
+    where?: postulacionesWhereInput
+    data: XOR<postulacionesUpdateWithoutOrigen_movimientoInput, postulacionesUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type postulacionesUpdateWithoutOrigen_movimientoInput = {
+    carnet_identidad?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    especialidades?: NullableStringFieldUpdateOperationsInput | string | null
+    documentos?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type postulacionesUncheckedUpdateWithoutOrigen_movimientoInput = {
+    id_postulacion?: IntFieldUpdateOperationsInput | number
+    carnet_identidad?: StringFieldUpdateOperationsInput | string
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: StringFieldUpdateOperationsInput | string
+    telefono?: StringFieldUpdateOperationsInput | string
+    especialidades?: NullableStringFieldUpdateOperationsInput | string | null
+    documentos?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: StringFieldUpdateOperationsInput | string
+    motivo_rechazo?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpsertWithoutOrigen_movimientoInput = {
+    update: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
+    create: XOR<colegiados_registrados_actividad_institucionalCreateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedCreateWithoutOrigen_movimientoInput>
+    where?: colegiados_registrados_actividad_institucionalWhereInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateToOneWithWhereWithoutOrigen_movimientoInput = {
+    where?: colegiados_registrados_actividad_institucionalWhereInput
+    data: XOR<colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput, colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput>
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateWithoutOrigen_movimientoInput = {
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    colegiados?: colegiadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutOrigen_movimientoInput = {
+    id_registro?: IntFieldUpdateOperationsInput | number
+    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type origen_movimientoCreateWithoutPagos_colegiadosInput = {
     tipo_origen?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
+    pagos_invitados?: pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput
+    postulaciones?: postulacionesCreateNestedOneWithoutOrigen_movimientoInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
   }
 
@@ -40221,6 +44123,8 @@ export namespace Prisma {
     tipo_origen?: string | null
     id_registro_actividad_institucional?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
   }
 
@@ -40247,8 +44151,8 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialCreateNestedManyWithoutColegiadosInput
-    documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutColegiadosInput
+    documentos_colegiados?: documentos_colegiadosCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosUncheckedCreateWithoutPagos_colegiadosInput = {
@@ -40265,8 +44169,8 @@ export namespace Prisma {
     pin_acceso?: string | null
     asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedCreateNestedManyWithoutColegiadosInput
-    documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutColegiadosInput
+    documentos_colegiados?: documentos_colegiadosUncheckedCreateNestedManyWithoutColegiadosInput
   }
 
   export type colegiadosCreateOrConnectWithoutPagos_colegiadosInput = {
@@ -40314,8 +44218,8 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUpdateManyWithoutColegiadosNestedInput
-    documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutColegiadosNestedInput
+    documentos_colegiados?: documentos_colegiadosUpdateManyWithoutColegiadosNestedInput
   }
 
   export type colegiadosUncheckedUpdateWithoutPagos_colegiadosInput = {
@@ -40332,8 +44236,8 @@ export namespace Prisma {
     pin_acceso?: NullableStringFieldUpdateOperationsInput | string | null
     asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_asignados_social?: colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosNestedInput
-    documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosNestedInput
+    documentos_colegiados?: documentos_colegiadosUncheckedUpdateManyWithoutColegiadosNestedInput
   }
 
   export type movimientos_financierosCreateWithoutPresupuestosInput = {
@@ -40343,7 +44247,13 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
     origen_movimiento?: origen_movimientoCreateNestedOneWithoutMovimientos_financierosInput
+    usuario?: usuariosCreateNestedOneWithoutMovimientos_financierosInput
   }
 
   export type movimientos_financierosUncheckedCreateWithoutPresupuestosInput = {
@@ -40355,6 +44265,12 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosCreateOrConnectWithoutPresupuestosInput = {
@@ -40394,8 +44310,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
-    roles?: rolesCreateNestedManyWithoutUsuariosInput
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosUncheckedCreateWithoutAuditoriaInput = {
@@ -40410,8 +44327,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
-    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
   }
 
   export type usuariosCreateOrConnectWithoutAuditoriaInput = {
@@ -40441,8 +44359,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUpdateManyWithoutUsuariosNestedInput
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutAuditoriaInput = {
@@ -40457,26 +44376,27 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
-    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
   }
 
   export type colegiados_asignados_socialCreateWithoutPasantesInput = {
     total_horas?: number | null
     horas_meta?: number | null
-    invitados?: invitadosCreateNestedOneWithoutColegiados_asignados_socialInput
+    estado?: string | null
+    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
     actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
-    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
   export type colegiados_asignados_socialUncheckedCreateWithoutPasantesInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
-    id_invitado?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
@@ -40517,8 +44437,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutRolesInput = {
@@ -40533,8 +44454,9 @@ export namespace Prisma {
     estado?: string | null
     fecha_actualizacion?: Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
-    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutRolesInput = {
@@ -40564,8 +44486,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutRolesInput = {
@@ -40580,8 +44503,9 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
     fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
-    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type actividades_institucionalesCreateWithoutUsuariosInput = {
@@ -40619,28 +44543,28 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type rolesCreateWithoutUsuariosInput = {
-    fecha_inicio?: Date | string | null
-    fecha_fin?: Date | string | null
-    activo?: boolean | null
-    rol?: $Enums.RolUsuario | null
+  export type auditoriaCreateWithoutUsuarioInput = {
+    accion: string
+    modulo: string
+    descripcion: string
+    fecha?: Date | string
   }
 
-  export type rolesUncheckedCreateWithoutUsuariosInput = {
-    id_rol?: number
-    fecha_inicio?: Date | string | null
-    fecha_fin?: Date | string | null
-    activo?: boolean | null
-    rol?: $Enums.RolUsuario | null
+  export type auditoriaUncheckedCreateWithoutUsuarioInput = {
+    id_auditoria?: number
+    accion: string
+    modulo: string
+    descripcion: string
+    fecha?: Date | string
   }
 
-  export type rolesCreateOrConnectWithoutUsuariosInput = {
-    where: rolesWhereUniqueInput
-    create: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput>
+  export type auditoriaCreateOrConnectWithoutUsuarioInput = {
+    where: auditoriaWhereUniqueInput
+    create: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput>
   }
 
-  export type rolesCreateManyUsuariosInputEnvelope = {
-    data: rolesCreateManyUsuariosInput | rolesCreateManyUsuariosInput[]
+  export type auditoriaCreateManyUsuarioInputEnvelope = {
+    data: auditoriaCreateManyUsuarioInput | auditoriaCreateManyUsuarioInput[]
     skipDuplicates?: boolean
   }
 
@@ -40679,28 +44603,71 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type auditoriaCreateWithoutUsuarioInput = {
-    accion: string
-    modulo: string
-    descripcion: string
-    fecha?: Date | string
+  export type movimientos_financierosCreateWithoutUsuarioInput = {
+    fecha_movimiento?: Date | string | null
+    tipo_movimiento?: string | null
+    categoria?: string | null
+    descripcion?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
+    origen_movimiento?: origen_movimientoCreateNestedOneWithoutMovimientos_financierosInput
+    presupuestos?: presupuestosCreateNestedOneWithoutMovimientos_financierosInput
   }
 
-  export type auditoriaUncheckedCreateWithoutUsuarioInput = {
-    id_auditoria?: number
-    accion: string
-    modulo: string
-    descripcion: string
-    fecha?: Date | string
+  export type movimientos_financierosUncheckedCreateWithoutUsuarioInput = {
+    id_movimiento?: number
+    id_presupuesto?: number | null
+    fecha_movimiento?: Date | string | null
+    tipo_movimiento?: string | null
+    categoria?: string | null
+    descripcion?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_origen?: number | null
+    comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
-  export type auditoriaCreateOrConnectWithoutUsuarioInput = {
-    where: auditoriaWhereUniqueInput
-    create: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput>
+  export type movimientos_financierosCreateOrConnectWithoutUsuarioInput = {
+    where: movimientos_financierosWhereUniqueInput
+    create: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput>
   }
 
-  export type auditoriaCreateManyUsuarioInputEnvelope = {
-    data: auditoriaCreateManyUsuarioInput | auditoriaCreateManyUsuarioInput[]
+  export type movimientos_financierosCreateManyUsuarioInputEnvelope = {
+    data: movimientos_financierosCreateManyUsuarioInput | movimientos_financierosCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type rolesCreateWithoutUsuariosInput = {
+    fecha_inicio?: Date | string | null
+    fecha_fin?: Date | string | null
+    activo?: boolean | null
+    rol?: $Enums.RolUsuario | null
+  }
+
+  export type rolesUncheckedCreateWithoutUsuariosInput = {
+    id_rol?: number
+    fecha_inicio?: Date | string | null
+    fecha_fin?: Date | string | null
+    activo?: boolean | null
+    rol?: $Enums.RolUsuario | null
+  }
+
+  export type rolesCreateOrConnectWithoutUsuariosInput = {
+    where: rolesWhereUniqueInput
+    create: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput>
+  }
+
+  export type rolesCreateManyUsuariosInputEnvelope = {
+    data: rolesCreateManyUsuariosInput | rolesCreateManyUsuariosInput[]
     skipDuplicates?: boolean
   }
 
@@ -40735,32 +44702,32 @@ export namespace Prisma {
     estado?: StringNullableFilter<"actividades_institucionales"> | string | null
   }
 
-  export type rolesUpsertWithWhereUniqueWithoutUsuariosInput = {
-    where: rolesWhereUniqueInput
-    update: XOR<rolesUpdateWithoutUsuariosInput, rolesUncheckedUpdateWithoutUsuariosInput>
-    create: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput>
+  export type auditoriaUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: auditoriaWhereUniqueInput
+    update: XOR<auditoriaUpdateWithoutUsuarioInput, auditoriaUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput>
   }
 
-  export type rolesUpdateWithWhereUniqueWithoutUsuariosInput = {
-    where: rolesWhereUniqueInput
-    data: XOR<rolesUpdateWithoutUsuariosInput, rolesUncheckedUpdateWithoutUsuariosInput>
+  export type auditoriaUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: auditoriaWhereUniqueInput
+    data: XOR<auditoriaUpdateWithoutUsuarioInput, auditoriaUncheckedUpdateWithoutUsuarioInput>
   }
 
-  export type rolesUpdateManyWithWhereWithoutUsuariosInput = {
-    where: rolesScalarWhereInput
-    data: XOR<rolesUpdateManyMutationInput, rolesUncheckedUpdateManyWithoutUsuariosInput>
+  export type auditoriaUpdateManyWithWhereWithoutUsuarioInput = {
+    where: auditoriaScalarWhereInput
+    data: XOR<auditoriaUpdateManyMutationInput, auditoriaUncheckedUpdateManyWithoutUsuarioInput>
   }
 
-  export type rolesScalarWhereInput = {
-    AND?: rolesScalarWhereInput | rolesScalarWhereInput[]
-    OR?: rolesScalarWhereInput[]
-    NOT?: rolesScalarWhereInput | rolesScalarWhereInput[]
-    id_rol?: IntFilter<"roles"> | number
-    id_usuario?: IntNullableFilter<"roles"> | number | null
-    fecha_inicio?: DateTimeNullableFilter<"roles"> | Date | string | null
-    fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
-    activo?: BoolNullableFilter<"roles"> | boolean | null
-    rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
+  export type auditoriaScalarWhereInput = {
+    AND?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
+    OR?: auditoriaScalarWhereInput[]
+    NOT?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
+    id_auditoria?: IntFilter<"auditoria"> | number
+    id_usuario?: IntFilter<"auditoria"> | number
+    accion?: StringFilter<"auditoria"> | string
+    modulo?: StringFilter<"auditoria"> | string
+    descripcion?: StringFilter<"auditoria"> | string
+    fecha?: DateTimeFilter<"auditoria"> | Date | string
   }
 
   export type correspondenciaUpsertWithWhereUniqueWithoutDestinatarioInput = {
@@ -40796,60 +44763,68 @@ export namespace Prisma {
     updatedAt?: DateTimeNullableFilter<"correspondencia"> | Date | string | null
   }
 
-  export type auditoriaUpsertWithWhereUniqueWithoutUsuarioInput = {
-    where: auditoriaWhereUniqueInput
-    update: XOR<auditoriaUpdateWithoutUsuarioInput, auditoriaUncheckedUpdateWithoutUsuarioInput>
-    create: XOR<auditoriaCreateWithoutUsuarioInput, auditoriaUncheckedCreateWithoutUsuarioInput>
+  export type movimientos_financierosUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: movimientos_financierosWhereUniqueInput
+    update: XOR<movimientos_financierosUpdateWithoutUsuarioInput, movimientos_financierosUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<movimientos_financierosCreateWithoutUsuarioInput, movimientos_financierosUncheckedCreateWithoutUsuarioInput>
   }
 
-  export type auditoriaUpdateWithWhereUniqueWithoutUsuarioInput = {
-    where: auditoriaWhereUniqueInput
-    data: XOR<auditoriaUpdateWithoutUsuarioInput, auditoriaUncheckedUpdateWithoutUsuarioInput>
+  export type movimientos_financierosUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: movimientos_financierosWhereUniqueInput
+    data: XOR<movimientos_financierosUpdateWithoutUsuarioInput, movimientos_financierosUncheckedUpdateWithoutUsuarioInput>
   }
 
-  export type auditoriaUpdateManyWithWhereWithoutUsuarioInput = {
-    where: auditoriaScalarWhereInput
-    data: XOR<auditoriaUpdateManyMutationInput, auditoriaUncheckedUpdateManyWithoutUsuarioInput>
+  export type movimientos_financierosUpdateManyWithWhereWithoutUsuarioInput = {
+    where: movimientos_financierosScalarWhereInput
+    data: XOR<movimientos_financierosUpdateManyMutationInput, movimientos_financierosUncheckedUpdateManyWithoutUsuarioInput>
   }
 
-  export type auditoriaScalarWhereInput = {
-    AND?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
-    OR?: auditoriaScalarWhereInput[]
-    NOT?: auditoriaScalarWhereInput | auditoriaScalarWhereInput[]
-    id_auditoria?: IntFilter<"auditoria"> | number
-    id_usuario?: IntFilter<"auditoria"> | number
-    accion?: StringFilter<"auditoria"> | string
-    modulo?: StringFilter<"auditoria"> | string
-    descripcion?: StringFilter<"auditoria"> | string
-    fecha?: DateTimeFilter<"auditoria"> | Date | string
+  export type rolesUpsertWithWhereUniqueWithoutUsuariosInput = {
+    where: rolesWhereUniqueInput
+    update: XOR<rolesUpdateWithoutUsuariosInput, rolesUncheckedUpdateWithoutUsuariosInput>
+    create: XOR<rolesCreateWithoutUsuariosInput, rolesUncheckedCreateWithoutUsuariosInput>
   }
 
-  export type colegiados_asignados_socialCreateWithoutInvitadosInput = {
-    total_horas?: number | null
-    horas_meta?: number | null
-    actividades_sociales?: actividades_socialesCreateNestedOneWithoutColegiados_asignados_socialInput
-    colegiados?: colegiadosCreateNestedOneWithoutColegiados_asignados_socialInput
-    pasantes?: pasantesCreateNestedOneWithoutColegiados_asignados_socialInput
-    asistencia_social_diaria?: asistencia_social_diariaCreateNestedManyWithoutColegiados_asignados_socialInput
+  export type rolesUpdateWithWhereUniqueWithoutUsuariosInput = {
+    where: rolesWhereUniqueInput
+    data: XOR<rolesUpdateWithoutUsuariosInput, rolesUncheckedUpdateWithoutUsuariosInput>
   }
 
-  export type colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput = {
-    id_asignacion?: number
-    id_actividad_social?: number | null
+  export type rolesUpdateManyWithWhereWithoutUsuariosInput = {
+    where: rolesScalarWhereInput
+    data: XOR<rolesUpdateManyMutationInput, rolesUncheckedUpdateManyWithoutUsuariosInput>
+  }
+
+  export type rolesScalarWhereInput = {
+    AND?: rolesScalarWhereInput | rolesScalarWhereInput[]
+    OR?: rolesScalarWhereInput[]
+    NOT?: rolesScalarWhereInput | rolesScalarWhereInput[]
+    id_rol?: IntFilter<"roles"> | number
+    id_usuario?: IntNullableFilter<"roles"> | number | null
+    fecha_inicio?: DateTimeNullableFilter<"roles"> | Date | string | null
+    fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
+    activo?: BoolNullableFilter<"roles"> | boolean | null
+    rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
+  }
+
+  export type asistencias_actividadCreateWithoutInvitadosInput = {
+    actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutAsistencias_actividadInput
+    colegiados?: colegiadosCreateNestedOneWithoutAsistencias_actividadInput
+  }
+
+  export type asistencias_actividadUncheckedCreateWithoutInvitadosInput = {
+    id_asistencia?: number
+    id_actividad?: number | null
     id_colegiado?: number | null
-    id_pasante?: number | null
-    total_horas?: number | null
-    horas_meta?: number | null
-    asistencia_social_diaria?: asistencia_social_diariaUncheckedCreateNestedManyWithoutColegiados_asignados_socialInput
   }
 
-  export type colegiados_asignados_socialCreateOrConnectWithoutInvitadosInput = {
-    where: colegiados_asignados_socialWhereUniqueInput
-    create: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput>
+  export type asistencias_actividadCreateOrConnectWithoutInvitadosInput = {
+    where: asistencias_actividadWhereUniqueInput
+    create: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput>
   }
 
-  export type colegiados_asignados_socialCreateManyInvitadosInputEnvelope = {
-    data: colegiados_asignados_socialCreateManyInvitadosInput | colegiados_asignados_socialCreateManyInvitadosInput[]
+  export type asistencias_actividadCreateManyInvitadosInputEnvelope = {
+    data: asistencias_actividadCreateManyInvitadosInput | asistencias_actividadCreateManyInvitadosInput[]
     skipDuplicates?: boolean
   }
 
@@ -40859,9 +44834,9 @@ export namespace Prisma {
     metodo_pago?: string | null
     createdAt?: Date | string | null
     updatedAt?: Date | string | null
-    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
     actividades_institucionales?: actividades_institucionalesCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
     colegiados?: colegiadosCreateNestedOneWithoutColegiados_registrados_actividad_institucionalInput
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutColegiados_registrados_actividad_institucionalInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedCreateWithoutInvitadosInput = {
@@ -40886,20 +44861,51 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type colegiados_asignados_socialUpsertWithWhereUniqueWithoutInvitadosInput = {
-    where: colegiados_asignados_socialWhereUniqueInput
-    update: XOR<colegiados_asignados_socialUpdateWithoutInvitadosInput, colegiados_asignados_socialUncheckedUpdateWithoutInvitadosInput>
-    create: XOR<colegiados_asignados_socialCreateWithoutInvitadosInput, colegiados_asignados_socialUncheckedCreateWithoutInvitadosInput>
+  export type pagos_invitadosCreateWithoutInvitadosInput = {
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoCreateNestedManyWithoutPagos_invitadosInput
   }
 
-  export type colegiados_asignados_socialUpdateWithWhereUniqueWithoutInvitadosInput = {
-    where: colegiados_asignados_socialWhereUniqueInput
-    data: XOR<colegiados_asignados_socialUpdateWithoutInvitadosInput, colegiados_asignados_socialUncheckedUpdateWithoutInvitadosInput>
+  export type pagos_invitadosUncheckedCreateWithoutInvitadosInput = {
+    id_pago?: number
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
+    origen_movimiento?: origen_movimientoUncheckedCreateNestedManyWithoutPagos_invitadosInput
   }
 
-  export type colegiados_asignados_socialUpdateManyWithWhereWithoutInvitadosInput = {
-    where: colegiados_asignados_socialScalarWhereInput
-    data: XOR<colegiados_asignados_socialUpdateManyMutationInput, colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosInput>
+  export type pagos_invitadosCreateOrConnectWithoutInvitadosInput = {
+    where: pagos_invitadosWhereUniqueInput
+    create: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput>
+  }
+
+  export type pagos_invitadosCreateManyInvitadosInputEnvelope = {
+    data: pagos_invitadosCreateManyInvitadosInput | pagos_invitadosCreateManyInvitadosInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type asistencias_actividadUpsertWithWhereUniqueWithoutInvitadosInput = {
+    where: asistencias_actividadWhereUniqueInput
+    update: XOR<asistencias_actividadUpdateWithoutInvitadosInput, asistencias_actividadUncheckedUpdateWithoutInvitadosInput>
+    create: XOR<asistencias_actividadCreateWithoutInvitadosInput, asistencias_actividadUncheckedCreateWithoutInvitadosInput>
+  }
+
+  export type asistencias_actividadUpdateWithWhereUniqueWithoutInvitadosInput = {
+    where: asistencias_actividadWhereUniqueInput
+    data: XOR<asistencias_actividadUpdateWithoutInvitadosInput, asistencias_actividadUncheckedUpdateWithoutInvitadosInput>
+  }
+
+  export type asistencias_actividadUpdateManyWithWhereWithoutInvitadosInput = {
+    where: asistencias_actividadScalarWhereInput
+    data: XOR<asistencias_actividadUpdateManyMutationInput, asistencias_actividadUncheckedUpdateManyWithoutInvitadosInput>
   }
 
   export type colegiados_registrados_actividad_institucionalUpsertWithWhereUniqueWithoutInvitadosInput = {
@@ -40918,9 +44924,188 @@ export namespace Prisma {
     data: XOR<colegiados_registrados_actividad_institucionalUpdateManyMutationInput, colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosInput>
   }
 
+  export type pagos_invitadosUpsertWithWhereUniqueWithoutInvitadosInput = {
+    where: pagos_invitadosWhereUniqueInput
+    update: XOR<pagos_invitadosUpdateWithoutInvitadosInput, pagos_invitadosUncheckedUpdateWithoutInvitadosInput>
+    create: XOR<pagos_invitadosCreateWithoutInvitadosInput, pagos_invitadosUncheckedCreateWithoutInvitadosInput>
+  }
+
+  export type pagos_invitadosUpdateWithWhereUniqueWithoutInvitadosInput = {
+    where: pagos_invitadosWhereUniqueInput
+    data: XOR<pagos_invitadosUpdateWithoutInvitadosInput, pagos_invitadosUncheckedUpdateWithoutInvitadosInput>
+  }
+
+  export type pagos_invitadosUpdateManyWithWhereWithoutInvitadosInput = {
+    where: pagos_invitadosScalarWhereInput
+    data: XOR<pagos_invitadosUpdateManyMutationInput, pagos_invitadosUncheckedUpdateManyWithoutInvitadosInput>
+  }
+
+  export type pagos_invitadosScalarWhereInput = {
+    AND?: pagos_invitadosScalarWhereInput | pagos_invitadosScalarWhereInput[]
+    OR?: pagos_invitadosScalarWhereInput[]
+    NOT?: pagos_invitadosScalarWhereInput | pagos_invitadosScalarWhereInput[]
+    id_pago?: IntFilter<"pagos_invitados"> | number
+    id_invitado?: IntNullableFilter<"pagos_invitados"> | number | null
+    concepto?: StringNullableFilter<"pagos_invitados"> | string | null
+    fecha_pago?: DateTimeNullableFilter<"pagos_invitados"> | Date | string | null
+    monto?: DecimalNullableFilter<"pagos_invitados"> | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+    comprobante?: StringNullableFilter<"pagos_invitados"> | string | null
+    metodo_pago?: StringNullableFilter<"pagos_invitados"> | string | null
+  }
+
+  export type origen_movimientoCreateWithoutPostulacionesInput = {
+    tipo_origen?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
+    pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+    pagos_invitados?: pagos_invitadosCreateNestedOneWithoutOrigen_movimientoInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoUncheckedCreateWithoutPostulacionesInput = {
+    id_origen?: number
+    tipo_origen?: string | null
+    id_pago_colegiado?: number | null
+    id_registro_actividad_institucional?: number | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_pago_invitado?: number | null
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoCreateOrConnectWithoutPostulacionesInput = {
+    where: origen_movimientoWhereUniqueInput
+    create: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput>
+  }
+
+  export type origen_movimientoCreateManyPostulacionesInputEnvelope = {
+    data: origen_movimientoCreateManyPostulacionesInput | origen_movimientoCreateManyPostulacionesInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type origen_movimientoUpsertWithWhereUniqueWithoutPostulacionesInput = {
+    where: origen_movimientoWhereUniqueInput
+    update: XOR<origen_movimientoUpdateWithoutPostulacionesInput, origen_movimientoUncheckedUpdateWithoutPostulacionesInput>
+    create: XOR<origen_movimientoCreateWithoutPostulacionesInput, origen_movimientoUncheckedCreateWithoutPostulacionesInput>
+  }
+
+  export type origen_movimientoUpdateWithWhereUniqueWithoutPostulacionesInput = {
+    where: origen_movimientoWhereUniqueInput
+    data: XOR<origen_movimientoUpdateWithoutPostulacionesInput, origen_movimientoUncheckedUpdateWithoutPostulacionesInput>
+  }
+
+  export type origen_movimientoUpdateManyWithWhereWithoutPostulacionesInput = {
+    where: origen_movimientoScalarWhereInput
+    data: XOR<origen_movimientoUpdateManyMutationInput, origen_movimientoUncheckedUpdateManyWithoutPostulacionesInput>
+  }
+
+  export type origen_movimientoCreateWithoutPagos_invitadosInput = {
+    tipo_origen?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutOrigen_movimientoInput
+    pagos_colegiados?: pagos_colegiadosCreateNestedOneWithoutOrigen_movimientoInput
+    postulaciones?: postulacionesCreateNestedOneWithoutOrigen_movimientoInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedOneWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoUncheckedCreateWithoutPagos_invitadosInput = {
+    id_origen?: number
+    tipo_origen?: string | null
+    id_pago_colegiado?: number | null
+    id_registro_actividad_institucional?: number | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutOrigen_movimientoInput
+  }
+
+  export type origen_movimientoCreateOrConnectWithoutPagos_invitadosInput = {
+    where: origen_movimientoWhereUniqueInput
+    create: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput>
+  }
+
+  export type origen_movimientoCreateManyPagos_invitadosInputEnvelope = {
+    data: origen_movimientoCreateManyPagos_invitadosInput | origen_movimientoCreateManyPagos_invitadosInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type invitadosCreateWithoutPagos_invitadosInput = {
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadCreateNestedManyWithoutInvitadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosUncheckedCreateWithoutPagos_invitadosInput = {
+    id_invitado?: number
+    nombre: string
+    apellido: string
+    correo?: string | null
+    telefono?: string | null
+    estado?: string | null
+    asistencias_actividad?: asistencias_actividadUncheckedCreateNestedManyWithoutInvitadosInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedCreateNestedManyWithoutInvitadosInput
+  }
+
+  export type invitadosCreateOrConnectWithoutPagos_invitadosInput = {
+    where: invitadosWhereUniqueInput
+    create: XOR<invitadosCreateWithoutPagos_invitadosInput, invitadosUncheckedCreateWithoutPagos_invitadosInput>
+  }
+
+  export type origen_movimientoUpsertWithWhereUniqueWithoutPagos_invitadosInput = {
+    where: origen_movimientoWhereUniqueInput
+    update: XOR<origen_movimientoUpdateWithoutPagos_invitadosInput, origen_movimientoUncheckedUpdateWithoutPagos_invitadosInput>
+    create: XOR<origen_movimientoCreateWithoutPagos_invitadosInput, origen_movimientoUncheckedCreateWithoutPagos_invitadosInput>
+  }
+
+  export type origen_movimientoUpdateWithWhereUniqueWithoutPagos_invitadosInput = {
+    where: origen_movimientoWhereUniqueInput
+    data: XOR<origen_movimientoUpdateWithoutPagos_invitadosInput, origen_movimientoUncheckedUpdateWithoutPagos_invitadosInput>
+  }
+
+  export type origen_movimientoUpdateManyWithWhereWithoutPagos_invitadosInput = {
+    where: origen_movimientoScalarWhereInput
+    data: XOR<origen_movimientoUpdateManyMutationInput, origen_movimientoUncheckedUpdateManyWithoutPagos_invitadosInput>
+  }
+
+  export type invitadosUpsertWithoutPagos_invitadosInput = {
+    update: XOR<invitadosUpdateWithoutPagos_invitadosInput, invitadosUncheckedUpdateWithoutPagos_invitadosInput>
+    create: XOR<invitadosCreateWithoutPagos_invitadosInput, invitadosUncheckedCreateWithoutPagos_invitadosInput>
+    where?: invitadosWhereInput
+  }
+
+  export type invitadosUpdateToOneWithWhereWithoutPagos_invitadosInput = {
+    where?: invitadosWhereInput
+    data: XOR<invitadosUpdateWithoutPagos_invitadosInput, invitadosUncheckedUpdateWithoutPagos_invitadosInput>
+  }
+
+  export type invitadosUpdateWithoutPagos_invitadosInput = {
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUpdateManyWithoutInvitadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateManyWithoutInvitadosNestedInput
+  }
+
+  export type invitadosUncheckedUpdateWithoutPagos_invitadosInput = {
+    id_invitado?: IntFieldUpdateOperationsInput | number
+    nombre?: StringFieldUpdateOperationsInput | string
+    apellido?: StringFieldUpdateOperationsInput | string
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencias_actividad?: asistencias_actividadUncheckedUpdateManyWithoutInvitadosNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutInvitadosNestedInput
+  }
+
   export type asistencias_actividadCreateManyActividades_institucionalesInput = {
     id_asistencia?: number
     id_colegiado?: number | null
+    id_invitado?: number | null
   }
 
   export type colegiados_registrados_actividad_institucionalCreateManyActividades_institucionalesInput = {
@@ -40936,16 +45121,19 @@ export namespace Prisma {
 
   export type asistencias_actividadUpdateWithoutActividades_institucionalesInput = {
     colegiados?: colegiadosUpdateOneWithoutAsistencias_actividadNestedInput
+    invitados?: invitadosUpdateOneWithoutAsistencias_actividadNestedInput
   }
 
   export type asistencias_actividadUncheckedUpdateWithoutActividades_institucionalesInput = {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type asistencias_actividadUncheckedUpdateManyWithoutActividades_institucionalesInput = {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpdateWithoutActividades_institucionalesInput = {
@@ -40954,9 +45142,9 @@ export namespace Prisma {
     metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
-    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutActividades_institucionalesInput = {
@@ -40987,6 +45175,8 @@ export namespace Prisma {
     tipo_origen?: string | null
     id_pago_colegiado?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
   }
 
   export type origen_movimientoUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
@@ -40994,6 +45184,8 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutOrigen_movimientoNestedInput
     pagos_colegiados?: pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput
+    pagos_invitados?: pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput
+    postulaciones?: postulacionesUpdateOneWithoutOrigen_movimientoNestedInput
   }
 
   export type origen_movimientoUncheckedUpdateWithoutColegiados_registrados_actividad_institucionalInput = {
@@ -41001,6 +45193,8 @@ export namespace Prisma {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput
   }
 
@@ -41009,43 +45203,45 @@ export namespace Prisma {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialCreateManyActividades_socialesInput = {
     id_asignacion?: number
     id_colegiado?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutActividades_socialesInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
     pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutActividades_socialesInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutActividades_socialesInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type actividades_socialesCreateManyConvenioInput = {
@@ -41112,15 +45308,27 @@ export namespace Prisma {
   export type asistencias_actividadCreateManyColegiadosInput = {
     id_asistencia?: number
     id_actividad?: number | null
+    id_invitado?: number | null
   }
 
   export type colegiados_asignados_socialCreateManyColegiadosInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
-    id_invitado?: number | null
     id_pasante?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
+  }
+
+  export type colegiados_registrados_actividad_institucionalCreateManyColegiadosInput = {
+    id_registro?: number
+    id_actividad?: number | null
+    fecha_registro?: Date | string | null
+    estado_registro?: string | null
+    metodo_pago?: string | null
+    id_invitado?: number | null
+    createdAt?: Date | string | null
+    updatedAt?: Date | string | null
   }
 
   export type documentos_colegiadosCreateManyColegiadosInput = {
@@ -41139,59 +45347,86 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     estado_pago?: string | null
     comprobante?: string | null
-  }
-
-  export type colegiados_registrados_actividad_institucionalCreateManyColegiadosInput = {
-    id_registro?: number
-    id_actividad?: number | null
-    fecha_registro?: Date | string | null
-    estado_registro?: string | null
     metodo_pago?: string | null
-    id_invitado?: number | null
-    createdAt?: Date | string | null
-    updatedAt?: Date | string | null
   }
 
   export type asistencias_actividadUpdateWithoutColegiadosInput = {
     actividades_institucionales?: actividades_institucionalesUpdateOneWithoutAsistencias_actividadNestedInput
+    invitados?: invitadosUpdateOneWithoutAsistencias_actividadNestedInput
   }
 
   export type asistencias_actividadUncheckedUpdateWithoutColegiadosInput = {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type asistencias_actividadUncheckedUpdateManyWithoutColegiadosInput = {
     id_asistencia?: IntFieldUpdateOperationsInput | number
     id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutColegiadosInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutColegiadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateManyWithoutColegiadosInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput = {
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput = {
+    id_registro?: IntFieldUpdateOperationsInput | number
+    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
+  }
+
+  export type colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosInput = {
+    id_registro?: IntFieldUpdateOperationsInput | number
+    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type documentos_colegiadosUpdateWithoutColegiadosInput = {
@@ -41226,6 +45461,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUpdateManyWithoutPagos_colegiadosNestedInput
   }
 
@@ -41236,6 +45472,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutPagos_colegiadosNestedInput
   }
 
@@ -41246,40 +45483,7 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
-  }
-
-  export type colegiados_registrados_actividad_institucionalUpdateWithoutColegiadosInput = {
-    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
     metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
-    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
-    invitados?: invitadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
-    actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutColegiadosInput = {
-    id_registro?: IntFieldUpdateOperationsInput | number
-    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
-    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
-    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
-  }
-
-  export type colegiados_registrados_actividad_institucionalUncheckedUpdateManyWithoutColegiadosInput = {
-    id_registro?: IntFieldUpdateOperationsInput | number
-    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
-    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    estado_registro?: NullableStringFieldUpdateOperationsInput | string | null
-    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
-    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type asistencia_social_diariaCreateManyColegiados_asignados_socialInput = {
@@ -41322,6 +45526,12 @@ export namespace Prisma {
     descripcion?: string | null
     monto?: Decimal | DecimalJsLike | number | string | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosUpdateWithoutOrigen_movimientoInput = {
@@ -41331,7 +45541,13 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     presupuestos?: presupuestosUpdateOneWithoutMovimientos_financierosNestedInput
+    usuario?: usuariosUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
   export type movimientos_financierosUncheckedUpdateWithoutOrigen_movimientoInput = {
@@ -41343,6 +45559,12 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoInput = {
@@ -41354,6 +45576,12 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type origen_movimientoCreateManyPagos_colegiadosInput = {
@@ -41361,12 +45589,16 @@ export namespace Prisma {
     tipo_origen?: string | null
     id_registro_actividad_institucional?: number | null
     monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+    id_pago_invitado?: number | null
   }
 
   export type origen_movimientoUpdateWithoutPagos_colegiadosInput = {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutOrigen_movimientoNestedInput
+    pagos_invitados?: pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput
+    postulaciones?: postulacionesUpdateOneWithoutOrigen_movimientoNestedInput
     colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
   }
 
@@ -41375,6 +45607,8 @@ export namespace Prisma {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput
   }
 
@@ -41383,6 +45617,8 @@ export namespace Prisma {
     tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
     id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type movimientos_financierosCreateManyPresupuestosInput = {
@@ -41394,6 +45630,12 @@ export namespace Prisma {
     monto?: Decimal | DecimalJsLike | number | string | null
     id_origen?: number | null
     comprobante?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
   }
 
   export type movimientos_financierosUpdateWithoutPresupuestosInput = {
@@ -41403,7 +45645,13 @@ export namespace Prisma {
     descripcion?: NullableStringFieldUpdateOperationsInput | string | null
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     origen_movimiento?: origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput
+    usuario?: usuariosUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
   export type movimientos_financierosUncheckedUpdateWithoutPresupuestosInput = {
@@ -41415,6 +45663,12 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type movimientos_financierosUncheckedUpdateManyWithoutPresupuestosInput = {
@@ -41426,33 +45680,39 @@ export namespace Prisma {
     monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     id_origen?: NullableIntFieldUpdateOperationsInput | number | null
     comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type colegiados_asignados_socialCreateManyPasantesInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
     id_colegiado?: number | null
-    id_invitado?: number | null
     total_horas?: number | null
     horas_meta?: number | null
+    estado?: string | null
   }
 
   export type colegiados_asignados_socialUpdateWithoutPasantesInput = {
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    invitados?: invitadosUpdateOneWithoutColegiados_asignados_socialNestedInput
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
     actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
-    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
   export type colegiados_asignados_socialUncheckedUpdateWithoutPasantesInput = {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
     asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
   }
 
@@ -41460,9 +45720,9 @@ export namespace Prisma {
     id_asignacion?: IntFieldUpdateOperationsInput | number
     id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_invitado?: NullableIntFieldUpdateOperationsInput | number | null
     total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
     horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type actividades_institucionalesCreateManyUsuariosInput = {
@@ -41476,12 +45736,12 @@ export namespace Prisma {
     estado?: string | null
   }
 
-  export type rolesCreateManyUsuariosInput = {
-    id_rol?: number
-    fecha_inicio?: Date | string | null
-    fecha_fin?: Date | string | null
-    activo?: boolean | null
-    rol?: $Enums.RolUsuario | null
+  export type auditoriaCreateManyUsuarioInput = {
+    id_auditoria?: number
+    accion: string
+    modulo: string
+    descripcion: string
+    fecha?: Date | string
   }
 
   export type correspondenciaCreateManyDestinatarioInput = {
@@ -41497,12 +45757,29 @@ export namespace Prisma {
     updatedAt?: Date | string | null
   }
 
-  export type auditoriaCreateManyUsuarioInput = {
-    id_auditoria?: number
-    accion: string
-    modulo: string
-    descripcion: string
-    fecha?: Date | string
+  export type movimientos_financierosCreateManyUsuarioInput = {
+    id_movimiento?: number
+    id_presupuesto?: number | null
+    fecha_movimiento?: Date | string | null
+    tipo_movimiento?: string | null
+    categoria?: string | null
+    descripcion?: string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_origen?: number | null
+    comprobante?: string | null
+    createdAt?: Date | string | null
+    estado?: string | null
+    metodo_pago?: string | null
+    tipo_origen_label?: string | null
+    updatedAt?: Date | string | null
+  }
+
+  export type rolesCreateManyUsuariosInput = {
+    id_rol?: number
+    fecha_inicio?: Date | string | null
+    fecha_fin?: Date | string | null
+    activo?: boolean | null
+    rol?: $Enums.RolUsuario | null
   }
 
   export type actividades_institucionalesUpdateWithoutUsuariosInput = {
@@ -41541,27 +45818,27 @@ export namespace Prisma {
     estado?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
-  export type rolesUpdateWithoutUsuariosInput = {
-    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  export type auditoriaUpdateWithoutUsuarioInput = {
+    accion?: StringFieldUpdateOperationsInput | string
+    modulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type rolesUncheckedUpdateWithoutUsuariosInput = {
-    id_rol?: IntFieldUpdateOperationsInput | number
-    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  export type auditoriaUncheckedUpdateWithoutUsuarioInput = {
+    id_auditoria?: IntFieldUpdateOperationsInput | number
+    accion?: StringFieldUpdateOperationsInput | string
+    modulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type rolesUncheckedUpdateManyWithoutUsuariosInput = {
-    id_rol?: IntFieldUpdateOperationsInput | number
-    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
-    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  export type auditoriaUncheckedUpdateManyWithoutUsuarioInput = {
+    id_auditoria?: IntFieldUpdateOperationsInput | number
+    accion?: StringFieldUpdateOperationsInput | string
+    modulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: StringFieldUpdateOperationsInput | string
+    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type correspondenciaUpdateWithoutDestinatarioInput = {
@@ -41602,36 +45879,83 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type auditoriaUpdateWithoutUsuarioInput = {
-    accion?: StringFieldUpdateOperationsInput | string
-    modulo?: StringFieldUpdateOperationsInput | string
-    descripcion?: StringFieldUpdateOperationsInput | string
-    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type movimientos_financierosUpdateWithoutUsuarioInput = {
+    fecha_movimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tipo_movimiento?: NullableStringFieldUpdateOperationsInput | string | null
+    categoria?: NullableStringFieldUpdateOperationsInput | string | null
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    origen_movimiento?: origen_movimientoUpdateOneWithoutMovimientos_financierosNestedInput
+    presupuestos?: presupuestosUpdateOneWithoutMovimientos_financierosNestedInput
   }
 
-  export type auditoriaUncheckedUpdateWithoutUsuarioInput = {
-    id_auditoria?: IntFieldUpdateOperationsInput | number
-    accion?: StringFieldUpdateOperationsInput | string
-    modulo?: StringFieldUpdateOperationsInput | string
-    descripcion?: StringFieldUpdateOperationsInput | string
-    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type movimientos_financierosUncheckedUpdateWithoutUsuarioInput = {
+    id_movimiento?: IntFieldUpdateOperationsInput | number
+    id_presupuesto?: NullableIntFieldUpdateOperationsInput | number | null
+    fecha_movimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tipo_movimiento?: NullableStringFieldUpdateOperationsInput | string | null
+    categoria?: NullableStringFieldUpdateOperationsInput | string | null
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type auditoriaUncheckedUpdateManyWithoutUsuarioInput = {
-    id_auditoria?: IntFieldUpdateOperationsInput | number
-    accion?: StringFieldUpdateOperationsInput | string
-    modulo?: StringFieldUpdateOperationsInput | string
-    descripcion?: StringFieldUpdateOperationsInput | string
-    fecha?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type movimientos_financierosUncheckedUpdateManyWithoutUsuarioInput = {
+    id_movimiento?: IntFieldUpdateOperationsInput | number
+    id_presupuesto?: NullableIntFieldUpdateOperationsInput | number | null
+    fecha_movimiento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    tipo_movimiento?: NullableStringFieldUpdateOperationsInput | string | null
+    categoria?: NullableStringFieldUpdateOperationsInput | string | null
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_origen?: NullableIntFieldUpdateOperationsInput | number | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    tipo_origen_label?: NullableStringFieldUpdateOperationsInput | string | null
+    updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
-  export type colegiados_asignados_socialCreateManyInvitadosInput = {
-    id_asignacion?: number
-    id_actividad_social?: number | null
+  export type rolesUpdateWithoutUsuariosInput = {
+    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  }
+
+  export type rolesUncheckedUpdateWithoutUsuariosInput = {
+    id_rol?: IntFieldUpdateOperationsInput | number
+    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  }
+
+  export type rolesUncheckedUpdateManyWithoutUsuariosInput = {
+    id_rol?: IntFieldUpdateOperationsInput | number
+    fecha_inicio?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
+    rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  }
+
+  export type asistencias_actividadCreateManyInvitadosInput = {
+    id_asistencia?: number
+    id_actividad?: number | null
     id_colegiado?: number | null
-    id_pasante?: number | null
-    total_horas?: number | null
-    horas_meta?: number | null
   }
 
   export type colegiados_registrados_actividad_institucionalCreateManyInvitadosInput = {
@@ -41645,32 +45969,31 @@ export namespace Prisma {
     updatedAt?: Date | string | null
   }
 
-  export type colegiados_asignados_socialUpdateWithoutInvitadosInput = {
-    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
-    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    actividades_sociales?: actividades_socialesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    colegiados?: colegiadosUpdateOneWithoutColegiados_asignados_socialNestedInput
-    pasantes?: pasantesUpdateOneWithoutColegiados_asignados_socialNestedInput
-    asistencia_social_diaria?: asistencia_social_diariaUpdateManyWithoutColegiados_asignados_socialNestedInput
+  export type pagos_invitadosCreateManyInvitadosInput = {
+    id_pago?: number
+    concepto?: string | null
+    fecha_pago?: Date | string | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    estado_pago?: string | null
+    comprobante?: string | null
+    metodo_pago?: string | null
   }
 
-  export type colegiados_asignados_socialUncheckedUpdateWithoutInvitadosInput = {
-    id_asignacion?: IntFieldUpdateOperationsInput | number
-    id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
-    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
-    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
-    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
-    asistencia_social_diaria?: asistencia_social_diariaUncheckedUpdateManyWithoutColegiados_asignados_socialNestedInput
+  export type asistencias_actividadUpdateWithoutInvitadosInput = {
+    actividades_institucionales?: actividades_institucionalesUpdateOneWithoutAsistencias_actividadNestedInput
+    colegiados?: colegiadosUpdateOneWithoutAsistencias_actividadNestedInput
   }
 
-  export type colegiados_asignados_socialUncheckedUpdateManyWithoutInvitadosInput = {
-    id_asignacion?: IntFieldUpdateOperationsInput | number
-    id_actividad_social?: NullableIntFieldUpdateOperationsInput | number | null
+  export type asistencias_actividadUncheckedUpdateWithoutInvitadosInput = {
+    id_asistencia?: IntFieldUpdateOperationsInput | number
+    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
     id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
-    id_pasante?: NullableIntFieldUpdateOperationsInput | number | null
-    total_horas?: NullableFloatFieldUpdateOperationsInput | number | null
-    horas_meta?: NullableFloatFieldUpdateOperationsInput | number | null
+  }
+
+  export type asistencias_actividadUncheckedUpdateManyWithoutInvitadosInput = {
+    id_asistencia?: IntFieldUpdateOperationsInput | number
+    id_actividad?: NullableIntFieldUpdateOperationsInput | number | null
+    id_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
   export type colegiados_registrados_actividad_institucionalUpdateWithoutInvitadosInput = {
@@ -41679,9 +46002,9 @@ export namespace Prisma {
     metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
     actividades_institucionales?: actividades_institucionalesUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
     colegiados?: colegiadosUpdateOneWithoutColegiados_registrados_actividad_institucionalNestedInput
+    origen_movimiento?: origen_movimientoUpdateManyWithoutColegiados_registrados_actividad_institucionalNestedInput
   }
 
   export type colegiados_registrados_actividad_institucionalUncheckedUpdateWithoutInvitadosInput = {
@@ -41705,6 +46028,111 @@ export namespace Prisma {
     metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type pagos_invitadosUpdateWithoutInvitadosInput = {
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUpdateManyWithoutPagos_invitadosNestedInput
+  }
+
+  export type pagos_invitadosUncheckedUpdateWithoutInvitadosInput = {
+    id_pago?: IntFieldUpdateOperationsInput | number
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    origen_movimiento?: origen_movimientoUncheckedUpdateManyWithoutPagos_invitadosNestedInput
+  }
+
+  export type pagos_invitadosUncheckedUpdateManyWithoutInvitadosInput = {
+    id_pago?: IntFieldUpdateOperationsInput | number
+    concepto?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_pago?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    estado_pago?: NullableStringFieldUpdateOperationsInput | string | null
+    comprobante?: NullableStringFieldUpdateOperationsInput | string | null
+    metodo_pago?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type origen_movimientoCreateManyPostulacionesInput = {
+    id_origen?: number
+    tipo_origen?: string | null
+    id_pago_colegiado?: number | null
+    id_registro_actividad_institucional?: number | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_pago_invitado?: number | null
+  }
+
+  export type origen_movimientoUpdateWithoutPostulacionesInput = {
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutOrigen_movimientoNestedInput
+    pagos_colegiados?: pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput
+    pagos_invitados?: pagos_invitadosUpdateOneWithoutOrigen_movimientoNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
+  }
+
+  export type origen_movimientoUncheckedUpdateWithoutPostulacionesInput = {
+    id_origen?: IntFieldUpdateOperationsInput | number
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput
+  }
+
+  export type origen_movimientoUncheckedUpdateManyWithoutPostulacionesInput = {
+    id_origen?: IntFieldUpdateOperationsInput | number
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_pago_invitado?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type origen_movimientoCreateManyPagos_invitadosInput = {
+    id_origen?: number
+    tipo_origen?: string | null
+    id_pago_colegiado?: number | null
+    id_registro_actividad_institucional?: number | null
+    monto?: Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: number | null
+  }
+
+  export type origen_movimientoUpdateWithoutPagos_invitadosInput = {
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutOrigen_movimientoNestedInput
+    pagos_colegiados?: pagos_colegiadosUpdateOneWithoutOrigen_movimientoNestedInput
+    postulaciones?: postulacionesUpdateOneWithoutOrigen_movimientoNestedInput
+    colegiados_registrados_actividad_institucional?: colegiados_registrados_actividad_institucionalUpdateOneWithoutOrigen_movimientoNestedInput
+  }
+
+  export type origen_movimientoUncheckedUpdateWithoutPagos_invitadosInput = {
+    id_origen?: IntFieldUpdateOperationsInput | number
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutOrigen_movimientoNestedInput
+  }
+
+  export type origen_movimientoUncheckedUpdateManyWithoutPagos_invitadosInput = {
+    id_origen?: IntFieldUpdateOperationsInput | number
+    tipo_origen?: NullableStringFieldUpdateOperationsInput | string | null
+    id_pago_colegiado?: NullableIntFieldUpdateOperationsInput | number | null
+    id_registro_actividad_institucional?: NullableIntFieldUpdateOperationsInput | number | null
+    monto?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    id_postulacion?: NullableIntFieldUpdateOperationsInput | number | null
   }
 
 

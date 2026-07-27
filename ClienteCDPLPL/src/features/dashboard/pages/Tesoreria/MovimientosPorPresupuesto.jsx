@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Edit3, Trash2, Plus, Calendar, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon, ExternalLink } from "lucide-react";
+import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Plus, Calendar, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon, ExternalLink, Eye } from "lucide-react";
 
 import {
     getPresupuestoById,
     getMovimientosFiltrados,
     getPresupuestoAnalytics,
     getCategoriasByPresupuesto,
-    deleteMovimientoFinanciero,
+    deleteMovimientoFinanciero
 } from "../../services/tesoreria";
 
 import { Button } from "../../components/Button";
 import Modal from "../../../../components/Modal";
-import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import Table from "../../components/Table";
 import MovimientoForm from "./components/MovimientoForm";
+import ModalDetallesMovimiento from "./components/ModalDetallesMovimiento";
 
 // Gráficos
 import LineChart from "./components/charts/LineChart";
@@ -22,8 +22,7 @@ import BarChart from "./components/charts/BarChart";
 import DonutChart from "./components/charts/DonutChart";
 import GroupedBarChart from "./components/charts/GroupedBarChart";
 
-const buildSupabaseUrl = (path) =>
-    `${import.meta.env.VITE_SUPABASE_URL}/storage/v1/object/public/bucket/${path}`;
+
 
 export default function MovimientosPorPresupuesto() {
     const { id } = useParams();
@@ -47,16 +46,17 @@ export default function MovimientosPorPresupuesto() {
     const [searchTemp, setSearchTemp] = useState(""); // Para el input antes de presionar buscar
     const [filtroTipo, setFiltroTipo] = useState("");
     const [filtroCategoria, setFiltroCategoria] = useState("");
+    const [filtroMetodo, setFiltroMetodo] = useState("");
+    const [filtroOrigen, setFiltroOrigen] = useState("");
+    const [filtroEstado, setFiltroEstado] = useState("");
     const [fechaDesde, setFechaDesde] = useState("");
     const [fechaHasta, setFechaHasta] = useState("");
     const [sortOrder, setSortOrder] = useState("desc");
 
     // Modales
     const [showModalCrearMovimiento, setShowModalCrearMovimiento] = useState(false);
-
-    // Estado para Eliminar con timer
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [selectedMovId, setSelectedMovId] = useState(null);
+    const [showDetallesModal, setShowDetallesModal] = useState(false);
+    const [selectedMovimiento, setSelectedMovimiento] = useState(null);
 
     // 1. Cargar datos estáticos (Presupuesto, Analytics, Categorías)
     const fetchInitialData = async () => {
@@ -85,6 +85,9 @@ export default function MovimientosPorPresupuesto() {
                 limit: 10,
                 tipo: filtroTipo,
                 categoria: filtroCategoria,
+                metodo: filtroMetodo,
+                origen: filtroOrigen,
+                estado: filtroEstado,
                 fecha_desde: fechaDesde,
                 fecha_hasta: fechaHasta,
                 search: search,
@@ -107,7 +110,7 @@ export default function MovimientosPorPresupuesto() {
 
     useEffect(() => {
         fetchTableData();
-    }, [page, filtroTipo, filtroCategoria, fechaDesde, fechaHasta, search, sortOrder, presupuestoId]);
+    }, [page, filtroTipo, filtroCategoria, filtroMetodo, filtroOrigen, filtroEstado, fechaDesde, fechaHasta, search, sortOrder, presupuestoId]);
 
     // Handlers
     const handleSearch = (e) => {
@@ -119,6 +122,9 @@ export default function MovimientosPorPresupuesto() {
     const handleLimpiarFiltros = () => {
         setFiltroTipo("");
         setFiltroCategoria("");
+        setFiltroMetodo("");
+        setFiltroOrigen("");
+        setFiltroEstado("");
         setFechaDesde("");
         setFechaHasta("");
         setSearch("");
@@ -126,28 +132,30 @@ export default function MovimientosPorPresupuesto() {
         setPage(1);
     };
 
-    const handleDeleteClick = (id_movimiento) => {
-        setSelectedMovId(id_movimiento);
-        setShowDeleteModal(true);
-    };
-
-    const handleConfirmDelete = async () => {
-        if (!selectedMovId) return;
-        try {
-            await deleteMovimientoFinanciero(selectedMovId);
-            setShowDeleteModal(false);
-            setSelectedMovId(null);
-            fetchInitialData(); // Actualizar analytics
-            fetchTableData();   // Actualizar tabla
-        } catch (error) {
-            console.error("Error al eliminar movimiento:", error);
-        }
+    const handleVerDetalles = (movimiento) => {
+        setSelectedMovimiento(movimiento);
+        setShowDetallesModal(true);
     };
 
     const handleSuccessForm = () => {
         setShowModalCrearMovimiento(false);
         fetchInitialData(); // Refrescar gráficos y KPIs
         fetchTableData();   // Refrescar tabla
+    };
+
+    const handleAnularMovimiento = async (id_movimiento) => {
+        if (window.confirm("¿Estás seguro de que deseas anular este movimiento? Esta acción cambiará el estado a ANULADO.")) {
+            try {
+                await deleteMovimientoFinanciero(id_movimiento);
+                setShowDetallesModal(false);
+                setSelectedMovimiento(null);
+                fetchInitialData();
+                fetchTableData();
+            } catch (error) {
+                console.error("Error al anular el movimiento", error);
+                alert("Ocurrió un error al intentar anular el movimiento.");
+            }
+        }
     };
 
     if (loadingInitial || !presupuesto || !analytics) {
@@ -358,11 +366,44 @@ export default function MovimientosPorPresupuesto() {
 
                             <select
                                 className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                value={filtroMetodo}
+                                onChange={e => { setFiltroMetodo(e.target.value); setPage(1); }}
+                            >
+                                <option value="">Cualquier método</option>
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="QR">QR</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                            </select>
+
+                            <select
+                                className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                value={filtroOrigen}
+                                onChange={e => { setFiltroOrigen(e.target.value); setPage(1); }}
+                            >
+                                <option value="">Todos los orígenes</option>
+                                <option value="MANUAL">Manual</option>
+                                <option value="COLEGIATURA">Colegiatura</option>
+                                <option value="ACTIVIDAD_INSTITUCIONAL">Cursos</option>
+                                <option value="POSTULACION">Postulación</option>
+                            </select>
+
+                            <select
+                                className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
+                                value={filtroEstado}
+                                onChange={e => { setFiltroEstado(e.target.value); setPage(1); }}
+                            >
+                                <option value="">Todos los estados</option>
+                                <option value="COMPLETADO">Completado</option>
+                                <option value="ANULADO">Anulado</option>
+                            </select>
+
+                            <select
+                                className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
                                 value={sortOrder}
                                 onChange={e => { setSortOrder(e.target.value); setPage(1); }}
                             >
-                                <option value="desc">Más reciente a antiguo</option>
-                                <option value="asc">Más antiguo a reciente</option>
+                                <option value="desc">Últimos modificados</option>
+                                <option value="asc">Primeros modificados</option>
                             </select>
 
                             <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-1">
@@ -399,7 +440,7 @@ export default function MovimientosPorPresupuesto() {
                                 Buscar
                             </Button>
 
-                            {(filtroTipo || filtroCategoria || fechaDesde || fechaHasta || search) && (
+                            {(filtroTipo || filtroCategoria || filtroMetodo || filtroOrigen || filtroEstado || fechaDesde || fechaHasta || search) && (
                                 <button type="button" onClick={handleLimpiarFiltros} className="text-sm text-rose-600 font-medium hover:underline px-2">
                                     Limpiar
                                 </button>
@@ -453,18 +494,65 @@ export default function MovimientosPorPresupuesto() {
                                 label: "Monto",
                                 key: "monto",
                                 render: (m) => (
-                                    <div className={`text-sm font-black ${m.tipo_movimiento === 'INGRESO' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                                    <div className={`text-sm font-black ${m.tipo_movimiento === 'INGRESO' ? 'text-emerald-600' : 'text-rose-600'} ${m.estado === 'ANULADO' ? 'line-through text-slate-400' : ''}`}>
                                         {m.tipo_movimiento === 'INGRESO' ? '+' : '-'}Bs. {formatMoney(m.monto)}
                                     </div>
                                 )
                             },
                             {
+                                label: "Método",
+                                key: "metodo_pago",
+                                render: (m) => (
+                                    <span className="bg-slate-100 text-slate-700 text-[10px] font-bold px-2 py-0.5 rounded-full border border-slate-200">
+                                        {m.metodo_pago || "EFECTIVO"}
+                                    </span>
+                                )
+                            },
+                            {
+                                label: "Origen",
+                                key: "origen",
+                                render: (m) => (
+                                    <div className="flex flex-col">
+                                        <span className="text-xs font-bold text-slate-600 uppercase">
+                                            {m.tipo_origen_label || "MANUAL"}
+                                        </span>
+                                        {m.origen_info?.persona && (
+                                            <span className="text-[10px] text-slate-500 truncate max-w-[120px]" title={m.origen_info.persona}>
+                                                {m.origen_info.persona}
+                                            </span>
+                                        )}
+                                    </div>
+                                )
+                            },
+                            {
+                                label: "Estado",
+                                key: "estado",
+                                render: (m) => (
+                                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${m.estado === 'ANULADO' ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}`}>
+                                        {m.estado || "COMPLETADO"}
+                                    </span>
+                                )
+                            },
+                            {
                                 label: "Fecha",
                                 key: "fecha",
+                                render: (m) => {
+                                    const dateStr = m.updatedAt ? new Date(m.updatedAt).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (m.fecha_movimiento ? new Date(m.fecha_movimiento).toLocaleDateString('es-ES') : "-");
+                                    return (
+                                        <div className="flex items-center space-x-2 text-slate-500 text-xs font-medium">
+                                            <Calendar className="w-3 h-3 text-slate-400" />
+                                            <span>{dateStr}</span>
+                                        </div>
+                                    )
+                                }
+                            },
+                            {
+                                label: "Autor",
+                                key: "autor",
                                 render: (m) => (
-                                    <div className="flex items-center space-x-2 text-slate-500 text-sm font-medium">
-                                        <Calendar className="w-4 h-4 text-slate-400" />
-                                        <span>{m.fecha_movimiento ? new Date(m.fecha_movimiento).toLocaleDateString('es-ES') : "-"}</span>
+                                    <div className="text-slate-600 text-xs font-medium">
+                                        <span className="font-semibold text-slate-800">{m.usuario?.nombre_completo || "Sistema"}</span>
+                                        {m.usuario?.rol && <span className="block text-[10px] text-indigo-600 font-bold">{m.usuario.rol}</span>}
                                     </div>
                                 )
                             },
@@ -473,7 +561,7 @@ export default function MovimientosPorPresupuesto() {
                                 key: "comprobante",
                                 render: (m) => m.comprobante ? (
                                     <button
-                                        onClick={() => window.open(buildSupabaseUrl(m.comprobante), '_blank')}
+                                        onClick={() => window.open(m.comprobante, '_blank')}
                                         className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-blue-50 text-blue-700 border border-blue-100 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-colors"
                                     >
                                         <ExternalLink className="w-3 h-3" /> Ver comprobante
@@ -492,10 +580,10 @@ export default function MovimientosPorPresupuesto() {
                         }}
                         actions={[
                             {
-                                label: "Eliminar",
-                                icon: Trash2,
-                                className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-lg font-medium hover:bg-rose-100 transition-colors shadow-sm",
-                                onClick: (m) => handleDeleteClick(m.id_movimiento)
+                                label: "Ver detalles",
+                                icon: Eye,
+                                className: "px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-lg font-medium hover:bg-indigo-100 transition-colors shadow-sm",
+                                onClick: (m) => handleVerDetalles(m)
                             }
                         ]}
                         emptyMessage={loadingTable ? "Buscando movimientos..." : "No se encontraron movimientos con los filtros actuales."}
@@ -516,15 +604,11 @@ export default function MovimientosPorPresupuesto() {
                 />
             </Modal>
 
-            <ConfirmDeleteModal
-                isOpen={showDeleteModal}
-                onClose={() => {
-                    setShowDeleteModal(false);
-                    setSelectedMovId(null);
-                }}
-                onConfirm={handleConfirmDelete}
-                title="Eliminar Movimiento"
-                message="¿Estás seguro de que deseas eliminar este movimiento? Esta acción no se puede deshacer y los datos se perderán permanentemente."
+            <ModalDetallesMovimiento
+                isOpen={showDetallesModal}
+                onClose={() => { setShowDetallesModal(false); setSelectedMovimiento(null); }}
+                movimiento={selectedMovimiento}
+                onAnular={handleAnularMovimiento}
             />
         </div>
     );

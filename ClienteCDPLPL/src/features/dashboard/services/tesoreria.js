@@ -65,6 +65,9 @@ export const getMovimientosFiltrados = async (id, params = {}) => {
         if (params.fecha_hasta) query.append("fecha_hasta", params.fecha_hasta);
         if (params.search) query.append("search", params.search);
         if (params.sortOrder) query.append("sortOrder", params.sortOrder);
+        if (params.metodo) query.append("metodo", params.metodo);
+        if (params.origen) query.append("origen", params.origen);
+        if (params.estado) query.append("estado", params.estado);
 
         const res = await axios.get(`${BASE_URL}/presupuestos/${id}/movimientos-filtrados?${query.toString()}`);
         return res.data;

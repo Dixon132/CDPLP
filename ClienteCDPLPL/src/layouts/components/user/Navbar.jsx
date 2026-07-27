@@ -27,10 +27,10 @@ const Navbar = ({ scrolled }) => {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex space-x-8">
-                        {['/', '/nosotros', '/contacto'].map((path, index) => (
+                        {['/', '/nosotros', '/contacto', '/postular'].map((path, index) => (
                             <NavLink
                                 key={index}
-                                to={path === '/' ? '/' : path.substring(1)}
+                                to={path}
                                 className={({ isActive }) =>
                                     `relative font-medium text-base transition-colors duration-200 ${isActive
                                         ? 'text-teal-600'
@@ -75,10 +75,10 @@ const Navbar = ({ scrolled }) => {
                     className="md:hidden bg-white shadow-lg"
                 >
                     <div className="px-4 py-5 space-y-4">
-                        {['/', '/nosotros', '/contacto'].map((path, index) => (
+                        {['/', '/nosotros', '/contacto', '/postular'].map((path, index) => (
                             <NavLink
                                 key={index}
-                                to={path === '/' ? '/' : path.substring(1)}
+                                to={path}
                                 className={({ isActive }) =>
                                     `block py-2 font-medium transition-colors duration-200 ${isActive ? 'text-teal-600' : 'text-gray-700 hover:text-teal-600'
                                     }`

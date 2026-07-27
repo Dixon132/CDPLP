@@ -1,6 +1,7 @@
 import { Router } from "express";
 import multer from "multer";
 import errorHandler from "../../../utils/error-handler";
+import { authMiddleware } from "../../../middlewares/auth";
 import {
     getAllPresupuestos,
     getPresupuestoById,
@@ -41,8 +42,8 @@ tesoreriaRoutes.get("/presupuestos/:id/movimientos-filtrados", errorHandler(getM
 
 // Rutas de MOVIMIENTOS FINANCIEROS
 tesoreriaRoutes.get("/presupuestos/:id/movimientos", errorHandler(getMovimientosByPresupuesto));
-tesoreriaRoutes.post("/movimientos", upload.single("comprobante"), errorHandler(createMovimientoFinanciero));
-tesoreriaRoutes.patch("/movimientos/:id", errorHandler(updateMovimientoFinanciero));
-tesoreriaRoutes.delete("/movimientos/:id", errorHandler(deleteMovimientoFinanciero));
+tesoreriaRoutes.post("/movimientos", [authMiddleware, upload.single("comprobante")], errorHandler(createMovimientoFinanciero));
+tesoreriaRoutes.patch("/movimientos/:id", authMiddleware, errorHandler(updateMovimientoFinanciero));
+tesoreriaRoutes.delete("/movimientos/:id", authMiddleware, errorHandler(deleteMovimientoFinanciero));
 
 export default tesoreriaRoutes

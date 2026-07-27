@@ -132,7 +132,8 @@ exports.Prisma.Actividades_institucionalesScalarFieldEnum = {
 exports.Prisma.Asistencias_actividadScalarFieldEnum = {
   id_asistencia: 'id_asistencia',
   id_actividad: 'id_actividad',
-  id_colegiado: 'id_colegiado'
+  id_colegiado: 'id_colegiado',
+  id_invitado: 'id_invitado'
 };
 
 exports.Prisma.Colegiados_registrados_actividad_institucionalScalarFieldEnum = {
@@ -205,10 +206,10 @@ exports.Prisma.Colegiados_asignados_socialScalarFieldEnum = {
   id_asignacion: 'id_asignacion',
   id_actividad_social: 'id_actividad_social',
   id_colegiado: 'id_colegiado',
-  id_invitado: 'id_invitado',
   id_pasante: 'id_pasante',
   total_horas: 'total_horas',
-  horas_meta: 'horas_meta'
+  horas_meta: 'horas_meta',
+  estado: 'estado'
 };
 
 exports.Prisma.Asistencia_social_diariaScalarFieldEnum = {
@@ -239,7 +240,13 @@ exports.Prisma.Movimientos_financierosScalarFieldEnum = {
   descripcion: 'descripcion',
   monto: 'monto',
   id_origen: 'id_origen',
-  comprobante: 'comprobante'
+  comprobante: 'comprobante',
+  id_usuario: 'id_usuario',
+  createdAt: 'createdAt',
+  estado: 'estado',
+  metodo_pago: 'metodo_pago',
+  tipo_origen_label: 'tipo_origen_label',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.Origen_movimientoScalarFieldEnum = {
@@ -247,7 +254,9 @@ exports.Prisma.Origen_movimientoScalarFieldEnum = {
   tipo_origen: 'tipo_origen',
   id_pago_colegiado: 'id_pago_colegiado',
   id_registro_actividad_institucional: 'id_registro_actividad_institucional',
-  monto: 'monto'
+  monto: 'monto',
+  id_postulacion: 'id_postulacion',
+  id_pago_invitado: 'id_pago_invitado'
 };
 
 exports.Prisma.Pagos_colegiadosScalarFieldEnum = {
@@ -257,7 +266,8 @@ exports.Prisma.Pagos_colegiadosScalarFieldEnum = {
   fecha_pago: 'fecha_pago',
   monto: 'monto',
   estado_pago: 'estado_pago',
-  comprobante: 'comprobante'
+  comprobante: 'comprobante',
+  metodo_pago: 'metodo_pago'
 };
 
 exports.Prisma.PresupuestosScalarFieldEnum = {
@@ -320,7 +330,8 @@ exports.Prisma.InvitadosScalarFieldEnum = {
   nombre: 'nombre',
   apellido: 'apellido',
   correo: 'correo',
-  telefono: 'telefono'
+  telefono: 'telefono',
+  estado: 'estado'
 };
 
 exports.Prisma.PostulacionesScalarFieldEnum = {
@@ -336,7 +347,8 @@ exports.Prisma.PostulacionesScalarFieldEnum = {
   estado: 'estado',
   motivo_rechazo: 'motivo_rechazo',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  metodo_pago: 'metodo_pago'
 };
 
 exports.Prisma.EspecialidadesScalarFieldEnum = {
@@ -374,6 +386,22 @@ exports.Prisma.Memorias_balancesScalarFieldEnum = {
   anio: 'anio',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Pagos_invitadosScalarFieldEnum = {
+  id_pago: 'id_pago',
+  id_invitado: 'id_invitado',
+  concepto: 'concepto',
+  fecha_pago: 'fecha_pago',
+  monto: 'monto',
+  estado_pago: 'estado_pago',
+  comprobante: 'comprobante',
+  metodo_pago: 'metodo_pago'
+};
+
+exports.Prisma.InstitucionesScalarFieldEnum = {
+  id_institucion: 'id_institucion',
+  nombre: 'nombre'
 };
 
 exports.Prisma.SortOrder = {
@@ -424,7 +452,9 @@ exports.Prisma.ModelName = {
   especialidades: 'especialidades',
   documentos_requeridos: 'documentos_requeridos',
   config_pago: 'config_pago',
-  memorias_balances: 'memorias_balances'
+  memorias_balances: 'memorias_balances',
+  pagos_invitados: 'pagos_invitados',
+  instituciones: 'instituciones'
 };
 
 /**

@@ -9,9 +9,10 @@ export const presupuestoSchema = z.object({
 
 export const movimientoSchema = z.object({
   id_presupuesto: z.coerce.number().int().positive(),
-  tipo_movimiento: z.string().max(20),
+  tipo_movimiento: z.enum(['INGRESO', 'EGRESO']),
   categoria: z.string().max(40).optional(),
-  descripcion: z.string().optional(),
-  monto: z.coerce.number().positive(),
-  id_origen: z.coerce.number().int().positive().optional()
+  descripcion: z.string().max(500).optional(),
+  monto: z.coerce.number().positive("El monto debe ser mayor a 0"),
+  metodo_pago: z.enum(['EFECTIVO', 'QR', 'TRANSFERENCIA']).optional(),
+  fecha_movimiento: z.string().optional(),
 });

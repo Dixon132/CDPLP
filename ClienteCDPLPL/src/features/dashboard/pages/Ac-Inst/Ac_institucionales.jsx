@@ -6,7 +6,7 @@ import Table from "../../components/Table";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 
-import { getAllActividadesInstitucionales, updateEstadoActividadInstitucional } from "../../services/ac-institucionales";
+import { getAllActividadesInstitucionales, updateEstadoActividadInstitucional, getActividadInstDetailReport } from "../../services/ac-institucionales";
 import CreateActInstitucional from "./components/CreateActInstitucional";
 import EditActInstitucional from "./components/EditActInstitucional";
 import RegisterColegiadoInst from "./components/RegisterColegiadoInst";
@@ -63,7 +63,24 @@ const AcInstitucionales = () => {
         const nuevoEstado = toggleTarget.estadoActual === "EN_CURSO" ? "TERMINADO" : "EN_CURSO";
         try {
             await updateEstadoActividadInstitucional(toggleTarget.id, nuevoEstado);
-            showAlert("success", `Actividad ${nuevoEstado === "EN_CURSO" ? "activada" : "pausada"} correctamente.`);
+            showAlert("success", `Actividad ${nuevoEstado === "EN_CURSO" ? "activada" : "terminada"} correctamente.`);
+            
+            if (nuevoEstado === "TERMINADO") {
+                try {
+                    const blob = await getActividadInstDetailReport(toggleTarget.id);
+                    const url = window.URL.createObjectURL(new Blob([blob]));
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", `lista_oficial_${toggleTarget.id}.pdf`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                } catch (e) {
+                    console.error(e);
+                    showAlert("error", "Error al descargar la lista oficial.");
+                }
+            }
+
             fetchActividades();
         } catch { showAlert("error", "Error al cambiar el estado."); }
         finally { setToggleTarget(null); }
@@ -140,19 +157,20 @@ const AcInstitucionales = () => {
                                     {a.costo ? `Bs. ${a.costo}` : "Gratis"}
                                 </div>)
                         },
-                        { label: "Estado", key: "estado", render: (a) => <span className={getEstadoBadge(a.estado)}>{getEstadoIcon(a.estado)} {a.estado}</span> },
+                        { label: "Estado", key: "estado", render: (a) => <ActividadEstadoBadge estado={a.estado} /> },
                     ]}
                     data={filteredActividades}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                     emptyMessage="No se encontraron actividades"
                     actions={[
                         {
-                            label: (a) => a.estado === "EN_INSCRIPCION" || a.estado === "EN_CURSO" ? "Terminar" : "Activar",
-                            icon: (a) => a.estado === "EN_INSCRIPCION" || a.estado === "EN_CURSO" ? PowerOff : Power,
-                            className: (a) => a.estado === "EN_INSCRIPCION" || a.estado === "EN_CURSO"
+                            label: (a) => a.estado === "EN_CURSO" ? "Terminar" : "Activar",
+                            icon: (a) => a.estado === "EN_CURSO" ? PowerOff : Power,
+                            className: (a) => a.estado === "EN_CURSO"
                                 ? "text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg"
                                 : "text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg",
                             onClick: (a) => setToggleTarget({ id: a.id_actividad, estadoActual: a.estado }),
+                            hide: (a) => a.estado === "EN_INSCRIPCION",
                         },
                         { label: "Editar", icon: Edit3, onClick: (a) => { setSelectedId(a.id_actividad); setShowModalEdit(true); } },
                         { label: "Registrar", icon: UserPlus, onClick: (a) => { setSelectedId(a.id_actividad); setShowModalRegister(true); } },
@@ -216,12 +234,12 @@ const AcInstitucionales = () => {
                 isOpen={!!toggleTarget}
                 onClose={() => setToggleTarget(null)}
                 onConfirm={ejecutarToggle}
-                title={toggleTarget?.estadoActual === "EN_INSCRIPCION" || toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar Actividad" : "Activar Actividad"}
-                message={`¿Confirmas que deseas ${toggleTarget?.estadoActual === "EN_INSCRIPCION" || toggleTarget?.estadoActual === "EN_CURSO" ? "marcar como terminada" : "activar"} esta actividad?`}
+                title={toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar Actividad" : "Activar Actividad"}
+                message={`¿Confirmas que deseas ${toggleTarget?.estadoActual === "EN_CURSO" ? "marcar como terminada" : "activar"} esta actividad?`}
                 waitSeconds={4}
-                confirmColor={toggleTarget?.estadoActual === "EN_INSCRIPCION" || toggleTarget?.estadoActual === "EN_CURSO" ? "amber" : "emerald"}
-                confirmIcon={toggleTarget?.estadoActual === "EN_INSCRIPCION" || toggleTarget?.estadoActual === "EN_CURSO" ? <PowerOff className="w-4 h-4" /> : <Power className="w-4 h-4" />}
-                confirmLabel={toggleTarget?.estadoActual === "EN_INSCRIPCION" || toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar" : "Activar"}
+                confirmColor={toggleTarget?.estadoActual === "EN_CURSO" ? "amber" : "emerald"}
+                confirmIcon={toggleTarget?.estadoActual === "EN_CURSO" ? <PowerOff className="w-4 h-4" /> : <Power className="w-4 h-4" />}
+                confirmLabel={toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar" : "Activar"}
             />
 
             <Alerts type={alert.type} message={alert.message} show={alert.show} onClose={() => setAlert((a) => ({ ...a, show: false }))} />

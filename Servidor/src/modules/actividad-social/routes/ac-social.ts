@@ -6,7 +6,7 @@ import {
     getActividadSocialDetailReport, getActividadSocialesById, listarActividadesSocialesMinimal,
     updateActividadSocial, updateEstadoById,
     getAsignacionById, marcarEntrada, marcarSalida, updateMetaAsignacion,
-    getAsignacionesByUser
+    getAsignacionesByUser, updateEstadoAsignacion, resetHorasAsignacion
 } from "../controllers/ac-social";
 
 const actividadSocialRouter: Router = Router()
@@ -29,6 +29,8 @@ actividadSocialRouter.get('/asignacion/:id', errorHandler(getAsignacionById))
 actividadSocialRouter.patch('/asignacion/:id/entrada', errorHandler(marcarEntrada))
 actividadSocialRouter.patch('/asignacion/:id/salida', errorHandler(marcarSalida))
 actividadSocialRouter.patch('/asignacion/:id/meta', errorHandler(updateMetaAsignacion))
+actividadSocialRouter.patch('/asignacion/:id/estado', errorHandler(updateEstadoAsignacion))
+actividadSocialRouter.patch('/asignacion/:id/reset-horas', errorHandler(resetHorasAsignacion))
 
 // ─── Perfil (debe ir al final para no capturar /asignacion/:id) ─────────────
 actividadSocialRouter.get('/:id', errorHandler(getActividadSocialById))

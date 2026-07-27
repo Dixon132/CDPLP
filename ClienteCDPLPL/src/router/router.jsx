@@ -33,6 +33,10 @@ export const router = createBrowserRouter([
             {
                 path: "memorias",
                 element: <MemoriasBalances />
+            },
+            {
+                path: "postular",
+                element: <PostularPage />
             }
         ]
     },
@@ -43,10 +47,6 @@ export const router = createBrowserRouter([
     {
         path: "/campo/:tipo/:id",
         element: <CampoPage />
-    },
-    {
-        path: "/postular",
-        element: <PostularPage />
     },
     dashboardRoutes,
     authRouter,

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
-import { getDocById } from "../../../services/colegiados";
+import { getDocById, updateDoc, verDocumento } from "../../../services/colegiados";
+import axios from "axios";
 import AñadirDocumento from "./AñadirDocumento";
 import { Button } from "../../../components/Button";
 import Modal from "../../../../../components/Modal";
 import EditarDocumento from "./EditarDocumento";
-import { FileText, Calendar, ExternalLink, Plus, Pencil } from "lucide-react";
+import Alerts from "../../../components/Alerts";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
+import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
+import { deleteDoc } from "../../../services/colegiados";
+import { FileText, Calendar, ExternalLink, Plus, Pencil, Trash2 } from "lucide-react";
 
 // Misma lógica de badge de estado que el resto del sistema
 const getEstadoBadge = (estado) => {
@@ -21,6 +26,27 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
     const [modalAñadir, setModalAñadir] = useState(false);
     const [modalDetalles, setModalDetalles] = useState(false);
     const [currentId, setCurrentId] = useState(null);
+
+    const [alert, setAlert] = useState({ show: false, type: "success", msg: "" });
+    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "edit", callback: null });
+    const [deleteTarget, setDeleteTarget] = useState(null);
+
+    const showAlertFn = (type, msg) => {
+        setAlert({ show: true, type, msg });
+        setTimeout(() => setAlert(a => ({ ...a, show: false })), 3000);
+    };
+
+    const handleDelete = async () => {
+        try {
+            await deleteDoc(deleteTarget);
+            setDeleteTarget(null);
+            showAlertFn("success", "Documento eliminado correctamente.");
+            getDoc();
+        } catch (error) {
+            showAlertFn("error", "Error al eliminar el documento.");
+            setDeleteTarget(null);
+        }
+    };
 
     // Sin cambios en la lógica de carga
     const getDoc = async () => {
@@ -78,15 +104,16 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
                                                 <Calendar size={12} />
                                                 Vence: {new Date(doc.fecha_vencimiento).toLocaleDateString("es-ES")}
                                             </span>
-                                            <a
-                                                href={`/${doc.archivo}`}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline"
+                                            <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    verDocumento(doc.id_documento);
+                                                }}
+                                                className="flex items-center gap-1 text-blue-600 hover:text-blue-800 hover:underline bg-transparent border-none cursor-pointer p-0"
                                             >
                                                 <ExternalLink size={12} />
                                                 Ver archivo
-                                            </a>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -106,6 +133,13 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
                                         <Pencil size={12} />
                                         Modificar
                                     </button>
+                                    <button
+                                        onClick={() => setDeleteTarget(doc.id_documento)}
+                                        className="flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-700 transition-colors"
+                                    >
+                                        <Trash2 size={12} />
+                                        Eliminar
+                                    </button>
                                 </div>
                             </div>
                         );
@@ -113,13 +147,76 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
                 </div>
             )}
 
-            {/* Modales — sin cambios */}
+            {/* Modales */}
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title="Añadir documento">
-                <AñadirDocumento id={id} tipoDoc={tipoDoc} />
+                <AñadirDocumento 
+                    id={id} 
+                    tipoDoc={tipoDoc} 
+                    onSubmitForm={(formData) => {
+                        setConfirmSave({
+                            open: true,
+                            variant: "create",
+                            callback: async () => {
+                                try {
+                                    await axios.post(`/api/colegiados/documentos/${id}`, formData, {
+                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                    });
+                                    setModalAñadir(false);
+                                    showAlertFn("success", "Documento añadido correctamente.");
+                                    getDoc();
+                                } catch (error) {
+                                    showAlertFn("error", "Error al añadir el documento.");
+                                }
+                            }
+                        });
+                    }}
+                />
             </Modal>
             <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title="Editar documento">
-                <EditarDocumento id_documento={currentId} />
+                <EditarDocumento 
+                    id_documento={currentId} 
+                    onSubmitForm={(data) => {
+                        setConfirmSave({
+                            open: true,
+                            variant: "edit",
+                            callback: async () => {
+                                try {
+                                    await updateDoc(currentId, data);
+                                    setModalDetalles(false);
+                                    showAlertFn("success", "Documento modificado correctamente.");
+                                    getDoc();
+                                } catch (error) {
+                                    showAlertFn("error", "Error al modificar el documento.");
+                                }
+                            }
+                        });
+                    }}
+                />
             </Modal>
+
+            <ConfirmActionModal
+                isOpen={confirmSave.open}
+                variant={confirmSave.variant}
+                title={confirmSave.variant === "create" ? "¿Confirmar subida?" : "¿Confirmar cambios?"}
+                message={confirmSave.variant === "create" ? "¿Confirmas que deseas subir este documento?" : "¿Confirmas que deseas guardar los cambios?"}
+                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
+                onConfirm={async () => { 
+                    if (confirmSave.callback) {
+                        await confirmSave.callback();
+                    }
+                    setConfirmSave({ ...confirmSave, open: false }); 
+                }}
+            />
+
+            <ConfirmDeleteModal
+                isOpen={!!deleteTarget}
+                onClose={() => setDeleteTarget(null)}
+                onConfirm={handleDelete}
+                title="Eliminar Documento"
+                message="¿Estás seguro que deseas eliminar este documento definitivamente? Esta acción eliminará el archivo y su registro."
+            />
+
+            <Alerts type={alert.type} message={alert.msg} show={alert.show} onClose={() => setAlert(a => ({ ...a, show: false }))} />
         </div>
     );
 };

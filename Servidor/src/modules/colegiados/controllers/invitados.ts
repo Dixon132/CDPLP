@@ -20,11 +20,13 @@ export const createInvitado = async (req: Request, res: Response) => {
     }
 }
 export const getInvitados = async (req: Request, res: Response) => {
-    const { page = 1, limit = 15, search = '' } = req.query;
+    const { page = 1, limit = 15, search = '', inactivos = 'false' } = req.query;
     const skip: number = (Number(page) - 1) * Number(limit);
     const take: number = Number(limit);
     const searchFields = ['nombre', 'apellido', 'correo', 'telefono'];
 
+    // Determinar si mostrar inactivos o activos
+    const showInactivos = inactivos === 'true';
 
     const searchFilter = search
         ? {
@@ -37,17 +39,18 @@ export const getInvitados = async (req: Request, res: Response) => {
         }
         : {};
 
+    const whereFilter = {
+        ...searchFilter,
+        estado: showInactivos ? 'INACTIVO' : 'ACTIVO'
+    };
+
     const invitados = await prismaClient.invitados.findMany({
-        where: {
-            ...searchFilter,
-        },
+        where: whereFilter,
         skip,
         take,
     });
     const total = await prismaClient.invitados.count({
-        where: {
-            ...searchFilter,
-        },
+        where: whereFilter,
     });
 
     res.status(200).json({
@@ -66,8 +69,23 @@ export const getInvitadoById = async (req: Request, res: Response) => {
         }
     });
     res.status(200).json(invitado);
-
 }
+
+export const updateEstadoInvitado = async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    try {
+        const invitado = await prismaClient.invitados.update({
+            where: { id_invitado: Number(id) },
+            data: { estado }
+        });
+        res.status(200).json(invitado);
+    } catch (error) {
+        res.status(500).json({ error: "Error al actualizar el estado del invitado" });
+    }
+}
+
 export const updateInvitadoById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const { nombre, apellido, correo, telefono } = req.body;

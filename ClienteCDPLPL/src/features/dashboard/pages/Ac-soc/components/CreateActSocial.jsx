@@ -17,6 +17,7 @@ import { MapContainer, TileLayer, Marker, Circle, useMapEvents } from "react-lea
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { createActividadSocial, getConvenios } from "../../../services/ac-sociales";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 
 // Fix icono leaflet en Vite/React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -45,7 +46,7 @@ export default function CreateActSocial({ onClose, onSuccess }) {
         watch,
         formState: { errors },
     } = useForm({
-        defaultValues: { radio_metros: 100 }
+        defaultValues: { radio_metros: 100, estado: "ACTIVO", tipo: "" }
     });
 
     const [convenios, setConvenios] = useState([]);
@@ -66,11 +67,19 @@ export default function CreateActSocial({ onClose, onSuccess }) {
         setValue("longitud", lng);
     };
 
-    const onSubmit = async (data) => {
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [formData, setFormData] = useState(null);
+
+    const onSubmit = (data) => {
+        setFormData(data);
+        setConfirmOpen(true);
+    };
+
+    const handleCreate = async () => {
+        setConfirmOpen(false);
         try {
-            await createActividadSocial(data);
+            await createActividadSocial(formData);
             if (onSuccess) onSuccess();
-            if (onClose) onClose();
         } catch (error) {
             alert("Error al crear actividad social");
         }
@@ -120,31 +129,29 @@ export default function CreateActSocial({ onClose, onSuccess }) {
                 error={!!errors.fecha_inicio}
                 helperText={errors.fecha_inicio?.message}
             />
-            <TextField
-                label="Fecha de Fin"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                inputProps={{ min: hoy }}
-                {...register("fecha_fin")}
-            />
-
-            {/* Estado */}
-            <FormControl error={!!errors.estado}>
-                <InputLabel>Estado</InputLabel>
-                <Select label="Estado" defaultValue="" {...register("estado", { required: "Estado obligatorio" })}>
-                    <MenuItem value="">Seleccione...</MenuItem>
-                    <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                    <MenuItem value="INACTIVO">INACTIVO</MenuItem>
-                </Select>
-                {errors.estado && <Typography variant="caption" color="error">{errors.estado.message}</Typography>}
-            </FormControl>
 
             {/* Tipo */}
-            <TextField
-                label="Tipo"
-                {...register("tipo", { required: "Tipo obligatorio" })}
-                error={!!errors.tipo}
-                helperText={errors.tipo?.message}
+            <Controller
+                name="tipo"
+                control={control}
+                rules={{ required: "Tipo obligatorio" }}
+                render={({ field }) => (
+                    <TextField
+                        {...field}
+                        select
+                        label="Tipo"
+                        error={!!errors.tipo}
+                        helperText={errors.tipo?.message}
+                    >
+                        <MenuItem value="">Seleccione...</MenuItem>
+                        <MenuItem value="CULTURAL">CULTURAL</MenuItem>
+                        <MenuItem value="DEPORTIVA">DEPORTIVA</MenuItem>
+                        <MenuItem value="SOCIAL">SOCIAL</MenuItem>
+                        <MenuItem value="RECREATIVA">RECREATIVA</MenuItem>
+                        <MenuItem value="EDUCATIVA">EDUCATIVA</MenuItem>
+                        <MenuItem value="BENEFICA">BENÉFICA</MenuItem>
+                    </TextField>
+                )}
             />
 
             {/* ─── Sección Geolocalización ─── */}
@@ -157,7 +164,7 @@ export default function CreateActSocial({ onClose, onSuccess }) {
                 </Typography>
 
                 {/* Mapa */}
-                <Box sx={{ height: 300, borderRadius: 2, overflow: "hidden", border: "1px solid #ddd", mb: 2 }}>
+                <Box sx={{ height: 280, borderRadius: 2, overflow: "hidden", border: "1px solid #ddd", mb: 1.5, zIndex: 0, position: "relative" }}>
                     <MapContainer
                         center={[-17.78, -63.18]}
                         zoom={13}
@@ -217,6 +224,15 @@ export default function CreateActSocial({ onClose, onSuccess }) {
                 <Button variant="outlined" onClick={onClose}>Cancelar</Button>
                 <Button type="submit" variant="contained" color="primary">Crear Actividad</Button>
             </Stack>
+
+            <ConfirmActionModal
+                isOpen={confirmOpen}
+                variant="create"
+                title="¿Confirmar creación?"
+                message="¿Estás seguro que deseas crear esta actividad? Verifica que los datos sean correctos."
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleCreate}
+            />
         </Box>
     );
 }

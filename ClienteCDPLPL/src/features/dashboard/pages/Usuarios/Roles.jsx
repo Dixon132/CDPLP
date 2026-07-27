@@ -3,7 +3,7 @@ import { getAllRoles, estadoRol } from "../../services/roles";
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import AsignarRol from "./Components/AsignarRol";
@@ -93,22 +93,23 @@ const Roles = () => {
                 }]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <Table
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="roles"
                     columns={[
                         {
                             label: "Usuario", key: "usuario", render: (r) => (
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-bold shadow-sm">{r.usuarios?.nombre?.[0]?.toUpperCase() || "U"}</div>
-                                    <div><p className="font-semibold text-slate-800">{r.usuarios?.nombre} {r.usuarios?.apellido}</p><p className="text-xs text-slate-500">ID: {r.id_rol}</p></div>
+                                    <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-bold shadow-sm shrink-0">{r.usuarios?.nombre?.[0]?.toUpperCase() || "U"}</div>
+                                    <div className="min-w-0 flex-1"><p className="font-semibold text-slate-800 truncate">{r.usuarios?.nombre} {r.usuarios?.apellido}</p><p className="text-xs text-slate-500">ID: {r.id_rol}</p></div>
                                 </div>)
                         },
                         { label: "Rol", key: "rol", render: (r) => <span className={getRolBadge(r.rol)}>{getRolIcon(r.rol)} {r.rol}</span> },
                         {
                             label: "Período", key: "fecha", render: (r) => (
                                 <div className="text-sm text-slate-600 space-y-1">
-                                    <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /> {new Date(r.fecha_inicio).toLocaleDateString()}</div>
-                                    <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400" /> {r.fecha_fin ? new Date(r.fecha_fin).toLocaleDateString() : "—"}</div>
+                                    <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400 shrink-0" /> <span className="truncate">{new Date(r.fecha_inicio).toLocaleDateString()}</span></div>
+                                    <div className="flex items-center gap-2"><Calendar className="w-4 h-4 text-slate-400 shrink-0" /> <span className="truncate">{r.fecha_fin ? new Date(r.fecha_fin).toLocaleDateString() : "—"}</span></div>
                                 </div>)
                         },
                         { label: "Estado", key: "estado", render: (r) => <span className={getEstadoBadge(r.activo)}>{getEstadoIcon(r.activo)} {r.activo ? "Activo" : "Inactivo"}</span> },

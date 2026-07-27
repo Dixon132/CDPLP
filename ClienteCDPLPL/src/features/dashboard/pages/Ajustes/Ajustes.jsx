@@ -2,7 +2,10 @@ import React from "react";
 import Header from "../../components/Header";
 import { Settings, User, Bell, Shield, Key } from "lucide-react";
 import EspecialidadesCRUD from "./components/EspecialidadesCRUD";
+import InstitucionesCRUD from "./components/InstitucionesCRUD";
 import DocumentosRequeridosCRUD from "./components/DocumentosRequeridosCRUD";
+import ConfiguracionPagos from "./components/ConfiguracionPagos";
+import ConfiguracionFinanciera from "./components/ConfiguracionFinanciera";
 
 const Ajustes = () => {
     return (
@@ -103,9 +106,24 @@ const Ajustes = () => {
                 <EspecialidadesCRUD />
             </div>
 
+            {/* Instituciones */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                <InstitucionesCRUD />
+            </div>
+
             {/* Documentos Requeridos */}
             <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
                 <DocumentosRequeridosCRUD />
+            </div>
+
+            {/* Configuración de Pagos */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                <ConfiguracionPagos />
+            </div>
+
+            {/* Configuración Financiera (Enrutamiento) */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                <ConfiguracionFinanciera />
             </div>
         </div>
     );

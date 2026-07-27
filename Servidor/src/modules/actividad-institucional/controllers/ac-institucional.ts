@@ -6,6 +6,8 @@ import { registrarMovimientoPagoCurso } from "../../financiero/services/movimien
 import { Origen } from "../../../types/movimientos";
 import registrarAuditoria from "../../Auditorias/services";
 import { Acciones, Modulos } from "../../../types/auditoria";
+import { subirArchivo } from "../../../utils/uploadS3";
+import crypto from "crypto";
 
 /**
  * GET /api/ac-institucionales
@@ -26,6 +28,16 @@ export const getActInst = async (req: Request, res: Response) => {
             })),
         }
         : {};
+
+    // Auto-transition logic
+    await prismaClient.actividades_institucionales.updateMany({
+        where: {
+            estado: "EN_INSCRIPCION",
+            fecha_programada: { lte: new Date() }
+        },
+        data: { estado: "EN_CURSO" }
+    });
+
 
     const data = await prismaClient.actividades_institucionales.findMany({
         where: { ...searchFilter },
@@ -150,14 +162,16 @@ export const createRegistroInst = async (req: Request, res: Response) => {
     } = req.body;
 
     // ─── Validación de duplicado ────────────────────────────────────────────
+    let existingRegistro = null;
+
     if (id_colegiado) {
-        const yaExiste = await prismaClient.colegiados_registrados_actividad_institucional.findFirst({
+        existingRegistro = await prismaClient.colegiados_registrados_actividad_institucional.findFirst({
             where: {
                 id_actividad: Number(id_actividad),
                 id_colegiado: Number(id_colegiado),
             }
         });
-        if (yaExiste) {
+        if (existingRegistro && existingRegistro.estado_registro !== 'ANULADO') {
             return res.status(409).json({
                 error: "El colegiado ya está registrado en esta actividad"
             });
@@ -165,13 +179,13 @@ export const createRegistroInst = async (req: Request, res: Response) => {
     }
 
     if (id_invitado) {
-        const yaExiste = await prismaClient.colegiados_registrados_actividad_institucional.findFirst({
+        existingRegistro = await prismaClient.colegiados_registrados_actividad_institucional.findFirst({
             where: {
                 id_actividad: Number(id_actividad),
                 id_invitado: Number(id_invitado),
             }
         });
-        if (yaExiste) {
+        if (existingRegistro && existingRegistro.estado_registro !== 'ANULADO') {
             return res.status(409).json({
                 error: "Este invitado ya está registrado en esta actividad"
             });
@@ -179,31 +193,170 @@ export const createRegistroInst = async (req: Request, res: Response) => {
     }
     // ────────────────────────────────────────────────────────────────────────
 
-    const reg = await prismaClient.colegiados_registrados_actividad_institucional.create({
-        data: {
-            id_actividad: Number(id_actividad),
-            id_colegiado: id_colegiado ? Number(id_colegiado) : null,
-            id_invitado: id_invitado ? Number(id_invitado) : null,
-            fecha_registro: fecha_registro ? new Date(fecha_registro) : new Date(),
-            estado_registro,
-            metodo_pago,
-        },
-    });
-    const act = await prismaClient.actividades_institucionales.findFirstOrThrow({
-        where: {
-            id_actividad
-        },
-        select: {
-            costo: true,
-            nombre: true
-        }
-    })
-    await registrarMovimientoPagoCurso(reg.id_registro, Number(act.costo), Origen.CURSO, `Pago de la actividad institucional: ${act.nombre}`, 1)
-    await registrarAuditoria(req.user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro una inscripcion al curso con monto de ${act.costo}`)
-    return res.status(201).json(reg);
+    try {
+        const configPresupuesto = await prismaClient.config_pago.findUnique({
+            where: { clave: 'PRESUPUESTO_ACTIVO' }
+        });
+        const activePresupuestoId = configPresupuesto ? Number(configPresupuesto.valor) : 1;
+
+        const reg = await prismaClient.$transaction(async (tx) => {
+            let registro;
+            if (existingRegistro) {
+                // Re-inscripción: actualizar el registro existente
+                registro = await tx.colegiados_registrados_actividad_institucional.update({
+                    where: { id_registro: existingRegistro.id_registro },
+                    data: {
+                        fecha_registro: fecha_registro ? new Date(fecha_registro) : new Date(),
+                        estado_registro,
+                        metodo_pago,
+                    },
+                });
+            } else {
+                // Nuevo registro
+                registro = await tx.colegiados_registrados_actividad_institucional.create({
+                    data: {
+                        id_actividad: Number(id_actividad),
+                        id_colegiado: id_colegiado ? Number(id_colegiado) : null,
+                        id_invitado: id_invitado ? Number(id_invitado) : null,
+                        fecha_registro: fecha_registro ? new Date(fecha_registro) : new Date(),
+                        estado_registro,
+                        metodo_pago,
+                    },
+                });
+            }
+
+            const act = await tx.actividades_institucionales.findFirstOrThrow({
+                where: { id_actividad: Number(id_actividad) },
+                select: { costo: true, nombre: true }
+            });
+
+            // Upload file if exists
+            let urlComprobante = undefined;
+            if (req.file) {
+                const nombreAct = act.nombre || 'ACT';
+                const prefix = nombreAct.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, 'A');
+                const hash4 = crypto.createHash('md5').update(String(id_actividad)).digest('hex').substring(0, 4);
+                const folderName = `${prefix}-${hash4}`;
+                // append original extension to keep it valid
+                const ext = req.file.originalname.split('.').pop() || 'png';
+                const fileName = `comp_${registro.id_registro}.${ext}`;
+                urlComprobante = await subirArchivo(req.file, `comprobantes_institucional/${folderName}/${fileName}`);
+            }
+
+            const userId = (req as any).user ? Number((req as any).user) : undefined;
+            
+            let idPagoColegiado = undefined;
+            let idPagoInvitado = undefined;
+            const conceptoPago = `Inscripción a Actividad Institucional: ${act.nombre}`;
+
+            if (id_colegiado) {
+                const pagoCol = await tx.pagos_colegiados.create({
+                    data: {
+                        id_colegiado: Number(id_colegiado),
+                        concepto: conceptoPago,
+                        fecha_pago: fecha_registro ? new Date(fecha_registro) : new Date(),
+                        monto: act.costo,
+                        metodo_pago,
+                        comprobante: urlComprobante
+                    }
+                });
+                idPagoColegiado = pagoCol.id_pago;
+            } else if (id_invitado) {
+                const pagoInv = await tx.pagos_invitados.create({
+                    data: {
+                        id_invitado: Number(id_invitado),
+                        concepto: conceptoPago,
+                        fecha_pago: fecha_registro ? new Date(fecha_registro) : new Date(),
+                        monto: act.costo,
+                        metodo_pago,
+                        comprobante: urlComprobante
+                    }
+                });
+                idPagoInvitado = pagoInv.id_pago;
+            }
+
+            await registrarMovimientoPagoCurso(registro.id_registro, Number(act.costo), Origen.CURSO, `Pago de la actividad institucional: ${act.nombre}`, activePresupuestoId, userId, metodo_pago, urlComprobante, tx, idPagoColegiado, idPagoInvitado);
+            
+            return registro;
+        });
+
+        await registrarAuditoria((req as any).user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro una inscripcion al curso con id_actividad ${id_actividad}`);
+        return res.status(201).json(reg);
+    } catch (error) {
+        console.error("Error en createRegistroInst:", error);
+        return res.status(500).json({ error: "Error al registrar la inscripción y sus movimientos financieros" });
+    }
 };
 
 
+
+
+
+export const anularRegistroInst = async (req: Request, res: Response) => {
+    try {
+        const id_registro = Number(req.params.id);
+        const registro = await prismaClient.colegiados_registrados_actividad_institucional.findUnique({
+            where: { id_registro }
+        });
+        if (!registro) return res.status(404).json({ error: "Registro no encontrado" });
+        if (registro.estado_registro === 'ANULADO') return res.status(409).json({ error: "El registro ya está anulado" });
+
+        const urlComprobante = await prismaClient.$transaction(async (tx) => {
+            await tx.colegiados_registrados_actividad_institucional.update({
+                where: { id_registro },
+                data: { estado_registro: 'ANULADO' }
+            });
+
+            // Buscar el movimiento asociado y anularlo
+            let urlComprobante = null;
+            const origen = await tx.origen_movimiento.findFirst({
+                where: { id_registro_actividad_institucional: id_registro },
+                orderBy: { id_origen: 'desc' }
+            });
+            if (origen) {
+                const movIngreso = await tx.movimientos_financieros.findFirst({
+                    where: { id_origen: origen.id_origen }
+                });
+                if (movIngreso) {
+                    urlComprobante = movIngreso.comprobante;
+                    await tx.movimientos_financieros.update({
+                        where: { id_movimiento: movIngreso.id_movimiento },
+                        data: { estado: 'ANULADO', comprobante: null }
+                    });
+                }
+                
+                if (origen.id_pago_colegiado) {
+                    await tx.pagos_colegiados.update({
+                        where: { id_pago: origen.id_pago_colegiado },
+                        data: { estado_pago: 'ANULADO', comprobante: null }
+                    });
+                }
+                
+                if (origen.id_pago_invitado) {
+                    await tx.pagos_invitados.update({
+                        where: { id_pago: origen.id_pago_invitado },
+                        data: { estado_pago: 'ANULADO', comprobante: null }
+                    });
+                }
+            }
+
+            // Return URL para eliminar después de la tx
+            return urlComprobante;
+        });
+
+        // Eliminar el archivo de S3 si existía
+        if (urlComprobante) {
+            import('../../../utils/uploadS3').then(({ eliminarArchivo }) => {
+                eliminarArchivo(urlComprobante).catch(e => console.error("Error eliminando comprobante:", e));
+            });
+        }
+
+        res.status(200).json({ message: "Registro anulado correctamente" });
+    } catch (error) {
+        console.error("Error anularRegistroInst:", error);
+        res.status(500).json({ error: "Error al anular el registro" });
+    }
+};
 
 
 
@@ -222,7 +375,7 @@ export const getAsistenciasInstByActividad = async (req: Request, res: Response)
     const id = Number(req.params.id);
     const asis = await prismaClient.asistencias_actividad.findMany({
         where: { id_actividad: id },
-        include: { colegiados: true },
+        include: { colegiados: true, invitados: true },
     });
     return res.status(200).json(asis);
 };
@@ -232,11 +385,12 @@ export const getAsistenciasInstByActividad = async (req: Request, res: Response)
 
 
 export const createAsistenciaInst = async (req: Request, res: Response) => {
-    const { id_actividad, id_colegiado } = req.body;
+    const { id_actividad, id_colegiado, id_invitado } = req.body;
     const a = await prismaClient.asistencias_actividad.create({
         data: {
             id_actividad: Number(id_actividad),
-            id_colegiado: Number(id_colegiado),
+            id_colegiado: id_colegiado ? Number(id_colegiado) : null,
+            id_invitado: id_invitado ? Number(id_invitado) : null,
         }
     });
     return res.status(201).json(a);
@@ -368,6 +522,7 @@ export const getActividadInstDetailReport = async (req: Request, res: Response) 
             } else if (r.invitados) {
                 const i = r.invitados;
                 return {
+                    tipo: "Invitado",
                     nombreCompleto: `${i.nombre || ""} ${i.apellido || ""}`.trim(),
                     correo: i.correo || "",
                     telefono: i.telefono || "",

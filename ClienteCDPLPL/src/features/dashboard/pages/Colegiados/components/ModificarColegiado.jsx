@@ -48,6 +48,9 @@ const ModificarColegiado = ({ id, onClose, onSuccess }) => {
                 ...formData,
                 especialidades: especialidades.join(", "),
             };
+            if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
+            if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
+            
             await modificarColegiados(id, payload);
             if (onSuccess) onSuccess();
             else if (onClose) onClose();

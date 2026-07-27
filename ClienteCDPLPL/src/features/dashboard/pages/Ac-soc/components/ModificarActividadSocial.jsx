@@ -9,9 +9,8 @@ import {
     getConvenios,
     getActividadSocialById,
     updateActividadSocial,
-    deleteActividadSocial,
 } from "../../../services/ac-sociales";
-import ConfirmDialog from "../../../components/ConfirmDialog";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 
 // Fix icono leaflet en Vite/React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -66,7 +65,6 @@ const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
                     motivo: actividad.motivo || "",
                     id_convenio: actividad.id_convenio || "",
                     fecha_inicio: actividad.fecha_inicio?.split("T")[0] || "",
-                    fecha_fin: actividad.fecha_fin?.split("T")[0] || "",
                     estado: actividad.estado?.toUpperCase() || "",
                     tipo: actividad.tipo?.toUpperCase() || "",
                     latitud: actividad.latitud ?? null,
@@ -89,32 +87,28 @@ const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
         if (id) fetchData();
     }, [id, reset, setValue]);
 
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [formData, setFormData] = useState(null);
+
     const handleLocationSelect = (lat, lng) => {
         setMarkerPos({ lat, lng });
         setValue("latitud", lat);
         setValue("longitud", lng);
     };
 
-    const onSubmit = async (formData) => {
+    const onSubmit = (data) => {
+        setFormData(data);
+        setConfirmOpen(true);
+    };
+
+    const handleUpdate = async () => {
+        setConfirmOpen(false);
         try {
             formData.id_convenio = formData.id_convenio ? parseInt(formData.id_convenio) : null;
             await updateActividadSocial(id, formData);
             if (onSuccess) onSuccess();
-            else if (onClose) onClose();
         } catch (error) {
             console.error("Error al modificar la actividad:", error);
-        }
-    };
-
-    const handleDelete = async () => {
-        try {
-            await deleteActividadSocial(id);
-            setShowDeleteConfirm(false);
-            if (onDelete) onDelete();
-            if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al eliminar la actividad:", error);
-            setShowDeleteConfirm(false);
         }
     };
 
@@ -188,43 +182,6 @@ const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
                         helperText={errors.fecha_inicio?.message}
                     />
 
-                    <TextField
-                        label="Fecha de Fin"
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        {...register("fecha_fin", {
-                            validate: (value) => {
-                                if (!value) return true;
-                                if (fechaInicioValue && value < fechaInicioValue) return "Debe ser posterior a la fecha de inicio";
-                                return true;
-                            },
-                        })}
-                        error={!!errors.fecha_fin}
-                        helperText={errors.fecha_fin?.message}
-                    />
-
-                    <Controller
-                        name="estado"
-                        control={control}
-                        rules={{ required: "Campo obligatorio" }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                select
-                                label="Estado"
-                                InputLabelProps={{ shrink: true }}
-                                error={!!errors.estado}
-                                helperText={errors.estado?.message}
-                            >
-                                <MenuItem value="">Seleccione...</MenuItem>
-                                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                                <MenuItem value="EN PROGRESO">EN PROGRESO</MenuItem>
-                                <MenuItem value="FINALIZADO">FINALIZADO</MenuItem>
-                                <MenuItem value="PENDIENTE">PENDIENTE</MenuItem>
-                            </TextField>
-                        )}
-                    />
-
                     <Controller
                         name="tipo"
                         control={control}
@@ -258,7 +215,7 @@ const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
                             Haz clic en el mapa o arrastra el marcador para ajustar la ubicación.
                         </Typography>
 
-                        <Box sx={{ height: 280, borderRadius: 2, overflow: "hidden", border: "1px solid #ddd", mb: 1.5 }}>
+                        <Box sx={{ height: 280, borderRadius: 2, overflow: "hidden", border: "1px solid #ddd", mb: 1.5, zIndex: 0, position: "relative" }}>
                             <MapContainer center={mapCenter} zoom={14} style={{ height: "100%", width: "100%" }} key={mapCenter.join(",")}>
                                 <TileLayer
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -317,31 +274,21 @@ const ModificarActividadSocial = ({ id, onClose, onDelete, onSuccess }) => {
                     </Box>
 
                     {/* Botones */}
-                    <Box display="flex" justifyContent="space-between" gap={2} mt={2}>
-                        <Button
-                            variant="outlined"
-                            color="error"
-                            startIcon={<Trash2 size={18} />}
-                            onClick={() => setShowDeleteConfirm(true)}
-                        >
-                            Eliminar
-                        </Button>
-                        <Box display="flex" gap={2}>
-                            <Button variant="outlined" onClick={onClose}>Cancelar</Button>
-                            <Button type="submit" variant="contained" color="primary">Guardar Cambios</Button>
-                        </Box>
+                    <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
+                        <Button variant="outlined" onClick={onClose}>Cancelar</Button>
+                        <Button type="submit" variant="contained" color="primary">Guardar Cambios</Button>
                     </Box>
 
                 </Box>
             </form>
 
-            <ConfirmDialog
-                isOpen={showDeleteConfirm}
-                message="¿Estás seguro de que deseas eliminar permanentemente esta actividad social? Esta acción no se puede deshacer."
-                onConfirm={handleDelete}
-                onClose={() => setShowDeleteConfirm(false)}
-                confirmText="Eliminar"
-                waitSeconds={4}
+            <ConfirmActionModal
+                isOpen={confirmOpen}
+                variant="edit"
+                title="¿Confirmar cambios?"
+                message="¿Estás seguro que deseas actualizar esta actividad? Revisa que los datos modificados sean correctos."
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleUpdate}
             />
         </>
     );

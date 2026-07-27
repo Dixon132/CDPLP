@@ -18,26 +18,31 @@ function haversineDistancia(lat1: number, lng1: number, lat2: number, lng2: numb
 }
 
 export const getActividadesSociales = async (req: Request, res: Response) => {
-    const { page = 1, limit = 15, search = '' } = req.query;
+    const { page = 1, limit = 15, search = '', estado } = req.query;
     const skip: number = (Number(page) - 1) * Number(limit);
     const take: number = Number(limit);
 
     const searchFields = ['nombre', 'descripcion', 'ubicacion', 'tipo'];
+    
+    let baseFilter: any = {};
+    if (estado) {
+        baseFilter.estado = estado;
+    }
+
     const searchFilter = search
         ? {
             OR: searchFields.map(field => ({
                 [field]: {
-                    contains: search,
+                    contains: search as string,
                     mode: 'insensitive',
                 },
             })),
+            ...baseFilter
         }
-        : {};
+        : { ...baseFilter };
 
     const actividades = await prismaClient.actividades_sociales.findMany({
-        where: {
-            ...searchFilter,
-        },
+        where: searchFilter,
         include: {
             convenio: true
         },
@@ -102,7 +107,6 @@ export const createActividadSocial = async (req: Request, res: Response) => {
         id_convenio,
         motivo,
         fecha_inicio,
-        fecha_fin,
         estado,
         tipo,
         latitud,
@@ -118,7 +122,6 @@ export const createActividadSocial = async (req: Request, res: Response) => {
             id_convenio: +id_convenio,
             motivo,
             fecha_inicio: new Date(fecha_inicio),
-            fecha_fin: new Date(fecha_fin),
             estado,
             tipo,
             latitud: latitud !== undefined ? Number(latitud) : null,
@@ -244,7 +247,6 @@ export const updateActividadSocial = async (req: Request, res: Response) => {
         id_convenio,
         motivo,
         fecha_inicio,
-        fecha_fin,
         estado,
         tipo,
         latitud,
@@ -260,7 +262,6 @@ export const updateActividadSocial = async (req: Request, res: Response) => {
             id_convenio: id_convenio ? Number(id_convenio) : null,
             motivo,
             fecha_inicio: fecha_inicio ? new Date(fecha_inicio) : undefined,
-            fecha_fin: fecha_fin ? new Date(fecha_fin) : undefined,
             estado,
             tipo,
             latitud: (latitud !== undefined && latitud !== null && latitud !== '') ? Number(latitud) : null,
@@ -302,7 +303,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
                         colegiados: {
                             select: { nombre: true, apellido: true, correo: true, telefono: true, especialidades: true, estado: true },
                         },
-                        invitados: {
+                        pasantes: {
                             select: { nombre: true, apellido: true, correo: true, telefono: true },
                         },
                     },
@@ -342,7 +343,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
         const asignaciones = act.colegiados_asignados_social;
         let tablaAsignadosHTML = "";
         if (asignaciones.length === 0) {
-            tablaAsignadosHTML = "<p>No hay colegiados ni invitados asignados a esta actividad social.</p>";
+            tablaAsignadosHTML = "<p>No hay colegiados ni pasantes asignados a esta actividad social.</p>";
         } else {
             tablaAsignadosHTML = `
       <table>
@@ -351,7 +352,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
             <th>Nombre Completo</th>
             <th>Correo</th>
             <th>Teléfono</th>
-            <th>Especialidades / Tipo Invitado</th>
+            <th>Especialidades / Rol</th>
             <th>Estado</th>
           </tr>
         </thead>
@@ -370,17 +371,17 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
                   <td>${c.estado ?? ""}</td>
                 </tr>
               `;
-                } else if (a.invitados) {
-                    // Si es un invitado
-                    const i = a.invitados;
+                } else if (a.pasantes) {
+                    // Si es un pasante
+                    const p = a.pasantes;
                     return `
                 <tr>
-
-                  <td>${i.nombre ?? ""} ${i.apellido ?? ""}</td>
-                  <td>${i.correo ?? ""}</td>
-                  <td>${i.telefono ?? ""}</td>
-                  <td>Invitado Externo</td>
-                  <td>Invitado</td>
+                  <td>Pasante</td>
+                  <td>${p.nombre ?? ""} ${p.apellido ?? ""}</td>
+                  <td>${p.correo ?? ""}</td>
+                  <td>${p.telefono ?? ""}</td>
+                  <td>Práctica Académica</td>
+                  <td>Activo</td>
                 </tr>
               `;
                 } else {
@@ -430,7 +431,7 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
           </div>
 
           <div class="seccion">
-            <h2>Colegiados e Invitados Asignados</h2>
+            <h2>Colegiados y Pasantes Asignados</h2>
             ${tablaAsignadosHTML}
           </div>
         </body>
@@ -862,5 +863,48 @@ export const updateMetaAsignacion = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error en updateMetaAsignacion:", error);
         res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+/**
+ * PATCH /api/ac-sociales/asignacion/:id/estado
+ * Body: { estado: "ACTIVO" | "INACTIVO" }
+ */
+export const updateEstadoAsignacion = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    const { estado } = req.body;
+    if (!estado) return res.status(400).json({ error: "estado es requerido" });
+
+    try {
+        const updated = await prismaClient.colegiados_asignados_social.update({
+            where: { id_asignacion: id },
+            data: { estado: String(estado) }
+        });
+        res.status(200).json({ message: "Estado de participación actualizado", asignacion: updated });
+    } catch (error) {
+        console.error("Error en updateEstadoAsignacion:", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+};
+
+/**
+ * PATCH /api/ac-sociales/asignacion/:id/reset-horas
+ * Forzar total_horas a 0 manteniendo el historial
+ */
+export const resetHorasAsignacion = async (req: Request, res: Response) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID inválido" });
+
+    try {
+        const updated = await prismaClient.colegiados_asignados_social.update({
+            where: { id_asignacion: id },
+            data: { total_horas: 0 }
+        });
+        res.status(200).json({ message: "Horas reiniciadas a 0 correctamente", asignacion: updated });
+    } catch (error) {
+        console.error("Error en resetHorasAsignacion:", error);
+        res.status(500).json({ error: "Error interno del servidor al reiniciar horas" });
     }
 };

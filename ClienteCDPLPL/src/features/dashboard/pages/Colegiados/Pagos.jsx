@@ -3,9 +3,11 @@ import { useParams } from "react-router-dom";
 import { Button } from "../../components/Button";
 import Modal from "../../../../components/Modal";
 import AñadirPago from "./components/AñadirPago";
-import { getAllPagos, getColegiadoById } from "../../services/colegiados";
+import { getAllPagos, getColegiadoById, createPago } from "../../services/colegiados";
 import parseDate from "../../../../utils/parseData";
 import VerDetallesPago from "./components/VerDetallesPago";
+import Alerts from "../../components/Alerts";
+import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import {
     CreditCard,
     DollarSign,
@@ -33,8 +35,19 @@ const Pagos = () => {
         setPagos(data)
         const colegiado = await getColegiadoById(id)
         setCol(colegiado)
-
     }
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMsg, setAlertMsg] = useState("");
+    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
+
+    const showAlertFn = (type, msg) => {
+        setAlertType(type);
+        setAlertMsg(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
 
     useEffect(() => {
         getPagos()
@@ -255,12 +268,53 @@ const Pagos = () => {
 
 
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir pago'}>
-                <AñadirPago id={id} />
+                <AñadirPago 
+                    id={id} 
+                    onSubmitForm={(formData) => {
+                        setConfirmSave({
+                            open: true, 
+                            variant: "create",
+                            callback: async () => { 
+                                try {
+                                    await createPago(id, formData);
+                                    setModalAñadir(false); 
+                                    showAlertFn("success", "Pago registrado exitosamente."); 
+                                    getPagos(); 
+                                } catch (error) {
+                                    showAlertFn("error", "Error al registrar el pago.");
+                                }
+                            },
+                        });
+                    }}
+                />
             </Modal>
 
             <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title={'Detalles del pago'}>
-                <VerDetallesPago id_pago={currentId} />
+                <VerDetallesPago 
+                    id_pago={currentId} 
+                    onSuccess={() => {
+                        setModalDetalles(false);
+                        showAlertFn("success", "Pago anulado correctamente.");
+                        getPagos();
+                    }}
+                />
             </Modal>
+
+            <ConfirmActionModal
+                isOpen={confirmSave.open}
+                variant={confirmSave.variant}
+                title="¿Confirmar creación?"
+                message="¿Confirmas que deseas registrar este pago?"
+                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
+                onConfirm={async () => { 
+                    if (confirmSave.callback) {
+                        await confirmSave.callback();
+                    }
+                    setConfirmSave({ ...confirmSave, open: false }); 
+                }}
+            />
+
+            <Alerts type={alertType} message={alertMsg} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 };

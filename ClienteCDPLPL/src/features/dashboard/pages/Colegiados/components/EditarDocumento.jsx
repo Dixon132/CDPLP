@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { getEspecificDoc, updateDoc } from "../../../services/colegiados";
 import { TextField, Button, Box, Typography, Paper, FormHelperText } from "@mui/material";
 
-const EditarDocumento = ({ id_documento, onSuccess }) => {
+const EditarDocumento = ({ id_documento, onSubmitForm }) => {
   const {
     register,
     handleSubmit,
@@ -27,10 +27,13 @@ const EditarDocumento = ({ id_documento, onSuccess }) => {
     })();
   }, [id_documento, reset]);
 
-  const onSubmit = async (data) => {
-    await updateDoc(id_documento, data);
-    alert("Documento actualizado con éxito");
-    onSuccess?.();
+  const onSubmit = (data) => {
+    // Fix timezone issues
+    const payload = { ...data };
+    if (payload.fecha_entrega) payload.fecha_entrega = `${payload.fecha_entrega}T00:00:00`;
+    if (payload.fecha_vencimiento) payload.fecha_vencimiento = `${payload.fecha_vencimiento}T00:00:00`;
+    
+    if (onSubmitForm) onSubmitForm(payload);
   };
 
   if (loading) return <Typography align="center">Cargando...</Typography>;
@@ -88,9 +91,6 @@ const EditarDocumento = ({ id_documento, onSuccess }) => {
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button type="submit" variant="contained" color="primary">
             Guardar cambios
-          </Button>
-          <Button variant="outlined" color="error" onClick={() => {}}>
-            Eliminar definitivamente
           </Button>
         </Box>
       </Box>

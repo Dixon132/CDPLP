@@ -4,15 +4,14 @@ import {
     getPostulacionById,
     aceptarPostulacion,
     rechazarPostulacion,
-    eliminarPostulacion,
-    getConfigPagoAdmin,
-    upsertConfigPago,
-    uploadQrConfig
+    eliminarPostulacion
 } from '../../../services/postulaciones';
 import Header from '../../../components/Header';
 import Alerts from '../../../components/Alerts';
 import Modal from '../../../../../components/Modal';
 import ConfirmDeleteModal from '../../../../../components/ConfirmDeleteModal';
+import ConfirmActionModal from '../../../../../components/ConfirmActionModal';
+import ResponsiveTable from '../../../components/ResponsiveTable';
 import {
     ClipboardList, Eye, CheckCircle2, XCircle, Trash2,
     User, Mail, Phone, CreditCard, FileText, Calendar,
@@ -61,10 +60,6 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
-    const [motivo, setMotivo] = useState('');
-    const [rechazando, setRechazando] = useState(false);
-    const [aceptando, setAceptando] = useState(false);
-    const [showRejectInput, setShowRejectInput] = useState(false);
 
     useEffect(() => {
         getPostulacionById(id)
@@ -73,17 +68,7 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
             .finally(() => setLoading(false));
     }, [id]);
 
-    const handleAceptar = async () => {
-        setAceptando(true);
-        try { await aceptarPostulacion(id); onAccept(); }
-        catch { setError('Error al aceptar.'); setAceptando(false); }
-    };
 
-    const handleRechazar = async () => {
-        setRechazando(true);
-        try { await rechazarPostulacion(id, motivo); onReject(); }
-        catch { setError('Error al rechazar.'); setRechazando(false); }
-    };
 
     if (loading) return (
         <div className="flex justify-center items-center py-16">
@@ -123,11 +108,11 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
                 <div>
                     <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mb-3">Documentos subidos</p>
                     <div className="space-y-2">
-                        {data.doc_urls.map((url, i) => (
-                            <a key={i} href={url} target="_blank" rel="noopener noreferrer"
+                        {data.doc_urls.map((doc, i) => (
+                            <a key={i} href={doc.url} target="_blank" rel="noopener noreferrer"
                                 className="flex items-center gap-3 p-3 border border-slate-200 rounded-lg hover:border-slate-400 hover:bg-slate-50 transition-all">
                                 <FileText className="w-4 h-4 text-slate-500" />
-                                <span className="flex-1 text-sm text-slate-700 truncate">Documento {i + 1}</span>
+                                <span className="flex-1 text-sm text-slate-700 truncate">{doc.nombre}</span>
                                 <ExternalLink className="w-4 h-4 text-slate-400" />
                             </a>
                         ))}
@@ -162,141 +147,29 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
                 </div>
             )}
 
-            {/* Acciones — solo si está EN REVISIÓN */}
-            {isEnRevision && (
+            {/* Acciones */}
+            {(isEnRevision || data?.estado === 'RECHAZADO') && (
                 <div className="pt-2 border-t border-slate-100 space-y-3">
-                    {showRejectInput ? (
-                        <div className="space-y-3">
-                            <label className="block text-sm font-semibold text-slate-700">Motivo del rechazo (opcional)</label>
-                            <textarea rows={3} value={motivo} onChange={e => setMotivo(e.target.value)}
-                                placeholder="Ej: Documentación incompleta..."
-                                className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-black resize-none" />
-                            <div className="flex gap-2">
-                                <button onClick={() => setShowRejectInput(false)}
-                                    className="flex-1 px-4 py-2 border border-slate-300 text-slate-600 text-sm font-semibold rounded-lg hover:bg-slate-50 transition-all">
-                                    Cancelar
-                                </button>
-                                <button onClick={handleRechazar} disabled={rechazando}
-                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-lg hover:bg-red-700 disabled:opacity-60 transition-all">
-                                    {rechazando ? <Loader2 className="w-4 h-4 animate-spin" /> : <XCircle className="w-4 h-4" />}
-                                    Confirmar Rechazo
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
                         <div className="flex gap-3">
-                            <button onClick={() => setShowRejectInput(true)}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-50 transition-all">
-                                <XCircle className="w-4 h-4" /> Rechazar
-                            </button>
-                            <button onClick={handleAceptar} disabled={aceptando}
-                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 disabled:opacity-60 transition-all">
-                                {aceptando ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                            {isEnRevision && (
+                                <button onClick={() => onReject(id)}
+                                    className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 border border-red-200 text-red-600 text-sm font-semibold rounded-lg hover:bg-red-50 transition-all">
+                                    <XCircle className="w-4 h-4" /> Rechazar
+                                </button>
+                            )}
+                            <button onClick={() => onAccept(id)}
+                                className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-all">
+                                <CheckCircle2 className="w-4 h-4" />
                                 Aceptar Postulación
                             </button>
                         </div>
-                    )}
                 </div>
             )}
         </div>
     );
 }
 
-// ─── Modal: Ajustes de Configuración ────────────────────────
-function AjustesConfigModal({ onClose, onSave }) {
-    const [config, setConfig] = useState({ MONTO_INICIAL: '', QR: '', CUENTA: '' });
-    const [loading, setLoading] = useState(true);
-    const [saving, setSaving] = useState(false);
-    const [error, setError] = useState('');
 
-    const [fileQr, setFileQr] = useState(null);
-
-    useEffect(() => {
-        getConfigPagoAdmin()
-            .then(data => setConfig({
-                MONTO_INICIAL: data.MONTO_INICIAL || '',
-                QR: data.QR || '',
-                CUENTA: data.CUENTA || ''
-            }))
-            .catch(() => setError('Error al cargar configuración.'))
-            .finally(() => setLoading(false));
-    }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSaving(true);
-        setError('');
-        try {
-            let qrUrl = config.QR;
-            if (fileQr) {
-                const resQr = await uploadQrConfig(fileQr);
-                qrUrl = resQr.ruta;
-            }
-
-            const items = [
-                { clave: 'MONTO_INICIAL', valor: config.MONTO_INICIAL },
-                { clave: 'CUENTA', valor: config.CUENTA },
-            ];
-            // Si hay un fileQr, el endpoint uploadQrConfig ya actualizó el QR, no hace falta reenviarlo,
-            // pero lo reenviamos por si acaso, o si solo pegaron una URL manual.
-            if (!fileQr && qrUrl) items.push({ clave: 'QR', valor: qrUrl });
-
-            await upsertConfigPago(items);
-            onSave();
-        } catch {
-            setError('Error al guardar configuración.');
-            setSaving(false);
-        }
-    };
-
-    if (loading) return (
-        <div className="flex justify-center items-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
-        </div>
-    );
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-5">
-            {error && (
-                <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
-                    <AlertCircle className="w-4 h-4" /> {error}
-                </div>
-            )}
-            <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Monto Inicial (Bs)</label>
-                <input type="number" required value={config.MONTO_INICIAL} onChange={e => setConfig({ ...config, MONTO_INICIAL: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500" />
-                <p className="text-xs text-slate-500 mt-1">Monto de inscripción que se registrará automáticamente en los pagos.</p>
-            </div>
-            <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Imagen QR</label>
-                <div className="space-y-2">
-                    <input type="file" accept="image/*" onChange={e => setFileQr(e.target.files[0])}
-                        className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100" />
-                    <p className="text-xs font-semibold text-slate-400 text-center uppercase">O pega un enlace directo:</p>
-                    <input type="url" value={config.QR} onChange={e => { setConfig({ ...config, QR: e.target.value }); setFileQr(null); }}
-                        placeholder="https://.../mi-qr.jpg"
-                        className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500" />
-                </div>
-            </div>
-            <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-1">Datos de Cuenta Bancaria</label>
-                <textarea rows={3} value={config.CUENTA} onChange={e => setConfig({ ...config, CUENTA: e.target.value })}
-                    placeholder="Banco Nacional de Bolivia&#10;Cta: 123456789&#10;A nombre de: Colegio de Auditores"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 resize-none" />
-            </div>
-            <div className="pt-4 border-t border-slate-100 flex justify-end gap-3">
-                <button type="button" onClick={onClose} className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-semibold rounded-lg hover:bg-slate-50">
-                    Cancelar
-                </button>
-                <button type="submit" disabled={saving} className="flex items-center gap-2 px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 disabled:opacity-60">
-                    {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                    Guardar Configuración
-                </button>
-            </div>
-        </form>
-    );
-}
 
 // ─── MAIN PAGE ────────────────────────────────────────────────
 export default function PostulacionesAdmin() {
@@ -311,8 +184,9 @@ export default function PostulacionesAdmin() {
     const [selectedId, setSelectedId] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [rejectId, setRejectId] = useState(null);
+    const [acceptId, setAcceptId] = useState(null);
     const [deleting, setDeleting] = useState(false);
-    const [showConfigModal, setShowConfigModal] = useState(false);
 
     const [alert, setAlert] = useState({ show: false, type: 'success', message: '' });
 
@@ -337,18 +211,29 @@ export default function PostulacionesAdmin() {
 
     useEffect(() => { fetchData(); }, [fetchData]);
 
-    const handleAccept = () => {
-        setShowModal(false);
-        showAlert('success', '¡Postulación aceptada! El colegiado fue creado y se envió correo.');
-        fetchData();
+    const handleConfirmAccept = async () => {
+        try {
+            await aceptarPostulacion(acceptId);
+            setAcceptId(null);
+            setShowModal(false);
+            showAlert('success', '¡Postulación aceptada! El colegiado fue creado exitosamente.');
+            fetchData();
+        } catch {
+            showAlert('error', 'Error al aceptar la postulación.');
+        }
     };
 
-    const handleReject = () => {
-        setShowModal(false);
-        showAlert('success', 'Postulación rechazada. Los archivos fueron eliminados y se envió correo.');
-        fetchData();
+    const handleConfirmReject = async () => {
+        try {
+            await rechazarPostulacion(rejectId, null);
+            setRejectId(null);
+            setShowModal(false);
+            showAlert('success', 'Postulación rechazada. Los archivos se mantienen.');
+            fetchData();
+        } catch {
+            showAlert('error', 'Error al rechazar la postulación.');
+        }
     };
-
     const handleDelete = async () => {
         setDeleting(true);
         try {
@@ -371,14 +256,6 @@ export default function PostulacionesAdmin() {
                 stats={[{ label: 'Total', value: total, color: 'purple' }]}
                 searchPlaceholder="Buscar por nombre, CI, correo..."
                 onSearch={val => { setSearch(val); setPage(1); }}
-                buttons={[
-                    {
-                        label: 'Ajustes',
-                        icon: <Settings className="w-4 h-4" />,
-                        onClick: () => setShowConfigModal(true),
-                        className: 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
-                    }
-                ]}
             />
 
             {/* Filter tabs */}
@@ -396,93 +273,76 @@ export default function PostulacionesAdmin() {
             </div>
 
             {/* Table */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 p-2 sm:p-4">
                 {loading ? (
                     <div className="flex justify-center items-center py-24">
                         <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
                     </div>
-                ) : data.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-24 text-slate-400">
-                        <ClipboardList className="w-12 h-12 mb-3 opacity-40" />
-                        <p className="font-medium">No hay postulaciones</p>
-                        <p className="text-sm mt-1">Cambia el filtro o espera nuevas solicitudes</p>
-                    </div>
                 ) : (
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr className="border-b border-slate-100 bg-slate-50/80">
-                                    {['Postulante', 'Contacto', 'Especialidades', 'Estado', 'Fecha', 'Acciones'].map(h => (
-                                        <th key={h} className="px-5 py-3.5 text-left text-xs font-semibold uppercase tracking-wider text-slate-500">{h}</th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100">
-                                {data.map(item => (
-                                    <tr key={item.id_postulacion} className="hover:bg-slate-50/80 transition-colors">
-                                        <td className="px-5 py-4">
-                                            <div>
-                                                <p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p>
-                                                <p className="text-xs text-slate-500 font-mono">CI: {item.carnet_identidad}</p>
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-4">
-                                            <div className="space-y-0.5 text-sm text-slate-600">
-                                                <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-slate-400" />{item.correo}</div>
-                                                <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400" />{item.telefono}</div>
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-4">
-                                            <p className="text-sm text-slate-600 max-w-[160px] truncate" title={item.especialidades}>
-                                                {item.especialidades || <span className="text-slate-400 italic">—</span>}
-                                            </p>
-                                        </td>
-                                        <td className="px-5 py-4"><EstadoBadge estado={item.estado} /></td>
-                                        <td className="px-5 py-4">
-                                            <div className="flex items-center gap-1.5 text-sm text-slate-500">
-                                                <Calendar className="w-3.5 h-3.5" />
-                                                {new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-4">
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => { setSelectedId(item.id_postulacion); setShowModal(true); }}
-                                                    className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl hover:bg-slate-200 transition-all">
-                                                    <Eye className="w-3.5 h-3.5" /> Revisar
-                                                </button>
-                                                {item.estado === 'RECHAZADO' && (
-                                                    <button
-                                                        onClick={() => setDeleteId(item.id_postulacion)}
-                                                        className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 text-red-600 text-xs font-semibold rounded-xl hover:bg-red-100 transition-all">
-                                                        <Trash2 className="w-3.5 h-3.5" /> Eliminar
-                                                    </button>
-                                                )}
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                )}
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                    <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between">
-                        <p className="text-xs text-slate-500">Total: <strong>{total}</strong></p>
-                        <div className="flex items-center gap-2">
-                            <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                                className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-all">
-                                <ChevronLeft className="w-4 h-4" />
-                            </button>
-                            <span className="text-sm text-slate-700 font-medium">{page} / {totalPages}</span>
-                            <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-                                className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 transition-all">
-                                <ChevronRight className="w-4 h-4" />
-                            </button>
-                        </div>
-                    </div>
+                    <ResponsiveTable
+                        storageKey="postulaciones_view"
+                        emptyMessage={
+                            <div className="flex flex-col items-center justify-center text-slate-400 py-6">
+                                <ClipboardList className="w-12 h-12 mb-3 opacity-40" />
+                                <p className="font-medium">No hay postulaciones</p>
+                                <p className="text-sm mt-1">Cambia el filtro o espera nuevas solicitudes</p>
+                            </div>
+                        }
+                        columns={[
+                            {
+                                label: "Postulante", key: "nombre", render: (item) => (
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 bg-indigo-50 rounded-xl flex items-center justify-center text-indigo-600 font-bold shadow-sm shrink-0">
+                                            {item.nombre ? item.nombre[0].toUpperCase() : 'P'}
+                                        </div>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="font-semibold text-slate-800 truncate">{item.nombre} {item.apellido}</p>
+                                            <p className="text-xs text-slate-500 font-mono">CI: {item.carnet_identidad}</p>
+                                        </div>
+                                    </div>
+                                )
+                            },
+                            {
+                                label: "Contacto", key: "correo", render: (item) => (
+                                    <div className="space-y-0.5 text-sm text-slate-600">
+                                        <div className="flex items-center gap-1.5"><Mail className="w-3 h-3 text-slate-400 shrink-0" /><span className="truncate">{item.correo}</span></div>
+                                        <div className="flex items-center gap-1.5"><Phone className="w-3 h-3 text-slate-400 shrink-0" /><span className="truncate">{item.telefono}</span></div>
+                                    </div>
+                                )
+                            },
+                            {
+                                label: "Especialidades", key: "especialidades", render: (item) => (
+                                    <p className="text-sm text-slate-600 max-w-[160px] truncate" title={item.especialidades}>
+                                        {item.especialidades || <span className="text-slate-400 italic">—</span>}
+                                    </p>
+                                )
+                            },
+                            {
+                                label: "Estado", key: "estado", render: (item) => <EstadoBadge estado={item.estado} />
+                            },
+                            {
+                                label: "Fecha", key: "createdAt", render: (item) => (
+                                    <div className="flex items-center gap-1.5 text-sm text-slate-500">
+                                        <Calendar className="w-3.5 h-3.5 shrink-0" />
+                                        <span className="truncate">{new Date(item.createdAt).toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+                                    </div>
+                                )
+                            }
+                        ]}
+                        data={data}
+                        actions={[
+                            {
+                                label: "Revisar", icon: Eye, className: "px-3 py-1.5 bg-slate-100 text-slate-700 rounded-xl font-medium shadow-sm hover:bg-slate-200",
+                                onClick: (item) => { setSelectedId(item.id_postulacion); setShowModal(true); }
+                            },
+                            {
+                                label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-50 text-red-600 rounded-xl font-medium shadow-sm hover:bg-red-100",
+                                show: (item) => item.estado === 'RECHAZADO',
+                                onClick: (item) => setDeleteId(item.id_postulacion)
+                            }
+                        ]}
+                        pagination={{ total, totalPage: totalPages, page, onPageChange: setPage }}
+                    />
                 )}
             </div>
 
@@ -492,13 +352,12 @@ export default function PostulacionesAdmin() {
                     <VerPostulacionModal
                         id={selectedId}
                         onClose={() => setShowModal(false)}
-                        onAccept={handleAccept}
-                        onReject={handleReject}
+                        onAccept={(id) => setAcceptId(id)}
+                        onReject={(id) => setRejectId(id)}
                     />
                 )}
             </Modal>
 
-            {/* Delete confirm */}
             <ConfirmDeleteModal
                 isOpen={!!deleteId}
                 onClose={() => setDeleteId(null)}
@@ -506,16 +365,31 @@ export default function PostulacionesAdmin() {
                 message="¿Eliminar definitivamente esta postulación? Esta acción no puede deshacerse."
             />
 
-            {/* Modal: Ajustes */}
-            <Modal isOpen={showConfigModal} title="Configuración de Pagos" onClose={() => setShowConfigModal(false)}>
-                <AjustesConfigModal 
-                    onClose={() => setShowConfigModal(false)}
-                    onSave={() => {
-                        setShowConfigModal(false);
-                        showAlert('success', 'Configuración actualizada.');
-                    }}
-                />
-            </Modal>
+            {/* Confirm Reject */}
+            <ConfirmDeleteModal
+                isOpen={!!rejectId}
+                onClose={() => setRejectId(null)}
+                onConfirm={handleConfirmReject}
+                title="Rechazar Postulación"
+                message="¿Estás seguro que deseas rechazar esta postulación? Los documentos se mantendrán por si se subsanan errores."
+                confirmLabel="Rechazar"
+                confirmColor="red"
+                confirmIcon={<XCircle className="w-4 h-4" />}
+            />
+
+            {/* Confirm Accept */}
+            <ConfirmActionModal
+                isOpen={!!acceptId}
+                onClose={() => setAcceptId(null)}
+                onConfirm={handleConfirmAccept}
+                title="Aceptar Postulación"
+                message="¿Estás seguro que deseas aceptar esta postulación? Se creará el registro de colegiado correspondiente."
+                confirmLabel="Aceptar"
+                confirmColor="emerald"
+                confirmIcon={<CheckCircle2 className="w-4 h-4" />}
+            />
+
+
 
             <Alerts type={alert.type} message={alert.message} show={alert.show} onClose={() => setAlert(a => ({ ...a, show: false }))} />
         </div>

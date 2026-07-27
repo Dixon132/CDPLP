@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Modal from "../../../../../components/Modal";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
-import Table from "../../../components/Table";
+import ResponsiveTable from "../../../components/ResponsiveTable";
 import PinDisplay from "../../../../../components/PinDisplay";
 import { getAllPasantes, updateEstadoPasante, deletePasante } from "../../../services/pasantes";
 import CreatePasante from "./Components/CreatePasante";
@@ -100,8 +100,9 @@ const Pasantes = () => {
                 ]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <Table
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="pasantes"
                     data={pasantes}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                     columns={[
@@ -173,6 +174,8 @@ const Pasantes = () => {
                 onClose={() => setConfirmSave({ ...confirmSave, open: false })}
                 onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
             />
+
+
 
             {/* ✅ Doble confirmación desactivar/activar (2s + 4s) */}
             <ConfirmDeleteModal

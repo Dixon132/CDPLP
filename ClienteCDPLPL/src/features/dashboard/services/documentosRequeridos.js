@@ -1,7 +1,7 @@
-import api from "@/lib/axios";
+import axios from "axios";
 
-export const getDocumentosRequeridos        = ()         => api.get("/documentos-requeridos");
-export const getDocumentosRequeridosAdmin   = ()         => api.get("/documentos-requeridos/admin");
-export const createDocumentoRequerido       = (data)     => api.post("/documentos-requeridos", data);
-export const updateDocumentoRequerido       = (id, data) => api.put(`/documentos-requeridos/${id}`, data);
-export const toggleEstadoDocumentoRequerido = (id)       => api.patch(`/documentos-requeridos/${id}/estado`);
+export const getDocumentosRequeridos        = ()         => axios.get("/api/documentos-requeridos");
+export const getDocumentosRequeridosAdmin   = ()         => axios.get("/api/documentos-requeridos/admin");
+export const createDocumentoRequerido       = (data)     => axios.post("/api/documentos-requeridos", data);
+export const updateDocumentoRequerido       = (id, data) => axios.put(`/api/documentos-requeridos/${id}`, data);
+export const toggleEstadoDocumentoRequerido = (id)       => axios.patch(`/api/documentos-requeridos/${id}/estado`);

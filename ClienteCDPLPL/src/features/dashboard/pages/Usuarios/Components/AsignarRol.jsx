@@ -61,82 +61,56 @@ const AsignarRol = ({ id, onClose, onSuccess }) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
-                {/* Fecha de inicio */}
-                <div>
-                    <label className="block mb-1 font-semibold">Fecha de Inicio</label>
-                    <TextField
-                        fullWidth
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        {...register("fecha_inicio", {
-                            required: "La fecha de inicio es obligatoria",
-                        })}
-                        error={!!errors.fecha_inicio}
-                        helperText={errors.fecha_inicio?.message}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
+                <TextField
+                    label="Fecha de Inicio"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("fecha_inicio", {
+                        required: "La fecha de inicio es obligatoria",
+                    })}
+                    error={!!errors.fecha_inicio}
+                    helperText={errors.fecha_inicio?.message}
+                />
 
-                {/* Fecha fin */}
-                <div>
-                    <label className="block mb-1 font-semibold">Fecha de Fin</label>
-                    <TextField
-                        fullWidth
-                        type="date"
-                        InputLabelProps={{ shrink: true }}
-                        {...register("fecha_fin", {
-                            required: "La fecha de fin es obligatoria",
-                        })}
-                        error={!!errors.fecha_fin}
-                        helperText={errors.fecha_fin?.message}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
+                <TextField
+                    label="Fecha de Fin"
+                    type="date"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("fecha_fin", {
+                        required: "La fecha de fin es obligatoria",
+                    })}
+                    error={!!errors.fecha_fin}
+                    helperText={errors.fecha_fin?.message}
+                />
 
-                {/* Rol del usuario */}
-                <div>
-                    <label className="block mb-1 font-semibold">Rol del Usuario</label>
-                    <Controller
-                        name="rol"
-                        control={control}
-                        rules={{ required: "Debe seleccionar un rol" }}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                select
-                                fullWidth
-                                variant="outlined"
-                                size="small"
-                                error={!!errors.rol}
-                                helperText={errors.rol?.message}
-                            >
-                                <MenuItem value="">-- Seleccione un rol --</MenuItem>
-                                {roles.map((rol, i) => (
-                                    <MenuItem key={i} value={rol}>
-                                        {rol.replaceAll("_", " ")}
-                                    </MenuItem>
-                                ))}
-                            </TextField>
-                        )}
-                    />
-                </div>
+                <Controller
+                    name="rol"
+                    control={control}
+                    rules={{ required: "Debe seleccionar un rol" }}
+                    render={({ field }) => (
+                        <TextField
+                            {...field}
+                            select
+                            label="Rol del Usuario"
+                            InputLabelProps={{ shrink: true }}
+                            error={!!errors.rol}
+                            helperText={errors.rol?.message}
+                        >
+                            <MenuItem value="">-- Seleccione un rol --</MenuItem>
+                            {roles.map((rol, i) => (
+                                <MenuItem key={i} value={rol}>
+                                    {rol.replaceAll("_", " ")}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                    )}
+                />
 
-                {/* Botones */}
                 <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={onClose}
-                    >
+                    <Button variant="outlined" onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
+                    <Button type="submit" variant="contained" color="primary">
                         Guardar Cambios
                     </Button>
                 </Box>

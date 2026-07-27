@@ -37,6 +37,7 @@ export default function MovimientoForm({
         defaultValues: {
             tipo_movimiento: "",
             categoria: "",
+            metodo_pago: "",
         }
     });
 
@@ -61,10 +62,11 @@ export default function MovimientoForm({
                         reset({
                             tipo_movimiento: mov.tipo_movimiento || "",
                             categoria: mov.categoria || "",
+                            metodo_pago: mov.metodo_pago || "",
                             descripcion: mov.descripcion || "",
                             monto: mov.monto?.toString() || "",
                             fecha_movimiento: mov.fecha_movimiento
-                                ? mov.fecha_movimiento.split("T")[0]
+                                ? new Date(new Date(mov.fecha_movimiento).getTime() - new Date(mov.fecha_movimiento).getTimezoneOffset() * 60000).toISOString().slice(0, 16)
                                 : "",
                         });
                     }
@@ -80,12 +82,20 @@ export default function MovimientoForm({
 
     const onSubmit = async (formData) => {
         setIsSubmitting(true);
+        
+        if (!movimientoId && (formData.metodo_pago === "QR" || formData.metodo_pago === "TRANSFERENCIA") && !comprobante) {
+            showAlert("error", "El comprobante es obligatorio para QR y Transferencia");
+            setIsSubmitting(false);
+            return;
+        }
+
         const payload = {
             id_presupuesto: presupuestoId,
             tipo_movimiento: formData.tipo_movimiento,
             categoria: formData.categoria,
             descripcion: formData.descripcion,
             monto: parseFloat(formData.monto),
+            metodo_pago: formData.metodo_pago || undefined,
             fecha_movimiento: formData.fecha_movimiento
                 ? new Date(formData.fecha_movimiento)
                 : null,
@@ -102,6 +112,7 @@ export default function MovimientoForm({
                     createPayload.append("id_presupuesto", presupuestoId);
                     createPayload.append("tipo_movimiento", formData.tipo_movimiento);
                     createPayload.append("categoria", formData.categoria);
+                    if (formData.metodo_pago) createPayload.append("metodo_pago", formData.metodo_pago);
                     if (formData.descripcion) createPayload.append("descripcion", formData.descripcion);
                     createPayload.append("monto", parseFloat(formData.monto));
                     if (formData.fecha_movimiento) createPayload.append("fecha_movimiento", new Date(formData.fecha_movimiento).toISOString());
@@ -167,6 +178,22 @@ export default function MovimientoForm({
                                 <MenuItem value="OTROS">OTROS</MenuItem>
                             </Select>
                         </FormControl>
+
+                        <FormControl fullWidth error={!!errors.metodo_pago}>
+                            <InputLabel shrink id="metodo-label">Método de Pago</InputLabel>
+                            <Select
+                                labelId="metodo-label"
+                                label="Método de Pago"
+                                displayEmpty
+                                value={watch("metodo_pago") || ""}
+                                {...register("metodo_pago")}
+                            >
+                                <MenuItem value="">No especificado</MenuItem>
+                                <MenuItem value="EFECTIVO">Efectivo</MenuItem>
+                                <MenuItem value="QR">QR</MenuItem>
+                                <MenuItem value="TRANSFERENCIA">Transferencia</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Box>
 
                     <TextField
@@ -194,10 +221,10 @@ export default function MovimientoForm({
                         />
 
                         <TextField
-                            label="Fecha"
-                            type="date"
+                            label="Fecha y Hora"
+                            type="datetime-local"
                             InputLabelProps={{ shrink: true }}
-                            {...register("fecha_movimiento", { required: "La fecha es obligatoria" })}
+                            {...register("fecha_movimiento", { required: "La fecha y hora es obligatoria" })}
                             error={!!errors.fecha_movimiento}
                             helperText={errors.fecha_movimiento?.message}
                             fullWidth
@@ -206,8 +233,8 @@ export default function MovimientoForm({
 
                     {!movimientoId && (
                         <Box>
-                            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, display: "block" }}>
-                                Comprobante (opcional)
+                            <Typography variant="caption" color={["QR", "TRANSFERENCIA"].includes(watch("metodo_pago")) ? "error" : "text.secondary"} sx={{ mb: 0.5, display: "block" }}>
+                                Comprobante {["QR", "TRANSFERENCIA"].includes(watch("metodo_pago")) ? "(Obligatorio)" : "(Opcional)"}
                             </Typography>
                             <Box
                                 sx={{

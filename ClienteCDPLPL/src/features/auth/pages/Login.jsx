@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LoginForm } from "../components/LoginForm";
+import { AccesoForm } from "../components/AccesoForm";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import sendLogin from "../services/sendLogin";
@@ -11,36 +12,17 @@ export default function Login() {
 
     if (!showDashboardLogin) {
         return (
-            <div className="w-full h-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white">
-                <div className="mb-12 text-center">
-                    <h1 className="text-3xl font-black uppercase tracking-tighter text-black mb-4">
-                        TIPO DE ACCESO
-                    </h1>
-                    <div className="w-16 h-[2px] bg-black mx-auto mb-6"></div>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-                        Seleccione el portal al que desea ingresar
-                    </p>
-                </div>
-
-                <div className="flex flex-col w-full max-w-sm space-y-6">
-                    <button 
-                        onClick={() => navigate('/acceso')}
-                        className="group w-full bg-white border border-black text-black py-5 px-6 flex flex-col items-center hover:bg-black hover:text-white transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]"
-                    >
-                        <span className="font-black text-sm uppercase tracking-widest mb-1">Acceso de Campo</span>
-                        <span className="text-[9px] font-bold tracking-wider opacity-60 uppercase">Sistema de Marcaje</span>
-                    </button>
-                    
+            <div className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]">
+                <AccesoForm />
+                
+                <div className="mt-8 pt-6 border-t border-gray-100 w-full max-w-sm flex flex-col items-center gap-4">
                     <button 
                         onClick={() => setShowDashboardLogin(true)}
-                        className="group w-full bg-white border border-black text-black py-5 px-6 flex flex-col items-center hover:bg-black hover:text-white transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px]"
+                        className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-black border border-gray-200 hover:border-black py-2 px-4 transition-all w-3/4"
                     >
-                        <span className="font-black text-sm uppercase tracking-widest mb-1">Acceso al Dashboard</span>
-                        <span className="text-[9px] font-bold tracking-wider opacity-60 uppercase">Portal Administrativo</span>
+                        Acceso al Dashboard Administrativo
                     </button>
-                </div>
-                
-                <div className="mt-16 text-center">
+                    
                     <button onClick={() => navigate('/')} className="text-[10px] font-bold uppercase tracking-widest text-gray-400 hover:text-black transition-colors border-b border-transparent hover:border-black">
                         &larr; Volver al Inicio
                     </button>
@@ -50,18 +32,17 @@ export default function Login() {
     }
 
     return (
-        <div className="w-full h-full relative z-10 bg-white flex flex-col">
-            <div className="p-6">
+        <div className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]">
+            <div className="w-full max-w-sm mb-4">
                 <button 
                     onClick={() => setShowDashboardLogin(false)}
-                    className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-black border-b border-transparent hover:border-black transition-all"
+                    className="text-[10px] font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-all flex items-center"
                 >
-                    &larr; Cambiar tipo de acceso
+                    &larr; Volver a Acceso de Campo
                 </button>
             </div>
-            <div className="flex-grow flex items-center justify-center">
-                <LoginForm hook={hook} onSubmit={hook.onSubmit} />
-            </div>
+            
+            <LoginForm hook={hook} onSubmit={hook.onSubmit} />
         </div>
     );
 }

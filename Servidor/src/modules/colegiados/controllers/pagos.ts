@@ -4,10 +4,28 @@ import { registrarMovimientoPagoColegiatura, registrarAnulacionPago } from "../.
 import { Origen } from "../../../types/movimientos";
 import registrarAuditoria from "../../Auditorias/services";
 import { Acciones, Modulos } from "../../../types/auditoria";
-import { subirArchivo } from "../../../utils/uploadS3";
+import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
 
 const ESTADOS_PAGO_VALIDOS = ["REALIZADO", "ANULADO"] as const;
 type EstadoPago = typeof ESTADOS_PAGO_VALIDOS[number];
+
+export const obtenerUrlComprobante = async (req: Request, res: Response) => {
+    try {
+        const id = +req.params.id;
+
+        const pago = await prismaClient.pagos_colegiados.findUnique({
+            where: { id_pago: id }
+        });
+
+        if (!pago || !pago.comprobante) return res.status(404).json({ error: "Comprobante no encontrado" });
+
+        const url = buildPublicUrl(pago.comprobante);
+        res.json({ url });
+    } catch (error) {
+        console.error("Error generando URL:", error);
+        res.status(500).json({ error: "Error al generar el acceso al archivo" });
+    }
+};
 
 export const getPagos = async (req: Request, res: Response) => {
     const id = req.params.id
@@ -25,7 +43,7 @@ export const createPago = async (req: Request, res: Response) => {
         concepto,
         fecha_pago,
         monto,
-
+        metodo_pago
     } = req.body
 
     const col = await prismaClient.colegiados.findFirstOrThrow({
@@ -63,19 +81,48 @@ export const createPago = async (req: Request, res: Response) => {
         rutaComprobante = await subirArchivo(req.file, `comprobantes/${folderUser}`);
     }
 
-    const response = await prismaClient.pagos_colegiados.create({
-        data: {
-            id_colegiado: +id,
-            concepto,
-            fecha_pago: new Date(fecha_pago),
-            monto,
-            comprobante: rutaComprobante
-        }
-    });
+    try {
+        const configPresupuesto = await prismaClient.config_pago.findUnique({
+            where: { clave: 'PRESUPUESTO_ACTIVO' }
+        });
+        const activePresupuestoId = configPresupuesto ? Number(configPresupuesto.valor) : 1;
 
-    await registrarMovimientoPagoColegiatura(response.id_pago, monto, Origen.COLEGIATURA, `Pago de colegiatura de ${col.nombre} ${col.apellido}`, 1)
-    await registrarAuditoria(req.user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro el pago con monto de: ${monto}bs de el colegiado ${col.nombre} ${col.apellido}`)
-    res.status(200).json(response)
+        const response = await prismaClient.$transaction(async (tx) => {
+            const pago = await tx.pagos_colegiados.create({
+                data: {
+                    id_colegiado: +id,
+                    concepto,
+                    fecha_pago: new Date(fecha_pago),
+                    monto,
+                    metodo_pago,
+                    comprobante: rutaComprobante
+                }
+            });
+
+            await registrarMovimientoPagoColegiatura(
+                pago.id_pago, 
+                monto, 
+                Origen.COLEGIATURA, 
+                `Pago de colegiatura de ${col.nombre} ${col.apellido}`, 
+                activePresupuestoId, 
+                Number(req.user), 
+                metodo_pago ?? undefined, 
+                rutaComprobante ?? undefined, 
+                tx
+            );
+            
+            return pago;
+        });
+
+        await registrarAuditoria(req.user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro el pago con monto de: ${monto}bs de el colegiado ${col.nombre} ${col.apellido}`)
+        res.status(200).json(response)
+    } catch (error) {
+        if (rutaComprobante) {
+            await eliminarArchivo(rutaComprobante).catch(e => console.error("Error eliminando archivo huérfano de S3:", e));
+        }
+        console.error("Error en la transacción de creación de pago:", error);
+        res.status(500).json({ error: "Error al registrar el pago y sus movimientos financieros" });
+    }
 
 }
 export const updatePago = async (req: Request, res: Response) => {
@@ -100,14 +147,28 @@ export const updatePago = async (req: Request, res: Response) => {
             return res.status(409).json({ error: "Este pago ya fue anulado y no puede modificarse" });
         }
 
-        const updatedPago = await prismaClient.pagos_colegiados.update({
-            where: { id_pago: +id },
-            data: { estado_pago },
+        const updatedPago = await prismaClient.$transaction(async (tx) => {
+            let updateData: any = { estado_pago };
+
+            // Si se anula, registrar EGRESO de reversión en tesorería
+            if (estado_pago === "ANULADO") {
+                await registrarAnulacionPago(+id, Number(pagoActual.monto), Number(req.user), tx);
+                
+                if (pagoActual.comprobante) {
+                    await eliminarArchivo(pagoActual.comprobante).catch(e => console.error("Error eliminando comprobante de S3:", e));
+                    updateData.comprobante = null;
+                }
+            }
+
+            const pagoUpdate = await tx.pagos_colegiados.update({
+                where: { id_pago: +id },
+                data: updateData,
+            });
+
+            return pagoUpdate;
         });
 
-        // Si se anula, registrar EGRESO de reversión en tesorería
         if (estado_pago === "ANULADO") {
-            await registrarAnulacionPago(+id, Number(pagoActual.monto));
             const nombre = `${pagoActual.colegiados?.nombre || ''} ${pagoActual.colegiados?.apellido || ''}`.trim();
             await registrarAuditoria(
                 req.user,

@@ -5,7 +5,7 @@ import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import CreateUser from "./Components/CreateUser";
 import ModificarUser from "./Components/ModificarUser";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import { Users, UserPlus, Edit3, UserCheck, UserX, Mail, Phone, MapPin, Eye, EyeOff } from "lucide-react";
@@ -68,26 +68,27 @@ const Usuarios = () => {
                 ]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <Table
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="usuarios"
                     columns={[
                         {
                             label: "Usuario", key: "nombre", render: (item) => (
                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 font-bold shadow-sm">{item.nombre[0].toUpperCase()}</div>
-                                    <div><p className="font-semibold text-slate-800">{item.nombre} {item.apellido}</p><p className="text-xs text-slate-500">ID: {item.id_usuario}</p></div>
+                                    <div className="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 font-bold shadow-sm shrink-0">{item.nombre[0].toUpperCase()}</div>
+                                    <div className="min-w-0 flex-1"><p className="font-semibold text-slate-800 truncate">{item.nombre} {item.apellido}</p><p className="text-xs text-slate-500">ID: {item.id_usuario}</p></div>
                                 </div>)
                         },
                         {
                             label: "Contacto", key: "correo", render: (item) => (
                                 <div className="space-y-1 text-sm text-slate-600">
-                                    <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-slate-400" /> {item.correo}</div>
-                                    <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-slate-400" /> {item.telefono}</div>
+                                    <div className="flex items-center gap-2"><Mail className="w-4 h-4 text-slate-400 shrink-0" /> <span className="truncate">{item.correo}</span></div>
+                                    <div className="flex items-center gap-2"><Phone className="w-4 h-4 text-slate-400 shrink-0" /> <span className="truncate">{item.telefono}</span></div>
                                 </div>)
                         },
                         {
                             label: "Dirección", key: "direccion", render: (item) => (
-                                <div className="flex items-center gap-2 text-sm text-slate-600"><MapPin className="w-4 h-4 text-purple-400" /> {item.direccion || "N/A"}</div>)
+                                <div className="flex items-center gap-2 text-sm text-slate-600"><MapPin className="w-4 h-4 text-purple-400 shrink-0" /> <span className="truncate">{item.direccion || "N/A"}</span></div>)
                         },
                         { label: "Estado", key: "estado", render: (item) => <span className={getEstadoBadge(item.estado)}>{getEstadoIcon(item.estado)} {item.estado}</span> },
                     ]}

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import Alerts from "../../../components/Alerts";
 import PinDisplay from "../../../../../components/PinDisplay";
+import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 
 // ──────────────────────────────────────────────
 // Circular progress ring
@@ -155,10 +156,49 @@ export const Perfil = () => {
         setTimeout(() => setAlert(false), 3000);
     };
 
-    // ── fetch principal ──────────────────────
-    useEffect(() => {
-        setLoading(true);
+    const [confirmDeactivate, setConfirmDeactivate] = useState(false);
+    const [confirmReset, setConfirmReset] = useState(false);
 
+    const handleToggleEstado = async (nuevoEstado) => {
+        try {
+            const res = await fetch(`/api/ac-sociales/ac-social/asignacion/${id}/estado`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ estado: nuevoEstado })
+            });
+            if (!res.ok) throw new Error("Error al cambiar el estado de la participación");
+            showAlert("success", `Participación ${nuevoEstado === 'ACTIVO' ? 'activada' : 'desactivada'} correctamente.`);
+            setConfirmDeactivate(false);
+            // Recargar datos en lugar de volver atrás para que vea el cambio
+            setTimeout(() => {
+                fetchData();
+            }, 1500);
+        } catch (err) {
+            showAlert("error", err.message);
+            setConfirmDeactivate(false);
+        }
+    };
+
+    const handleResetHoras = async () => {
+        try {
+            const res = await fetch(`/api/ac-sociales/ac-social/asignacion/${id}/reset-horas`, {
+                method: "PATCH"
+            });
+            if (!res.ok) throw new Error("Error al reiniciar las horas");
+            showAlert("success", "Las horas han sido reiniciadas a 0.");
+            setConfirmReset(false);
+            setTimeout(() => {
+                fetchData();
+            }, 1500);
+        } catch (err) {
+            showAlert("error", err.message);
+            setConfirmReset(false);
+        }
+    };
+
+    // ── fetch principal ──────────────────────
+    const fetchData = () => {
+        setLoading(true);
         fetch(`/api/ac-sociales/ac-social/asignacion/${id}`)
             .then((r) => r.json())
             .then((d) => {
@@ -186,6 +226,10 @@ export const Perfil = () => {
                 setError("No se pudo cargar el perfil del asignado.");
                 setLoading(false);
             });
+    };
+
+    useEffect(() => {
+        fetchData();
     }, [id]);
 
     if (loading)
@@ -231,14 +275,42 @@ export const Perfil = () => {
         <div className="min-h-screen bg-slate-50/50 p-4 md:p-8 font-sans">
             <div className="max-w-5xl mx-auto space-y-6">
 
-                {/* ── BACK BUTTON ── */}
-                <button
-                    onClick={() => navigate(-1)}
-                    className="flex items-center gap-2 text-slate-500 hover:text-slate-700 font-medium transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 w-fit hover:bg-slate-50"
-                >
-                    <ArrowLeft className="w-5 h-5" />
-                    Volver a la actividad
-                </button>
+                {/* ── TOP BUTTONS ── */}
+                <div className="flex items-center justify-between">
+                    <button
+                        onClick={() => navigate(-1)}
+                        className="flex items-center gap-2 text-slate-500 hover:text-slate-700 font-medium transition-colors bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 w-fit hover:bg-slate-50"
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                        Volver a la actividad
+                    </button>
+                    <div className="flex items-center gap-3">
+                        <button
+                            onClick={() => setConfirmReset(true)}
+                            className="flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium transition-colors bg-amber-50 px-4 py-2 rounded-xl shadow-sm border border-amber-100 hover:bg-amber-100"
+                        >
+                            <Clock className="w-5 h-5" />
+                            Reiniciar Horas
+                        </button>
+                        {data?.estado === "INACTIVO" ? (
+                            <button
+                                onClick={() => handleToggleEstado("ACTIVO")}
+                                className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium transition-colors bg-emerald-50 px-4 py-2 rounded-xl shadow-sm border border-emerald-100 hover:bg-emerald-100"
+                            >
+                                <CheckCircle2 className="w-5 h-5" />
+                                Activar Participación
+                            </button>
+                        ) : (
+                            <button
+                                onClick={() => setConfirmDeactivate(true)}
+                                className="flex items-center gap-2 text-red-600 hover:text-red-700 font-medium transition-colors bg-red-50 px-4 py-2 rounded-xl shadow-sm border border-red-100 hover:bg-red-100"
+                            >
+                                <XCircle className="w-5 h-5" />
+                                Desactivar Participación
+                            </button>
+                        )}
+                    </div>
+                </div>
 
                 {/* ══ HERO CARD ══════════════════════════════ */}
                 <div className="relative bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden backdrop-blur-xl bg-white/80">
@@ -473,6 +545,28 @@ export const Perfil = () => {
                 </div>
 
             </div>
+
+            {/* Modal de confirmación para desactivar */}
+            <ConfirmDeleteModal
+                isOpen={confirmDeactivate}
+                title="¿Desactivar participación?"
+                message="¿Estás seguro de que deseas desactivar la participación de esta persona en esta actividad social? Ya no acumulará más horas."
+                confirmLabel="Desactivar"
+                confirmColor="red"
+                onClose={() => setConfirmDeactivate(false)}
+                onConfirm={() => handleToggleEstado("INACTIVO")}
+            />
+
+            {/* Modal de confirmación para reiniciar horas */}
+            <ConfirmDeleteModal
+                isOpen={confirmReset}
+                title="¿Reiniciar horas a cero?"
+                message="¿Estás completamente seguro de que deseas reiniciar las horas acumuladas a 0? Esta acción es irreversible, aunque el historial de marcajes se mantendrá."
+                confirmLabel="Sí, reiniciar"
+                confirmColor="amber"
+                onClose={() => setConfirmReset(false)}
+                onConfirm={handleResetHoras}
+            />
 
             {/* Alerts */}
             <Alerts

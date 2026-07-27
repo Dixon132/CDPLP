@@ -134,3 +134,29 @@ export const updateDocumento = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Error al actualizar el documento" });
     }
 };
+
+export const deleteDocumento = async (req: Request, res: Response) => {
+    try {
+        const id = +req.params.id;
+        const doc = await prismaClient.documentos_colegiados.findUnique({
+            where: { id_documento: id }
+        });
+        
+        if (!doc) {
+            return res.status(404).json({ error: "Documento no encontrado" });
+        }
+
+        if (doc.archivo) {
+            await eliminarArchivo(doc.archivo);
+        }
+
+        await prismaClient.documentos_colegiados.delete({
+            where: { id_documento: id }
+        });
+
+        res.status(200).json({ message: "Documento eliminado con éxito" });
+    } catch (error) {
+        console.error("Error al eliminar documento:", error);
+        res.status(500).json({ error: "Error al eliminar el documento" });
+    }
+};

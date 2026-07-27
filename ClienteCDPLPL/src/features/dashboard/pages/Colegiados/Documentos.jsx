@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getAlldocs, getColegiadoById, verDocumento, modificarColegiados } from "../../services/colegiados";
+import axios from "axios";
 import parseDate from "../../../../utils/parseData";
+import { getDocumentosRequeridos } from "../../services/documentosRequeridos";
 import Modal from "../../../../components/Modal";
 import AñadirDocumento from "./components/AñadirDocumento";
 import { Button } from "../../components/Button";
 import VerDetallesDoc from "./components/VerDetallesDoc";
+import Alerts from "../../components/Alerts";
+import ConfirmActionModal from "../../../../components/ConfirmActionModal";
+import EspecialidadesSelect from "../../../dashboard/components/EspecialidadesSelect";
 import {
     FileText,
     Upload,
@@ -30,16 +35,7 @@ import {
     Tag
 } from 'lucide-react';
 
-const TIPO_DOCUMENTOS = [
-    "TITULO_PROFESIONAL",
-    "TITULO_POSTGRADO",
-    "HOJA_DE_VIDA",
-    "FOTOGRAFIA",
-    "CEDULA_IDENTIDAD",
-    "COMPROBANTE",
-    "CERTIFICADO_DE_TRIBUNAL",
-    "CERTIFICADO_DE_ANTECEDENTES"
-];
+// Documentos requeridos se cargarán dinámicamente desde la base de datos
 
 const Documentos = () => {
     const { id } = useParams()
@@ -54,6 +50,21 @@ const Documentos = () => {
     const [nuevaEsp, setNuevaEsp] = useState('');
     const [guardandoEsp, setGuardandoEsp] = useState(false);
     const [errorEsp, setErrorEsp] = useState('');
+    
+    // Estado para documentos requeridos dinámicos
+    const [tiposDocumentos, setTiposDocumentos] = useState([]);
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMsg, setAlertMsg] = useState("");
+    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
+
+    const showAlertFn = (type, msg) => {
+        setAlertType(type);
+        setAlertMsg(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
 
     const getDocs = async () => {
         try {
@@ -71,12 +82,15 @@ const Documentos = () => {
         }
     };
 
+
+
     const guardarEspecialidades = async (nuevaLista) => {
         setGuardandoEsp(true);
         setErrorEsp('');
         try {
             await modificarColegiados(id, { especialidades: nuevaLista.join(', ') });
             setEspecialidades(nuevaLista);
+            showAlertFn("success", "Especialidades actualizadas correctamente.");
         } catch {
             setErrorEsp('No se pudo guardar. Inténtalo de nuevo.');
         } finally {
@@ -84,25 +98,16 @@ const Documentos = () => {
         }
     };
 
-    const agregarEspecialidad = async () => {
-        const trimmed = nuevaEsp.trim();
-        if (!trimmed) return;
-        if (especialidades.map(e => e.toLowerCase()).includes(trimmed.toLowerCase())) {
-            setErrorEsp('Esa especialidad ya existe.');
-            return;
-        }
-        const nueva = [...especialidades, trimmed];
-        setNuevaEsp('');
-        await guardarEspecialidades(nueva);
-    };
-
-    const eliminarEspecialidad = async (index) => {
-        const nueva = especialidades.filter((_, i) => i !== index);
-        await guardarEspecialidades(nueva);
-    };
-
     useEffect(() => {
         getDocs();
+        // Cargar los documentos requeridos desde la base de datos
+        getDocumentosRequeridos()
+            .then(res => {
+                const docs = res.data ?? [];
+                // Usamos el nombre del documento como tipo
+                setTiposDocumentos(docs.map(doc => doc.nombre));
+            })
+            .catch(err => console.error("Error al cargar documentos requeridos:", err));
     }, [id]);
 
     const getDocumentIcon = (tipo) => {
@@ -156,15 +161,18 @@ const Documentos = () => {
     };
 
     const formatDocumentName = (tipo) => {
-        return tipo.replace(/_/g, ' ').toLowerCase()
-            .split(' ')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
+        if (tipo.includes('_')) {
+            return tipo.replace(/_/g, ' ').toLowerCase()
+                .split(' ')
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        }
+        return tipo;
     };
 
     // Porcentaje correcto: tipos distintos subidos / total de tipos definidos
     const tiposSubidos = new Set(docs.map(d => d.tipo_documento)).size;
-    const documentosTotal = TIPO_DOCUMENTOS.length;
+    const documentosTotal = tiposDocumentos.length || 1;
     const porcentajeCompletado = Math.min(100, Math.round((tiposSubidos / documentosTotal) * 100));
     const documentosSubidos = tiposSubidos; // para el texto informativo
 
@@ -238,7 +246,7 @@ const Documentos = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-200/60">
-                            {TIPO_DOCUMENTOS.map((tipo, i) => {
+                            {Array.from(new Set([...tiposDocumentos, ...docs.map(d => d.tipo_documento)])).map((tipo, i) => {
                                 const doc = docs.find(d => d.tipo_documento === tipo);
                                 const existe = !!doc;
 
@@ -263,7 +271,10 @@ const Documentos = () => {
                                         <td className="px-6 py-4">
                                             {doc?.archivo ? (
                                                 <button
-                                                    onClick={() => verDocumento(doc.id_documento)}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        verDocumento(doc.id_documento);
+                                                    }}
                                                     className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-200 transition-colors duration-150"
                                                 >
                                                     <Eye className="w-3 h-3" />
@@ -343,73 +354,73 @@ const Documentos = () => {
                         Especialidades
                     </h2>
                 </div>
-                <div className="p-6 space-y-4">
-                    {/* Chips de especialidades existentes */}
-                    <div className="flex flex-wrap gap-2 min-h-[40px]">
-                        {especialidades.length === 0 ? (
-                            <p className="text-slate-400 text-sm italic">Sin especialidades registradas.</p>
-                        ) : (
-                            especialidades.map((esp, i) => (
-                                <span
-                                    key={i}
-                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-purple-100 to-indigo-100 text-purple-800 border border-purple-200 rounded-full text-sm font-medium"
-                                >
-                                    <Tag className="w-3 h-3" />
-                                    {esp}
-                                    <button
-                                        onClick={() => eliminarEspecialidad(i)}
-                                        disabled={guardandoEsp}
-                                        className="ml-1 text-purple-500 hover:text-red-600 transition-colors disabled:opacity-40"
-                                        title="Eliminar especialidad"
-                                    >
-                                        <X className="w-3 h-3" />
-                                    </button>
-                                </span>
-                            ))
-                        )}
-                        {guardandoEsp && (
-                            <span className="inline-flex items-center gap-1.5 text-slate-400 text-sm">
-                                <Loader2 className="w-3 h-3 animate-spin" />
-                                Guardando...
-                            </span>
-                        )}
-                    </div>
-
-                    {/* Input para agregar nueva especialidad */}
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            value={nuevaEsp}
-                            onChange={(e) => { setNuevaEsp(e.target.value); setErrorEsp(''); }}
-                            onKeyDown={(e) => e.key === 'Enter' && agregarEspecialidad()}
-                            placeholder="Ej: Derecho Civil, Notarial..."
-                            disabled={guardandoEsp}
-                            className="flex-1 px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent disabled:opacity-50 transition-all"
-                        />
-                        <button
-                            onClick={agregarEspecialidad}
-                            disabled={!nuevaEsp.trim() || guardandoEsp}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-lg text-sm font-medium hover:shadow-md hover:shadow-purple-500/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            <Plus className="w-4 h-4" />
-                            Agregar
-                        </button>
-                    </div>
-
+                <div className="p-6 space-y-4 max-w-xl">
+                    <p className="text-sm text-slate-500 mb-2">
+                        Selecciona o crea especialidades para este colegiado. Los cambios se guardan automáticamente.
+                    </p>
+                    <EspecialidadesSelect
+                        value={especialidades}
+                        onChange={guardarEspecialidades}
+                        allowCreate={true}
+                    />
+                    
+                    {guardandoEsp && (
+                        <span className="inline-flex items-center gap-1.5 text-blue-500 text-sm mt-2">
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            Guardando...
+                        </span>
+                    )}
                     {errorEsp && (
-                        <p className="text-red-500 text-xs">{errorEsp}</p>
+                        <p className="text-red-500 text-xs mt-2">{errorEsp}</p>
                     )}
                 </div>
             </div>
 
             {/* Modales */}
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir documento'}>
-                <AñadirDocumento id={id} tipoDoc={tipoDoc} />
+                <AñadirDocumento 
+                    id={id} 
+                    tipoDoc={tipoDoc} 
+                    onSubmitForm={(formData) => {
+                        setConfirmSave({
+                            open: true, 
+                            variant: "create",
+                            callback: async () => { 
+                                try {
+                                    await axios.post(`/api/colegiados/documentos/${id}`, formData, {
+                                        headers: { 'Content-Type': 'multipart/form-data' }
+                                    });
+                                    setModalAñadir(false); 
+                                    showAlertFn("success", "Documento añadido exitosamente."); 
+                                    getDocs(); 
+                                } catch (error) {
+                                    showAlertFn("error", "Error al añadir el documento.");
+                                }
+                            },
+                        });
+                    }}
+                />
             </Modal>
 
             <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title={'Detalles del documento'}>
                 <VerDetallesDoc id={id} tipoDoc={tipoDoc} />
             </Modal>
+            
+            <ConfirmActionModal
+                isOpen={confirmSave.open}
+                variant={confirmSave.variant}
+                title="¿Confirmar subida?"
+                message="¿Confirmas que deseas subir este documento?"
+                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
+                onConfirm={async () => { 
+                    if (confirmSave.callback) {
+                        await confirmSave.callback();
+                    }
+                    setConfirmSave({ ...confirmSave, open: false }); 
+                }}
+            />
+
+            <Alerts type={alertType} message={alertMsg} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 };

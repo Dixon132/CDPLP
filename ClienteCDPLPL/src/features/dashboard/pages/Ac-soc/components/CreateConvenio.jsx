@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { createConvenio } from "../../../services/convenios";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import {
     Button,
     TextField,
@@ -29,17 +30,24 @@ export default function CreateConvenio({ onClose, onSuccess }) {
 
     const [loading, setLoading] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [formData, setFormData] = useState(null);
 
     const hoy = new Date().toISOString().split("T")[0];
 
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
+        setFormData(data);
+        setConfirmOpen(true);
+    };
+
+    const handleCreate = async () => {
+        setConfirmOpen(false);
         setLoading(true);
         setErrorMsg("");
         
         try {
-            await createConvenio(data);
+            await createConvenio(formData);
             if (onSuccess) onSuccess();
-            if (onClose) onClose();
             reset();
         } catch (error) {
             console.error("Error al crear convenio:", error);
@@ -96,33 +104,7 @@ export default function CreateConvenio({ onClose, onSuccess }) {
                                 helperText={errors.fecha_inicio?.message}
                                 fullWidth
                             />
-
-                            <TextField
-                                label="Fecha de Fin (opcional)"
-                                type="date"
-                                InputLabelProps={{ shrink: true }}
-                                {...register("fecha_fin", {
-                                    validate: (value) =>
-                                        !value || value >= hoy || "No puedes escoger una fecha pasada",
-                                })}
-                                error={!!errors.fecha_fin}
-                                helperText={errors.fecha_fin?.message}
-                                fullWidth
-                            />
                         </Box>
-
-                        <FormControl fullWidth error={!!errors.estado}>
-                            <InputLabel id="estado-label">Estado Inicial</InputLabel>
-                            <Select
-                                labelId="estado-label"
-                                label="Estado Inicial"
-                                defaultValue="ACTIVO"
-                                {...register("estado", { required: "El estado es obligatorio" })}
-                            >
-                                <MenuItem value="ACTIVO">ACTIVO</MenuItem>
-                                <MenuItem value="INACTIVO">INACTIVO</MenuItem>
-                            </Select>
-                        </FormControl>
 
                         <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
                             {onClose && (
@@ -137,6 +119,15 @@ export default function CreateConvenio({ onClose, onSuccess }) {
                     </Box>
                 </form>
             </Box>
+
+            <ConfirmActionModal
+                isOpen={confirmOpen}
+                variant="create"
+                title="¿Confirmar creación?"
+                message="¿Estás seguro que deseas crear este convenio? Verifica que los datos sean correctos."
+                onClose={() => setConfirmOpen(false)}
+                onConfirm={handleCreate}
+            />
         </Container>
     );
 }

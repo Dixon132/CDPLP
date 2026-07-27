@@ -21,6 +21,16 @@ export default function ConfirmActionModal({
     waitSeconds = 2,
 }) {
     const [secondsLeft, setSecondsLeft] = useState(waitSeconds);
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    const handleConfirm = async () => {
+        setIsProcessing(true);
+        try {
+            await onConfirm();
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     useEffect(() => {
         if (!isOpen) return;
@@ -65,21 +75,29 @@ export default function ConfirmActionModal({
                     <div className="flex items-center gap-3 w-full mt-2">
                         <button
                             onClick={onClose}
-                            className="flex-1 px-4 py-2 rounded-lg font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                            disabled={isProcessing}
+                            className="flex-1 px-4 py-2 rounded-lg font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Cancelar
                         </button>
                         <button
-                            onClick={secondsLeft === 0 ? onConfirm : undefined}
-                            disabled={secondsLeft > 0}
+                            onClick={secondsLeft === 0 && !isProcessing ? handleConfirm : undefined}
+                            disabled={secondsLeft > 0 || isProcessing}
                             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-bold text-white transition-all
-                                ${secondsLeft > 0
-                                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                                ${secondsLeft > 0 || isProcessing
+                                    ? "bg-slate-200 text-slate-500 cursor-not-allowed"
                                     : `${colorBtn} shadow-md`
                                 }`}
                         >
-                            <Icon className="w-4 h-4" />
-                            {secondsLeft > 0 ? `Espera ${secondsLeft}s` : btnLabel}
+                            {isProcessing ? (
+                                <svg className="animate-spin h-5 w-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            ) : (
+                                <Icon className="w-4 h-4" />
+                            )}
+                            {secondsLeft > 0 ? `Espera ${secondsLeft}s` : isProcessing ? "Procesando..." : btnLabel}
                         </button>
                     </div>
                 </div>

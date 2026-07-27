@@ -18,6 +18,7 @@ import {
     CircularProgress
 } from '@mui/material';
 import Alerts from "../../../components/Alerts";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 
 export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     const {
@@ -30,6 +31,8 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
     const [loading, setLoading] = useState(true);
     const [usuarios, setUsuarios] = useState([]);
     const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
+    const [confirmModal, setConfirmModal] = useState({ open: false, data: null });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const showAlert = (type, message) => {
         setAlert({ show: true, type, message });
@@ -51,8 +54,8 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
             reset({
                 asunto: res.asunto,
                 resumen: res.resumen,
-                fecha_envio: res.fecha_envio?.slice(0, 10),
-                fecha_recibido: res.fecha_recibido?.slice(0, 10) || '',
+                fecha_envio: res.fecha_envio ? new Date(res.fecha_envio).toISOString().slice(0, 16) : '',
+                fecha_recibido: res.fecha_recibido ? new Date(res.fecha_recibido).toISOString().slice(0, 16) : '',
                 remitente: res.remitente,
                 id_destinatario: res.id_destinatario,
                 estado: res.estado,
@@ -69,12 +72,20 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
         fetchData();
     }, [id, reset]);
 
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
+        setConfirmModal({ open: true, data });
+    };
+
+    const handleConfirmEdit = async () => {
+        const data = confirmModal.data;
+        setConfirmModal({ open: false, data: null });
+        setIsSubmitting(true);
         try {
             await updateCorrespondenciaById(id, data);
             if (onSuccess) onSuccess();
         } catch (error) {
             showAlert("error", "Error al actualizar correspondencia");
+            setIsSubmitting(false);
         }
     };
 
@@ -115,12 +126,12 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
 
                         <TextField
                             label="Fecha de envío"
-                            type="date"
+                            type="datetime-local"
                             InputLabelProps={{ shrink: true }}
-                            inputProps={{ max: hoy }}
+                            inputProps={{ max: hoy + "T23:59" }}
                             {...register('fecha_envio', {
                                 required: "Fecha de envío requerida",
-                                validate: value => value <= hoy || "No puedes escoger una fecha futura"
+                                validate: value => value <= hoy + "T23:59" || "No puedes escoger una fecha futura"
                             })}
                             error={!!errors.fecha_envio}
                             helperText={errors.fecha_envio?.message}
@@ -129,14 +140,13 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
 
                         <TextField
                             label="Fecha de recibido"
-                            type="date"
+                            type="datetime-local"
+                            disabled
                             InputLabelProps={{ shrink: true }}
-                            inputProps={{ max: hoy }}
-                            {...register('fecha_recibido', {
-                                validate: value => !value || value <= hoy || "No puedes escoger una fecha futura"
-                            })}
+                            inputProps={{ max: hoy + "T23:59" }}
+                            {...register('fecha_recibido')}
                             error={!!errors.fecha_recibido}
-                            helperText={errors.fecha_recibido?.message}
+                            helperText={errors.fecha_recibido?.message || "Esta fecha se genera automáticamente al abrir el mensaje"}
                             fullWidth
                         />
 
@@ -189,17 +199,26 @@ export default function EditarCorrespondencia({ id, onClose, onSuccess }) {
 
                         <Box sx={{ mt: 3, display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
                             {onClose && (
-                                <Button variant="outlined" color="inherit" onClick={onClose}>
+                                <Button variant="outlined" color="secondary" onClick={onClose} disabled={isSubmitting}>
                                     Cancelar
                                 </Button>
                             )}
-                            <Button type="submit" variant="contained" color="warning">
-                                Actualizar
+                            <Button type="submit" variant="contained" color="primary" disabled={isSubmitting}>
+                                {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Guardar Cambios'}
                             </Button>
                         </Box>
                     </Box>
                 </form>
             </Box>
+
+            <ConfirmActionModal
+                isOpen={confirmModal.open}
+                variant="edit"
+                title="¿Confirmar cambios?"
+                message="¿Estás seguro que deseas guardar los cambios realizados?"
+                onClose={() => setConfirmModal({ open: false, data: null })}
+                onConfirm={handleConfirmEdit}
+            />
         </Container>
     );
 }

@@ -1,7 +1,7 @@
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import { useEffect, useState } from 'react';
 import { getAllColegiados, updateEstadoColegiado } from "../../services/colegiados";
 import CreateColegiado from "./components/CreateColegiado";
@@ -60,6 +60,20 @@ const Colegiados = () => {
         finally { setDesacTarget(null); }
     };
 
+    const getActions = () => [
+        { label: "Pagos", icon: CreditCard, className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/pagos/${item.id_colegiado}`) },
+        { label: "Docs", icon: FileText, className: "px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl font-medium shadow-sm hover:bg-blue-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/documentos/${item.id_colegiado}`) },
+        {
+            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
+            onClick: (item) => { setColegiadoSeleccionado(item.id_colegiado); setMostrarModal2(true); }
+        },
+        {
+            label: mostrarInactivos ? "Activar" : "Desactivar", icon: mostrarInactivos ? UserCheck : UserX,
+            className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
+            onClick: (item) => setDesacTarget(item.id_colegiado)
+        },
+    ];
+
     return (
         <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
             <Header
@@ -74,9 +88,11 @@ const Colegiados = () => {
                 ]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <Table
+            {/* Tabla genérica / Grid */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
                     data={colegiados}
+                    storageKey="colegiados"
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                     columns={[
                         {
@@ -107,19 +123,7 @@ const Colegiados = () => {
                         },
                         { label: "Estado", key: "estado", render: (item) => <span className={getEstadoBadge(item.estado)}>{getEstadoIcon(item.estado)} {item.estado}</span> },
                     ]}
-                    actions={[
-                        { label: "Pagos", icon: CreditCard, className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/pagos/${item.id_colegiado}`) },
-                        { label: "Docs", icon: FileText, className: "px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl font-medium shadow-sm hover:bg-blue-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/documentos/${item.id_colegiado}`) },
-                        {
-                            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
-                            onClick: (item) => { setColegiadoSeleccionado(item.id_colegiado); setMostrarModal2(true); }
-                        },
-                        {
-                            label: mostrarInactivos ? "Activar" : "Desactivar", icon: mostrarInactivos ? UserCheck : UserX,
-                            className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
-                            onClick: (item) => setDesacTarget(item.id_colegiado)
-                        },
-                    ]}
+                    actions={getActions()}
                 />
             </div>
 

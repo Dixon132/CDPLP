@@ -11,15 +11,18 @@ export const getAllConvenios = async (req: Request, res: Response) => {
             ? req.query.search.trim()
             : '';
 
+        const estado = req.query.estado as string;
+
         // construyo el filtro tipado para Prisma
         let where: Prisma.convenioWhereInput = {};
         if (search) {
-            where = {
-                OR: [
-                    { nombre: { contains: search, mode: 'insensitive' } },
-                    { descripcion: { contains: search, mode: 'insensitive' } },
-                ]
-            };
+            where.OR = [
+                { nombre: { contains: search, mode: 'insensitive' } },
+                { descripcion: { contains: search, mode: 'insensitive' } },
+            ];
+        }
+        if (estado) {
+            where.estado = estado;
         }
 
         const [data, total] = await Promise.all([
@@ -44,7 +47,7 @@ export const getAllConvenios = async (req: Request, res: Response) => {
     }
 }
 export const createConvenio = async (req: Request, res: Response) => {
-    const { nombre, descripcion, fecha_inicio, fecha_fin } = req.body;
+    const { nombre, descripcion, fecha_inicio } = req.body;
 
     try {
         const newConvenio = await prismaClient.convenio.create({
@@ -52,7 +55,6 @@ export const createConvenio = async (req: Request, res: Response) => {
                 nombre,
                 descripcion,
                 fecha_inicio: new Date(fecha_inicio),
-                fecha_fin: new Date(fecha_fin),
                 estado: 'ACTIVO'
             }
         });
@@ -65,7 +67,7 @@ export const createConvenio = async (req: Request, res: Response) => {
 }
 export const updateConvenio = async (req: Request, res: Response) => {
     const id = req.params.id;
-    const { nombre, descripcion, fecha_inicio, fecha_fin, estado } = req.body;
+    const { nombre, descripcion, fecha_inicio, estado } = req.body;
 
     try {
         const updatedConvenio = await prismaClient.convenio.update({
@@ -74,7 +76,6 @@ export const updateConvenio = async (req: Request, res: Response) => {
                 nombre,
                 descripcion,
                 fecha_inicio: new Date(fecha_inicio),
-                fecha_fin: new Date(fecha_fin),
                 estado
             }
         });
@@ -120,5 +121,25 @@ export const getSimpleConvenios = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error al obtener convenios simples:", error);
         return res.status(500).json({ error: "Error al obtener convenios simples" });
+    }
+}
+
+export const cambiarEstadoConvenio = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const { estado } = req.body;
+
+    if (!estado) {
+        return res.status(400).json({ error: "El estado es requerido" });
+    }
+
+    try {
+        const updated = await prismaClient.convenio.update({
+            where: { id_convenio: +id },
+            data: { estado }
+        });
+        return res.status(200).json(updated);
+    } catch (error) {
+        console.error("Error al cambiar estado de convenio:", error);
+        return res.status(500).json({ error: "Error al cambiar estado de convenio" });
     }
 }

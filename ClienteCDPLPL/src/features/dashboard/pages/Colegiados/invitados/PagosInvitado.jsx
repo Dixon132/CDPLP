@@ -1,0 +1,322 @@
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Button } from "../../../components/Button";
+import Modal from "../../../../../components/Modal";
+import AñadirPago from "./Components/AñadirPagoInvitado";
+import { getAllPagosInvitado, getInvitadoById, createPagoInvitado } from "../../../services/invitados";
+import parseDate from "../../../../../utils/parseData";
+import VerDetallesPago from "./Components/VerDetallesPagoInvitado";
+import Alerts from "../../../components/Alerts";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
+import {
+    CreditCard,
+    DollarSign,
+    Calendar,
+    CheckCircle,
+    XCircle,
+    AlertCircle,
+    Plus,
+    Ban,
+    Receipt,
+    TrendingUp,
+    Banknote,
+    Eye
+} from 'lucide-react';
+
+const Pagos = () => {
+    const { id } = useParams()
+    const [pagos, setPagos] = useState([])
+    const [modalAñadir, setModalAñadir] = useState(false)
+    const [modalDetalles, setModalDetalles] = useState(false)
+    const [currentId, setCurrentId] = useState(null)
+    const [col, setCol] = useState([])
+    const getPagos = async () => {
+        const data = await getAllPagosInvitado(id)
+        setPagos(data)
+        const Invitado = await getInvitadoById(id)
+        setCol(Invitado)
+    }
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMsg, setAlertMsg] = useState("");
+    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
+
+    const showAlertFn = (type, msg) => {
+        setAlertType(type);
+        setAlertMsg(msg);
+        setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
+
+    useEffect(() => {
+        getPagos()
+    }, [id])
+
+    const getEstadoIcon = (estado) => {
+        switch (estado?.toUpperCase()) {
+            case 'REALIZADO':
+                return <CheckCircle className="w-4 h-4 text-green-500" />;
+            case 'ANULADO':
+                return <Ban className="w-4 h-4 text-red-500" />;
+            default:
+                return <AlertCircle className="w-4 h-4 text-gray-400" />;
+        }
+    };
+
+    const getEstadoBadge = (estado) => {
+        const base = "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium";
+        switch (estado?.toUpperCase()) {
+            case 'REALIZADO':
+                return `${base} bg-emerald-100 text-emerald-800 border border-emerald-200`;
+            case 'ANULADO':
+                return `${base} bg-red-100 text-red-700 border border-red-200 line-through`;
+            default:
+                return `${base} bg-gray-100 text-gray-600 border border-gray-200`;
+        }
+    };
+
+    // Solo suma pagos REALIZADOS
+    const calcularTotalPagos = () => {
+        return pagos
+            .filter(p => p.estado_pago?.toUpperCase() === 'REALIZADO')
+            .reduce((total, pago) => total + (parseFloat(pago.monto) || 0), 0);
+    };
+
+    const pagosRealizados = pagos.filter(p => p.estado_pago?.toUpperCase() === 'REALIZADO').length;
+    const pagosAnulados  = pagos.filter(p => p.estado_pago?.toUpperCase() === 'ANULADO').length;
+    const totalPagos     = pagos.length;
+
+    return (
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+            {/* Header mejorado */}
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
+                <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-3">
+                        <div className="p-3 bg-emerald-600 hover:bg-emerald-700 rounded-xl shadow-lg">
+                            <CreditCard className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                            <h1 className="text-2xl font-bold text-slate-800 mb-1">
+                                Pagos del Invitado: {`${col.nombre} ${col.apellido}`}
+                            </h1>
+                            <p className="text-slate-600 text-sm">
+                                {totalPagos} pagos registrados
+                            </p>
+                        </div>
+                    </div>
+
+                    <button
+                        onClick={() => setModalAñadir(true)}
+                        className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Añadir Pago
+                    </button>
+                </div>
+
+                {/* Estadísticas */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-blue-200/60">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-blue-500 rounded-lg">
+                                <Receipt className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-blue-600 font-medium">Total Pagos</p>
+                                <p className="text-lg font-bold text-blue-700">{totalPagos}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-emerald-50 p-4 rounded-xl border border-green-200/60">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-green-500 rounded-lg">
+                                <CheckCircle className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-green-600 font-medium">Realizados</p>
+                                <p className="text-lg font-bold text-green-700">{pagosRealizados}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-rose-50 p-4 rounded-xl border border-red-200/60">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-red-500 rounded-lg">
+                                <Ban className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-red-600 font-medium">Anulados</p>
+                                <p className="text-lg font-bold text-red-700">{pagosAnulados}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-indigo-50 p-4 rounded-xl border border-purple-200/60">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-purple-500 rounded-lg">
+                                <TrendingUp className="w-4 h-4 text-white" />
+                            </div>
+                            <div>
+                                <p className="text-xs text-purple-600 font-medium">Total efectivo Bs.</p>
+                                <p className="text-lg font-bold text-purple-700">{calcularTotalPagos().toFixed(2)}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Tabla de pagos mejorada */}
+            <div className="bg-white border border-slate-200 shadow-sm rounded-2xl overflow-hidden">
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200/60">
+                    <h2 className="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                        <DollarSign className="w-5 h-5 text-emerald-500" />
+                        Historial de Pagos
+                    </h2>
+                </div>
+
+                {pagos.length === 0 ? (
+                    <div className="p-12">
+                        <div className="text-center">
+                            <Banknote className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                            <p className="text-slate-500 font-medium mb-2">No hay pagos registrados</p>
+                            <p className="text-slate-400 text-sm mb-6">Añade el primer pago para comenzar</p>
+                            <button
+                                onClick={() => setModalAñadir(true)}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                            >
+                                <Plus className="w-4 h-4" />
+                                Añadir Primer Pago
+                            </button>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="w-full">
+                            <thead className="bg-slate-50 border-b border-slate-200/60">
+                                <tr>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Concepto</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Fecha</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Monto</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Estado</th>
+                                    <th className="px-6 py-4 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-200/60">
+                                {pagos.map((pago, i) => (
+                                    <tr key={i} className="hover:bg-slate-50 transition-colors duration-150">
+                                        {/* Concepto */}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="p-2 bg-emerald-100 rounded-lg">
+                                                    <Receipt className="w-4 h-4 text-emerald-600" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-slate-800">{pago.concepto}</p>
+                                                    <p className="text-xs text-slate-500">Pago #{pago.id_pago}</p>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        {/* Fecha */}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                                                <Calendar className="w-4 h-4 text-slate-400" />
+                                                {parseDate(pago.fecha_pago)}
+                                            </div>
+                                        </td>
+
+                                        {/* Monto */}
+                                        <td className="px-6 py-4">
+                                            <div className="flex items-center gap-2">
+                                                <DollarSign className="w-4 h-4 text-emerald-500" />
+                                                <span className="font-semibold text-slate-800">
+                                                    Bs. {parseFloat(pago.monto).toFixed(2)}
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        {/* Estado */}
+                                        <td className="px-6 py-4">
+                                            <span className={getEstadoBadge(pago.estado_pago)}>
+                                                {getEstadoIcon(pago.estado_pago)}
+                                                {pago.estado_pago || "Pendiente"}
+                                            </span>
+                                        </td>
+
+                                        {/* Acciones */}
+                                        <td className="px-6 py-4">
+                                            <button
+                                                onClick={() => {
+                                                    setCurrentId(pago.id_pago);
+                                                    setModalDetalles(true);
+                                                }}
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-medium hover:bg-indigo-100 transition-colors duration-150 shadow-sm"
+                                            >
+                                                <Eye className="w-3.5 h-3.5" />
+                                                {pago.estado_pago === 'ANULADO' ? 'Ver detalle' : 'Ver / Anular'}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+
+
+            <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir pago'}>
+                <AñadirPago 
+                    id={id} 
+                    onSubmitForm={(formData) => {
+                        setConfirmSave({
+                            open: true, 
+                            variant: "create",
+                            callback: async () => { 
+                                try {
+                                    await createPagoInvitado(id, formData);
+                                    setModalAñadir(false); 
+                                    showAlertFn("success", "Pago registrado exitosamente."); 
+                                    getPagos(); 
+                                } catch (error) {
+                                    showAlertFn("error", "Error al registrar el pago.");
+                                }
+                            },
+                        });
+                    }}
+                />
+            </Modal>
+
+            <Modal isOpen={modalDetalles} onClose={() => setModalDetalles(false)} title={'Detalles del pago'}>
+                <VerDetallesPago 
+                    id_pago={currentId} 
+                    onSuccess={() => {
+                        setModalDetalles(false);
+                        showAlertFn("success", "Pago anulado correctamente.");
+                        getPagos();
+                    }}
+                />
+            </Modal>
+
+            <ConfirmActionModal
+                isOpen={confirmSave.open}
+                variant={confirmSave.variant}
+                title="¿Confirmar creación?"
+                message="¿Confirmas que deseas registrar este pago?"
+                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
+                onConfirm={async () => { 
+                    if (confirmSave.callback) {
+                        await confirmSave.callback();
+                    }
+                    setConfirmSave({ ...confirmSave, open: false }); 
+                }}
+            />
+
+            <Alerts type={alertType} message={alertMsg} show={alert} onClose={() => setAlert(false)} />
+        </div>
+    );
+};
+
+export default Pagos;

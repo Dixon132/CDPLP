@@ -27,8 +27,10 @@ model asistencias_actividad {
   id_asistencia               Int                          @id @default(autoincrement())
   id_actividad                Int?
   id_colegiado                Int?
+  id_invitado                 Int?
   actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
   colegiados                  colegiados?                  @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
+  invitados                   invitados?                   @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model colegiados_registrados_actividad_institucional {
@@ -39,12 +41,12 @@ model colegiados_registrados_actividad_institucional {
   estado_registro             String?                      @db.VarChar(50)
   metodo_pago                 String?                      @db.VarChar(50)
   id_invitado                 Int?
-  origen_movimiento           origen_movimiento[]
-  invitados                   invitados?                   @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
-  actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
-  colegiados                  colegiados?                  @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
   createdAt                   DateTime?                    @default(now()) @db.Date
   updatedAt                   DateTime?                    @updatedAt @db.Date
+  actividades_institucionales actividades_institucionales? @relation(fields: [id_actividad], references: [id_actividad], onDelete: NoAction, onUpdate: NoAction)
+  colegiados                  colegiados?                  @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
+  invitados                   invitados?                   @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
+  origen_movimiento           origen_movimiento[]
 }
 
 model actividades_sociales {
@@ -78,16 +80,16 @@ model convenio {
 
 model correspondencia {
   id_correspondencia Int       @id @default(autoincrement())
-  asunto             String?   @db.VarChar(200) //CARA
-  contenido          String? //URL
-  resumen            String? //PONER AHORA PERO IA FUTURO
-  fecha_envio        DateTime? @db.Date
-  fecha_recibido     DateTime? @db.Date //RECEPCIONAR ESTO
-  estado             String?   @db.VarChar(50) //CAMBIAR ESTO DINAMICAMENTE
+  asunto             String?   @db.VarChar(200)
+  contenido          String?
+  resumen            String?
+  fecha_envio        DateTime?
+  fecha_recibido     DateTime?
+  estado             String?   @db.VarChar(50)
   remitente          String?   @db.VarChar(100)
   id_destinatario    Int?
-  createdAt          DateTime? @default(now()) @db.Date
-  updatedAt          DateTime? @updatedAt @db.Date
+  createdAt          DateTime? @default(now())
+  updatedAt          DateTime? @updatedAt
   destinatario       usuarios? @relation("destinatario", fields: [id_destinatario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -105,34 +107,32 @@ model colegiados {
   pin_acceso                                     String?
   asistencias_actividad                          asistencias_actividad[]
   colegiados_asignados_social                    colegiados_asignados_social[]
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
   documentos_colegiados                          documentos_colegiados[]
   pagos_colegiados                               pagos_colegiados[]
-  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
 }
 
 model colegiados_asignados_social {
   id_asignacion            Int                        @id @default(autoincrement())
   id_actividad_social      Int?
   id_colegiado             Int?
-  id_invitado              Int?
   id_pasante               Int?
   total_horas              Float?
   horas_meta               Float?
-  invitados                invitados?                 @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
+  estado                   String?                    @default("ACTIVO") @db.VarChar(50)
+  asistencia_social_diaria asistencia_social_diaria[]
   actividades_sociales     actividades_sociales?      @relation(fields: [id_actividad_social], references: [id_actividad_social], onDelete: NoAction, onUpdate: NoAction)
   colegiados               colegiados?                @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
   pasantes                 pasantes?                  @relation(fields: [id_pasante], references: [id_pasante], onDelete: NoAction, onUpdate: NoAction)
-  asistencia_social_diaria asistencia_social_diaria[]
 }
 
 model asistencia_social_diaria {
-  id_asistencia_diaria Int       @id @default(autoincrement())
-  id_asignacion        Int
-  fecha_marcaje        DateTime  @db.Date
-  hora_entrada         DateTime?
-  hora_salida          DateTime?
-  horas_ganadas        Float?    @default(0)
-
+  id_asistencia_diaria        Int                         @id @default(autoincrement())
+  id_asignacion               Int
+  fecha_marcaje               DateTime                    @db.Date
+  hora_entrada                DateTime?
+  hora_salida                 DateTime?
+  horas_ganadas               Float?                      @default(0)
   colegiados_asignados_social colegiados_asignados_social @relation(fields: [id_asignacion], references: [id_asignacion], onDelete: Cascade)
 }
 
@@ -148,18 +148,24 @@ model documentos_colegiados {
 }
 
 model movimientos_financieros {
-  id_movimiento    Int       @id @default(autoincrement())
-  id_presupuesto   Int?
-  fecha_movimiento DateTime? @default(now())
-  tipo_movimiento  String?   @db.VarChar(20)
-  categoria        String?   @db.VarChar(40)
-  descripcion      String?
-  monto            Decimal?  @db.Decimal(12, 2)
-  id_origen        Int?
-  comprobante      String?   @db.VarChar(300)
-
+  id_movimiento     Int                @id @default(autoincrement())
+  id_presupuesto    Int?
+  fecha_movimiento  DateTime?          @default(now())
+  tipo_movimiento   String?            @db.VarChar(20)
+  categoria         String?            @db.VarChar(40)
+  descripcion       String?
+  monto             Decimal?           @db.Decimal(12, 2)
+  id_origen         Int?
+  comprobante       String?            @db.VarChar(300)
+  id_usuario        Int?
+  createdAt         DateTime?          @default(now())
+  estado            String?            @default("COMPLETADO") @db.VarChar(30)
+  metodo_pago       String?            @db.VarChar(50)
+  tipo_origen_label String?            @default("MANUAL") @db.VarChar(50)
+  updatedAt         DateTime?
   origen_movimiento origen_movimiento? @relation(fields: [id_origen], references: [id_origen], onDelete: NoAction, onUpdate: NoAction)
   presupuestos      presupuestos?      @relation(fields: [id_presupuesto], references: [id_presupuesto], onDelete: NoAction, onUpdate: NoAction)
+  usuario           usuarios?          @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model origen_movimiento {
@@ -168,9 +174,13 @@ model origen_movimiento {
   id_pago_colegiado                              Int?
   id_registro_actividad_institucional            Int?
   monto                                          Decimal?                                        @db.Decimal(12, 2)
+  id_postulacion                                 Int?
+  id_pago_invitado                               Int?
   movimientos_financieros                        movimientos_financieros[]
-  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional? @relation(fields: [id_registro_actividad_institucional], references: [id_registro], onDelete: NoAction, onUpdate: NoAction)
   pagos_colegiados                               pagos_colegiados?                               @relation(fields: [id_pago_colegiado], references: [id_pago], onDelete: NoAction, onUpdate: NoAction)
+  pagos_invitados                                pagos_invitados?                                @relation(fields: [id_pago_invitado], references: [id_pago], onDelete: NoAction, onUpdate: NoAction)
+  postulaciones                                  postulaciones?                                  @relation(fields: [id_postulacion], references: [id_postulacion], onDelete: NoAction, onUpdate: NoAction)
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional? @relation(fields: [id_registro_actividad_institucional], references: [id_registro], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model pagos_colegiados {
@@ -181,6 +191,7 @@ model pagos_colegiados {
   monto             Decimal?            @db.Decimal(10, 2)
   estado_pago       String?             @default("REALIZADO") @db.VarChar(50)
   comprobante       String?             @db.VarChar(300)
+  metodo_pago       String?             @db.VarChar(50)
   origen_movimiento origen_movimiento[]
   colegiados        colegiados?         @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -199,12 +210,11 @@ model presupuestos {
 model auditoria {
   id_auditoria Int      @id @default(autoincrement())
   id_usuario   Int
-  accion       String // "CREÓ", "ELIMINÓ", "MODIFICÓ", "INICIÓ SESIÓN", etc.
-  modulo       String // "Pagos", "Actividades", "Usuarios", "Perfil", etc. ✅ Más amigable que 'tabla'
-  descripcion  String // "El usuario eliminó un pago de 100Bs para el colegiado Juan Pérez"
+  accion       String
+  modulo       String
+  descripcion  String
   fecha        DateTime @default(now())
-
-  usuario usuarios @relation(fields: [id_usuario], references: [id_usuario])
+  usuario      usuarios @relation(fields: [id_usuario], references: [id_usuario])
 }
 
 model pasantes {
@@ -244,9 +254,90 @@ model usuarios {
   estado                      String?                       @default("ACTIVO") @db.VarChar(20)
   fecha_actualizacion         DateTime?                     @updatedAt @db.Date
   actividades_institucionales actividades_institucionales[]
-  roles                       roles[]
-  destinatario                correspondencia[]             @relation("destinatario")
   auditoria                   auditoria[]
+  destinatario                correspondencia[]             @relation("destinatario")
+  movimientos_financieros     movimientos_financieros[]
+  roles                       roles[]
+}
+
+model invitados {
+  id_invitado                                    Int                                              @id @default(autoincrement())
+  nombre                                         String
+  apellido                                       String
+  correo                                         String?
+  telefono                                       String?
+  estado                                         String?                                          @default("ACTIVO") @db.VarChar(50)
+  asistencias_actividad                          asistencias_actividad[]
+  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
+  pagos_invitados                                pagos_invitados[]
+}
+
+model postulaciones {
+  id_postulacion    Int                 @id @default(autoincrement())
+  carnet_identidad  String              @db.VarChar(20)
+  nombre            String              @db.VarChar(100)
+  apellido          String              @db.VarChar(100)
+  correo            String              @db.VarChar(150)
+  telefono          String              @db.VarChar(20)
+  especialidades    String?             @db.VarChar(500)
+  documentos        String?
+  comprobante_pago  String?             @db.VarChar(300)
+  estado            String              @default("EN_REVISION") @db.VarChar(30)
+  motivo_rechazo    String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  metodo_pago       String?             @db.VarChar(50)
+  origen_movimiento origen_movimiento[]
+}
+
+model especialidades {
+  id_especialidad Int      @id @default(autoincrement())
+  nombre          String   @unique @db.VarChar(150)
+  descripcion     String?
+  activo          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+}
+
+model documentos_requeridos {
+  id_doc_req  Int      @id @default(autoincrement())
+  nombre      String   @db.VarChar(200)
+  descripcion String?
+  activo      Boolean  @default(true)
+  es_opcional Boolean  @default(false)
+  orden       Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model config_pago {
+  id          Int      @id @default(autoincrement())
+  clave       String   @unique @db.VarChar(50)
+  valor       String
+  descripcion String?  @db.VarChar(200)
+  updatedAt   DateTime @updatedAt
+}
+
+model memorias_balances {
+  id          Int      @id @default(autoincrement())
+  titulo      String   @db.VarChar(200)
+  descripcion String?
+  archivo     String   @db.VarChar(500)
+  categoria   String   @db.VarChar(100)
+  anio        Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model pagos_invitados {
+  id_pago           Int                 @id @default(autoincrement())
+  id_invitado       Int?
+  concepto          String?             @db.VarChar(100)
+  fecha_pago        DateTime?           @db.Date
+  monto             Decimal?            @db.Decimal(10, 2)
+  estado_pago       String?             @default("REALIZADO") @db.VarChar(50)
+  comprobante       String?             @db.VarChar(300)
+  metodo_pago       String?             @db.VarChar(50)
+  origen_movimiento origen_movimiento[]
+  invitados         invitados?          @relation(fields: [id_invitado], references: [id_invitado], onDelete: NoAction, onUpdate: NoAction)
 }
 
 enum RolUsuario {
@@ -259,72 +350,7 @@ enum RolUsuario {
   NO_DEFINIDO
 }
 
-model invitados {
-  id_invitado                                    Int                                              @id @default(autoincrement())
-  nombre                                         String
-  apellido                                       String
-  correo                                         String?
-  telefono                                       String?
-  colegiados_asignados_social                    colegiados_asignados_social[]
-  colegiados_registrados_actividad_institucional colegiados_registrados_actividad_institucional[]
-}
-
-// ─── POSTULACIONES ────────────────────────────────────────────
-model postulaciones {
-  id_postulacion   Int      @id @default(autoincrement())
-  carnet_identidad String   @db.VarChar(20)
-  nombre           String   @db.VarChar(100)
-  apellido         String   @db.VarChar(100)
-  correo           String   @db.VarChar(150)
-  telefono         String   @db.VarChar(20)
-  especialidades   String?  @db.VarChar(500)
-  // rutas relativas de archivos en Supabase Storage (separadas por coma)
-  documentos       String?  @db.Text
-  // ruta relativa del comprobante de pago
-  comprobante_pago String?  @db.VarChar(300)
-  estado           String   @default("EN_REVISION") @db.VarChar(30)
-  motivo_rechazo   String?  @db.Text
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-}
-
-// ─── ESPECIALIDADES ───────────────────────────────────────────
-model especialidades {
-  id_especialidad Int      @id @default(autoincrement())
-  nombre          String   @unique @db.VarChar(150)
-  descripcion     String?  @db.Text
-  activo          Boolean  @default(true)
-  createdAt       DateTime @default(now())
-}
-
-// ─── DOCUMENTOS REQUERIDOS ────────────────────────────────────
-model documentos_requeridos {
-  id_doc_req  Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(200)
-  descripcion String?  @db.Text
-  activo      Boolean  @default(true)
-  es_opcional Boolean  @default(false)
-  orden       Int      @default(0)
-  createdAt   DateTime @default(now())
-}
-
-// ─── CONFIGURACIÓN DE PAGO ────────────────────────────────────
-model config_pago {
-  id          Int      @id @default(autoincrement())
-  clave       String   @unique @db.VarChar(50)
-  valor       String   @db.Text
-  descripcion String?  @db.VarChar(200)
-  updatedAt   DateTime @updatedAt
-}
-
-// ─── MEMORIAS Y BALANCES ──────────────────────────────────────
-model memorias_balances {
-  id          Int      @id @default(autoincrement())
-  titulo      String   @db.VarChar(200)
-  descripcion String?  @db.Text
-  archivo     String   @db.VarChar(500)
-  categoria   String   @db.VarChar(100) // e.g. "Memorias Anuales", "Balances"
-  anio        Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+model instituciones {
+  id_institucion Int    @id @default(autoincrement())
+  nombre         String @unique @db.VarChar(150)
 }

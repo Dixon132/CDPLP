@@ -46,6 +46,7 @@ const Table = ({
                                         <td className="px-6 py-4">
                                             <div className="flex gap-2 flex-wrap">
                                                 {actions.map((action, aIdx) => {
+                                                    if (action.hide && action.hide(row)) return null;
                                                     const labelStr = (typeof action.label === 'string' ? action.label.toLowerCase() : '');
                                                     let colorClass = "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200";
                                                     if (labelStr.includes('edit') || labelStr.includes('modificar')) colorClass = "bg-amber-50 text-amber-600 hover:bg-amber-100 border border-amber-100";
@@ -56,6 +57,8 @@ const Table = ({
                                                     if (action.className) {
                                                         colorClass = typeof action.className === 'function' ? action.className(row) : action.className;
                                                     }
+                                                    
+                                                    if (typeof action.show === 'function' && !action.show(row)) return null;
 
                                                     return (
                                                         <button

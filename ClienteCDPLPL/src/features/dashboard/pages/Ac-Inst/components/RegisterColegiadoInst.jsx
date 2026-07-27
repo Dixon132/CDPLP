@@ -18,6 +18,7 @@ import {
   CircularProgress,
   Alert
 } from "@mui/material";
+import AttachFileIcon from "@mui/icons-material/AttachFile";
 
 export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
   const {
@@ -42,6 +43,8 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
 
   const selectedColegiado = watch("id_colegiado");
   const selectedInvitado = watch("id_invitado");
+  const metodoPago = watch("metodo_pago");
+  const [comprobante, setComprobante] = useState(null);
 
   useEffect(() => {
     const fetchColegiados = async () => {
@@ -78,18 +81,27 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
 
     setLoading(true);
     setErrorMsg("");
+    
+    if (data.metodo_pago !== "EFECTIVO" && !comprobante) {
+      setErrorMsg("Debe adjuntar un comprobante de pago para pagos por QR o Transferencia.");
+      setLoading(false);
+      return;
+    }
 
-    const payload = {
-      id_actividad: id,
-      id_colegiado: data.id_colegiado ? data.id_colegiado.value : null,
-      id_invitado: data.id_invitado ? data.id_invitado.value : null,
-      fecha_registro: new Date(),
-      estado_registro: "REGISTRADO",
-      metodo_pago: data.metodo_pago || "EFECTIVO",
-    };
+    const formData = new FormData();
+    formData.append("id_actividad", id);
+    if (data.id_colegiado) formData.append("id_colegiado", data.id_colegiado.value);
+    if (data.id_invitado) formData.append("id_invitado", data.id_invitado.value);
+    formData.append("fecha_registro", new Date().toISOString());
+    formData.append("estado_registro", "REGISTRADO");
+    formData.append("metodo_pago", data.metodo_pago || "EFECTIVO");
+
+    if (comprobante && (data.metodo_pago === "QR" || data.metodo_pago === "TRANSFERENCIA")) {
+      formData.append("comprobante", comprobante);
+    }
 
     try {
-      await registerColegiadoInstitucional(payload);
+      await registerColegiadoInstitucional(formData);
 
       setShowSuccess(true);
       if (onSuccess) onSuccess();
@@ -99,6 +111,7 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
         setValue("id_colegiado", null);
         setValue("id_invitado", null);
         setValue("metodo_pago", "EFECTIVO");
+        setComprobante(null);
         setLoading(false);
       }, 1500);
 
@@ -203,12 +216,53 @@ export default function RegisterColegiadoInst({ id, onClose, onSuccess }) {
                     disabled={loading}
                   >
                     <MenuItem value="EFECTIVO">Efectivo</MenuItem>
-                    <MenuItem value="TRANSFERENCIA">Transferencia / QR</MenuItem>
-                    <MenuItem value="BECA">Beca / Invitación</MenuItem>
+                    <MenuItem value="QR">QR</MenuItem>
+                    <MenuItem value="TRANSFERENCIA">Transferencia</MenuItem>
                   </Select>
                 )}
               />
             </FormControl>
+
+            {(metodoPago === "QR" || metodoPago === "TRANSFERENCIA") && (
+              <Box>
+                <Typography variant="caption" color="error" sx={{ mb: 0.5, display: "block", fontWeight: "bold" }}>
+                  Comprobante (obligatorio)
+                </Typography>
+                <Box
+                  sx={{
+                    display: "flex", alignItems: "center", gap: 1.5,
+                    border: "1px solid", borderColor: "divider", borderRadius: 1,
+                    px: 2, py: 1.25, cursor: "pointer",
+                    "&:hover": { borderColor: "text.primary" },
+                  }}
+                  onClick={() => document.getElementById('comprobante-input')?.click()}
+                >
+                  <AttachFileIcon fontSize="small" color="action" />
+                  <Typography variant="body2" color={comprobante ? "text.primary" : "text.secondary"} noWrap>
+                    {comprobante ? comprobante.name : "Seleccionar imagen o PDF..."}
+                  </Typography>
+                  <input
+                    id="comprobante-input"
+                    type="file"
+                    accept="image/*,.pdf"
+                    style={{ display: "none" }}
+                    onChange={(e) => setComprobante(e.target.files?.[0] ?? null)}
+                  />
+                </Box>
+                {comprobante && (
+                  <Button
+                    size="small" color="inherit" sx={{ mt: 0.5, fontSize: 11 }}
+                    onClick={() => {
+                      setComprobante(null);
+                      const el = document.getElementById('comprobante-input');
+                      if (el) el.value = "";
+                    }}
+                  >
+                    Quitar archivo
+                  </Button>
+                )}
+              </Box>
+            )}
 
             <Box sx={{ mt: 3, display: "flex", gap: 2, justifyContent: "flex-end" }}>
               {onClose && (

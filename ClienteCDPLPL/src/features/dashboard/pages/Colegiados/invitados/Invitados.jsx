@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import Table from "../../../components/Table";
+import ResponsiveTable from "../../../components/ResponsiveTable";
 import Modal from "../../../../../components/Modal";
 import Alerts from "../../../components/Alerts";
-import { Outlet } from "react-router-dom";
-import { getAllInvitados, deleteInvitado } from "../../../services/invitados";
+import { Outlet, useNavigate } from "react-router-dom";
+import { getAllInvitados, deleteInvitado, updateEstadoInvitado } from "../../../services/invitados";
 import CreateInvitado from "./Components/CreateInvitado";
 import ModificarInvitado from "./Components/ModificarInvitado";
 import GenerarReporteInvitados from "./Components/GenerarReporte";
@@ -21,12 +21,19 @@ import {
     Rocket,
     BarChart3,
     Eye,
+    EyeOff,
     Plus,
+    DollarSign,
+    UserX,
+    UserCheck,
 } from 'lucide-react';
 import Header from '../../../components/Header';
 import ConfirmDialog from '../../../components/ConfirmDialog';
+import ConfirmActionModal from '../../../../../components/ConfirmActionModal';
+import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 
 const Invitados = () => {
+    const navigate = useNavigate();
     const [invitados, setInvitados] = useState([]);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
@@ -35,19 +42,26 @@ const Invitados = () => {
 
     const [mostrarModal, setMostrarModal] = useState(false);
     const [mostrarModal2, setMostrarModal2] = useState(false);
-    const [modalReporte, setModalReporte] = useState(false);
+    const [invitadoSeleccionado, setInvitadoSeleccionado] = useState(null);
+    const [desacTarget, setDesacTarget] = useState(null);
 
-    const [alert, setAlert] = useState(false);
+    // Confirm DESPUÉS de guardar
+    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
     const [alertType, setAlertType] = useState("success");
     const [alertMessage, setAlertMessage] = useState("");
 
+    const [mostrarInactivos, setMostrarInactivos] = useState(false);
+    const [modalReporte, setModalReporte] = useState(false);
+
+    const [alert, setAlert] = useState(false);
+    
+    // Doble confirmación eliminar
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [invitadoToDelete, setInvitadoToDelete] = useState(null);
-    const [invitadoSeleccionado, setInvitadoSeleccionado] = useState(null);
 
     const fetchInvitados = async () => {
         const { data, total, page: currentPage, totalPages } =
-            await getAllInvitados({ page, search });
+            await getAllInvitados({ page, search, inactivos: mostrarInactivos });
         setInvitados(data);
         setTotal(total);
         setTotalPage(totalPages);
@@ -56,7 +70,7 @@ const Invitados = () => {
 
     useEffect(() => {
         fetchInvitados();
-    }, [page, search]);
+    }, [page, search, mostrarInactivos]);
 
     const handleSuccess = (message = 'Operación realizada con éxito.') => {
         setAlertType('success');
@@ -77,17 +91,61 @@ const Invitados = () => {
         setShowDeleteConfirm(true);
     };
 
-    const handleDelete = async () => {
+    const handleDesactivar = async () => {
         try {
-            await deleteInvitado(invitadoToDelete);
-            handleSuccess('Invitado eliminado correctamente');
+            await updateEstadoInvitado(desacTarget, mostrarInactivos ? "ACTIVO" : "INACTIVO");
+            handleSuccess(mostrarInactivos ? "Invitado activado correctamente." : "Invitado desactivado correctamente.");
             fetchInvitados();
         } catch (error) {
-            handleError('Error al eliminar el invitado');
+            handleError('Error al cambiar el estado del invitado');
         } finally {
-            setShowDeleteConfirm(false);
-            setInvitadoToDelete(null);
+            setDesacTarget(null);
         }
+    };
+
+    const getActions = () => {
+        const editarAction = {
+            label: "Editar",
+            icon: Edit3,
+            className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
+            onClick: (item) => {
+                setMostrarModal2(true);
+                setInvitadoSeleccionado(item.id_invitado);
+            }
+        };
+
+        const verPagosAction = {
+            label: "Ver Pagos",
+            icon: DollarSign,
+            className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors",
+            onClick: (item) => {
+                navigate(`/dashboard/invitados/pagos/${item.id_invitado}`);
+            }
+        };
+
+        if (mostrarInactivos) {
+            return [
+                editarAction,
+                verPagosAction,
+                {
+                    label: "Activar",
+                    icon: UserCheck,
+                    className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors",
+                    onClick: (item) => setDesacTarget(item.id_invitado)
+                }
+            ];
+        }
+
+        return [
+            editarAction,
+            verPagosAction,
+            {
+                label: "Desactivar",
+                icon: UserX,
+                className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
+                onClick: (item) => setDesacTarget(item.id_invitado)
+            }
+        ];
     };
 
     return (
@@ -104,6 +162,12 @@ const Invitados = () => {
                 onSearch={(value) => { setSearch(value); setPage(1); }}
                 buttons={[
                     {
+                        label: mostrarInactivos ? 'Ver activos' : 'Ver inactivos',
+                        icon: mostrarInactivos ? <Eye /> : <EyeOff />,
+                        onClick: () => { setMostrarInactivos(!mostrarInactivos); setPage(1); },
+                        color: mostrarInactivos ? "emerald" : "rose",
+                    },
+                    {
                         label: "Añadir Invitado",
                         icon: <Plus />,
                         onClick: () => setMostrarModal(true),
@@ -113,9 +177,10 @@ const Invitados = () => {
                 ]}
             />
 
-            {/*  Tabla genérica */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
-                <Table
+            {/*  Tabla genérica / Grid */}
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="invitados"
                     data={invitados}
                     pagination={{
                         total,
@@ -163,44 +228,55 @@ const Invitados = () => {
                                     <span className="text-sm text-slate-400 italic">Sin teléfono</span>
                                 )
                         },
-                    ]}
-                    actions={[
                         {
-                            label: "Editar",
-                            icon: Edit3,
-                            className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100 transition-colors",
-                            onClick: (item) => {
-                                setMostrarModal2(true);
-                                setInvitadoSeleccionado(item.id_invitado);
-                            }
-                        },
-                        {
-                            label: "Eliminar",
-                            icon: Trash2,
-                            className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
-                            onClick: (item) => confirmDelete(item.id_invitado)
+                            label: "Estado",
+                            key: "estado",
+                            render: (item) => (
+                                <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${item.estado === 'ACTIVO' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
+                                    {item.estado || 'ACTIVO'}
+                                </span>
+                            )
                         }
                     ]}
+                    actions={getActions()}
                 />
             </div>
 
-            {/* Modal confirmación de eliminación */}
-            <ConfirmDialog
-                isOpen={showDeleteConfirm}
-                message="¿Estás seguro de que deseas eliminar este invitado? Esta acción no se puede deshacer."
-                onConfirm={handleDelete}
-                onClose={() => setShowDeleteConfirm(false)}
-                confirmText="Eliminar"
+
+
+            {/* ✅ Confirm DESPUÉS de guardar */}
+            <ConfirmActionModal
+                isOpen={confirmSave.open}
+                variant={confirmSave.variant}
+                title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
+                message={confirmSave.variant === "create" ? "¿Confirmas que deseas registrar este invitado?" : "¿Confirmas que deseas guardar los cambios realizados?"}
+                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
+                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+            />
+
+            {/* ✅ Doble confirmación desactivar/activar (2s + 4s) */}
+            <ConfirmDeleteModal
+                isOpen={!!desacTarget}
+                onClose={() => setDesacTarget(null)}
+                onConfirm={handleDesactivar}
+                title={mostrarInactivos ? "Activar Invitado" : "Desactivar Invitado"}
+                message={mostrarInactivos 
+                    ? "¿Estás seguro de que deseas activar a este invitado? Podrá ser usado nuevamente en el sistema." 
+                    : "¿Estás seguro de que deseas desactivar a este invitado? No aparecerá en las listas activas."}
                 waitSeconds={4}
+                confirmColor={mostrarInactivos ? "emerald" : "amber"}
+                confirmIcon={mostrarInactivos ? <UserCheck className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
+                confirmLabel={mostrarInactivos ? "Activar" : "Desactivar"}
             />
 
             {/*  Modales */}
             <Modal isOpen={mostrarModal} title="" onClose={() => setMostrarModal(false)}>
                 <CreateInvitado
                     onSuccess={() => {
-                        setMostrarModal(false);
-                        handleSuccess("Invitado creado correctamente");
-                        fetchInvitados();
+                        setConfirmSave({
+                            open: true, variant: "create",
+                            callback: () => { setMostrarModal(false); handleSuccess("Invitado creado correctamente."); fetchInvitados(); },
+                        });
                     }}
                 />
             </Modal>
@@ -208,9 +284,12 @@ const Invitados = () => {
             <Modal isOpen={mostrarModal2} title="Modificar Invitado" onClose={() => setMostrarModal2(false)}>
                 <ModificarInvitado
                     id={invitadoSeleccionado}
-                    onClose={() => {
-                        setMostrarModal2(false);
-                        fetchInvitados();
+                    onClose={() => setMostrarModal2(false)}
+                    onSuccess={() => {
+                        setConfirmSave({
+                            open: true, variant: "edit",
+                            callback: () => { setMostrarModal2(false); handleSuccess("Invitado modificado exitosamente."); fetchInvitados(); },
+                        });
                     }}
                 />
             </Modal>

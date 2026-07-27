@@ -18,6 +18,7 @@ export const Navbar = () => {
                 <nav className="flex items-center space-x-8 text-[10px] md:text-[11px] font-bold uppercase tracking-widest z-50">
                     <Link to="/nosotros" className={`hover:text-gray-500 hover:underline underline-offset-4 transition-all ${isActive('/nosotros') ? 'text-black' : ''}`}>Nosotros</Link>
                     <Link to="/contacto" className={`hover:text-gray-500 hover:underline underline-offset-4 transition-all ${isActive('/contacto') ? 'text-black' : ''}`}>Contacto</Link>
+                    <Link to="/postular" className={`hover:text-gray-500 hover:underline underline-offset-4 transition-all ${isActive('/postular') ? 'text-black' : ''}`}>Postulaciones</Link>
                     <Link to="/memorias" className={`hover:text-gray-500 hover:underline underline-offset-4 transition-all ${isActive('/memorias') ? 'text-black' : ''}`}>Repo Institucional</Link>
                     <Link to="/auth/login" className="hover:text-gray-500 hover:underline underline-offset-4 transition-all text-black font-black">Iniciar Sesión</Link>
                 </nav>

@@ -23,6 +23,7 @@ import Memorias from "./pages/Memorias/Memorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
+import PagosInvitado from "./pages/Colegiados/invitados/PagosInvitado";
 // Módulo IREC anterior retirado del dashboard del colegio (Req. 1.3, 1.4, tarea 26.12).
 // El componente fuente `./pages/Ia/IREC` permanece en disco; solo se desconecta de las rutas.
 // import IRECDashboard from "./pages/Ia/IREC";
@@ -57,6 +58,14 @@ export const dashboardRoutes = {
             element: (
                 <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
                     <Invitados />
+                </RequireRole>
+            )
+        },
+        {
+            path: 'invitados/pagos/:id',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                    <PagosInvitado />
                 </RequireRole>
             )
         },

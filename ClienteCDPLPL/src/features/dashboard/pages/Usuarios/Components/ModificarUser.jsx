@@ -39,46 +39,27 @@ const ModificarUser = ({ id, onClose, onSuccess }) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <Box display="flex" flexDirection="column" gap={2}>
-                {/* Teléfono */}
-                <div>
-                    <label className="block mb-1 font-semibold">Teléfono</label>
-                    <TextField
-                        fullWidth
-                        {...register("telefono", { required: "El teléfono es requerido" })}
-                        error={!!errors.telefono}
-                        helperText={errors.telefono?.message}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
+                <TextField
+                    label="Teléfono"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("telefono", { required: "El teléfono es requerido" })}
+                    error={!!errors.telefono}
+                    helperText={errors.telefono?.message}
+                />
 
-                {/* Dirección */}
-                <div>
-                    <label className="block mb-1 font-semibold">Dirección</label>
-                    <TextField
-                        fullWidth
-                        {...register("direccion", { required: "La dirección es requerida" })}
-                        error={!!errors.direccion}
-                        helperText={errors.direccion?.message}
-                        variant="outlined"
-                        size="small"
-                    />
-                </div>
+                <TextField
+                    label="Dirección"
+                    InputLabelProps={{ shrink: true }}
+                    {...register("direccion", { required: "La dirección es requerida" })}
+                    error={!!errors.direccion}
+                    helperText={errors.direccion?.message}
+                />
 
-                {/* Botones */}
                 <Box display="flex" justifyContent="flex-end" gap={2} mt={2}>
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        onClick={onClose}
-                    >
+                    <Button variant="outlined" onClick={onClose}>
                         Cancelar
                     </Button>
-                    <Button
-                        type="submit"
-                        variant="contained"
-                        color="primary"
-                    >
+                    <Button type="submit" variant="contained" color="primary">
                         Guardar Cambios
                     </Button>
                 </Box>

@@ -11,7 +11,7 @@ import {
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-const AñadirDocumento = ({ id, tipoDoc }) => {
+const AñadirDocumento = ({ id, tipoDoc, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -20,21 +20,16 @@ const AñadirDocumento = ({ id, tipoDoc }) => {
     const [fileName, setFileName] = useState('');
     const today = new Date().toISOString().split('T')[0];
 
-    const onSubmit = async (data) => {
+    const onSubmit = (data) => {
         const formData = new FormData();
         formData.append('tipo_documento', tipoDoc);
         formData.append('archivo', data.archivo[0]);
-        formData.append('fecha_vencimiento', data.fecha_vencimiento);
+        
+        // Fix timezone issue by appending local time
+        const fecha_vencimiento_local = data.fecha_vencimiento ? `${data.fecha_vencimiento}T00:00:00` : "";
+        formData.append('fecha_vencimiento', fecha_vencimiento_local);
 
-        try {
-            await axios.post(`/api/colegiados/documentos/${id}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
-            alert('Documento enviado correctamente');
-        } catch (error) {
-            console.error('Error al subir el documento:', error);
-            alert('Error al subir el documento');
-        }
+        if (onSubmitForm) onSubmitForm(formData);
     };
 
     return (

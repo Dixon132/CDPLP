@@ -51,7 +51,11 @@ export const getEspecificDoc = async (id) => {
 }
 export const updateDoc = async (id, data) => {
     const res = await axios.put(`/api/colegiados/documentos/update/${id}`, data)
-    return alert('Documento actualizado con éxito')
+    return res.data;
+}
+export const deleteDoc = async (id) => {
+    const res = await axios.delete(`/api/colegiados/documentos/delete/${id}`)
+    return res.data;
 }
 
 
@@ -67,9 +71,14 @@ export const getPagoById = async (id_pago) => {
     const res = await axios.get(`/api/colegiados/pagos/getOne/${id_pago}`)
     return res.data
 }
+export const verComprobantePago = async (id) => {
+    const response = await axios.get(`/api/colegiados/pagos/ver/${id}`);
+    const url = response.data.url;
+    window.open(url, "_blank");
+}
 export const updatePago = async (id_pago, data) => {
     const res = await axios.put(`/api/colegiados/pagos/update/${id_pago}`, data)
-    return alert('Pago actualizado correctamente')
+    return res.data;
 }
 
 

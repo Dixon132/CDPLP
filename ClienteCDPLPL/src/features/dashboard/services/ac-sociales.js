@@ -1,9 +1,9 @@
 import axios from "axios"
 import { Axis3D } from "lucide-react";
 
-export const gelAllActividadesSociales = async ({ page, search }) => {
+export const gelAllActividadesSociales = async ({ page, search, estado }) => {
     const res = await axios('/api/ac-sociales/ac-social/', {
-        params: { page, search }
+        params: { page, search, estado }
     })
     return res.data
 }
@@ -28,6 +28,10 @@ export const updateActividadSocial = async (id, data) => {
 //////////
 export const deleteActividadSocial = async(id)=>{
     const res = await axios.delete(`/api/ac-sociales/ac-social/${id}`);
+}
+export const cambiarEstadoActividadSocial = async (id, estado) => {
+    const res = await axios.post(`/api/ac-sociales/ac-social/${id}/updateEstado`, { estado });
+    return res.data;
 }
 //ASIGNAR COLEGIADO
 

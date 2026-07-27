@@ -1,6 +1,6 @@
 import { Router } from "express";
 import errorHandler from "../../../utils/error-handler";
-import { createDoc, getAllDocsById, getDocumentoById, getEspecificDocumentoById, obtenerUrlFirmada, updateDocumento } from "../controllers/documentos";
+import { createDoc, getAllDocsById, getDocumentoById, getEspecificDocumentoById, obtenerUrlFirmada, updateDocumento, deleteDocumento } from "../controllers/documentos";
 import { upload } from "../../../middlewares/multer";
 
 const documentosRouter:Router = Router()
@@ -11,5 +11,6 @@ documentosRouter.get("/ver/:id", errorHandler(obtenerUrlFirmada));
 documentosRouter.get("/getOne/:id", errorHandler(getDocumentoById));
 documentosRouter.get("/especifico/:id", errorHandler(getEspecificDocumentoById));
 documentosRouter.put("/update/:id", errorHandler(updateDocumento));
+documentosRouter.delete("/delete/:id", errorHandler(deleteDocumento));
 
 export default documentosRouter
