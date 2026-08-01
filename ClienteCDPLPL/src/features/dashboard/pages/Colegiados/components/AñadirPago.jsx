@@ -104,15 +104,12 @@ const AñadirPago = ({ id, onSubmitForm }) => {
                         max: { value: 10, message: "Máximo 10 gestiones" }
                     })}
                     error={!!errors.gestiones}
-                    helperText={errors.gestiones?.message}
+                    helperText={
+                        errors.gestiones?.message ||
+                        `Concepto: Pago de colegiatura anual (${gestiones || 1} gestión/es)`
+                    }
                 />
                 
-                <Box sx={{ p: 2, bgcolor: "info.main", color: "info.contrastText", borderRadius: 1 }}>
-                    <Typography variant="body1" fontWeight="bold">
-                        Concepto: Pago de colegiatura anual ({gestiones || 1} gestión/es)
-                    </Typography>
-                </Box>
-
                 {/* Fecha de Pago */}
                 <TextField
                     label="Fecha de Pago"

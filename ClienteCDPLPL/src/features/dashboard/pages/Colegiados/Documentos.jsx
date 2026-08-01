@@ -177,7 +177,7 @@ const Documentos = () => {
     const documentosSubidos = tiposSubidos; // para el texto informativo
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             {/* Header mejorado */}
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">

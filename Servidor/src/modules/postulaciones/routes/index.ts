@@ -15,6 +15,7 @@ import {
     upsertConfigPago,
     uploadQr,
 } from "../controllers/postulaciones";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 const router: Router = Router();
 
@@ -36,11 +37,11 @@ router.post(
 // ─── RUTAS ADMIN (con auth) ───────────────────────────────────
 router.get("/admin", auth, errorHandler(getPostulaciones));
 router.get("/admin/config-pago", auth, errorHandler(getConfigPagoAdmin));
-router.put("/admin/config-pago", auth, errorHandler(upsertConfigPago));
-router.post("/admin/upload-qr", auth, upload.single('qr'), errorHandler(uploadQr));
+router.put("/admin/config-pago", auth, errorHandler(upsertConfigPago, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
+router.post("/admin/upload-qr", auth, upload.single('qr'), errorHandler(uploadQr, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
 router.get("/admin/:id", auth, errorHandler(getPostulacionById));
-router.patch("/admin/:id/aceptar", auth, errorHandler(aceptarPostulacion));
-router.patch("/admin/:id/rechazar", auth, errorHandler(rechazarPostulacion));
-router.delete("/admin/:id", auth, errorHandler(eliminarPostulacion));
+router.patch("/admin/:id/aceptar", auth, errorHandler(aceptarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ACTIVO }));
+router.patch("/admin/:id/rechazar", auth, errorHandler(rechazarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.RECHAZO }));
+router.delete("/admin/:id", auth, errorHandler(eliminarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ELIMINO }));
 
 export default router;

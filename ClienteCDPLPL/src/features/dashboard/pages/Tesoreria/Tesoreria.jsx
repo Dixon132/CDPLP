@@ -3,17 +3,16 @@ import React, { useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import Alerts from "../../components/Alerts";
 
 import { getAllPresupuestos, deletePresupuesto } from "../../services/tesoreria";
 import PresupuestoForm from "./components/PresupuestoForm";
-import GenerarReporteTesoreria from "./components/GenerarReporteTesoreria";
 import { getPresupuestoActivo } from '../../services/configFinanciera';
 
 import {
     Wallet, Plus, Search, Calendar, DollarSign, TrendingUp, TrendingDown,
-    Activity, Edit3, Trash2, Download, CheckCircle, XCircle, Clock, AlertCircle,
+    Activity, Edit3, Trash2, CheckCircle, XCircle, Clock, AlertCircle,
     Banknote
 } from 'lucide-react';
 
@@ -23,7 +22,6 @@ export default function Tesoreria() {
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
     const [search, setSearch] = useState("");
-    const [modalReporte, setModalReporte] = useState(false);
     const [showModalCreate, setShowModalCreate] = useState(false);
     const [showModalEdit, setShowModalEdit] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
@@ -93,7 +91,7 @@ export default function Tesoreria() {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
                     <div className="flex items-center gap-3">
@@ -105,10 +103,6 @@ export default function Tesoreria() {
                             <p className="text-slate-600 text-sm">Gestión integral de presupuestos y finanzas</p>
                         </div>
                     </div>
-                    <button onClick={() => setModalReporte(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl shadow-lg hover:scale-105">
-                        <Download className="w-4 h-4" /> Generar Reporte
-                    </button>
                 </div>
                 {presupuestoActivoNombre && (
                     <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-emerald-50 border border-emerald-200 rounded-xl">
@@ -137,64 +131,67 @@ export default function Tesoreria() {
                 </div>
             </div>
 
-            <Table
-                data={presupuestos}
-                pagination={{ total, totalPage, page, onPageChange: setPage }}
-                columns={[
-                    {
-                        label: "Presupuesto", key: "nombre_presupuesto", render: (p) => (
-                            <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white">
-                                    <DollarSign className="w-5 h-5" />
-                                </div>
-                                <div><p className="font-semibold text-slate-800">{p.nombre_presupuesto}</p><p className="text-xs text-slate-500">{p.descripcion}</p></div>
-                            </div>)
-                    },
-                    {
-                        label: "Montos", key: "monto_total", render: (p) => (
-                            <div className="space-y-1">
-                                <div className="flex items-center gap-2 text-sm"><TrendingUp className="w-3 h-3 text-emerald-500" /> Total: <span className="font-semibold text-emerald-600">{formatCurrency(p.monto_total)}</span></div>
-                                <div className="flex items-center gap-2 text-sm"><TrendingDown className="w-3 h-3 text-blue-500" /> Disponible: <span className="font-semibold text-blue-600">{formatCurrency(p.saldo_restante)}</span></div>
-                            </div>)
-                    },
-                    {
-                        label: "Progreso", key: "uso", render: (p) => {
-                            const pct = calculateUsedPercentage(p.monto_total, p.saldo_restante);
-                            const isLow = parseFloat(pct) > 80;
-                            return (
-                                <div className="space-y-2">
-                                    <div className="flex justify-between text-sm"><span>Usado</span><span className={isLow ? 'text-red-600' : 'text-slate-800'}>{pct}%</span></div>
-                                    <div className="w-full bg-gray-200 rounded-full h-2">
-                                        <div className={`${isLow ? 'bg-red-500' : 'bg-emerald-500'} h-2 rounded-full`} style={{ width: `${Math.min(pct, 100)}%` }} />
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="tesoreria-presupuestos"
+                    data={presupuestos}
+                    pagination={{ total, totalPage, page, onPageChange: setPage }}
+                    columns={[
+                        {
+                            label: "Presupuesto", key: "nombre_presupuesto", render: (p) => (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-full flex items-center justify-center text-white">
+                                        <DollarSign className="w-5 h-5" />
                                     </div>
-                                </div>);
-                        }
-                    },
-                    {
-                        label: "Fecha", key: "fecha_asignacion", render: (p) => (
-                            <div className="flex items-center gap-2 text-sm text-slate-600"><Calendar className="w-3 h-3" /> {p.fecha_asignacion?.split('T')[0] || "-"}</div>)
-                    },
-                    {
-                        label: "Estado", key: "estado", render: (p) => (
-                            <span className={getEstadoBadge(p.estado)}>{getEstadoIcon(p.estado)} {p.estado}</span>)
-                    },
-                ]}
-                actions={[
-                    {
-                        label: "Movimientos", icon: Activity, className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 text-sm",
-                        onClick: (p) => { window.location.href = `/dashboard/tesoreria/movimientos/${p.id_presupuesto}`; }
-                    },
-                    {
-                        label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 text-sm",
-                        // ✅ Abre el form DIRECTAMENTE
-                        onClick: (p) => { setSelectedId(p.id_presupuesto); setShowModalEdit(true); }
-                    },
-                    {
-                        label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm",
-                        onClick: (p) => setPresupuestoToDelete(p)
-                    },
-                ]}
-            />
+                                    <div><p className="font-semibold text-slate-800">{p.nombre_presupuesto}</p><p className="text-xs text-slate-500">{p.descripcion}</p></div>
+                                </div>)
+                        },
+                        {
+                            label: "Montos", key: "monto_total", render: (p) => (
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-sm"><TrendingUp className="w-3 h-3 text-emerald-500" /> Total: <span className="font-semibold text-emerald-600">{formatCurrency(p.monto_total)}</span></div>
+                                    <div className="flex items-center gap-2 text-sm"><TrendingDown className="w-3 h-3 text-blue-500" /> Disponible: <span className="font-semibold text-blue-600">{formatCurrency(p.saldo_restante)}</span></div>
+                                </div>)
+                        },
+                        {
+                            label: "Progreso", key: "uso", render: (p) => {
+                                const pct = calculateUsedPercentage(p.monto_total, p.saldo_restante);
+                                const isLow = parseFloat(pct) > 80;
+                                return (
+                                    <div className="space-y-2">
+                                        <div className="flex justify-between text-sm"><span>Usado</span><span className={isLow ? 'text-red-600' : 'text-slate-800'}>{pct}%</span></div>
+                                        <div className="w-full bg-gray-200 rounded-full h-2">
+                                            <div className={`${isLow ? 'bg-red-500' : 'bg-emerald-500'} h-2 rounded-full`} style={{ width: `${Math.min(pct, 100)}%` }} />
+                                        </div>
+                                    </div>);
+                            }
+                        },
+                        {
+                            label: "Fecha", key: "fecha_asignacion", render: (p) => (
+                                <div className="flex items-center gap-2 text-sm text-slate-600"><Calendar className="w-3 h-3" /> {p.fecha_asignacion?.split('T')[0] || "-"}</div>)
+                        },
+                        {
+                            label: "Estado", key: "estado", render: (p) => (
+                                <span className={getEstadoBadge(p.estado)}>{getEstadoIcon(p.estado)} {p.estado}</span>)
+                        },
+                    ]}
+                    actions={[
+                        {
+                            label: "Movimientos", icon: Activity, className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 text-sm",
+                            onClick: (p) => { window.location.href = `/dashboard/tesoreria/movimientos/${p.id_presupuesto}`; }
+                        },
+                        {
+                            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 text-sm",
+                            // ✅ Abre el form DIRECTAMENTE
+                            onClick: (p) => { setSelectedId(p.id_presupuesto); setShowModalEdit(true); }
+                        },
+                        {
+                            label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm",
+                            onClick: (p) => setPresupuestoToDelete(p)
+                        },
+                    ]}
+                />
+            </div>
 
             {/* ✅ Modal crear — confirm aparece DESPUÉS de guardar exitosamente (en onSuccess) */}
             <Modal isOpen={showModalCreate} title="Crear Presupuesto" onClose={() => setShowModalCreate(false)}>
@@ -224,10 +221,6 @@ export default function Tesoreria() {
                         });
                     }}
                 />
-            </Modal>
-
-            <Modal isOpen={modalReporte} title="Generar Reporte de Tesorería" onClose={() => setModalReporte(false)}>
-                <GenerarReporteTesoreria onClose={() => setModalReporte(false)} />
             </Modal>
 
             {/* ✅ Confirm que aparece tras guardar exitosamente */}

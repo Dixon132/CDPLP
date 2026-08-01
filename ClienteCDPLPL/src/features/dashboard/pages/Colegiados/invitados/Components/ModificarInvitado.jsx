@@ -3,9 +3,14 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TextField, Button, Box, Typography, Alert } from "@mui/material";
-import { getInvitadoById, updateInvitado } from "../../../../services/invitados";
+import { getInvitadoById } from "../../../../services/invitados";
 
-const ModificarInvitado = ({ id, onClose, onSuccess }) => {
+/**
+ * Formulario de modificación de invitado.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo.
+ */
+const ModificarInvitado = ({ id, onClose, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -33,16 +38,9 @@ const ModificarInvitado = ({ id, onClose, onSuccess }) => {
         fetchData();
     }, [id, reset]);
 
-    const onSubmit = async (formData) => {
-        try {
-            setServerError(null);
-            await updateInvitado(id, formData);
-            if (onSuccess) onSuccess();
-            else if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al actualizar invitado:", error);
-            setServerError("Ocurrió un error al guardar los cambios. Intente nuevamente.");
-        }
+    const onSubmit = (formData) => {
+        setServerError(null);
+        onSubmitForm(formData);
     };
 
     return (

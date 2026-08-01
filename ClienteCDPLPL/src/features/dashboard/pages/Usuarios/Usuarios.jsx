@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ActivarUsuarios, desactivarUsuarios, getAllActiveUsuarios } from "../../services/usuarios";
+import { ActivarUsuarios, desactivarUsuarios, getAllActiveUsuarios, createUsuario, ModificarUsuario } from "../../services/usuarios";
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
@@ -23,7 +23,7 @@ const Usuarios = () => {
     const [mostrarModalModificar, setMostrarModalModificar] = useState(false);
     const [usuarioModificando, setUsuarioModificando] = useState(null);
 
-    // Confirm DESPUÉS de guardar
+    // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
 
     // Doble confirmación activar/desactivar
@@ -56,7 +56,7 @@ const Usuarios = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 title="Gestión de Usuarios" icon={<Users className="w-8 h-8" />}
                 stats={[{ label: "Total", value: total, color: "purple" }]}
@@ -108,13 +108,20 @@ const Usuarios = () => {
                 />
             </div>
 
-            {/* Forms — abren directo */}
+            {/* Forms — abren directo y delegan el guardado al confirm */}
             <Modal isOpen={mostrarModal} title="Crear Usuario" onClose={() => setMostrarModal(false)}>
                 <CreateUser
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "create",
-                            callback: () => { setMostrarModal(false); showAlertFn("success", "Usuario creado correctamente."); fetchUsuarios(); },
+                            callback: async () => {
+                                try {
+                                    await createUsuario(payload);
+                                    setMostrarModal(false);
+                                    showAlertFn("success", "Usuario creado correctamente.");
+                                    fetchUsuarios();
+                                } catch { showAlertFn("error", "Error al crear el usuario."); }
+                            },
                         });
                     }}
                 />
@@ -124,23 +131,33 @@ const Usuarios = () => {
                 <ModificarUser
                     id={usuarioModificando}
                     onClose={() => setMostrarModalModificar(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "edit",
-                            callback: () => { setMostrarModalModificar(false); showAlertFn("success", "Usuario modificado correctamente."); fetchUsuarios(); },
+                            callback: async () => {
+                                try {
+                                    await ModificarUsuario(usuarioModificando, payload);
+                                    setMostrarModalModificar(false);
+                                    showAlertFn("success", "Usuario modificado correctamente.");
+                                    fetchUsuarios();
+                                } catch { showAlertFn("error", "Error al modificar el usuario."); }
+                            },
                         });
                     }}
                 />
             </Modal>
 
-            {/* ✅ Confirm DESPUÉS de guardar */}
+            {/* ✅ Confirm ANTES de guardar — cancelar aborta la operación */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
                 variant={confirmSave.variant}
                 title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
                 message={confirmSave.variant === "create" ? "¿Confirmas que deseas crear este usuario?" : "¿Confirmas que deseas guardar los cambios realizados?"}
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+                onClose={() => setConfirmSave((prev) => ({ ...prev, open: false }))}
+                onConfirm={async () => {
+                    await confirmSave.callback?.();
+                    setConfirmSave((prev) => ({ ...prev, open: false }));
+                }}
             />
 
             {/* ✅ Doble confirmación activar/desactivar (2s + 4s) */}

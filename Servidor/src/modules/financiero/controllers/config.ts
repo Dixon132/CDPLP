@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
+import { describir } from "../../../utils/auditoria";
 
 export const getPresupuestoActivo = async (req: Request, res: Response) => {
     try {
@@ -39,6 +40,7 @@ export const setPresupuestoActivo = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Cambió el presupuesto activo al #${id_presupuesto}`);
         res.status(200).json(config);
     } catch (error) {
         console.error("Error seteando presupuesto activo:", error);

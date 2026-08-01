@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { Prisma } from "../../../../generated/prisma";
+import { describir } from "../../../utils/auditoria";
 
 export const getAllConvenios = async (req: Request, res: Response) => {
     try {
@@ -59,6 +60,7 @@ export const createConvenio = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Se creó el convenio "${newConvenio.nombre}"`);
         return res.status(201).json(newConvenio);
     } catch (error) {
         console.error("Error al crear convenio:", error);
@@ -80,6 +82,7 @@ export const updateConvenio = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Modificó el convenio "${updatedConvenio.nombre}"`);
         return res.status(200).json(updatedConvenio);
     } catch (error) {
         console.error("Error al actualizar convenio:", error);
@@ -137,6 +140,7 @@ export const cambiarEstadoConvenio = async (req: Request, res: Response) => {
             where: { id_convenio: +id },
             data: { estado }
         });
+        describir(res, `Cambió el estado del convenio "${updated.nombre}" a ${estado}`);
         return res.status(200).json(updated);
     } catch (error) {
         console.error("Error al cambiar estado de convenio:", error);

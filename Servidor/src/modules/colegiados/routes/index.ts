@@ -5,8 +5,12 @@ import pagosRouter from "./pagos";
 import pagosInvitadosRouter from "./pagos-invitados";
 import invitadosRouter from "./invitados";
 import pasantesRouter from "./pasantes";
+import { authMiddleware } from "../../../middlewares/auth";
 
 const colegiadosRouter: Router = Router()
+
+// Todo el módulo requiere sesión del dashboard.
+colegiadosRouter.use(authMiddleware)
 
 colegiadosRouter.use('/colegiado', colegiadoRouter)
 colegiadosRouter.use('/documentos', documentosRouter)

@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// Espejo de `ErrorCodes.TOKEN_EXPIRED` en Servidor/src/exceptions/root.ts
+const TOKEN_EXPIRED = 4002;
+
 export function useAxiosInterceptor() {
   const navigate = useNavigate();
 
@@ -12,8 +15,9 @@ export function useAxiosInterceptor() {
         const status = error.response?.status;
         const code = error.response?.data?.errorCode;
 
-        // Si el token expiró
-        if (status === 401 && code === 'TOKEN_EXPIRED') {
+        // El servidor envía el enum numérico `ErrorCodes.TOKEN_EXPIRED` (4002),
+        // no la cadena; comparar contra el string dejaba esta rama muerta.
+        if (status === 401 && code === TOKEN_EXPIRED) {
           localStorage.removeItem('token');
           console.warn('⚠️ Sesión expirada. Redirigiendo al login...');
           // Usamos un pequeño delay para evitar conflicto con el canal cerrado

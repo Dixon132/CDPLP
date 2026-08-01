@@ -2,6 +2,7 @@ import { Router } from "express";
 import errorHandler from "../../../utils/error-handler";
 import { getActivas, getAdmin, create, update, toggleEstado } from "../controllers/especialidades";
 import { authMiddleware } from "../../../middlewares/auth";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 const especialidadesRouter: Router = Router();
 
@@ -12,8 +13,8 @@ especialidadesRouter.get("/", errorHandler(getActivas));
 especialidadesRouter.get("/admin", [authMiddleware], errorHandler(getAdmin));
 
 // Protegidas: requieren sesión de admin
-especialidadesRouter.post("/", [authMiddleware], errorHandler(create));
-especialidadesRouter.put("/:id", [authMiddleware], errorHandler(update));
-especialidadesRouter.patch("/:id/estado", [authMiddleware], errorHandler(toggleEstado));
+especialidadesRouter.post("/", [authMiddleware], errorHandler(create, { modulo: Modulos.CONFIGURACION, accion: Acciones.CREO }));
+especialidadesRouter.put("/:id", [authMiddleware], errorHandler(update, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
+especialidadesRouter.patch("/:id/estado", [authMiddleware], errorHandler(toggleEstado, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
 
 export default especialidadesRouter;

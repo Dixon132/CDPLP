@@ -249,7 +249,7 @@ export default function PostulacionesAdmin() {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 icon={<ClipboardList className="w-8 h-8" />}
                 title="Postulaciones"

@@ -10,8 +10,7 @@ import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import CreateActSocial from "./components/CreateActSocial";
 import ModificarActividadSocial from "./components/ModificarActividadSocial";
-import GenerarReporteActividadesSociales from "./components/GenerarReporteActividadesSociales";
-import { PartyPopper, Plus, Edit3, Eye, Target, FileText, Calendar, MapPin, BarChart3, Trash2, RotateCcw, EyeOff } from "lucide-react";
+import { PartyPopper, Plus, Edit3, Eye, Target, FileText, Calendar, MapPin, Trash2, RotateCcw, EyeOff } from "lucide-react";
 import { getEstadoBadge, getEstadoIcon, getTipoIcon } from "../../hooks/estados";
 import { VerDetallesActividad } from "./components/VerDetallesActividad";
 
@@ -28,7 +27,6 @@ const Ac_sociales = () => {
     const [showCreate, setShowCreate] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
     const [showVer, setShowVer] = useState(false);
-    const [showReporte, setShowReporte] = useState(false);
 
     const [confirmStateChange, setConfirmStateChange] = useState({ open: false, id: null, nuevoEstado: "" });
 
@@ -69,7 +67,7 @@ const Ac_sociales = () => {
     ], [actividades, total]);
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 title="Actividades Sociales" icon={<PartyPopper />}
                 stats={stats} searchPlaceholder="Buscar actividad..."
@@ -81,7 +79,6 @@ const Ac_sociales = () => {
                         onClick: () => { setEstadoFiltro(estadoFiltro === "ACTIVO" ? "INACTIVO" : "ACTIVO"); setPage(1); },
                         color: "slate",
                     },
-                    { label: "Reportes", icon: <BarChart3 />, onClick: () => setShowReporte(true), color: "green" },
                     { label: "Nueva Actividad", icon: <Plus />, onClick: () => setShowCreate(true), color: "indigo" },
                 ]}
             />
@@ -158,10 +155,6 @@ const Ac_sociales = () => {
                         fetchData();
                     }}
                 />
-            </Modal>
-
-            <Modal isOpen={showReporte} title="Reporte de Actividades Sociales" onClose={() => setShowReporte(false)}>
-                <GenerarReporteActividadesSociales />
             </Modal>
 
             <ConfirmDeleteModal

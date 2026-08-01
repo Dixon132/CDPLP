@@ -1,5 +1,4 @@
 import axios from "axios"
-import { Axis3D } from "lucide-react";
 
 export const gelAllActividadesSociales = async ({ page, search, estado }) => {
     const res = await axios('/api/ac-sociales/ac-social/', {
@@ -88,4 +87,25 @@ export const getPasantes = async ()=>{
 export const asignarPasante = async (data)=>{
     const res = await axios.post('/api/ac-sociales/ac-social/asignarPasante', data)
     return res.data
+}
+// ── Asignaciones ───────────────────────────────────────────────────────────
+// Estas rutas se consumían con `fetch()` crudo desde los componentes, sin el
+// header Authorization que inyecta axios. Al pasar el módulo a requerir sesión
+// devolvían 401 y, como no se comprobaba `res.ok`, el cuerpo del error acababa
+// pintado como si fueran datos (de ahí los "Invalid Date").
+export const getAsignacionById = async (id) => {
+    const res = await axios.get(`/api/ac-sociales/ac-social/asignacion/${id}`);
+    return res.data;
+}
+export const updateMetaAsignacion = async (id, horas_meta) => {
+    const res = await axios.patch(`/api/ac-sociales/ac-social/asignacion/${id}/meta`, { horas_meta });
+    return res.data;
+}
+export const updateEstadoAsignacion = async (id, estado) => {
+    const res = await axios.patch(`/api/ac-sociales/ac-social/asignacion/${id}/estado`, { estado });
+    return res.data;
+}
+export const resetHorasAsignacion = async (id) => {
+    const res = await axios.patch(`/api/ac-sociales/ac-social/asignacion/${id}/reset-horas`);
+    return res.data;
 }

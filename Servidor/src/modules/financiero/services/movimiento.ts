@@ -85,106 +85,18 @@ export const registrarMovimientoPagoCurso = async (id: number, monto: number, Or
 
 
 
-//UPDATE
-export const updateMovimientoPagoColegiatura = async (id: number, monto: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            const origen = await tx.origen_movimiento.findFirstOrThrow({
-                where: {
-                    id_pago_colegiado: id
-                }
-            })
-            const mov = await tx.movimientos_financieros.findFirstOrThrow({
-                where: {
-                    id_origen: origen.id_origen
-                }
-            })
-            await tx.origen_movimiento.update({
-                where: {
-                    id_origen: origen.id_origen
-                },
-                data: {
-                    monto
-                }
-            })
-            await tx.movimientos_financieros.update({
-                where: {
-                    id_movimiento: mov.id_movimiento
-                },
-                data: {
-                    monto
-                }
-            })
-
-        })
-    } catch {
-        console.log('error al actualizar el pago del colegiado')
-    }
-}
-
-//DELETE
-export const deleteMovimientoPagoColegiatura = async (id: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            const origen = await tx.origen_movimiento.findFirstOrThrow({
-                where: {
-                    id_pago_colegiado: id
-                }
-            })
-            const mov = await tx.movimientos_financieros.findFirstOrThrow({
-                where: {
-                    id_origen: origen.id_origen
-                }
-            })
-            await tx.movimientos_financieros.delete({
-                where: {
-                    id_movimiento: mov.id_movimiento
-                }
-            })
-            await tx.origen_movimiento.delete({
-                where: {
-                    id_origen: origen.id_origen
-                }
-            })
-        })
-    } catch {
-        console.log('error al eliminar el pago del colegiado')
-    }
-}
-export const deleteMovimientoPagoCurso = async (id: number) => {
-    try {
-        await prismaClient.$transaction(async (tx) => {
-            const origen = await tx.origen_movimiento.findFirstOrThrow({
-                where: {
-                    id_registro_actividad_institucional: id
-                }
-            })
-            const mov = await tx.movimientos_financieros.findFirstOrThrow({
-                where: {
-                    id_origen: origen.id_origen
-                }
-            })
-            await tx.movimientos_financieros.delete({
-                where: {
-                    id_movimiento: mov.id_movimiento
-                }
-            })
-            await tx.origen_movimiento.delete({
-                where: {
-                    id_origen: origen.id_origen
-                }
-            })
-        })
-    } catch {
-        console.log('error al eliminar el pago del curso')
-    }
-}
-
 /**
- * Registra un EGRESO de reversión cuando un pago es ANULADO.
- * El INGRESO original NO se borra — queda como trazabilidad de que el dinero entró y luego se revirtió.
+ * Propaga la ANULACIÓN de un pago a tesorería.
+ *
+ * No borra nada ni genera un contra-asiento: marca el INGRESO original como
+ * ANULADO y le quita el comprobante. Los informes y el saldo del presupuesto
+ * solo suman movimientos en estado COMPLETADO, así que el importe deja de
+ * contar mientras el registro permanece para trazabilidad.
+ *
+ * Si el pago venía de una inscripción a una actividad institucional, también
+ * anula esa inscripción.
  */
-export const registrarAnulacionPago = async (id_pago: number, monto: number, id_usuario?: number, txClient: any = prismaClient, tipo: 'colegiado' | 'invitado' = 'colegiado') => {
+export const registrarAnulacionPago = async (id_pago: number, txClient: any = prismaClient, tipo: 'colegiado' | 'invitado' = 'colegiado') => {
     // Buscar el origen del movimiento original
     const origen = await txClient.origen_movimiento.findFirst({
         where: tipo === 'colegiado' ? { id_pago_colegiado: id_pago } : { id_pago_invitado: id_pago },
@@ -200,7 +112,6 @@ export const registrarAnulacionPago = async (id_pago: number, monto: number, id_
 
     if (!movIngreso) return;
 
-    // En lugar de crear un EGRESO, actualizamos el estado a ANULADO
     await txClient.movimientos_financieros.update({
         where: { id_movimiento: movIngreso.id_movimiento },
         data: {

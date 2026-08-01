@@ -2,6 +2,7 @@ import { Router } from "express";
 import errorHandler from "../../../utils/error-handler";
 import { getActivos, getAdmin, create, update, toggleEstado } from "../controllers/documentos-requeridos";
 import { authMiddleware } from "../../../middlewares/auth";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 const documentosRequeridosRouter: Router = Router();
 
@@ -12,8 +13,8 @@ documentosRequeridosRouter.get("/", errorHandler(getActivos));
 documentosRequeridosRouter.get("/admin", [authMiddleware], errorHandler(getAdmin));
 
 // Protegidas: requieren sesión de admin
-documentosRequeridosRouter.post("/", [authMiddleware], errorHandler(create));
-documentosRequeridosRouter.put("/:id", [authMiddleware], errorHandler(update));
-documentosRequeridosRouter.patch("/:id/estado", [authMiddleware], errorHandler(toggleEstado));
+documentosRequeridosRouter.post("/", [authMiddleware], errorHandler(create, { modulo: Modulos.CONFIGURACION, accion: Acciones.CREO }));
+documentosRequeridosRouter.put("/:id", [authMiddleware], errorHandler(update, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
+documentosRequeridosRouter.patch("/:id/estado", [authMiddleware], errorHandler(toggleEstado, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
 
 export default documentosRequeridosRouter;

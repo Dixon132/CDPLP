@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
+import { describir } from "../../../utils/auditoria";
 
 
 export const getPasantes = async (req: Request, res: Response) => {
@@ -64,6 +65,7 @@ export const createPasante = async (req: Request, res: Response) => {
                 pin_acceso: pinPlano
             }
         })
+        describir(res, `Se creó el pasante ${pasante.nombre} ${pasante.apellido}`)
         // ⚠️ pin_temporal solo se devuelve ESTA vez
         res.status(201).json({ message: 'Pasante creado exitosamente', pasante, pin_temporal: pinPlano })
     } catch (error) {
@@ -84,7 +86,7 @@ export const updateEstadoById = async (req: Request, res: Response) => {
     const id = req.params.id
     const { estado } = req.body
     try {
-        await prismaClient.pasantes.update({
+        const pasante = await prismaClient.pasantes.update({
             where: {
                 id_pasante: +id
             },
@@ -92,6 +94,7 @@ export const updateEstadoById = async (req: Request, res: Response) => {
                 estado
             }
         })
+        describir(res, `${estado === 'ACTIVO' ? 'Activó' : 'Desactivó'} al pasante ${pasante.nombre} ${pasante.apellido}`)
         res.status(200).json({ message: 'Estado del pasante actualizado' })
     } catch (e) {
 
@@ -112,6 +115,7 @@ export const updatePasanteById = async (req: Request, res: Response) => {
                 institucion,
             }
         })
+        describir(res, `Modificó los datos del pasante ${updatedPasante.nombre} ${updatedPasante.apellido}`)
         res.status(200).json(updatedPasante);
     } catch (error) {
 
@@ -120,9 +124,10 @@ export const updatePasanteById = async (req: Request, res: Response) => {
 export const deletePasanteById = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        await prismaClient.pasantes.delete({
+        const pasante = await prismaClient.pasantes.delete({
             where: { id_pasante: +id }
         });
+        describir(res, `Eliminó al pasante ${pasante.nombre} ${pasante.apellido}`)
         res.status(200).json({ message: 'Pasante eliminado exitosamente' })
     } catch (error) {
 

@@ -1,327 +1,204 @@
-import { useEffect, useState } from 'react';
-import {
-  Home,
-  BarChart2,
-  Users,
-  Settings,
-  Calendar,
-  MessageSquare,
-  HelpCircle,
-  LogOut,
-  DollarSign,
-  HeartHandshake,
-  BookMarked,
-  UsersRound,
-  FolderDot,
-  UserCog,
-  ChevronRight,
-  Search,
-  Activity,
-  ClipboardList
-} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ChevronRight, LogOut, ShieldCheck } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
-import { parseToken } from '../../../utils/parsejwt';
-const Sidebar = ({ collapsed }) => {
-  const [rol, setRol] = useState('');
+import { getNavForRole, getIcon, formatTitle } from '../../navigation';
+import { useSession } from '../../../context/SessionProvider';
+
+/**
+ * Navegación lateral del dashboard.
+ *
+ * Los módulos y sus permisos viven en `src/layouts/navigation.js`; aquí solo se
+ * presentan. Sigue leyendo el rol de `localStorage` para poder renderizarse de
+ * forma aislada (así lo hace `Sidebar.test.jsx`), pero prefiere el rol del
+ * contexto de sesión cuando existe.
+ */
+const Sidebar = ({ collapsed = false }) => {
+  const { rol, nombreCompleto, iniciales, vigencia, logout } = useSession();
   const [mostrarSubmenus, setMostrarSubmenus] = useState({});
   const location = useLocation();
-  const getRol = () => {
-    const token = localStorage.getItem('token');
-    if (!token) return <Navigate to="/auth/login" replace />;
-    const { rol } = parseToken(token);
-    return rol.rol;
-  };
+
+  const grupos = useMemo(() => getNavForRole(rol), [rol]);
+
+  // Abre automáticamente el submenú del módulo en el que estás.
   useEffect(() => {
-    setRol(getRol());
-  }, []);
+    const activo = grupos
+      .flatMap((g) => g.items)
+      .find((i) => i.subtitles && location.pathname.startsWith(i.path));
+    if (activo) setMostrarSubmenus((prev) => ({ ...prev, [activo.title]: true }));
+  }, [grupos, location.pathname]);
 
-  let mainNavItems = [];
-  if (rol === "NO_DEFINIDO") {
-    mainNavItems = [
-      { title: 'Cerrar Sesion', icon: <LogOut size={20} /> }
-    ];
-  } else if (rol === "PRESIDENTE") {
-    mainNavItems = [
-      { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
-      { title: 'Auditorias', icon: <Search size={20} />, path: '/dashboard/auditorias' },
-      { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
-      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados', subtitles: ['Invitados', `Pasantes`] },
-      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
-      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
-      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
-      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
-      // Módulo IREC anterior retirado del dashboard del colegio (Req. 1.3, 1.4, tarea 26.12).
-      // La fuente del módulo IREC permanece en disco; solo se desconecta de la navegación.
-    ];
-  } else if (rol === "SECRETARIO") {
-    mainNavItems = [
-      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
-      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
-      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' }
-    ];
-  } else if (rol === "TESORERO") {
-    mainNavItems = [
-      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
-      { title: 'Buzon', icon: <FolderDot size={20} />, path: '/dashboard/Buzon' },
-    ];
-  }
-  else if (rol === "VICEPRESIDENTE") {
-    mainNavItems = [
-      { title: 'Usuarios', icon: <UserCog size={20} />, subtitles: ['Roles'], path: '/dashboard/usuarios' },
-      { title: 'Colegiados', icon: <UsersRound size={20} />, path: '/dashboard/colegiados' },
-      { title: 'Postulaciones', icon: <ClipboardList size={20} />, path: '/dashboard/postulaciones' },
-      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
-      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
-      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' },
-    ];
-  }
-  else if (rol === "VOCAL") {
-    mainNavItems = [
-      { title: 'Buzon', icon: <FolderDot size={20} />, path: '/dashboard/Buzon' },
-      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' },
-      { title: 'Tesoreria', icon: <DollarSign size={20} />, path: '/dashboard/tesoreria' }
-    ];
-  }
-  else if (rol === "SECRETARIO_GENERAL") {
-    mainNavItems = [
-      { title: 'Dashboard', icon: <Home size={20} />, path: '/dashboard' },
-      { title: 'Correspondencia', icon: <FolderDot size={20} />, subtitles: ['Buzon'], path: '/dashboard/correspondencia' },
-      { title: 'Actividades_Sociales', icon: <HeartHandshake size={20} />, subtitles: ['convenios'], path: '/dashboard/actividades_sociales' },
-      { title: 'Actividades_Institucionales', icon: <BookMarked size={20} />, path: '/dashboard/actividades_institucionales' },
-      { title: 'Memorias', icon: <BookMarked size={20} />, path: '/dashboard/memorias' }
-    ];
-  }
-
-  // Punto de acceso a la Plataforma_GDS (Gemelo Digital Social).
-  // Disponible para cualquier usuario autenticado con un rol definido; al
-  // navegar a `/gds` se monta el `GdsLayout` propio de la plataforma, que es
-  // independiente del `DashboardLayout` del colegio (Req. 1.1, 1.2).
-  if (rol && rol !== 'NO_DEFINIDO') {
-    mainNavItems = [
-      ...mainNavItems,
-      { title: 'Plataforma_GDS', icon: <Activity size={20} />, path: '/gds' },
-    ];
-  }
-
-  const secondaryNavItems = [
-    { title: 'Ajustes', icon: <Settings size={20} />, path: '/dashboard/ajustes' },
-    { title: 'Cerrar Sesion', icon: <LogOut size={20} />, path: '/auth/login' },
-  ];
-
-  const isActiveRoute = (path) => {
-    return location.pathname === path || location.pathname.startsWith(path + '/');
-  };
-
-  const formatTitle = (title) => {
-    return title.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
+  const isActiveRoute = (item) =>
+    item.exact
+      ? location.pathname === item.path
+      : location.pathname === item.path || location.pathname.startsWith(item.path + '/');
 
   const toggleSubmenu = (title, e) => {
     e.preventDefault();
     e.stopPropagation();
-    setMostrarSubmenus((prev) => ({
-      ...prev,
-      [title]: !prev[title]
-    }));
+    setMostrarSubmenus((prev) => ({ ...prev, [title]: !prev[title] }));
+  };
+
+  const vigenciaTexto = () => {
+    if (!vigencia?.hasta) return null;
+    const fin = new Date(vigencia.hasta);
+    if (Number.isNaN(fin.getTime())) return null;
+    return `Cargo hasta ${fin.toLocaleDateString('es-ES', { month: 'short', year: 'numeric' })}`;
   };
 
   return (
-    <aside className={`${collapsed ? 'w-16' : 'w-64'}  rounded-br-4xl  bg-white/90  z-10 transition-all duration-300 ease-in-out flex-shrink-0 h-screen shadow-2xl relative`}>
-      {/* Gradiente de fondo */}
-      <div className="absolute inset-0  -z-10" />
-      {/* Logo Section */}
-      <div className="h-16 flex items-center justify-center ">
-        <div className={`flex items-center ${collapsed ? 'justify-center' : 'justify-start px-4'}`}>
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
-            <BarChart2 size={20} className="text-white" />
+    <aside
+      className={`${collapsed ? 'w-[72px]' : 'w-64'} shrink-0 h-full bg-white border-r border-slate-200 flex flex-col transition-[width] duration-300 ease-in-out`}
+    >
+      {/* Marca */}
+      <div className="h-16 shrink-0 flex items-center border-b border-slate-200 px-4">
+        <Link
+          to="/dashboard"
+          className={`flex items-center rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400 ${collapsed ? 'justify-center w-full' : ''}`}
+        >
+          <div className="h-9 w-9 shrink-0 rounded-xl bg-slate-900 flex items-center justify-center">
+            <span className="text-white font-black text-sm tracking-tight">C</span>
           </div>
           {!collapsed && (
-            <div className="ml-3">
-              <span className="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-                CDPLP
-              </span>
-              <div className="text-xs text-slate-500 font-medium">Dashboard</div>
+            <div className="ml-3 leading-tight">
+              <div className="text-sm font-black uppercase tracking-tight text-slate-900">CDPLP</div>
+              <div className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                Panel administrativo
+              </div>
             </div>
           )}
-        </div>
+        </Link>
       </div>
-      {/* Main Navigation */}
-      <div className="py-6 px-3">
-        <nav>
-          <div className={`${collapsed ? 'hidden' : 'block'} `}>
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-3">
-              Navegación Principal
-            </h3>
-          </div>
 
-          <ul className="space-y-1">
-            {mainNavItems.map((item, index) => {
-              const isActive = isActiveRoute(item.path);
-              const hasSubmenus = Array.isArray(item.subtitles) && item.subtitles.length > 0;
-              const isSubmenuOpen = mostrarSubmenus[item.title];
+      {/* Navegación con scroll propio */}
+      <nav
+        aria-label="Navegación principal"
+        className="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-6"
+      >
+        {grupos.map((grupo) => (
+          <div key={grupo.id}>
+            {!collapsed && (
+              <h3 className="px-3 mb-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                {grupo.label}
+              </h3>
+            )}
+            {collapsed && <div className="mx-auto mb-2 h-px w-6 bg-slate-200" />}
 
-              return (
-                <li key={index}>
-                  {hasSubmenus ? (
-                    <div className="relative">
-                      <Link
-                        to={item.path}
-                        className={`
-                          group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200 w-full
-                          ${isActive
-                            ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
-                            : 'text-slate-700 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
-                          }
-                          ${collapsed ? 'justify-center' : 'justify-between'}
-                        `}
-                      >
-                        <div className="flex items-center">
-                          <span className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-600'}`}>
-                            {item.icon}
-                          </span>
-                          {!collapsed && (
-                            <span className="ml-3 font-medium text-sm">
-                              {formatTitle(item.title)}
-                            </span>
-                          )}
-                        </div>
-
-                        {/* Indicador activo */}
-                        {isActive && (
-                          <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-full shadow-sm" />
-                        )}
-                      </Link>
-
-                      {/* Botón de flecha separado */}
-                      {!collapsed && (
-                        <button
-                          onClick={(e) => toggleSubmenu(item.title, e)}
-                          className={`
-                            absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md transition-all duration-200
-                            ${isActive
-                              ? 'text-white hover:bg-white/20'
-                              : 'text-slate-600 hover:bg-slate-200'
-                            }
-                          `}
-                        >
-                          <span className={`transition-transform duration-200 ${isSubmenuOpen ? 'rotate-90' : ''}`}>
-                            <ChevronRight size={16} />
-                          </span>
-                        </button>
-                      )}
-                    </div>
-                  ) : (
-                    <Link
-                      to={item.path}
-                      className={`
-                        group relative flex items-center py-3 px-3 rounded-xl transition-all duration-200
-                        ${isActive
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/25'
-                          : 'text-slate-700 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
-                        }
-                        ${collapsed ? 'justify-center' : 'justify-between'}
-                      `}
-                    >
-                      <div className="flex items-center">
-                        <span className={`flex-shrink-0 ${isActive ? 'text-white' : 'text-slate-600'}`}>
-                          {item.icon}
-                        </span>
-                        {!collapsed && (
-                          <span className="ml-3 font-medium text-sm">
-                            {formatTitle(item.title)}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Indicador activo */}
-                      {isActive && (
-                        <div className="absolute -right-3 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-full shadow-sm" />
-                      )}
-                    </Link>
-                  )}
-
-                  {/* Submenús */}
-                  {hasSubmenus && !collapsed && (
-                    <div className={`overflow-hidden transition-all duration-300 ${isSubmenuOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <ul className="mt-2 ml-6 space-y-1">
-                        {item.subtitles.map((subtitle, i) => (
-                          <li key={i}>
-                            <Link
-                              to={`/dashboard/${subtitle.toLowerCase()}`}
-                              className="flex items-center py-2 px-3 rounded-lg text-sm text-slate-600 hover:bg-white/50 hover:text-slate-900 transition-colors duration-200"
-                            >
-                              <div className="w-2 h-2 rounded-full bg-slate-300 mr-3" />
-                              {subtitle}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-        {/* Secondary Navigation */}
-        <div className="mt-8 pt-6 border-t border-slate-200/60">
-          {!collapsed && (
-            <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-3 mb-4">
-              Configuración
-            </h3>
-          )}
-
-          <nav>
             <ul className="space-y-1">
-              {secondaryNavItems.map((item, index) => {
-                const isActive = isActiveRoute(item.path);
+              {grupo.items.map((item) => {
+                const Icono = getIcon(item.icon);
+                const activo = isActiveRoute(item);
+                const tieneSub = Array.isArray(item.subtitles) && item.subtitles.length > 0;
+                const abierto = mostrarSubmenus[item.title];
+                const etiqueta = formatTitle(item.title);
 
                 return (
-                  <li key={index}>
+                  <li key={item.path} className="relative">
                     <Link
                       to={item.path}
-                      className={`
-                        group flex items-center py-3 px-3 rounded-xl transition-all duration-200
-                        ${isActive
-                          ? 'bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-lg'
-                          : 'text-slate-600 hover:bg-white/70 hover:shadow-md hover:text-slate-900'
-                        }
-                        ${collapsed ? 'justify-center' : ''}
-                        ${item.title === 'Cerrar Sesion' ? 'hover:bg-red-50 hover:text-red-600' : ''}
-                      `}
+                      title={collapsed ? etiqueta : undefined}
+                      aria-current={activo ? 'page' : undefined}
+                      className={`group relative flex items-center rounded-xl py-2.5 text-sm font-medium transition-colors
+                        ${collapsed ? 'justify-center px-0' : 'px-3'}
+                        ${activo
+                          ? 'bg-slate-900 text-white'
+                          : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'}`}
                     >
-                      <span className="flex-shrink-0">{item.icon}</span>
-                      {!collapsed && (
-                        <span className="ml-3 font-medium text-sm">
-                          {item.title}
-                        </span>
+                      {/* Marca de sección activa */}
+                      {activo && (
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-indigo-400" />
                       )}
+                      <Icono size={18} className="shrink-0" />
+                      {!collapsed && <span className="ml-3 truncate">{etiqueta}</span>}
                     </Link>
+
+                    {tieneSub && !collapsed && (
+                      <button
+                        type="button"
+                        onClick={(e) => toggleSubmenu(item.title, e)}
+                        aria-expanded={!!abierto}
+                        aria-label={`${abierto ? 'Contraer' : 'Expandir'} ${etiqueta}`}
+                        className={`absolute right-1.5 top-[9px] p-1 rounded-md transition-colors
+                          ${activo ? 'text-white/70 hover:bg-white/15' : 'text-slate-400 hover:bg-slate-200'}`}
+                      >
+                        <ChevronRight
+                          size={14}
+                          className={`transition-transform duration-200 ${abierto ? 'rotate-90' : ''}`}
+                        />
+                      </button>
+                    )}
+
+                    {tieneSub && !collapsed && (
+                      <div
+                        className={`overflow-hidden transition-all duration-300 ${abierto ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'}`}
+                      >
+                        <ul className="mt-1 ml-5 border-l border-slate-200 space-y-0.5">
+                          {item.subtitles.map((sub) => {
+                            const ruta = `/dashboard/${sub.toLowerCase()}`;
+                            const subActivo = location.pathname.startsWith(ruta);
+                            return (
+                              <li key={sub}>
+                                <Link
+                                  to={ruta}
+                                  className={`block py-1.5 pl-4 text-[13px] transition-colors border-l-2 -ml-px
+                                    ${subActivo
+                                      ? 'border-slate-900 text-slate-900 font-semibold'
+                                      : 'border-transparent text-slate-500 hover:text-slate-900 hover:border-slate-300'}`}
+                                >
+                                  {sub}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    )}
                   </li>
                 );
               })}
             </ul>
-          </nav>
-        </div>
-      </div>
-      {/* Footer info cuando está expandido */}
-      {!collapsed && (
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="bg-gradient-to-r from-blue-500/10 to-indigo-500/10 backdrop-blur-sm rounded-xl p-3 border border-blue-200/30">
-            <div className="text-xs text-slate-600 font-medium">
-              Rol: <span className="text-blue-600">{rol}</span>
-            </div>
           </div>
-        </div>
-      )}
+        ))}
+      </nav>
+
+      {/* Pie: usuario real y salida */}
+      <div className="shrink-0 border-t border-slate-200 p-3">
+        {!collapsed ? (
+          <div className="rounded-xl bg-slate-50 border border-slate-200 p-3">
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 shrink-0 rounded-lg bg-slate-900 text-white flex items-center justify-center text-xs font-bold">
+                {iniciales}
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs font-semibold text-slate-800">{nombreCompleto}</p>
+                <p className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                  <ShieldCheck size={10} />
+                  <span className="truncate">{formatTitle(rol || '—')}</span>
+                </p>
+              </div>
+            </div>
+            {vigenciaTexto() && (
+              <p className="mt-2 text-[10px] text-slate-400">{vigenciaTexto()}</p>
+            )}
+            <button
+              type="button"
+              onClick={logout}
+              className="mt-2.5 w-full flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white py-1.5 text-xs font-semibold text-slate-600 hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+            >
+              <LogOut size={13} /> Cerrar sesión
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={logout}
+            title="Cerrar sesión"
+            aria-label="Cerrar sesión"
+            className="w-full flex items-center justify-center rounded-xl py-2.5 text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-colors"
+          >
+            <LogOut size={18} />
+          </button>
+        )}
+      </div>
     </aside>
   );
 };

@@ -1,6 +1,7 @@
 // controllers/documentos-requeridos.ts
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
+import { describir } from "../../../utils/auditoria";
 
 /**
  * GET /api/documentos-requeridos
@@ -43,6 +44,7 @@ export const create = async (req: Request, res: Response) => {
         },
     });
 
+    describir(res, `Se creó el documento requerido "${nuevo.nombre}"`);
     return res.status(201).json({ message: "Documento requerido creado", data: nuevo });
 };
 
@@ -73,6 +75,7 @@ export const update = async (req: Request, res: Response) => {
         },
     });
 
+    describir(res, `Modificó el documento requerido "${updated.nombre}"`);
     return res.status(200).json(updated);
 };
 
@@ -96,5 +99,6 @@ export const toggleEstado = async (req: Request, res: Response) => {
         data: { activo: !documento.activo },
     });
 
+    describir(res, `${updated.activo ? 'Activó' : 'Desactivó'} el documento requerido "${updated.nombre}"`);
     return res.status(200).json(updated);
 };

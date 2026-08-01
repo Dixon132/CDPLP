@@ -1,23 +1,16 @@
 import { useForm } from 'react-hook-form';
-import { Button, TextField, Box, Typography, Container, MenuItem, Select, FormControl, InputLabel } from '@mui/material';
-import { createUsuario } from '../../../services/usuarios';
+import { Button, TextField, Box, Typography, Container } from '@mui/material';
 
-const CreateUser = ({ onSuccess }) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
-    const roles = [
-        { value: 'PRESIDENTE', label: 'PRESIDENTE' },
-        { value: 'VICEPRESIDENTE', label: 'VICEPRESIDENTE' },
-        { value: 'SECRETARIO_GENERAL', label: 'SECRETARIO_GENERAL' },
-        { value: 'VOCAL', label: 'VOCAL' },
-        { value: 'SECRETARIO', label: 'SECRETARIO' },
-        { value: 'TESORERO', label: 'TESORERO' }
-    ];
+/**
+ * Formulario de creación de usuario.
+ * No llama a la API: entrega los datos validados vía `onSubmitForm` para que el
+ * contenedor los confirme (ConfirmActionModal) antes de persistirlos.
+ */
+const CreateUser = ({ onSubmitForm }) => {
+    const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = (data) => {
-        const user = createUsuario(data)
-        onSuccess()
-        reset()
+        onSubmitForm(data);
     };
 
     return (

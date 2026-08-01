@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import prismaClient from "../../../utils/prismaClient"
+import { describir } from "../../../utils/auditoria"
 
 export const getRoles = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '', inactivos } = req.query
@@ -54,6 +55,7 @@ export const createRole = async (req: Request, res: Response) => {
     const role = await prismaClient.roles.create({
         data: { id_usuario, rol, fecha_inicio, fecha_fin }
     })
+    describir(res, `Asignó el rol ${rol} al usuario #${id_usuario}`)
     res.status(200).json(role)
 }
 export const updateRoleById = async (req: Request, res: Response) => {
@@ -68,6 +70,7 @@ export const updateRoleById = async (req: Request, res: Response) => {
             activo: estado === "ACTIVO" ? true : false
         }
     })
+    describir(res, `${estado === "ACTIVO" ? 'Activó' : 'Desactivó'} el rol ${rol.rol} (#${rol.id_rol})`)
     res.status(200).json(rol)
 }
 
@@ -88,6 +91,7 @@ export const updateRol = async (req: Request, res: Response) => {
             rol
         }
     })
+    describir(res, `Modificó el rol ${data.rol} (#${data.id_rol})`)
     res.status(200).json(data)
 }
 export const getRolById = async (req: Request, res: Response) => {

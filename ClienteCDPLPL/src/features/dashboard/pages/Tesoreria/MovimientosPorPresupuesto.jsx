@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Plus, Calendar, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon, ExternalLink, Eye } from "lucide-react";
+import { ArrowLeft, Wallet, TrendingUp, TrendingDown, Plus, Calendar, Clock, Activity, Filter, Search, BarChart3, PieChart, LineChart as LineChartIcon, ExternalLink, Eye } from "lucide-react";
 
 import {
     getPresupuestoById,
@@ -12,9 +12,24 @@ import {
 
 import { Button } from "../../components/Button";
 import Modal from "../../../../components/Modal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
+import Alerts from "../../components/Alerts";
+import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import MovimientoForm from "./components/MovimientoForm";
 import ModalDetallesMovimiento from "./components/ModalDetallesMovimiento";
+
+/**
+ * Fecha + hora en un único formato para toda la tabla.
+ * Antes se mezclaban `toLocaleString` (con hora) y `toLocaleDateString` (sin
+ * hora) según si la fila tenía `updatedAt`, y por eso unas mostraban la hora y
+ * otras no.
+ */
+const formatFechaHora = (valor) => {
+    if (!valor) return "—";
+    const d = new Date(valor);
+    if (Number.isNaN(d.getTime())) return "—";
+    return d.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' });
+};
 
 // Gráficos
 import LineChart from "./components/charts/LineChart";
@@ -52,11 +67,25 @@ export default function MovimientosPorPresupuesto() {
     const [fechaDesde, setFechaDesde] = useState("");
     const [fechaHasta, setFechaHasta] = useState("");
     const [sortOrder, setSortOrder] = useState("desc");
+    // "actividad" = última vez que se tocó (alta/edición/anulación) | "fecha" = fecha contable
+    const [sortBy, setSortBy] = useState("actividad");
 
     // Modales
     const [showModalCrearMovimiento, setShowModalCrearMovimiento] = useState(false);
     const [showDetallesModal, setShowDetallesModal] = useState(false);
     const [selectedMovimiento, setSelectedMovimiento] = useState(null);
+
+    // Doble confirmación para anular un movimiento
+    const [anularTarget, setAnularTarget] = useState(null);
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMsg, setAlertMsg] = useState("");
+
+    const showAlertFn = (type, msg) => {
+        setAlertType(type); setAlertMsg(msg); setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
 
     // 1. Cargar datos estáticos (Presupuesto, Analytics, Categorías)
     const fetchInitialData = async () => {
@@ -91,7 +120,8 @@ export default function MovimientosPorPresupuesto() {
                 fecha_desde: fechaDesde,
                 fecha_hasta: fechaHasta,
                 search: search,
-                sortOrder: sortOrder
+                sortOrder: sortOrder,
+                sortBy: sortBy
             });
             setMovimientos(res.data);
             setTotal(res.total);
@@ -110,7 +140,7 @@ export default function MovimientosPorPresupuesto() {
 
     useEffect(() => {
         fetchTableData();
-    }, [page, filtroTipo, filtroCategoria, filtroMetodo, filtroOrigen, filtroEstado, fechaDesde, fechaHasta, search, sortOrder, presupuestoId]);
+    }, [page, filtroTipo, filtroCategoria, filtroMetodo, filtroOrigen, filtroEstado, fechaDesde, fechaHasta, search, sortOrder, sortBy, presupuestoId]);
 
     // Handlers
     const handleSearch = (e) => {
@@ -143,24 +173,26 @@ export default function MovimientosPorPresupuesto() {
         fetchTableData();   // Refrescar tabla
     };
 
-    const handleAnularMovimiento = async (id_movimiento) => {
-        if (window.confirm("¿Estás seguro de que deseas anular este movimiento? Esta acción cambiará el estado a ANULADO.")) {
-            try {
-                await deleteMovimientoFinanciero(id_movimiento);
-                setShowDetallesModal(false);
-                setSelectedMovimiento(null);
-                fetchInitialData();
-                fetchTableData();
-            } catch (error) {
-                console.error("Error al anular el movimiento", error);
-                alert("Ocurrió un error al intentar anular el movimiento.");
-            }
+    const handleAnularMovimiento = async () => {
+        if (!anularTarget) return;
+        try {
+            await deleteMovimientoFinanciero(anularTarget);
+            setShowDetallesModal(false);
+            setSelectedMovimiento(null);
+            showAlertFn("success", "Movimiento anulado correctamente.");
+            fetchInitialData();
+            fetchTableData();
+        } catch (error) {
+            console.error("Error al anular el movimiento", error);
+            showAlertFn("error", "Ocurrió un error al intentar anular el movimiento.");
+        } finally {
+            setAnularTarget(null);
         }
     };
 
     if (loadingInitial || !presupuesto || !analytics) {
         return (
-            <div className="min-h-screen bg-slate-50/50 flex items-center justify-center relative overflow-hidden">
+            <div className="min-h-full bg-slate-50/50 flex items-center justify-center relative overflow-hidden">
                 <div className="relative z-10 bg-white/80 backdrop-blur-xl border border-slate-200 p-12 rounded-3xl shadow-sm">
                     <div className="flex flex-col items-center">
                         <div className="w-16 h-16 border-4 border-indigo-100 border-t-emerald-500 rounded-full animate-spin"></div>
@@ -183,7 +215,7 @@ export default function MovimientosPorPresupuesto() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50/50 p-6 space-y-6">
+        <div className="min-h-full bg-slate-50/50 p-6 space-y-6">
 
             {/* --- HEADER --- */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
@@ -399,11 +431,16 @@ export default function MovimientosPorPresupuesto() {
 
                             <select
                                 className="px-4 py-2 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none"
-                                value={sortOrder}
-                                onChange={e => { setSortOrder(e.target.value); setPage(1); }}
+                                value={`${sortBy}:${sortOrder}`}
+                                onChange={e => {
+                                    const [by, order] = e.target.value.split(":");
+                                    setSortBy(by); setSortOrder(order); setPage(1);
+                                }}
                             >
-                                <option value="desc">Últimos modificados</option>
-                                <option value="asc">Primeros modificados</option>
+                                <option value="actividad:desc">Última actividad (más reciente)</option>
+                                <option value="actividad:asc">Última actividad (más antigua)</option>
+                                <option value="fecha:desc">Fecha del movimiento (más reciente)</option>
+                                <option value="fecha:asc">Fecha del movimiento (más antigua)</option>
                             </select>
 
                             <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-3 py-1">
@@ -450,13 +487,14 @@ export default function MovimientosPorPresupuesto() {
                 </div>
 
                 {/* Tabla Paginada */}
-                <div className="relative">
+                <div className="relative p-2 sm:p-4">
                     {loadingTable && (
                         <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-10 flex items-center justify-center">
                             <div className="w-8 h-8 border-4 border-slate-200 border-t-emerald-500 rounded-full animate-spin"></div>
                         </div>
                     )}
-                    <Table
+                    <ResponsiveTable
+                        storageKey="movimientos-presupuesto"
                         columns={[
                             {
                                 label: "Tipo",
@@ -534,16 +572,33 @@ export default function MovimientosPorPresupuesto() {
                                 )
                             },
                             {
-                                label: "Fecha",
-                                key: "fecha",
+                                label: "Fecha del movimiento",
+                                key: "fecha_movimiento",
+                                render: (m) => (
+                                    <div className="flex items-center space-x-2 text-slate-600 text-xs font-medium">
+                                        <Calendar className="w-3 h-3 text-slate-400" />
+                                        <span>{formatFechaHora(m.fecha_movimiento)}</span>
+                                    </div>
+                                )
+                            },
+                            {
+                                label: "Última actividad",
+                                key: "updatedAt",
                                 render: (m) => {
-                                    const dateStr = m.updatedAt ? new Date(m.updatedAt).toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : (m.fecha_movimiento ? new Date(m.fecha_movimiento).toLocaleDateString('es-ES') : "-");
+                                    const ultima = m.updatedAt ?? m.createdAt ?? m.fecha_movimiento;
+                                    const editado = m.updatedAt && m.createdAt
+                                        && new Date(m.updatedAt).getTime() - new Date(m.createdAt).getTime() > 1000;
                                     return (
-                                        <div className="flex items-center space-x-2 text-slate-500 text-xs font-medium">
-                                            <Calendar className="w-3 h-3 text-slate-400" />
-                                            <span>{dateStr}</span>
+                                        <div className="flex flex-col gap-0.5 text-xs font-medium">
+                                            <div className="flex items-center space-x-2 text-slate-600">
+                                                <Clock className="w-3 h-3 text-slate-400" />
+                                                <span>{formatFechaHora(ultima)}</span>
+                                            </div>
+                                            <span className="text-[10px] text-slate-400 uppercase tracking-wider">
+                                                {m.estado === 'ANULADO' ? 'Anulado' : editado ? 'Modificado' : 'Creado'}
+                                            </span>
                                         </div>
-                                    )
+                                    );
                                 }
                             },
                             {
@@ -608,8 +663,22 @@ export default function MovimientosPorPresupuesto() {
                 isOpen={showDetallesModal}
                 onClose={() => { setShowDetallesModal(false); setSelectedMovimiento(null); }}
                 movimiento={selectedMovimiento}
-                onAnular={handleAnularMovimiento}
+                onAnular={(idMovimiento) => setAnularTarget(idMovimiento)}
             />
+
+            {/* ✅ Doble confirmación para anular el movimiento (2s + 4s) */}
+            <ConfirmDeleteModal
+                isOpen={!!anularTarget}
+                onClose={() => setAnularTarget(null)}
+                onConfirm={handleAnularMovimiento}
+                title="Anular Movimiento"
+                message="¿Confirmas que deseas anular este movimiento? Su estado pasará a ANULADO y se ajustará el presupuesto."
+                waitSeconds={4}
+                confirmLabel="Anular"
+                confirmColor="red"
+            />
+
+            <Alerts type={alertType} message={alertMsg} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 }

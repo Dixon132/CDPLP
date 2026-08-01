@@ -5,10 +5,11 @@ import { ChartJSNodeCanvas } from 'chartjs-node-canvas';
 import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
-import puppeteer from "puppeteer";
 import { Prisma } from "../../../../generated/prisma";
-import registrarAuditoria from "../../Auditorias/services";
-import { Acciones, Modulos } from "../../../types/auditoria";
+import { Modulos } from "../../../types/auditoria";
+import { emitirNotificacion } from "../../notificaciones/services";
+import { describir } from "../../../utils/auditoria";
+import { esc, generarInformePdf, enviarInformePdf, renderInformeHTML, renderTabla, renderBarraProgreso } from "../../../utils/informes";
 
 
 const chartCanvas = new ChartJSNodeCanvas({ width: 600, height: 300 });
@@ -33,9 +34,18 @@ export const createColegiado = async (req: Request, res: Response) => {
         pin_acceso: pinPlano
       }
     })
-    // @ts-ignore
-    await registrarAuditoria(req.user?.id_usuario, Acciones.CREO, Modulos.COLEGIADOS, `Se creo el colegiado ${colegiado.nombre} ${colegiado.apellido}`)
-    // ⚠️ pin_temporal solo se devuelve ESTA vez — guárdalo y comunícaselo al colegiado
+    describir(res, `Se creó el colegiado ${colegiado.nombre} ${colegiado.apellido}`)
+    await emitirNotificacion({
+      modulo: Modulos.COLEGIADOS,
+      tipo: 'exito',
+      titulo: 'Nuevo colegiado registrado',
+      descripcion: `${colegiado.nombre} ${colegiado.apellido} fue dado de alta.`,
+      enlace: '/dashboard/colegiados',
+      idUsuario: req.user!.id_usuario,
+    })
+    // pin_temporal se devuelve para mostrarlo al registrar. El PIN queda además
+    // consultable desde el listado de colegiados (columna "PIN Acceso"), que es
+    // una ruta autenticada.
     res.status(201).json({ message: 'El colegiado fue registrado exitosamente', colegiado, pin_temporal: pinPlano })
   } catch {
     throw new BadRequestException('Hubo un error al crear el registro del colegiado', ErrorCodes.INTERNAL_EXCEPTION)
@@ -94,6 +104,7 @@ export const updateEstadoColegiadoById = async (req: Request, res: Response) => 
       estado
     }
   })
+  describir(res, `${estado === 'ACTIVO' ? 'Activó' : 'Desactivó'} al colegiado ${colegiado.nombre} ${colegiado.apellido}`)
   res.status(200).json(colegiado)
 }
 
@@ -131,6 +142,7 @@ export const updateColegiado = async (req: Request, res: Response) => {
       },
     });
 
+    describir(res, `Modificó los datos del colegiado ${colegiadoActualizado.nombre} ${colegiadoActualizado.apellido}`)
     res.status(200).json(colegiadoActualizado);
   } catch (error) {
     console.error("Error al actualizar el colegiado:", error);
@@ -186,84 +198,66 @@ export const getInvitadosSimple = async (req: Request, res: Response) => {
 
 export const getColegiadosReportSummary = async (req: Request, res: Response) => {
   try {
-    // Contamos cuántos colegiados están ACTIVO e INACTIVO
-    const totalActivos = await prismaClient.colegiados.count({
-      where: { estado: "ACTIVO" },
-    });
-    const totalInactivos = await prismaClient.colegiados.count({
-      where: { estado: "INACTIVO" },
+    const [totalActivos, totalInactivos, porEspecialidad] = await Promise.all([
+      prismaClient.colegiados.count({ where: { estado: "ACTIVO" } }),
+      prismaClient.colegiados.count({ where: { estado: "INACTIVO" } }),
+      prismaClient.colegiados.groupBy({
+        by: ["especialidades"],
+        _count: { _all: true },
+        orderBy: { _count: { especialidades: "desc" } },
+      }),
+    ]);
+
+    const totalColegiados = totalActivos + totalInactivos;
+    const pctActivos = totalColegiados > 0 ? (totalActivos / totalColegiados) * 100 : 0;
+
+    const kpis = [
+      { label: "Total Colegiados", value: totalColegiados, accent: "violeta" as const },
+      { label: "Activos", value: totalActivos, accent: "violeta" as const },
+      { label: "Inactivos", value: totalInactivos, accent: "rosa" as const },
+    ];
+
+    const filasEstado = [
+      `<tr><td>Activos</td><td>${totalActivos}</td><td>${renderBarraProgreso(pctActivos)}</td></tr>`,
+      `<tr><td>Inactivos</td><td>${totalInactivos}</td><td>${renderBarraProgreso(100 - pctActivos)}</td></tr>`,
+    ];
+
+    const filasEspecialidad = porEspecialidad.map((e) => {
+      const nombre = e.especialidades?.trim() ? e.especialidades : "Sin especialidad registrada";
+      const cantidad = e._count._all;
+      const pct = totalColegiados > 0 ? (cantidad / totalColegiados) * 100 : 0;
+      return `<tr><td>${esc(nombre)}</td><td>${cantidad}</td><td>${renderBarraProgreso(pct)}</td></tr>`;
     });
 
-    // Generamos un HTML sencillo para el PDF
-    const html = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            .resumen { margin-top: 40px; font-size: 16px; }
-            .resumen span { font-weight: bold; }
-            table { width: 50%; margin: 20px auto; border-collapse: collapse; }
-            th, td { border: 1px solid #999; padding: 8px; text-align: center; }
-            th { background-color: #eee; }
-          </style>
-        </head>
-        <body>
-          <h1>Resumen de Colegiados</h1>
-          <div class="resumen">
-            <p>Total Colegiados Activos: <span>${totalActivos}</span></p>
-            <p>Total Colegiados Inactivos: <span>${totalInactivos}</span></p>
-            <p>Generado: ${new Date().toLocaleString()}</p>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Estado</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>ACTIVOS</td>
-                <td>${totalActivos}</td>
-              </tr>
-              <tr>
-                <td>INACTIVOS</td>
-                <td>${totalInactivos}</td>
-              </tr>
-            </tbody>
-          </table>
-        </body>
-      </html>
+    const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Estado de la Membresía</h2>
+        ${renderTabla(
+          [{ label: "Estado" }, { label: "Total", align: "right" }, { label: "% del Total" }],
+          filasEstado
+        )}
+      </section>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Distribución por Especialidad</h2>
+        ${renderTabla(
+          [{ label: "Especialidad" }, { label: "Colegiados", align: "right" }, { label: "% del Total" }],
+          filasEspecialidad
+        )}
+      </section>
     `;
 
-    // Lanzamos Puppeteer en modo headless
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
-
-    // Generar PDF
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+    const html = renderInformeHTML({
+      titulo: "Informe Estadístico de Colegiados",
+      subtitulo: "Resumen de membresía por estado y especialidad",
+      kpis,
+      bodyHtml,
     });
-    await browser.close();
 
-    // Validar buffer
-    if (!pdfBuffer || pdfBuffer.length === 0) {
-      return res.status(500).send("Error generando PDF de resumen.");
-    }
-
-    // Enviamos el PDF como descarga
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      `attachment; filename="reporte_resumen_colegiados.pdf"`
-    );
-    res.send(pdfBuffer);
+    const pdfBuffer = await generarInformePdf(html);
+    return enviarInformePdf(res, pdfBuffer, "informe_resumen_colegiados.pdf");
   } catch (error) {
     console.error("Error en getColegiadosReportSummary:", error);
-    return res.status(500).send("Error al generar reporte resumen.");
+    return res.status(500).send("Error al generar informe resumen.");
   }
 };
 
@@ -359,193 +353,84 @@ export const getColegiadoReportDetail = async (req: Request, res: Response) => {
       estado_actividad: s.actividades_sociales?.estado ?? "",
     }));
 
-    // 3) Armar HTML del detalle
-    const html = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1, h2, h3 { color: #333; margin-bottom: 5px; }
-            .seccion { margin-top: 30px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            th, td { border: 1px solid #ccc; padding: 6px; font-size: 12px; }
-            th { background-color: #eee; text-align: left; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-            .datos-basicos p { margin: 4px 0; }
-          </style>
-        </head>
-        <body>
-          <h1>Reporte Individual de Colegiado</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
+    const totalPagado = pagos
+      .filter((p) => p.estado_pago === "REALIZADO")
+      .reduce((acc, p) => acc + Number(p.monto), 0);
 
-          <div class="seccion datos-basicos">
-            <h2>Datos Básicos</h2>
-            <p><strong>Nombre Completo:</strong> ${nombreCompleto}</p>
-            <p><strong>C.I.:</strong> ${ci}</p>
-            <p><strong>Correo:</strong> ${correo}</p>
-            <p><strong>Teléfono:</strong> ${telefono}</p>
-            <p><strong>Especialidades:</strong> ${especialidades}</p>
-            <p><strong>Estado:</strong> ${estado}</p>
-            <p><strong>Fecha Inscripción:</strong> ${fechaInscr}</p>
-            <p><strong>Fecha Renovación:</strong> ${fechaRenov}</p>
-          </div>
+    const kpis = [
+      { label: "Documentos", value: docs.length, accent: "violeta" as const },
+      { label: "Pagos Registrados", value: pagos.length, accent: "violeta" as const },
+      { label: "Total Pagado - Realizado (Bs.)", value: totalPagado.toFixed(2), accent: "rosa" as const },
+      { label: "Actividades (Inst. + Soc.)", value: asistenciasInst.length + sesionesSociales.length, accent: "neutro" as const },
+    ];
 
-          <div class="seccion">
-            <h2>Documentos</h2>
-            ${docs.length === 0
-        ? "<p>No tiene documentos registrados.</p>"
-        : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Tipo Documento</th>
-                    <th>Fecha Entrega</th>
-                    <th>Fecha Vencimiento</th>
-                    <th>Estado</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${docs
-          .map(
-            (d) => `
-                    <tr>
-                      <td>${d.tipo}</td>
-                      <td>${d.fecha_entrega}</td>
-                      <td>${d.fecha_vencimiento}</td>
-                      <td>${d.estado}</td>
-                    </tr>
-                  `
-          )
-          .join("")}
-                </tbody>
-              </table>
-            `
-      }
-          </div>
+    const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Datos Básicos</h2>
+        <p><strong>Nombre Completo:</strong> ${esc(nombreCompleto)}</p>
+        <p><strong>C.I.:</strong> ${esc(ci)}</p>
+        <p><strong>Correo:</strong> ${esc(correo)}</p>
+        <p><strong>Teléfono:</strong> ${esc(telefono)}</p>
+        <p><strong>Especialidades:</strong> ${esc(especialidades)}</p>
+        <p><strong>Estado:</strong> ${esc(estado)}</p>
+        <p><strong>Fecha Inscripción:</strong> ${esc(fechaInscr)}</p>
+        <p><strong>Fecha Renovación:</strong> ${esc(fechaRenov)}</p>
+      </section>
 
-          <div class="seccion">
-            <h2>Pagos</h2>
-            ${pagos.length === 0
-        ? "<p>No se han registrado pagos.</p>"
-        : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fecha Pago</th>
-                    <th>Monto (Bs.)</th>
-                    <th>Concepto</th>
-                    <th>Estado Pago</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${pagos
-          .map(
-            (p) => `
-                    <tr>
-                      <td>${p.fecha_pago}</td>
-                      <td>${p.monto.toString()}</td>
-                      <td>${p.concepto}</td>
-                      <td>${p.estado_pago}</td>
-                    </tr>
-                  `
-          )
-          .join("")}
-                </tbody>
-              </table>
-            `
-      }
-          </div>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Documentos</h2>
+        ${renderTabla(
+          [{ label: "Tipo Documento" }, { label: "Fecha Entrega" }, { label: "Fecha Vencimiento" }, { label: "Estado" }],
+          docs.map(
+            (d) => `<tr><td>${esc(d.tipo)}</td><td>${esc(d.fecha_entrega)}</td><td>${esc(d.fecha_vencimiento)}</td><td>${esc(d.estado)}</td></tr>`
+          ),
+          "No tiene documentos registrados."
+        )}
+      </section>
 
-          <div class="seccion">
-            <h2>Asistencias a Actividades Institucionales</h2>
-            ${asistenciasInst.length === 0
-        ? "<p>No ha asistido a actividades institucionales.</p>"
-        : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Actividad Institucional</th>
-                    <th>Fecha Programada</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${asistenciasInst
-          .map(
-            (a) => `
-                    <tr>
-                      <td>${a.nombre_actividad}</td>
-                      <td>${a.fecha_actividad}</td>
-                    </tr>
-                  `
-          )
-          .join("")}
-                </tbody>
-              </table>
-            `
-      }
-          </div>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Pagos</h2>
+        ${renderTabla(
+          [{ label: "Fecha Pago" }, { label: "Monto (Bs.)", align: "right" }, { label: "Concepto" }, { label: "Estado Pago" }],
+          pagos.map(
+            (p) => `<tr><td>${esc(p.fecha_pago)}</td><td style="text-align:right">${esc(p.monto.toString())}</td><td>${esc(p.concepto)}</td><td>${esc(p.estado_pago)}</td></tr>`
+          ),
+          "No se han registrado pagos."
+        )}
+      </section>
 
-          <div class="seccion">
-            <h2>Asignaciones a Actividades Sociales</h2>
-            ${sesionesSociales.length === 0
-        ? "<p>No ha sido asignado a actividades sociales.</p>"
-        : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Actividad Social</th>
-                    <th>Fecha Inicio</th>
-                    <th>Fecha Fin</th>
-                    <th>Estado Actividad</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${sesionesSociales
-          .map(
-            (s) => `
-                    <tr>
-                      <td>${s.nombre_actividad}</td>
-                      <td>${s.fecha_inicio}</td>
-                      <td>${s.fecha_fin}</td>
-                      <td>${s.estado_actividad}</td>
-                    </tr>
-                  `
-          )
-          .join("")}
-                </tbody>
-              </table>
-            `
-      }
-          </div>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Asistencias a Actividades Institucionales</h2>
+        ${renderTabla(
+          [{ label: "Actividad Institucional" }, { label: "Fecha Programada" }],
+          asistenciasInst.map((a) => `<tr><td>${esc(a.nombre_actividad)}</td><td>${esc(a.fecha_actividad)}</td></tr>`),
+          "No ha asistido a actividades institucionales."
+        )}
+      </section>
 
-          <!-- Si quieres incluir correspondencia aquí, agregar otra sección similar -->
-
-        </body>
-      </html>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Asignaciones a Actividades Sociales</h2>
+        ${renderTabla(
+          [{ label: "Actividad Social" }, { label: "Fecha Inicio" }, { label: "Fecha Fin" }, { label: "Estado Actividad" }],
+          sesionesSociales.map(
+            (s) => `<tr><td>${esc(s.nombre_actividad)}</td><td>${esc(s.fecha_inicio)}</td><td>${esc(s.fecha_fin)}</td><td>${esc(s.estado_actividad)}</td></tr>`
+          ),
+          "No ha sido asignado a actividades sociales."
+        )}
+      </section>
     `;
 
-    // 4) Generar PDF con Puppeteer
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-    await page.setContent(html, { waitUntil: "networkidle0" });
-
-    const pdfBuffer = await page.pdf({
-      format: "A4",
-      printBackground: true,
+    const html = renderInformeHTML({
+      titulo: "Informe Individual de Colegiado",
+      subtitulo: nombreCompleto,
+      kpis,
+      bodyHtml,
     });
-    await browser.close();
 
-    if (!pdfBuffer || pdfBuffer.length === 0) {
-      return res.status(500).send("Error generando PDF de detalle.");
-    }
-
-    // 5) Enviar como descarga
-    const filename = `reporte_colegiado_${id}.pdf`;
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-    res.send(pdfBuffer);
+    const pdfBuffer = await generarInformePdf(html);
+    return enviarInformePdf(res, pdfBuffer, `informe_colegiado_${id}.pdf`);
   } catch (error) {
     console.error("Error en getColegiadoReportDetail:", error);
-    return res.status(500).send("Error al generar reporte individual.");
+    return res.status(500).send("Error al generar informe individual.");
   }
 };

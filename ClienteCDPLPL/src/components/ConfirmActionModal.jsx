@@ -1,16 +1,30 @@
 import React, { useState, useEffect } from "react";
-import { CheckCircle, Save, Plus } from "lucide-react";
+import { Save, Plus } from "lucide-react";
 
 /**
- * Confirmación simple para CREAR y MODIFICAR.
- * Espera 2s antes de habilitar el botón de confirmar.
- * variant: "create" (verde) | "edit" (azul)
+ * Confirmación simple para acciones no destructivas (crear, modificar, aprobar).
+ * Espera `waitSeconds` antes de habilitar el botón de confirmar.
  *
  * CÓMO USAR CORRECTAMENTE:
- *   - Abre este modal ANTES de abrir el form.
- *   - Al confirmar, entonces abre el modal del form.
- *   - Al cancelar, no pasa nada.
+ *   - El formulario NO debe llamar a la API. Debe entregar sus datos hacia arriba.
+ *   - Este modal se abre con esos datos y es su `onConfirm` quien ejecuta la
+ *     petición. Así "Cancelar" realmente cancela la operación.
+ *
+ * Props:
+ *   variant      — "create" (emerald + Plus) | "edit" (blue + Save). Define los
+ *                  valores por defecto de color, icono y label.
+ *   confirmLabel — texto del botón de confirmación (default según variant)
+ *   confirmColor — "emerald" | "blue" | "amber" | "red" (default según variant)
+ *   confirmIcon  — ReactNode (default según variant)
  */
+
+const colorMap = {
+    emerald: { btn: "bg-emerald-500 hover:bg-emerald-600", ring: "bg-emerald-100 text-emerald-600" },
+    blue: { btn: "bg-blue-500 hover:bg-blue-600", ring: "bg-blue-100 text-blue-600" },
+    amber: { btn: "bg-amber-500 hover:bg-amber-600", ring: "bg-amber-100 text-amber-600" },
+    red: { btn: "bg-red-600 hover:bg-red-700", ring: "bg-red-100 text-red-600" },
+};
+
 export default function ConfirmActionModal({
     isOpen,
     onClose,
@@ -19,6 +33,9 @@ export default function ConfirmActionModal({
     message,
     variant = "edit",
     waitSeconds = 2,
+    confirmLabel,
+    confirmColor,
+    confirmIcon,
 }) {
     const [secondsLeft, setSecondsLeft] = useState(waitSeconds);
     const [isProcessing, setIsProcessing] = useState(false);
@@ -47,21 +64,25 @@ export default function ConfirmActionModal({
     if (!isOpen) return null;
 
     const isCreate = variant === "create";
-    const colorBg = isCreate ? "bg-emerald-100 text-emerald-600" : "bg-blue-100 text-blue-600";
-    const colorBtn = isCreate ? "bg-emerald-500 hover:bg-emerald-600" : "bg-blue-500 hover:bg-blue-600";
-    const Icon = isCreate ? Plus : Save;
+    const DefaultIcon = isCreate ? Plus : Save;
+
+    const resolvedColor = colorMap[confirmColor] || (isCreate ? colorMap.emerald : colorMap.blue);
+    const resolvedIcon = confirmIcon || <DefaultIcon className="w-4 h-4" />;
+    const resolvedLabel = confirmLabel || (isCreate ? "Crear" : "Guardar cambios");
+
     const defaultTitle = isCreate ? "Confirmar creación" : "Confirmar modificación";
     const defaultMsg = isCreate
         ? "¿Confirmas que deseas guardar el nuevo registro?"
         : "¿Confirmas que deseas guardar los cambios?";
-    const btnLabel = isCreate ? "Crear" : "Guardar cambios";
 
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[60] p-4">
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
                 <div className="flex flex-col items-center text-center space-y-4">
-                    <div className={`w-16 h-16 rounded-full flex items-center justify-center ${colorBg}`}>
-                        <Icon className="w-8 h-8" />
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center ${resolvedColor.ring}`}>
+                        {confirmIcon
+                            ? React.cloneElement(resolvedIcon, { className: "w-8 h-8" })
+                            : <DefaultIcon className="w-8 h-8" />}
                     </div>
 
                     <h4 className="text-lg font-bold text-slate-800">
@@ -86,7 +107,7 @@ export default function ConfirmActionModal({
                             className={`flex-1 flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-bold text-white transition-all
                                 ${secondsLeft > 0 || isProcessing
                                     ? "bg-slate-200 text-slate-500 cursor-not-allowed"
-                                    : `${colorBtn} shadow-md`
+                                    : `${resolvedColor.btn} shadow-md`
                                 }`}
                         >
                             {isProcessing ? (
@@ -95,9 +116,9 @@ export default function ConfirmActionModal({
                                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
                             ) : (
-                                <Icon className="w-4 h-4" />
+                                resolvedIcon
                             )}
-                            {secondsLeft > 0 ? `Espera ${secondsLeft}s` : isProcessing ? "Procesando..." : btnLabel}
+                            {secondsLeft > 0 ? `Espera ${secondsLeft}s` : isProcessing ? "Procesando..." : resolvedLabel}
                         </button>
                     </div>
                 </div>

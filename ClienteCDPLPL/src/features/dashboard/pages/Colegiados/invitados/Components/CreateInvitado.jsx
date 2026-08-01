@@ -9,26 +9,20 @@ import {
     Typography,
     Stack
 } from "@mui/material";
-import { createInvitado } from "../../../../services/invitados";
-
-const CreateInvitado = ({ onSuccess, onClose }) => {
+/**
+ * Formulario de registro de invitado.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo.
+ */
+const CreateInvitado = ({ onSubmitForm, onClose }) => {
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors, isSubmitting },
     } = useForm();
 
-    const onSubmit = async (data) => {
-        try {
-            const response = await createInvitado(data);
-            if (onSuccess) onSuccess();
-            reset();
-            if (onClose) onClose();
-        } catch (err) {
-            console.error(err);
-            alert("Error al crear el invitado");
-        }
+    const onSubmit = (data) => {
+        onSubmitForm(data);
     };
 
     return (

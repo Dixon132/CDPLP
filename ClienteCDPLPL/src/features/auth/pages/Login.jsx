@@ -4,6 +4,7 @@ import { AccesoForm } from "../components/AccesoForm";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "react-router-dom";
 import sendLogin from "../services/sendLogin";
+import { motion } from "framer-motion";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -12,7 +13,12 @@ export default function Login() {
 
     if (!showDashboardLogin) {
         return (
-            <div className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]">
+            <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]"
+            >
                 <AccesoForm />
                 
                 <div className="mt-8 pt-6 border-t border-gray-100 w-full max-w-sm flex flex-col items-center gap-4">
@@ -27,12 +33,17 @@ export default function Login() {
                         &larr; Volver al Inicio
                     </button>
                 </div>
-            </div>
+            </motion.div>
         );
     }
 
     return (
-        <div className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]">
+        <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full flex flex-col justify-center items-center p-8 md:p-12 relative z-10 bg-white min-h-[400px]"
+        >
             <div className="w-full max-w-sm mb-4">
                 <button 
                     onClick={() => setShowDashboardLogin(false)}
@@ -43,6 +54,6 @@ export default function Login() {
             </div>
             
             <LoginForm hook={hook} onSubmit={hook.onSubmit} />
-        </div>
+        </motion.div>
     );
 }

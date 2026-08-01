@@ -24,3 +24,13 @@ export const getUserById = async(id)=>{
     return res.data
 }
 
+/**
+ * Usuario de la sesión actual (nombre, correo, teléfono...).
+ * El JWT solo lleva `userId` y el rol, por eso hace falta este viaje.
+ * OJO: la ruta es POST, no GET.
+ */
+export const getMe = async()=>{
+    const res = await axios.post('/api/usuarios/auth/me')
+    return res.data
+}
+

@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem, Typography } from "@mui/material";
-import { getPasanteById, modificarPasante } from "../../../../services/pasantes";
+import { getPasanteById } from "../../../../services/pasantes";
 import InstitucionesSelect from "../../../../components/InstitucionesSelect";
 
-const ModificarPasante = ({ id, onClose, onSuccess }) => {
+/**
+ * Formulario de modificación de pasante.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo.
+ */
+const ModificarPasante = ({ id, onClose, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -39,18 +44,12 @@ const ModificarPasante = ({ id, onClose, onSuccess }) => {
         if (id) fetchData();
     }, [id, reset]);
 
-    // Enviar cambios
-    const onSubmit = async (formData) => {
-        try {
-            await modificarPasante(id, {
-                ...formData,
-                institucion: institucionSeleccionada,
-            });
-            if (onSuccess) onSuccess();
-            else if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al modificar el pasante:", error);
-        }
+    // Entregar cambios al contenedor para su confirmación
+    const onSubmit = (formData) => {
+        onSubmitForm({
+            ...formData,
+            institucion: institucionSeleccionada,
+        });
     };
 
     return (

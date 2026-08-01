@@ -2,9 +2,11 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { registrarMovimientoPagoColegiatura, registrarAnulacionPago } from "../../financiero/services/movimiento";
 import { Origen } from "../../../types/movimientos";
-import registrarAuditoria from "../../Auditorias/services";
-import { Acciones, Modulos } from "../../../types/auditoria";
+import { Modulos } from "../../../types/auditoria";
+import { describir } from "../../../utils/auditoria";
 import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
+import { crearPagoSchema } from "../schemas/pagos";
+import { emitirNotificacion } from "../../notificaciones/services";
 
 const ESTADOS_PAGO_VALIDOS = ["REALIZADO", "ANULADO"] as const;
 type EstadoPago = typeof ESTADOS_PAGO_VALIDOS[number];
@@ -39,12 +41,18 @@ export const getPagos = async (req: Request, res: Response) => {
 
 export const createPago = async (req: Request, res: Response) => {
     const id = req.params.id
-    const {
-        concepto,
-        fecha_pago,
-        monto,
-        metodo_pago
-    } = req.body
+
+    // Validación explícita: la petición es multipart, así que no pasa por
+    // `validateBody`. Sin esto se aceptaban montos negativos o cero, que
+    // entraban en tesorería como un INGRESO que restaba del presupuesto.
+    const parsed = crearPagoSchema.safeParse(req.body)
+    if (!parsed.success) {
+        return res.status(400).json({
+            error: 'Datos del pago inválidos',
+            detalles: parsed.error.issues.map(i => ({ campo: i.path.join('.'), mensaje: i.message }))
+        })
+    }
+    const { concepto, fecha_pago, monto, metodo_pago } = parsed.data
 
     const col = await prismaClient.colegiados.findFirstOrThrow({
         where: { id_colegiado: +id },
@@ -92,7 +100,7 @@ export const createPago = async (req: Request, res: Response) => {
                 data: {
                     id_colegiado: +id,
                     concepto,
-                    fecha_pago: new Date(fecha_pago),
+                    fecha_pago,
                     monto,
                     metodo_pago,
                     comprobante: rutaComprobante
@@ -105,7 +113,7 @@ export const createPago = async (req: Request, res: Response) => {
                 Origen.COLEGIATURA, 
                 `Pago de colegiatura de ${col.nombre} ${col.apellido}`, 
                 activePresupuestoId, 
-                Number(req.user), 
+                req.user!.id_usuario, 
                 metodo_pago ?? undefined, 
                 rutaComprobante ?? undefined, 
                 tx
@@ -114,7 +122,15 @@ export const createPago = async (req: Request, res: Response) => {
             return pago;
         });
 
-        await registrarAuditoria(req.user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro el pago con monto de: ${monto}bs de el colegiado ${col.nombre} ${col.apellido}`)
+        describir(res, `Se registró el pago de ${monto}Bs. de el colegiado ${col.nombre} ${col.apellido}`)
+        await emitirNotificacion({
+            modulo: Modulos.FINANCIERO,
+            tipo: 'exito',
+            titulo: 'Pago de colegiado registrado',
+            descripcion: `${col.nombre} ${col.apellido} · Bs. ${monto}`,
+            enlace: `/dashboard/colegiados/pagos/${id}`,
+            idUsuario: req.user!.id_usuario,
+        })
         res.status(200).json(response)
     } catch (error) {
         if (rutaComprobante) {
@@ -150,14 +166,10 @@ export const updatePago = async (req: Request, res: Response) => {
         const updatedPago = await prismaClient.$transaction(async (tx) => {
             let updateData: any = { estado_pago };
 
-            // Si se anula, registrar EGRESO de reversión en tesorería
+            // Si se anula, propagar la anulación a tesorería
             if (estado_pago === "ANULADO") {
-                await registrarAnulacionPago(+id, Number(pagoActual.monto), Number(req.user), tx);
-                
-                if (pagoActual.comprobante) {
-                    await eliminarArchivo(pagoActual.comprobante).catch(e => console.error("Error eliminando comprobante de S3:", e));
-                    updateData.comprobante = null;
-                }
+                await registrarAnulacionPago(+id, tx);
+                if (pagoActual.comprobante) updateData.comprobante = null;
             }
 
             const pagoUpdate = await tx.pagos_colegiados.update({
@@ -168,14 +180,15 @@ export const updatePago = async (req: Request, res: Response) => {
             return pagoUpdate;
         });
 
+        // El archivo se borra ya confirmada la transacción: dentro de ella, un
+        // fallo posterior revertiría la BD pero el comprobante ya estaría perdido.
+        if (estado_pago === "ANULADO" && pagoActual.comprobante) {
+            await eliminarArchivo(pagoActual.comprobante).catch(e => console.error("Error eliminando comprobante de S3:", e));
+        }
+
         if (estado_pago === "ANULADO") {
             const nombre = `${pagoActual.colegiados?.nombre || ''} ${pagoActual.colegiados?.apellido || ''}`.trim();
-            await registrarAuditoria(
-                req.user,
-                Acciones.MODIFICO,
-                Modulos.FINANCIERO,
-                `Se anuló el pago de ${nombre} por monto de ${pagoActual.monto}Bs — se generó reversión en tesorería`
-            );
+            describir(res, `Anuló el pago de ${nombre} por monto de ${pagoActual.monto}Bs — se generó reversión en tesorería`);
         }
 
         res.status(200).json(updatedPago);

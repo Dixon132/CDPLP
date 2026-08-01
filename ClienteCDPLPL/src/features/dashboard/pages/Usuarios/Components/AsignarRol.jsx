@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem } from "@mui/material";
-import { getRolById, actualizarRol } from "../../../services/roles";
+import { getRolById } from "../../../services/roles";
 
 const roles = [
     "SECRETARIO_GENERAL",
@@ -13,7 +13,12 @@ const roles = [
     "NO_DEFINIDO",
 ];
 
-const AsignarRol = ({ id, onClose, onSuccess }) => {
+/**
+ * Formulario de asignación de rol.
+ * No llama a la API: entrega los datos validados vía `onSubmitForm` para que el
+ * contenedor los confirme (ConfirmActionModal) antes de persistirlos.
+ */
+const AsignarRol = ({ id, onClose, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -47,15 +52,9 @@ const AsignarRol = ({ id, onClose, onSuccess }) => {
         if (id) fetchRol();
     }, [id, reset, setValue]);
 
-    // ✅ Enviar cambios
-    const onSubmit = async (formData) => {
-        try {
-            await actualizarRol(id, formData);
-            if (onSuccess) onSuccess();
-            else if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al actualizar el rol:", error);
-        }
+    // ✅ Entregar cambios al contenedor para su confirmación
+    const onSubmit = (formData) => {
+        onSubmitForm(formData);
     };
 
     return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 
@@ -53,7 +53,7 @@ const Memorias = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
+        <div className="space-y-6 p-6 min-h-full bg-slate-50/50">
             <Header
                 title="Memorias Anuales y Balances"
                 icon={<BookMarked className="w-8 h-8" />}
@@ -66,8 +66,9 @@ const Memorias = () => {
                 }]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200">
-                <Table
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="memorias"
                     columns={[
                         {
                             label: "Título", key: "titulo", render: (m) => (

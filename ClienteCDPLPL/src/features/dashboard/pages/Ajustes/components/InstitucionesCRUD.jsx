@@ -8,7 +8,7 @@ import {
 import Modal from "../../../../../components/Modal";
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
-import Table from "../../../components/Table";
+import ResponsiveTable from "../../../components/ResponsiveTable";
 import Alerts from "../../../components/Alerts";
 import {
     Building2,
@@ -213,13 +213,14 @@ const InstitucionesCRUD = () => {
             </div>
 
             {/* Tabla */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div>
                 {loadingData ? (
                     <div className="flex items-center justify-center py-16 text-slate-400 text-sm font-medium">
                         Cargando instituciones…
                     </div>
                 ) : (
-                    <Table
+                    <ResponsiveTable
+                        storageKey="instituciones"
                         columns={[
                             {
                                 label: "Nombre",

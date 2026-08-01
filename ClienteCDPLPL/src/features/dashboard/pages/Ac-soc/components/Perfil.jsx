@@ -26,6 +26,11 @@ import {
 import Alerts from "../../../components/Alerts";
 import PinDisplay from "../../../../../components/PinDisplay";
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
+import {
+    getAsignacionById,
+    updateEstadoAsignacion,
+    resetHorasAsignacion,
+} from "../../../services/ac-sociales";
 
 // ──────────────────────────────────────────────
 // Circular progress ring
@@ -161,37 +166,29 @@ export const Perfil = () => {
 
     const handleToggleEstado = async (nuevoEstado) => {
         try {
-            const res = await fetch(`/api/ac-sociales/ac-social/asignacion/${id}/estado`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ estado: nuevoEstado })
-            });
-            if (!res.ok) throw new Error("Error al cambiar el estado de la participación");
+            await updateEstadoAsignacion(id, nuevoEstado);
             showAlert("success", `Participación ${nuevoEstado === 'ACTIVO' ? 'activada' : 'desactivada'} correctamente.`);
             setConfirmDeactivate(false);
             // Recargar datos en lugar de volver atrás para que vea el cambio
             setTimeout(() => {
                 fetchData();
             }, 1500);
-        } catch (err) {
-            showAlert("error", err.message);
+        } catch {
+            showAlert("error", "Error al cambiar el estado de la participación");
             setConfirmDeactivate(false);
         }
     };
 
     const handleResetHoras = async () => {
         try {
-            const res = await fetch(`/api/ac-sociales/ac-social/asignacion/${id}/reset-horas`, {
-                method: "PATCH"
-            });
-            if (!res.ok) throw new Error("Error al reiniciar las horas");
+            await resetHorasAsignacion(id);
             showAlert("success", "Las horas han sido reiniciadas a 0.");
             setConfirmReset(false);
             setTimeout(() => {
                 fetchData();
             }, 1500);
-        } catch (err) {
-            showAlert("error", err.message);
+        } catch {
+            showAlert("error", "Error al reiniciar las horas");
             setConfirmReset(false);
         }
     };
@@ -199,8 +196,7 @@ export const Perfil = () => {
     // ── fetch principal ──────────────────────
     const fetchData = () => {
         setLoading(true);
-        fetch(`/api/ac-sociales/ac-social/asignacion/${id}`)
-            .then((r) => r.json())
+        getAsignacionById(id)
             .then((d) => {
                 setData(d);
                 
@@ -222,8 +218,10 @@ export const Perfil = () => {
                 setAsistencias(asistenciaReal);
                 setLoading(false);
             })
-            .catch(() => {
-                setError("No se pudo cargar el perfil del asignado.");
+            .catch((err) => {
+                setError(err?.response?.status === 401
+                    ? "Tu sesión no tiene acceso a este perfil."
+                    : "No se pudo cargar el perfil del asignado.");
                 setLoading(false);
             });
     };
@@ -234,14 +232,14 @@ export const Perfil = () => {
 
     if (loading)
         return (
-            <div className="flex items-center justify-center min-h-screen bg-slate-50/50">
+            <div className="flex items-center justify-center min-h-full bg-slate-50/50">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-teal-500" />
             </div>
         );
 
     if (error)
         return (
-            <div className="flex items-center justify-center min-h-screen bg-slate-50/50">
+            <div className="flex items-center justify-center min-h-full bg-slate-50/50">
                 <p className="text-rose-500 text-lg bg-white p-6 rounded-2xl shadow-sm border border-rose-100">{error}</p>
             </div>
         );
@@ -272,7 +270,7 @@ export const Perfil = () => {
             : 0;
 
     return (
-        <div className="min-h-screen bg-slate-50/50 p-4 md:p-8 font-sans">
+        <div className="min-h-full bg-slate-50/50 p-4 md:p-8 font-sans">
             <div className="max-w-5xl mx-auto space-y-6">
 
                 {/* ── TOP BUTTONS ── */}
@@ -579,4 +577,4 @@ export const Perfil = () => {
     );
 };
 
-
+

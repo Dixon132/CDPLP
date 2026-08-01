@@ -1,89 +1,66 @@
 import axios from "axios"
 
-export const getAllInvitados = async ({page=1, limit=15, search='',inactivos}) => {
-    try{
-        const response = await axios('/api/colegiados/invitados',{
+// Forma vacía segura para los listados: evita que un fallo de red reviente el
+// destructuring en los contenedores.
+const LISTA_VACIA = { data: [], total: 0, page: 1, totalPages: 1 }
+
+export const getAllInvitados = async ({ page = 1, limit = 15, search = '', inactivos }) => {
+    try {
+        const response = await axios('/api/colegiados/invitados', {
             params: { page, limit, search, inactivos }
         })
         return response.data
-    }catch(e){
-        console.error("Error al obtener usuarios:", e)
+    } catch (e) {
+        console.error("Error al obtener invitados:", e)
+        return LISTA_VACIA
     }
 }
+
+// Las mutaciones propagan el error: el contenedor necesita distinguir éxito de
+// fallo para mostrar la alerta correcta.
 export const createInvitado = async (data) => {
-    try{
-        const response = await axios.post('/api/colegiados/invitados', data)
-        return response.data
-    }catch(e){
-        console.error("Error al crear invitado:", e)
-    }
+    const response = await axios.post('/api/colegiados/invitados', data)
+    return response.data
 }
 export const updateInvitado = async (id, data) => {
-    try{
-        await axios.put(`/api/colegiados/invitados/${id}`, data)
-    }catch(e){
-
-    }
+    const response = await axios.put(`/api/colegiados/invitados/${id}`, data)
+    return response.data
 }
 export const updateEstadoInvitado = async (id, estado) => {
-    try{
-        await axios.patch(`/api/colegiados/invitados/${id}/estado`, { estado })
-    }catch(e){
-        throw e;
-    }
+    const response = await axios.patch(`/api/colegiados/invitados/${id}/estado`, { estado })
+    return response.data
 }
 export const deleteInvitado = async (id) => {
-    try{
-        await axios.delete(`/api/colegiados/invitados/${id}`)
-    }catch(e){
-        console.error("Error al eliminar invitado:", e)
-    }
+    const response = await axios.delete(`/api/colegiados/invitados/${id}`)
+    return response.data
 }
 export const getInvitadoById = async (id) => {
-    try{
-        const response = await axios(`/api/colegiados/invitados/${id}`)
-        return response.data
-    }catch(e){
-
-    }
+    const response = await axios(`/api/colegiados/invitados/${id}`)
+    return response.data
 }
 
 export const getAllPagosInvitado = async (id) => {
-    try{
+    try {
         const response = await axios(`/api/colegiados/pagos-invitados/${id}`)
         return response.data
-    }catch(e){
+    } catch (e) {
         console.error("Error al obtener pagos de invitado:", e)
+        return []
     }
 }
 export const createPagoInvitado = async (id, data) => {
-    try{
-        const response = await axios.post(`/api/colegiados/pagos-invitados/${id}`, data)
-        return response.data
-    }catch(e){
-        console.error("Error al crear pago de invitado:", e)
-    }
+    const response = await axios.post(`/api/colegiados/pagos-invitados/${id}`, data)
+    return response.data
 }
 export const getPagoInvitadoById = async (id) => {
-    try{
-        const response = await axios(`/api/colegiados/pagos-invitados/getOne/${id}`)
-        return response.data
-    }catch(e){
-        console.error("Error al obtener pago de invitado:", e)
-    }
+    const response = await axios(`/api/colegiados/pagos-invitados/getOne/${id}`)
+    return response.data
 }
 export const updatePagoInvitado = async (id, data) => {
-    try{
-        await axios.put(`/api/colegiados/pagos-invitados/update/${id}`, data)
-    }catch(e){
-        console.error("Error al actualizar pago de invitado:", e)
-    }
+    const response = await axios.put(`/api/colegiados/pagos-invitados/update/${id}`, data)
+    return response.data
 }
 export const verPagoInvitado = async (id) => {
-    try {
-        const response = await axios(`/api/colegiados/pagos-invitados/ver/${id}`)
-        return response.data.url
-    } catch (e) {
-        console.error("Error al obtener url de pago de invitado:", e)
-    }
+    const response = await axios(`/api/colegiados/pagos-invitados/ver/${id}`)
+    return response.data.url
 }

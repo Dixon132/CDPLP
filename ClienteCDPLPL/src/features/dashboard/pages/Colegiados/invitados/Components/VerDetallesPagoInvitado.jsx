@@ -105,8 +105,12 @@ const VerDetallesPago = ({ id_pago, onSuccess }) => {
                 {pago.comprobante !== null && (
                     <button
                         onClick={async () => {
-                            const url = await verPagoInvitado(pago.id_pago);
-                            if (url) window.open(url, "_blank");
+                            try {
+                                const url = await verPagoInvitado(pago.id_pago);
+                                if (url) window.open(url, "_blank");
+                            } catch {
+                                setError("No se pudo abrir el comprobante.");
+                            }
                         }}
                         className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg text-sm font-medium hover:bg-indigo-100 transition-colors"
                     >

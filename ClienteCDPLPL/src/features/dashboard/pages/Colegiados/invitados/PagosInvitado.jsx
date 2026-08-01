@@ -31,10 +31,14 @@ const Pagos = () => {
     const [currentId, setCurrentId] = useState(null)
     const [col, setCol] = useState([])
     const getPagos = async () => {
-        const data = await getAllPagosInvitado(id)
-        setPagos(data)
-        const Invitado = await getInvitadoById(id)
-        setCol(Invitado)
+        try {
+            const data = await getAllPagosInvitado(id)
+            setPagos(data)
+            const Invitado = await getInvitadoById(id)
+            setCol(Invitado)
+        } catch {
+            showAlertFn("error", "No se pudieron cargar los pagos del invitado.")
+        }
     }
 
     const [alert, setAlert] = useState(false);
@@ -88,7 +92,7 @@ const Pagos = () => {
     const totalPagos     = pagos.length;
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             {/* Header mejorado */}
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">

@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
-import puppeteer from "puppeteer";
 import { actividadSocialSchema } from "../schemas/ac-social";
+import { describir } from "../../../utils/auditoria";
+import { esc, generarInformePdf, enviarInformePdf, renderInformeHTML, renderTabla } from "../../../utils/informes";
 
 // Haversine: calcula distancia en metros entre dos puntos GPS
 function haversineDistancia(lat1: number, lng1: number, lat2: number, lng2: number): number {
@@ -79,12 +80,13 @@ export const getActividadSocialById = async (req: Request, res: Response) => {
 export const deleteActividadSocialById = async (req: Request, res: Response) => {
 
     const id = req.params.id
-    await prismaClient.actividades_sociales.delete({
+    const actividad = await prismaClient.actividades_sociales.delete({
         where: {
             id_actividad_social: +id
         }
     })
-    res.status(200)
+    describir(res, `Eliminó la actividad social "${actividad.nombre}"`)
+    res.status(200).json({ message: 'Actividad social eliminada exitosamente' })
 }
 export const updateEstadoById = async (req: Request, res: Response) => {
     const id = req.params.id
@@ -97,6 +99,7 @@ export const updateEstadoById = async (req: Request, res: Response) => {
             estado
         }
     })
+    describir(res, `Cambió el estado de la actividad social "${updatedActividad.nombre}" a ${estado}`)
     res.status(200).json(updatedActividad)
 }
 export const createActividadSocial = async (req: Request, res: Response) => {
@@ -129,6 +132,7 @@ export const createActividadSocial = async (req: Request, res: Response) => {
             radio_metros: radio_metros !== undefined ? Number(radio_metros) : 100
         }
     });
+    describir(res, `Se creó la actividad social "${actividad.nombre}"`)
     res.status(200).json(actividad)
 }
 
@@ -215,6 +219,7 @@ export const asignarColegiado = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Asignó al colegiado #${id_colegiado} a la actividad social #${id_actividad_social}`)
         res.status(200).json(actividad);
     } catch (error) {
         console.error('Error al asignar colegiado:', error);
@@ -231,6 +236,7 @@ export const asignarPasante = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Asignó al pasante #${id_pasante} a la actividad social #${id_actividad_social}`)
         res.status(200).json(actividad);
     } catch (error) {
         console.error('Error al asignar pasante:', error);
@@ -274,6 +280,7 @@ export const updateActividadSocial = async (req: Request, res: Response) => {
             data: actividadSocialData
         });
 
+        describir(res, `Modificó la actividad social "${actividadSocialActualizada.nombre}"`)
         res.status(200).json({
             message: 'Actividad social actualizada correctamente',
             actividadSocial: actividadSocialActualizada
@@ -326,145 +333,108 @@ export const getActividadSocialDetailReport = async (req: Request, res: Response
         const fechaFin = act.fecha_fin ? act.fecha_fin.toISOString().split("T")[0] : "";
 
         // Datos del convenio, si existe
-        let convenioHTML = "<p>No asociado a ningún convenio.</p>";
+        let convenioHtml = "<p>No asociado a ningún convenio.</p>";
         if (act.convenio) {
             const conv = act.convenio;
             const convInicio = conv.fecha_inicio ? conv.fecha_inicio.toISOString().split("T")[0] : "";
             const convFin = conv.fecha_fin ? conv.fecha_fin.toISOString().split("T")[0] : "";
-            convenioHTML = `
-        <p><strong>Convenio:</strong> ${conv.nombre ?? ""}</p>
-        <p><strong>Contacto:</strong> ${conv.contacto ?? ""}</p>
-        <p><strong>Fechas Convenio:</strong> ${convInicio} – ${convFin}</p>
-        <p><strong>Estado Convenio:</strong> ${conv.estado ?? ""}</p>
+            convenioHtml = `
+        <p><strong>Convenio:</strong> ${esc(conv.nombre ?? "")}</p>
+        <p><strong>Contacto:</strong> ${esc(conv.contacto ?? "")}</p>
+        <p><strong>Fechas Convenio:</strong> ${esc(convInicio)} – ${esc(convFin)}</p>
+        <p><strong>Estado Convenio:</strong> ${esc(conv.estado ?? "")}</p>
       `;
         }
 
-        // Colegiados asignados
+        // Colegiados y pasantes asignados
         const asignaciones = act.colegiados_asignados_social;
-        let tablaAsignadosHTML = "";
-        if (asignaciones.length === 0) {
-            tablaAsignadosHTML = "<p>No hay colegiados ni pasantes asignados a esta actividad social.</p>";
-        } else {
-            tablaAsignadosHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre Completo</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Especialidades / Rol</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${asignaciones.map((a) => {
+        const totalColegiados = asignaciones.filter((a) => a.colegiados).length;
+        const totalPasantes = asignaciones.filter((a) => a.pasantes).length;
+
+        const filasAsignados = asignaciones
+            .map((a) => {
                 if (a.colegiados) {
-                    // Si es un colegiado
                     const c = a.colegiados;
                     return `
                 <tr>
                   <td>Colegiado</td>
-                  <td>${c.nombre ?? ""} ${c.apellido ?? ""}</td>
-                  <td>${c.correo ?? ""}</td>
-                  <td>${c.telefono ?? ""}</td>
-                  <td>${c.especialidades ?? ""}</td>
-                  <td>${c.estado ?? ""}</td>
-                </tr>
-              `;
-                } else if (a.pasantes) {
-                    // Si es un pasante
+                  <td>${esc(`${c.nombre ?? ""} ${c.apellido ?? ""}`.trim())}</td>
+                  <td>${esc(c.correo ?? "")}</td>
+                  <td>${esc(c.telefono ?? "")}</td>
+                  <td>${esc(c.especialidades ?? "")}</td>
+                  <td>${esc(c.estado ?? "")}</td>
+                </tr>`;
+                }
+                if (a.pasantes) {
                     const p = a.pasantes;
                     return `
                 <tr>
                   <td>Pasante</td>
-                  <td>${p.nombre ?? ""} ${p.apellido ?? ""}</td>
-                  <td>${p.correo ?? ""}</td>
-                  <td>${p.telefono ?? ""}</td>
+                  <td>${esc(`${p.nombre ?? ""} ${p.apellido ?? ""}`.trim())}</td>
+                  <td>${esc(p.correo ?? "")}</td>
+                  <td>${esc(p.telefono ?? "")}</td>
                   <td>Práctica Académica</td>
                   <td>Activo</td>
-                </tr>
-              `;
-                } else {
-                    return "";
+                </tr>`;
                 }
-            }).join("")}
-        </tbody>
-      </table>
-      `;
-        }
+                return "";
+            })
+            .filter(Boolean);
 
-        // 1.3) Armamos el HTML completo
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            h2 { color: #444; margin-top: 20px; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-            .seccion { margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <h1>Detalle Actividad Social</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
+        const kpis = [
+            { label: "Total Asignados", value: asignaciones.length, accent: "violeta" as const },
+            { label: "Colegiados", value: totalColegiados, accent: "violeta" as const },
+            { label: "Pasantes", value: totalPasantes, accent: "rosa" as const },
+        ];
 
-          <div class="seccion">
-            <h2>Datos Generales</h2>
-            <p><strong>Nombre:</strong> ${nombre}</p>
-            <p><strong>Descripción:</strong> ${descripcion}</p>
-            <p><strong>Ubicación:</strong> ${ubicacion}</p>
-            <p><strong>Motivo:</strong> ${motivo}</p>
-            <p><strong>Fechas:</strong> ${fechaInicio} – ${fechaFin}</p>
-            <p><strong>Estado:</strong> ${estado}</p>
-            <p><strong>Tipo:</strong> ${tipo}</p>
-          </div>
+        const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Datos Generales</h2>
+        <p><strong>Nombre:</strong> ${esc(nombre)}</p>
+        <p><strong>Descripción:</strong> ${esc(descripcion)}</p>
+        <p><strong>Ubicación:</strong> ${esc(ubicacion)}</p>
+        <p><strong>Motivo:</strong> ${esc(motivo)}</p>
+        <p><strong>Fechas:</strong> ${esc(fechaInicio)} – ${esc(fechaFin)}</p>
+        <p><strong>Estado:</strong> ${esc(estado)}</p>
+        <p><strong>Tipo:</strong> ${esc(tipo)}</p>
+      </section>
 
-          <div class="seccion">
-            <h2>Información de Convenio</h2>
-            ${convenioHTML}
-          </div>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Información de Convenio</h2>
+        ${convenioHtml}
+      </section>
 
-          <div class="seccion">
-            <h2>Colegiados y Pasantes Asignados</h2>
-            ${tablaAsignadosHTML}
-          </div>
-        </body>
-      </html>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Colegiados y Pasantes Asignados</h2>
+        ${renderTabla(
+            [
+                { label: "Rol" },
+                { label: "Nombre Completo" },
+                { label: "Correo" },
+                { label: "Teléfono" },
+                { label: "Especialidades / Rol" },
+                { label: "Estado" },
+            ],
+            filasAsignados,
+            "No hay colegiados ni pasantes asignados a esta actividad social."
+        )}
+      </section>
     `;
 
-        // 1.4) Generar PDF con Puppeteer
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe de Actividad Social",
+            subtitulo: nombre,
+            kpis,
+            bodyHtml,
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({
-            format: "A4",
-            printBackground: true,
-        });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res.status(500).send("Error generando PDF detallado de la actividad social.");
-        }
-
-        const filename = `reporte_actividad_social_${id}.pdf`;
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html);
+        return enviarInformePdf(res, pdfBuffer, `informe_actividad_social_${id}.pdf`);
     } catch (error) {
         console.error("Error en getActividadSocialDetailReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte detallado de actividad social.");
+            .send("Error al generar informe detallado de actividad social.");
     }
 };
 
@@ -532,106 +502,68 @@ export const getActividadesSocialesSummaryReport = async (req: Request, res: Res
         });
 
         // 2.4) Texto con los filtros aplicados
-        let filtrosTexto = "<p>Todos los registros.</p>";
+        let filtrosTexto = "Todos los registros.";
         if (fecha_inicio || fecha_fin) {
             const inicio = fecha_inicio ? String(fecha_inicio) : "—";
             const fin = fecha_fin ? String(fecha_fin) : "—";
-            filtrosTexto = `<p><strong>Rango Fecha Inicio:</strong> ${inicio} – ${fin}</p>`;
+            filtrosTexto = `Rango Fecha Inicio: ${esc(inicio)} – ${esc(fin)}`;
         }
 
-        // 2.5) Creamos la tabla HTML
-        let tablaHTML = "";
-        if (datos.length === 0) {
-            tablaHTML = `<p>No hay actividades sociales en este rango.</p>`;
-        } else {
-            tablaHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Ubicación</th>
-            <th>Motivo</th>
-            <th>Tipo</th>
-            <th>Estado</th>
-            <th>Fecha Inicio</th>
-            <th>Fecha Fin</th>
-            <th>Convenio</th>
-            <th># Asignados</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${datos
-                    .map(
-                        (d) => `
+        const totalAsignadosGlobal = datos.reduce((acc, d) => acc + d.totalAsignados, 0);
+
+        const kpis = [
+            { label: "Actividades", value: datos.length, accent: "violeta" as const },
+            { label: "Total Asignados", value: totalAsignadosGlobal, accent: "rosa" as const },
+        ];
+
+        const bodyHtml = `
+      <section class="seccion">
+        ${renderTabla(
+            [
+                { label: "Nombre" },
+                { label: "Ubicación" },
+                { label: "Motivo" },
+                { label: "Tipo" },
+                { label: "Estado" },
+                { label: "Fecha Inicio" },
+                { label: "Fecha Fin" },
+                { label: "Convenio" },
+                { label: "# Asignados", align: "right" },
+            ],
+            datos.map(
+                (d) => `
             <tr>
-              <td>${d.nombre}</td>
-              <td>${d.ubicacion}</td>
-              <td>${d.motivo}</td>
-              <td>${d.tipo}</td>
-              <td>${d.estado}</td>
-              <td>${d.fechaInicio}</td>
-              <td>${d.fechaFin}</td>
-              <td>${d.convenio}</td>
-              <td>${d.totalAsignados}</td>
-            </tr>
-          `
-                    )
-                    .join("")}
-        </tbody>
-      </table>
-      `;
-        }
-
-        // 2.6) HTML completo
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Resumen de Actividades Sociales</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
-          ${filtrosTexto}
-          ${tablaHTML}
-        </body>
-      </html>
+              <td>${esc(d.nombre)}</td>
+              <td>${esc(d.ubicacion)}</td>
+              <td>${esc(d.motivo)}</td>
+              <td>${esc(d.tipo)}</td>
+              <td>${esc(d.estado)}</td>
+              <td>${esc(d.fechaInicio)}</td>
+              <td>${esc(d.fechaFin)}</td>
+              <td>${esc(d.convenio)}</td>
+              <td style="text-align:right">${d.totalAsignados}</td>
+            </tr>`
+            ),
+            "No hay actividades sociales en este rango."
+        )}
+      </section>
     `;
 
-        // 2.7) Puppeteer → PDF
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe Consolidado de Actividades Sociales",
+            filtrosTexto,
+            kpis,
+            bodyHtml,
+            orientacion: "landscape",
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res.status(500).send("Error generando PDF resumen de actividades sociales.");
-        }
-
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="resumen_actividades_sociales.pdf"`
-        );
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html, { landscape: true });
+        return enviarInformePdf(res, pdfBuffer, "informe_actividades_sociales.pdf");
     } catch (error) {
         console.error("Error en getActividadesSocialesSummaryReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte resumen de actividades sociales.");
+            .send("Error al generar informe resumen de actividades sociales.");
     }
 };
 export const listarActividadesSocialesMinimal = async (req: Request, res: Response) => {
@@ -755,6 +687,7 @@ export const marcarEntrada = async (req: Request, res: Response) => {
                 hora_entrada: new Date(),
             }
         });
+        describir(res, `Marcó entrada en la asignación #${id} de actividad social`)
         res.status(200).json({ message: "Entrada marcada correctamente", asignacion: newRegistro });
     } catch (error) {
         console.error("Error en marcarEntrada:", error);
@@ -833,6 +766,7 @@ export const marcarSalida = async (req: Request, res: Response) => {
             });
         });
 
+        describir(res, `Marcó salida en la asignación #${id} de actividad social`)
         res.status(200).json({ message: "Salida marcada correctamente" });
     } catch (error) {
         console.error("Error en marcarSalida:", error);
@@ -859,6 +793,7 @@ export const updateMetaAsignacion = async (req: Request, res: Response) => {
             where: { id_asignacion: id },
             data: { horas_meta: Number(horas_meta) }
         });
+        describir(res, `Actualizó la meta de horas de la asignación #${id} a ${horas_meta}`)
         res.status(200).json({ message: "Meta de horas actualizada", asignacion: updated });
     } catch (error) {
         console.error("Error en updateMetaAsignacion:", error);
@@ -882,6 +817,7 @@ export const updateEstadoAsignacion = async (req: Request, res: Response) => {
             where: { id_asignacion: id },
             data: { estado: String(estado) }
         });
+        describir(res, `Cambió el estado de participación de la asignación #${id} a ${estado}`)
         res.status(200).json({ message: "Estado de participación actualizado", asignacion: updated });
     } catch (error) {
         console.error("Error en updateEstadoAsignacion:", error);
@@ -902,6 +838,7 @@ export const resetHorasAsignacion = async (req: Request, res: Response) => {
             where: { id_asignacion: id },
             data: { total_horas: 0 }
         });
+        describir(res, `Reinició a 0 las horas acumuladas de la asignación #${id}`)
         res.status(200).json({ message: "Horas reiniciadas a 0 correctamente", asignacion: updated });
     } catch (error) {
         console.error("Error en resetHorasAsignacion:", error);

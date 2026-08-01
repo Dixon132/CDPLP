@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/*
+ * Tipografía conmutable.
+ *
+ * `--font-sans` es la variable que consume Tailwind (`font-sans`, y el `body`
+ * de más abajo), así que basta reapuntarla desde `[data-font]` para cambiar la
+ * tipografía de toda la app sin tocar ningún componente.
+ */
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
   --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
@@ -9,4 +16,239 @@
   body {
     @apply font-sans text-black bg-white antialiased;
   }
+
+  /*
+   * `font-sans` (=`var(--font-sans)`) se aplica en el `body` con la variable
+   * resuelta desde `:root`. Como el body está POR ENCIMA del `.dashboard-shell`,
+   * redefinir `--font-sans` en el shell no lograba nada: los hijos heredaban la
+   * font-family ya calculada del body.
+   *
+   * Aquí se re-aplica `font-family` en el shell leyendo la variable del propio
+   * shell (donde sí se sobreescribe por `data-font`), y los hijos la heredan por
+   * cascada normal.
+   */
+  .dashboard-shell {
+    font-family: var(--font-sans);
+  }
+
+  /*
+   * Suaviza el cambio de tema SOLO dentro del dashboard. Antes esto vivía en el
+   * body y los elementos globales, con el efecto secundario de que la landing y
+   * el login heredaban tanto los tokens del tema como estas transiciones.
+   */
+  .dashboard-shell,
+  .dashboard-shell aside,
+  .dashboard-shell header,
+  .dashboard-shell footer,
+  .dashboard-shell nav,
+  .dashboard-shell main {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dashboard-shell,
+    .dashboard-shell aside,
+    .dashboard-shell header,
+    .dashboard-shell footer,
+    .dashboard-shell nav,
+    .dashboard-shell main { transition: none; }
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TIPOGRAFÍAS — se aplican en <html data-font="...">
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.dashboard-shell[data-font='moderna'] {
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+.dashboard-shell[data-font='tecnica'] {
+  --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+}
+
+.dashboard-shell[data-font='redonda'] {
+  --font-sans: 'Fraunces', ui-serif, Georgia, serif;
+}
+
+.dashboard-shell[data-font='institucional'] {
+  --font-sans: 'Libre Baskerville', ui-serif, 'Times New Roman', serif;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   TEMAS — se aplican en <html data-theme="...">
+
+   Tailwind v4 compila `bg-white` a `background-color: var(--color-white)` y
+   `text-slate-800` a `color: var(--color-slate-800)`. Por eso un tema se
+   consigue redefiniendo esas variables: no hay que tocar ni una clase de
+   ningún componente.
+
+   La rampa neutra se invierte manteniendo el contraste de cada pareja: donde
+   había fondo claro (slate-50) con texto oscuro (slate-800), pasa a haber
+   fondo oscuro con texto claro. Todo lo que ya se leía se sigue leyendo.
+
+   El tema CLARO no define nada: usa los valores por defecto de Tailwind, así
+   que queda exactamente como está hoy.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Oscuro: azul pizarra profundo, sin negros puros ──────────────────── */
+.dashboard-shell[data-theme='oscuro'] {
+  color-scheme: dark;
+
+  /* Superficies */
+  --color-white: #151b26;
+  --color-black: #f1f5f9;
+
+  /* Rampa neutra invertida */
+  --color-slate-50: #1b2330;
+  --color-slate-100: #222b3a;
+  --color-slate-200: #2e394a;
+  --color-slate-300: #3d4a5e;
+  --color-slate-400: #8595ab;
+  --color-slate-500: #9aa8bc;
+  --color-slate-600: #b4c0d1;
+  --color-slate-700: #ccd5e0;
+  --color-slate-800: #e3e9f0;
+  --color-slate-900: #f3f6fa;
+  --color-slate-950: #ffffff;
+
+  /* `gray` aparece suelto en pantallas antiguas */
+  --color-gray-50: #1b2330;
+  --color-gray-100: #222b3a;
+  --color-gray-200: #2e394a;
+  --color-gray-300: #3d4a5e;
+  --color-gray-400: #8595ab;
+  --color-gray-500: #9aa8bc;
+  --color-gray-600: #b4c0d1;
+  --color-gray-700: #ccd5e0;
+  --color-gray-800: #e3e9f0;
+  --color-gray-900: #f3f6fa;
+
+  /* Acentos: los tonos -50/-100 son fondos de badge (se oscurecen) y los
+     -600/-700/-800 son el texto encima (se aclaran). */
+  --color-indigo-50: #232a4a;
+  --color-indigo-100: #2c3560;
+  --color-indigo-400: #97a4ff;
+  --color-indigo-600: #a5b0ff;
+  --color-indigo-700: #bcc4ff;
+
+  --color-emerald-50: #12312a;
+  --color-emerald-100: #17453a;
+  --color-emerald-600: #4ade9f;
+  --color-emerald-700: #6ee7b7;
+  --color-emerald-800: #a7f3d0;
+
+  --color-rose-50: #3a1c25;
+  --color-rose-100: #4d2531;
+  --color-rose-500: #fb7185;
+  --color-rose-600: #fda4af;
+  --color-rose-700: #fecdd3;
+
+  --color-amber-50: #3a2c12;
+  --color-amber-100: #4d3a17;
+  --color-amber-600: #fbbf24;
+  --color-amber-700: #fcd34d;
+  --color-amber-800: #fde68a;
+
+  --color-blue-50: #16294a;
+  --color-blue-100: #1d3560;
+  --color-blue-600: #7ab0ff;
+  --color-blue-700: #a3c8ff;
+  --color-blue-800: #c7ddff;
+
+  --color-red-50: #3a1c1c;
+  --color-red-100: #4d2525;
+  --color-red-600: #fca5a5;
+  --color-red-700: #fecaca;
+  --color-red-800: #fee2e2;
+
+  --color-green-50: #12312a;
+  --color-green-100: #17453a;
+  --color-green-600: #4ade9f;
+  --color-green-700: #6ee7b7;
+  --color-green-800: #a7f3d0;
+
+  --color-yellow-50: #3a2c12;
+  --color-yellow-100: #4d3a17;
+  --color-yellow-600: #fbbf24;
+  --color-yellow-700: #fcd34d;
+  --color-yellow-800: #fde68a;
+
+  --color-purple-50: #2b1f45;
+  --color-purple-100: #38295a;
+  --color-purple-600: #c4a6ff;
+  --color-purple-700: #d6c2ff;
+
+  --color-sky-50: #12303f;
+  --color-sky-600: #7dd3fc;
+
+  --color-teal-500: #5eead4;
+  --color-teal-600: #5eead4;
+
+  --color-orange-50: #3a2718;
+  --color-orange-600: #fdba74;
+}
+
+/* ── Durazno: crema cálido y terracota suave. Amable sin ser infantil ─── */
+.dashboard-shell[data-theme='durazno'] {
+  color-scheme: light;
+
+  /* Superficies */
+  --color-white: #fffaf6;
+
+  /* Rampa neutra en tonos tierra */
+  --color-slate-50: #fdf2ea;
+  --color-slate-100: #f9e6da;
+  --color-slate-200: #f0d7c8;
+  --color-slate-300: #e0bfab;
+  --color-slate-400: #b79b8a;
+  --color-slate-500: #997d6d;
+  --color-slate-600: #7d6255;
+  --color-slate-700: #614a40;
+  --color-slate-800: #47342d;
+  --color-slate-900: #33241f;
+  --color-slate-950: #241814;
+
+  --color-gray-50: #fdf2ea;
+  --color-gray-100: #f9e6da;
+  --color-gray-200: #f0d7c8;
+  --color-gray-300: #e0bfab;
+  --color-gray-400: #b79b8a;
+  --color-gray-500: #997d6d;
+  --color-gray-600: #7d6255;
+  --color-gray-700: #614a40;
+  --color-gray-800: #47342d;
+  --color-gray-900: #33241f;
+
+  /* El índigo es el acento del sidebar y de los botones: pasa a terracota. */
+  --color-indigo-50: #fdeae6;
+  --color-indigo-100: #fbd9d2;
+  --color-indigo-400: #e98a7a;
+  --color-indigo-500: #de6f5c;
+  --color-indigo-600: #c9583f;
+  --color-indigo-700: #a8472f;
+
+  --color-emerald-50: #e8f4ec;
+  --color-emerald-100: #d3e9db;
+  --color-emerald-600: #4f8a68;
+  --color-emerald-700: #3f7355;
+
+  --color-rose-50: #fdeaea;
+  --color-rose-100: #fbd6d6;
+  --color-rose-500: #dd6b6b;
+  --color-rose-600: #c95555;
+  --color-rose-700: #a84343;
+
+  --color-amber-50: #fdf1de;
+  --color-amber-100: #fae2bd;
+  --color-amber-600: #b57e2b;
+  --color-amber-700: #9a6a1f;
+
+  --color-blue-50: #e7f0f7;
+  --color-blue-100: #d2e3ef;
+  --color-blue-600: #46789e;
+  --color-blue-700: #3a6486;
+
+  --color-purple-50: #f4ecf7;
+  --color-purple-600: #8a5fa3;
 }

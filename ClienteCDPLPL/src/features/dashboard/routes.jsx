@@ -9,6 +9,7 @@ import Ac_institucionales from "./pages/Ac-Inst/Ac_institucionales";
 import Tesoreria from "./pages/Tesoreria/Tesoreria";
 import Ajustes from "./pages/Ajustes/Ajustes";
 import NotAuthorized from "./pages/NotAuthorized";
+import EstadoSesion from "./pages/EstadoSesion";
 import Roles from "./pages/Usuarios/Roles";
 import Documentos from "./pages/Colegiados/Documentos";
 import Pagos from "./pages/Colegiados/Pagos";
@@ -19,6 +20,7 @@ import Contenido from "./pages/Correspondencia/Contenido";
 import GestionAsistenciaInst from "./pages/Ac-Inst/components/GestionAsistenciaInst";
 import MovimientosPorPresupuesto from "./pages/Tesoreria/MovimientosPorPresupuesto";
 import Auditorias from "./pages/Auditorias/Auditorias";
+import Informes from "./pages/Informes/Informes";
 import Memorias from "./pages/Memorias/Memorias";
 import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
@@ -216,6 +218,20 @@ export const dashboardRoutes = {
             path: 'notAuthorized',
             element: <NotAuthorized />
         },
+        // Destinos a los que redirige `RequireRole`. Antes no existían y caían
+        // en el 404 genérico.
+        {
+            path: 'roleNotDefined',
+            element: <EstadoSesion tipo="noDefinido" />
+        },
+        {
+            path: 'roleExpired',
+            element: <EstadoSesion tipo="vencido" />
+        },
+        {
+            path: 'roleInactive',
+            element: <EstadoSesion tipo="inactivo" />
+        },
         {
             path: 'roles',
             element: (
@@ -229,6 +245,14 @@ export const dashboardRoutes = {
             element: (
                 <RequireRole allowedRoles={['PRESIDENTE']}>
                     <Auditorias />
+                </RequireRole>
+            )
+        },
+        {
+            path: 'informes',
+            element: (
+                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE', 'SECRETARIO_GENERAL', 'SECRETARIO', 'TESORERO', 'VOCAL']}>
+                    <Informes />
                 </RequireRole>
             )
         },

@@ -5,7 +5,7 @@ import { authMiddleware } from "../../../middlewares/auth";
 
 const AuditoriasRoutes: Router = Router()
 
-AuditoriasRoutes.get('/', [authMiddleware], errorHandler(getAuditorias))//get all auditorias
-AuditoriasRoutes.get('/report', [authMiddleware], errorHandler(getAuditoriasReport))//report
+AuditoriasRoutes.get('/report', [authMiddleware], errorHandler(getAuditoriasReport))
+AuditoriasRoutes.get('/', [authMiddleware], errorHandler(getAuditorias))
 
 export default AuditoriasRoutes

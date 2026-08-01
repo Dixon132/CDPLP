@@ -2,8 +2,11 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { Prisma } from "../../../../generated/prisma";
 import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
-import puppeteer from "puppeteer";
 import dotenv from "dotenv";
+import { describir } from "../../../utils/auditoria";
+import { Modulos } from "../../../types/auditoria";
+import { emitirNotificacion } from "../../notificaciones/services";
+import { esc, generarInformePdf, enviarInformePdf, renderInformeHTML, renderTabla } from "../../../utils/informes";
 dotenv.config();
 export const getCorrespondencia = async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string) || 1;
@@ -76,6 +79,15 @@ export const createCorrespondencia = async (req: Request, res: Response) => {
 
         });
 
+        describir(res, `Se registró correspondencia "${newCorrespondencia.asunto}" de ${remitente}`);
+        await emitirNotificacion({
+            modulo: Modulos.CORRESPONDENCIA,
+            tipo: 'info',
+            titulo: 'Nueva correspondencia recibida',
+            descripcion: `${newCorrespondencia.asunto} · De: ${remitente}`,
+            enlace: `/dashboard/buzon/${newCorrespondencia.id_correspondencia}`,
+            idUsuario: req.user?.id_usuario,
+        });
         res.status(201).json(newCorrespondencia);
     } catch (error) {
         console.error("Error al crear correspondencia:", error);
@@ -119,6 +131,7 @@ export const updateCorrespondencia = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Modificó la correspondencia "${updatedCorrespondencia.asunto}"`);
         res.status(200).json(updatedCorrespondencia);
     } catch (error) {
         console.error("Error al actualizar correspondencia:", error);
@@ -194,6 +207,7 @@ export const marcarVisto = async (req: Request, res: Response) => {
             data: { estado: "VISTO", fecha_recibido: new Date() }
         });
 
+        describir(res, `Marcó como visto la correspondencia "${correspondencia.asunto}"`);
         res.status(200).json(correspondencia);
     } catch (error) {
         console.error("Error al marcar como visto:", error);
@@ -241,6 +255,7 @@ export const deleteCorrespondencia = async (req: Request, res: Response) => {
             where: { id_correspondencia: +id },
         });
 
+        describir(res, `Eliminó la correspondencia "${deletedCorrespondencia.asunto}"`);
         res.status(200).json(deletedCorrespondencia);
     } catch (error) {
         console.error("Error al eliminar correspondencia:", error);
@@ -258,6 +273,7 @@ export const changeEstadoCorrespondencia = async (req: Request, res: Response) =
             data: { estado }
         });
 
+        describir(res, `Cambió el estado de la correspondencia "${updatedCorrespondencia.asunto}" a ${estado}`);
         res.status(200).json(updatedCorrespondencia);
     } catch (error) {
         console.error("Error al cambiar estado de correspondencia:", error);
@@ -411,98 +427,65 @@ export const getCorrespondenciaReport = async (req: Request, res: Response) => {
             filtrosAplicadosTextoParts.push(`Destinatario ID: ${id_destinatario}`);
         }
         const filtrosAplicadosTexto = filtrosAplicadosTextoParts.length
-            ? `<p><strong>Filtros:</strong> ${filtrosAplicadosTextoParts.join(" • ")}</p>`
-            : "<p><strong>Filtros:</strong> Ninguno (todas las correspondencias).</p>";
+            ? `Filtros: ${esc(filtrosAplicadosTextoParts.join(" • "))}`
+            : "Filtros: Ninguno (todas las correspondencias).";
 
-        let tablaHTML = "";
-        if (datos.length === 0) {
-            tablaHTML = `<p>No se encontraron registros de correspondencia con esos filtros.</p>`;
-        } else {
-            tablaHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Asunto</th>
-            <th>Remitente</th>
-            <th>Destinatario</th>
-            <th>Fecha Envío</th>
-            <th>Fecha Recibido</th>
-            <th>Estado</th>
-            
-          </tr>
-        </thead>
-        <tbody>
-          ${datos
-                    .map(
-                        (d) => `
-            <tr>
-              <td>${d.asunto}</td>
-              <td>${d.remitente}</td>
-              <td>${d.destinatario}</td>
-              <td>${d.fecha_envio}</td>
-              <td>${d.fecha_recibido}</td>
-              <td>${d.estado}</td>
-              
-            </tr>
-          `
-                    )
-                    .join("")}
-        </tbody>
-      </table>
-      `;
+        // Contadores por estado, para dar una lectura rápida antes del detalle
+        const contadoresPorEstado = new Map<string, number>();
+        for (const d of datos) {
+            const estado = d.estado || "Sin estado";
+            contadoresPorEstado.set(estado, (contadoresPorEstado.get(estado) ?? 0) + 1);
         }
 
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { color: #333; text-align: center; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Reporte de Correspondencia</h1>
-          <p>Generado: ${new Date().toLocaleString()}</p>
-          ${filtrosAplicadosTexto}
-          ${tablaHTML}
-        </body>
-      </html>
+        const kpis = [
+            { label: "Total Correspondencia", value: datos.length, accent: "violeta" as const },
+            ...Array.from(contadoresPorEstado.entries()).map(([estado, cantidad]) => ({
+                label: estado,
+                value: cantidad,
+                accent: "neutro" as const,
+            })),
+        ];
+
+        const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Detalle</h2>
+        ${renderTabla(
+            [
+                { label: "Asunto" },
+                { label: "Remitente" },
+                { label: "Destinatario" },
+                { label: "Fecha Envío" },
+                { label: "Fecha Recibido" },
+                { label: "Estado" },
+            ],
+            datos.map(
+                (d) => `
+            <tr>
+              <td>${esc(d.asunto)}</td>
+              <td>${esc(d.remitente)}</td>
+              <td>${esc(d.destinatario)}</td>
+              <td>${esc(d.fecha_envio)}</td>
+              <td>${esc(d.fecha_recibido)}</td>
+              <td>${esc(d.estado)}</td>
+            </tr>`
+            ),
+            "No se encontraron registros de correspondencia con esos filtros."
+        )}
+      </section>
     `;
 
-        // 6) Usar Puppeteer para renderizar el HTML y generar PDF
-        const browser = await puppeteer.launch({
-            headless: true,
-            // en algunos entornos sin GUI se requieren flags:
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe de Gestión de Correspondencia",
+            filtrosTexto: filtrosAplicadosTexto,
+            kpis,
+            bodyHtml,
+            orientacion: "landscape",
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({
-            format: "A4",
-            printBackground: true,
-        });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res.status(500).send("Error generando PDF de correspondencia.");
-        }
-
-        // 7) Enviar PDF a cliente
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="reporte_correspondencia.pdf"`
-        );
-        res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html, { landscape: true });
+        return enviarInformePdf(res, pdfBuffer, "informe_correspondencia.pdf");
     } catch (error) {
         console.error("Error en getCorrespondenciaReport:", error);
-        return res.status(500).send("Error al generar reporte de correspondencia.");
+        return res.status(500).send("Error al generar informe de correspondencia.");
     }
 };

@@ -19,6 +19,7 @@ import {
     getMovimientosFiltrados,
     getCategoriasByPresupuesto,
 } from "../controllers/tesoreria";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 const tesoreriaRoutes: Router = Router()
 const upload = multer({ storage: multer.memoryStorage() })
@@ -31,9 +32,9 @@ tesoreriaRoutes.get("/:id/report", errorHandler(getPresupuestoDetailReport));
 // Rutas de PRESUPUESTOS
 tesoreriaRoutes.get("/presupuestos", errorHandler(getAllPresupuestos));
 tesoreriaRoutes.get("/presupuestos/:id", errorHandler(getPresupuestoById));
-tesoreriaRoutes.post("/presupuestos", errorHandler(createPresupuesto));
-tesoreriaRoutes.patch("/presupuestos/:id", errorHandler(updatePresupuesto));
-tesoreriaRoutes.delete("/presupuestos/:id", errorHandler(deletePresupuesto));
+tesoreriaRoutes.post("/presupuestos", errorHandler(createPresupuesto, { modulo: Modulos.FINANCIERO, accion: Acciones.CREO }));
+tesoreriaRoutes.patch("/presupuestos/:id", errorHandler(updatePresupuesto, { modulo: Modulos.FINANCIERO, accion: Acciones.MODIFICO }));
+tesoreriaRoutes.delete("/presupuestos/:id", errorHandler(deletePresupuesto, { modulo: Modulos.FINANCIERO, accion: Acciones.ELIMINO }));
 
 // Analytics, Categorias y Movimientos Filtrados
 tesoreriaRoutes.get("/presupuestos/:id/analytics", errorHandler(getPresupuestoAnalytics));
@@ -42,8 +43,8 @@ tesoreriaRoutes.get("/presupuestos/:id/movimientos-filtrados", errorHandler(getM
 
 // Rutas de MOVIMIENTOS FINANCIEROS
 tesoreriaRoutes.get("/presupuestos/:id/movimientos", errorHandler(getMovimientosByPresupuesto));
-tesoreriaRoutes.post("/movimientos", [authMiddleware, upload.single("comprobante")], errorHandler(createMovimientoFinanciero));
-tesoreriaRoutes.patch("/movimientos/:id", authMiddleware, errorHandler(updateMovimientoFinanciero));
-tesoreriaRoutes.delete("/movimientos/:id", authMiddleware, errorHandler(deleteMovimientoFinanciero));
+tesoreriaRoutes.post("/movimientos", [authMiddleware, upload.single("comprobante")], errorHandler(createMovimientoFinanciero, { modulo: Modulos.FINANCIERO, accion: Acciones.REGISTRO }));
+tesoreriaRoutes.patch("/movimientos/:id", authMiddleware, errorHandler(updateMovimientoFinanciero, { modulo: Modulos.FINANCIERO, accion: Acciones.MODIFICO }));
+tesoreriaRoutes.delete("/movimientos/:id", authMiddleware, errorHandler(deleteMovimientoFinanciero, { modulo: Modulos.FINANCIERO, accion: Acciones.MODIFICO }));
 
 export default tesoreriaRoutes

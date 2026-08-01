@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import dotenv from "dotenv";
 import { subirAaws, subirArchivo, eliminarArchivo, buildPublicUrl } from "../../../utils/uploadS3";
+import { describir } from "../../../utils/auditoria";
 dotenv.config();
 
 export const obtenerUrlFirmada = async (req: Request, res: Response) => {
@@ -76,6 +77,7 @@ export const createDoc = async (req: Request, res: Response) => {
             },
         });
 
+        describir(res, `Se subió el documento "${tipo_documento}" de ${col.nombre} ${col.apellido}`);
         res.status(201).json(doc);
     } catch (error) {
         console.error("Error al crear documento:", error);
@@ -128,6 +130,7 @@ export const updateDocumento = async (req: Request, res: Response) => {
             },
         });
 
+        describir(res, `Modificó el documento "${updatedDoc.tipo_documento}" (ID ${updatedDoc.id_documento})`);
         res.status(200).json(updatedDoc);
     } catch (error) {
         console.error("Error actualizando documento:", error);
@@ -154,6 +157,7 @@ export const deleteDocumento = async (req: Request, res: Response) => {
             where: { id_documento: id }
         });
 
+        describir(res, `Eliminó el documento "${doc.tipo_documento}" (ID ${doc.id_documento})`);
         res.status(200).json({ message: "Documento eliminado con éxito" });
     } catch (error) {
         console.error("Error al eliminar documento:", error);

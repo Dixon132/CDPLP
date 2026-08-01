@@ -4,14 +4,14 @@ import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import ResponsiveTable from "../../../components/ResponsiveTable";
 import PinDisplay from "../../../../../components/PinDisplay";
-import { getAllPasantes, updateEstadoPasante, deletePasante } from "../../../services/pasantes";
+import { getAllPasantes, updateEstadoPasante, deletePasante, createPasante, modificarPasante } from "../../../services/pasantes";
 import CreatePasante from "./Components/CreatePasante";
 import ModificarPasante from "./Components/ModificarPasante";
 import GenerarReportePasantes from "./components/GenerarReporte";
 import parseDate from "../../../../../utils/parseData";
 import Alerts from "../../../components/Alerts";
 import { getEstadoBadge, getEstadoIcon } from "../../../hooks/estados";
-import { Briefcase, UserPlus, Eye, EyeOff, Mail, Phone, Building2, Calendar, Edit3, UserCheck, UserX, Trash2 } from 'lucide-react';
+import { Briefcase, UserPlus, Eye, EyeOff, Mail, Phone, Building2, Calendar, Edit3, UserCheck, UserX, Trash2, KeyRound, Copy } from 'lucide-react';
 import Header from "../../../components/Header";
 
 const Pasantes = () => {
@@ -27,8 +27,11 @@ const Pasantes = () => {
     const [mostrarModal2, setMostrarModal2] = useState(false);
     const [pasanteSeleccionado, setPasanteSeleccionado] = useState(null);
 
-    // Confirm DESPUÉS de guardar
+    // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
+
+    // PIN devuelto por el servidor al registrar (solo se muestra una vez)
+    const [pinGenerado, setPinGenerado] = useState(null);
 
     // Doble confirmación desactivar/activar
     const [desacTarget, setDesacTarget] = useState(null);
@@ -88,7 +91,7 @@ const Pasantes = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 title="Pasantes" icon={<Briefcase className="w-8 h-8" />}
                 stats={[{ label: 'Total', value: total, color: 'blue' }]}
@@ -139,10 +142,18 @@ const Pasantes = () => {
             <Modal isOpen={mostrarModal} title="Crear Pasante" onClose={() => setMostrarModal(false)}>
                 <CreatePasante
                     onClose={() => setMostrarModal(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "create",
-                            callback: () => { setMostrarModal(false); showAlertFn("success", "Pasante registrado exitosamente."); fetchPasantes(); },
+                            callback: async () => {
+                                try {
+                                    const response = await createPasante(payload);
+                                    setMostrarModal(false);
+                                    fetchPasantes();
+                                    if (response?.pin_temporal) setPinGenerado(response.pin_temporal);
+                                    else showAlertFn("success", "Pasante registrado exitosamente.");
+                                } catch { showAlertFn("error", "Error al registrar el pasante."); }
+                            },
                         });
                     }}
                 />
@@ -152,10 +163,17 @@ const Pasantes = () => {
                 <ModificarPasante
                     id={pasanteSeleccionado}
                     onClose={() => setMostrarModal2(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "edit",
-                            callback: () => { setMostrarModal2(false); showAlertFn("success", "Pasante modificado exitosamente."); fetchPasantes(); },
+                            callback: async () => {
+                                try {
+                                    await modificarPasante(pasanteSeleccionado, payload);
+                                    setMostrarModal2(false);
+                                    showAlertFn("success", "Pasante modificado exitosamente.");
+                                    fetchPasantes();
+                                } catch { showAlertFn("error", "Error al modificar el pasante."); }
+                            },
                         });
                     }}
                 />
@@ -165,14 +183,44 @@ const Pasantes = () => {
                 <GenerarReportePasantes />
             </Modal>
 
-            {/* ✅ Confirm DESPUÉS de guardar */}
+            {/* PIN de acceso — solo se muestra esta vez */}
+            <Modal isOpen={!!pinGenerado} title="PIN de acceso generado" onClose={() => setPinGenerado(null)}>
+                <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center">
+                        <KeyRound className="w-8 h-8" />
+                    </div>
+                    <p className="text-slate-600 text-sm max-w-sm">
+                        Guarda este PIN y comunícaselo al pasante. Es necesario para el acceso por GPS.
+                    </p>
+                    <PinDisplay pin={pinGenerado} />
+                    <div className="flex items-center gap-3 pt-2">
+                        <button
+                            onClick={() => navigator.clipboard.writeText(pinGenerado)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                        >
+                            <Copy className="w-4 h-4" /> Copiar
+                        </button>
+                        <button
+                            onClick={() => { setPinGenerado(null); showAlertFn("success", "Pasante registrado exitosamente."); }}
+                            className="px-4 py-2 rounded-lg font-bold text-white bg-emerald-500 hover:bg-emerald-600 shadow-md transition-all"
+                        >
+                            Entendido, continuar
+                        </button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* ✅ Confirm ANTES de guardar — cancelar aborta la operación */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
                 variant={confirmSave.variant}
                 title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
                 message={confirmSave.variant === "create" ? "¿Confirmas que deseas registrar este pasante?" : "¿Confirmas que deseas guardar los cambios realizados?"}
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+                onClose={() => setConfirmSave((prev) => ({ ...prev, open: false }))}
+                onConfirm={async () => {
+                    await confirmSave.callback?.();
+                    setConfirmSave((prev) => ({ ...prev, open: false }));
+                }}
             />
 
 

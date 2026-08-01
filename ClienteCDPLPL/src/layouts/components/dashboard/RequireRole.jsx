@@ -13,19 +13,20 @@ export function RequireRole({ allowedRoles, children }) {
 
   const now = Date.now();
   if (payload.exp * 1000 < now) {
+    // Sin `alert()` nativo: el header avisa con antelación cuando la sesión
+    // está por expirar, así que aquí basta con devolver al login.
     localStorage.removeItem('token');
-    alert('Tu sesión ha expirado');
     return <Navigate to="/auth/login" replace />;
   }
-  if (payload.rol.rol === 'NO_DEFINIDO') {
+  if (payload.rol?.rol === 'NO_DEFINIDO') {
     return <Navigate to="/dashboard/roleNotDefined" replace />;
   }
-  const fechaInicio = new Date(payload.rol.fecha_inicio).getTime();
-  const fechaFin = new Date(payload.rol.fecha_fin).getTime();
+  const fechaInicio = new Date(payload.rol?.fecha_inicio).getTime();
+  const fechaFin = new Date(payload.rol?.fecha_fin).getTime();
   if (now < fechaInicio || now > fechaFin) {
     return <Navigate to="/dashboard/roleExpired" replace />;
   }
-  if (!payload.rol.activo) {
+  if (!payload.rol?.activo) {
     return <Navigate to="/dashboard/roleInactive" replace />;
   }
   if (!allowedRoles.includes(payload.rol.rol)) {

@@ -4,6 +4,9 @@ import { subirArchivo, eliminarArchivos, buildPublicUrl, moverArchivo } from "..
 import { enviarCorreoAceptacion, enviarCorreoRechazo } from "../../../utils/mailer";
 import { registrarMovimientoPagoColegiatura } from "../../financiero/services/movimiento";
 import { Origen } from "../../../types/movimientos";
+import { describir } from "../../../utils/auditoria";
+import { Modulos } from "../../../types/auditoria";
+import { emitirNotificacion } from "../../notificaciones/services";
 
 // ──────────────────────────────────────────────────────────────
 //  PÚBLICO — sin auth
@@ -136,6 +139,16 @@ export const crearPostulacion = async (req: Request, res: Response) => {
             }
         });
 
+        // Sin describir(): las postulaciones son públicas y no se auditan (solo se
+        // registran acciones de usuarios autenticados dentro del dashboard).
+        await emitirNotificacion({
+            modulo: Modulos.POSTULACIONES,
+            tipo: 'info',
+            titulo: 'Nueva postulación recibida',
+            descripcion: `${postulacion.nombre} ${postulacion.apellido} · CI ${postulacion.carnet_identidad}`,
+            enlace: `/dashboard/postulaciones`,
+            idUsuario: undefined,
+        });
         return res.status(201).json({ message: 'Postulación enviada correctamente. Te notificaremos por correo.', postulacion });
     } catch (error) {
         console.error("Error crearPostulacion:", error);
@@ -308,8 +321,7 @@ export const aceptarPostulacion = async (req: Request, res: Response) => {
         });
         const activePresupuestoId = configPresupuesto ? Number(configPresupuesto.valor) : 1;
 
-        // @ts-ignore
-        await registrarMovimientoPagoColegiatura(pagoCreado.id_pago, montoBase, Origen.COLEGIATURA, `Inscripción inicial de ${colegiado.nombre} ${colegiado.apellido}`, activePresupuestoId, Number(req.user?.id_usuario || req.user), p.metodo_pago ?? undefined, nuevaRutaComprobante ?? undefined);
+        await registrarMovimientoPagoColegiatura(pagoCreado.id_pago, montoBase, Origen.COLEGIATURA, `Inscripción inicial de ${colegiado.nombre} ${colegiado.apellido}`, activePresupuestoId, req.user!.id_usuario, p.metodo_pago ?? undefined, nuevaRutaComprobante ?? undefined);
 
         const origenModificado = await prismaClient.origen_movimiento.findFirst({
             where: { id_pago_colegiado: pagoCreado.id_pago },
@@ -346,6 +358,15 @@ export const aceptarPostulacion = async (req: Request, res: Response) => {
         }
         */
 
+        describir(res, `Aceptó la postulación de ${p.nombre} ${p.apellido} y creó el colegiado correspondiente`);
+        await emitirNotificacion({
+            modulo: Modulos.COLEGIADOS,
+            tipo: 'exito',
+            titulo: 'Postulación aceptada',
+            descripcion: `${colegiado.nombre} ${colegiado.apellido} fue dado de alta como colegiado.`,
+            enlace: '/dashboard/colegiados',
+            idUsuario: req.user!.id_usuario,
+        });
         return res.json({ message: 'Postulación aceptada. Colegiado creado.', colegiado, pin_temporal: pin });
     } catch (error) {
         console.error("Error aceptarPostulacion:", error);
@@ -368,6 +389,15 @@ export const rechazarPostulacion = async (req: Request, res: Response) => {
             data: { estado: 'RECHAZADO', motivo_rechazo: motivo ?? null }
         });
 
+        await emitirNotificacion({
+            modulo: Modulos.POSTULACIONES,
+            tipo: 'aviso',
+            titulo: 'Postulación rechazada',
+            descripcion: `${p.nombre} ${p.apellido} · CI ${p.carnet_identidad}`,
+            enlace: '/dashboard/postulaciones',
+            idUsuario: req.user!.id_usuario,
+        });
+
         // Correo de rechazo (Desactivado según requerimiento)
         /*
         try {
@@ -377,6 +407,7 @@ export const rechazarPostulacion = async (req: Request, res: Response) => {
         }
         */
 
+        describir(res, `Rechazó la postulación de ${p.nombre} ${p.apellido}${motivo ? `: ${motivo}` : ''}`);
         return res.json({ message: 'Postulación rechazada. Los archivos se mantienen.' });
     } catch (error) {
         console.error("Error rechazarPostulacion:", error);
@@ -411,6 +442,7 @@ export const eliminarPostulacion = async (req: Request, res: Response) => {
         });
 
         await prismaClient.postulaciones.delete({ where: { id_postulacion: id } });
+        describir(res, `Eliminó definitivamente la postulación de ${p.nombre} ${p.apellido}`);
         return res.json({ message: 'Postulación eliminada definitivamente.' });
     } catch (error) {
         console.error("Error eliminarPostulacion:", error);
@@ -444,6 +476,7 @@ export const upsertConfigPago = async (req: Request, res: Response) => {
             })
         );
         const result = await Promise.all(ops);
+        describir(res, `Modificó la configuración de pago de postulaciones (${items.map(i => i.clave).join(', ')})`);
         return res.json(result);
     } catch (error) {
         console.error("Error upsertConfigPago:", error);
@@ -476,6 +509,7 @@ export const uploadQr = async (req: Request, res: Response) => {
             create: { clave: 'QR', valor: rutaQR, descripcion: 'Ruta de la imagen QR' }
         });
 
+        describir(res, `Actualizó el código QR de pago para postulaciones`);
         return res.json({ message: 'QR subido correctamente.', ruta: rutaQR });
     } catch (error) {
         console.error("Error uploadQr:", error);

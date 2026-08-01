@@ -9,24 +9,23 @@ import {
     MenuItem,
     Select,
     FormControl,
-    InputLabel,
-    Alert,
-    IconButton,
-    InputAdornment
+    InputLabel
 } from '@mui/material';
-import { Visibility, VisibilityOff, ContentCopy } from '@mui/icons-material';
-import { createColegiado } from '../../../services/colegiados';
 import EspecialidadesSelect from '../../../components/EspecialidadesSelect';
 
-const CreateColegiado = ({ onSuccess }) => {
+/**
+ * Formulario de registro de colegiado.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo. El PIN
+ * generado por el servidor lo muestra el contenedor tras la creación.
+ */
+const CreateColegiado = ({ onSubmitForm }) => {
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm();
 
-    const [pinGenerado, setPinGenerado] = useState(null);
-    const [mostrarPin, setMostrarPin] = useState(false);
     const [especialidades, setEspecialidades] = useState([]);
 
     // Fecha de hoy en formato AAAA-MM-DD
@@ -37,25 +36,15 @@ const CreateColegiado = ({ onSuccess }) => {
         { value: 'INACTIVO', label: 'Inactivo' }
     ];
 
-    const onSubmit = async (data) => {
-        try {
-            const payload = {
-                ...data,
-                especialidades: especialidades.join(", "),
-            };
-            if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
-            if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
-            
-            const response = await createColegiado(payload);
-            const pin = response?.pin_temporal;
-            if (pin) {
-                setPinGenerado(pin);
-            } else {
-                onSuccess();
-            }
-        } catch (error) {
-            alert('Error al registrar colegiado');
-        }
+    const onSubmit = (data) => {
+        const payload = {
+            ...data,
+            especialidades: especialidades.join(", "),
+        };
+        if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
+        if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
+
+        onSubmitForm(payload);
     };
 
     return (
@@ -176,53 +165,9 @@ const CreateColegiado = ({ onSuccess }) => {
                             )}
                         </FormControl>
 
-                        {pinGenerado && (
-                            <Alert
-                                severity="warning"
-                                sx={{ mt: 2 }}
-                                action={
-                                    <IconButton
-                                        color="inherit"
-                                        size="small"
-                                        onClick={() => {
-                                            navigator.clipboard.writeText(pinGenerado);
-                                        }}
-                                    >
-                                        <ContentCopy fontSize="small" />
-                                    </IconButton>
-                                }
-                            >
-                                <strong>PIN de acceso:</strong>{" "}
-                                {mostrarPin ? pinGenerado : "••••"}
-                                <IconButton
-                                    size="small"
-                                    onClick={() => setMostrarPin(!mostrarPin)}
-                                    sx={{ ml: 0.5 }}
-                                >
-                                    {mostrarPin ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
-                                </IconButton>
-                                <br />
-                                <Typography variant="caption" color="text.secondary">
-                                    Guarda este PIN, solo se muestra una vez y es necesario para el acceso por GPS.
-                                </Typography>
-                            </Alert>
-                        )}
-                        {pinGenerado ? (
-                            <Button
-                                variant="contained"
-                                color="success"
-                                onClick={() => {
-                                    setPinGenerado(null);
-                                    onSuccess();
-                                }}
-                            >
-                                Entendido, continuar
-                            </Button>
-                        ) : (
-                            <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
-                                Registrar Colegiado
-                            </Button>
-                        )}
+                        <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
+                            Registrar Colegiado
+                        </Button>
                     </Box>
                 </form>
             </Box>

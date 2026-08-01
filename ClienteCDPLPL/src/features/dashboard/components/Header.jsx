@@ -29,7 +29,7 @@ const Header = ({
     };
 
     return (
-        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 lg:p-8 mb-8 relative overflow-hidden">
+        <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 lg:p-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl opacity-50 -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
             <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">

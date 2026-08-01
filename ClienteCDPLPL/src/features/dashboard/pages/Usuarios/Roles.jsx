@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAllRoles, estadoRol } from "../../services/roles";
+import { getAllRoles, estadoRol, actualizarRol } from "../../services/roles";
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
@@ -20,7 +20,7 @@ const Roles = () => {
     const [mostrarModal, setMostrarModal] = useState(false);
     const [currentId, setCurrentId] = useState(null);
 
-    // Confirm DESPUÉS de guardar
+    // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "edit", callback: null });
 
     // Doble confirmación activar/desactivar
@@ -79,7 +79,7 @@ const Roles = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 title="Gestión de Roles" icon={<Shield className="w-8 h-8" />}
                 stats={[{ label: "Total de Roles", value: total, color: "blue" }]}
@@ -130,28 +130,38 @@ const Roles = () => {
                 />
             </div>
 
-            {/* Form — abre directo */}
+            {/* Form — abre directo y delega el guardado al confirm */}
             <Modal isOpen={mostrarModal} title="Asignar / Modificar Rol" onClose={() => setMostrarModal(false)}>
                 <AsignarRol
                     id={currentId}
                     onClose={() => setMostrarModal(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "edit",
-                            callback: () => { setMostrarModal(false); showAlertFn("success", "Rol actualizado correctamente."); fetchRoles(); },
+                            callback: async () => {
+                                try {
+                                    await actualizarRol(currentId, payload);
+                                    setMostrarModal(false);
+                                    showAlertFn("success", "Rol actualizado correctamente.");
+                                    fetchRoles();
+                                } catch { showAlertFn("error", "Error al actualizar el rol."); }
+                            },
                         });
                     }}
                 />
             </Modal>
 
-            {/* ✅ Confirm DESPUÉS de guardar */}
+            {/* ✅ Confirm ANTES de guardar — cancelar aborta la operación */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
                 variant={confirmSave.variant}
                 title="¿Confirmar cambios?"
                 message="¿Confirmas que deseas guardar los cambios realizados al rol?"
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+                onClose={() => setConfirmSave((prev) => ({ ...prev, open: false }))}
+                onConfirm={async () => {
+                    await confirmSave.callback?.();
+                    setConfirmSave((prev) => ({ ...prev, open: false }));
+                }}
             />
 
             {/* ✅ Doble confirmación activar/desactivar (2s + 4s) */}

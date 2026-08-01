@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
+import { describir } from "../../../utils/auditoria";
 
 export const createInvitado = async (req: Request, res: Response) => {
     try {
@@ -14,6 +15,7 @@ export const createInvitado = async (req: Request, res: Response) => {
 
             }
         })
+        describir(res, `Se creó el invitado ${invitado.nombre} ${invitado.apellido}`)
         res.status(201).json({ message: 'Invitado creado exitosamente', invitado })
     } catch (e) {
         throw new BadRequestException('Error al crear invitado', ErrorCodes.INTERNAL_EXCEPTION)
@@ -80,6 +82,7 @@ export const updateEstadoInvitado = async (req: Request, res: Response) => {
             where: { id_invitado: Number(id) },
             data: { estado }
         });
+        describir(res, `${estado === 'ACTIVO' ? 'Activó' : 'Desactivó'} al invitado ${invitado.nombre} ${invitado.apellido}`)
         res.status(200).json(invitado);
     } catch (error) {
         res.status(500).json({ error: "Error al actualizar el estado del invitado" });
@@ -100,6 +103,7 @@ export const updateInvitadoById = async (req: Request, res: Response) => {
                 telefono
             },
         });
+        describir(res, `Modificó los datos del invitado ${updatedInvitado.nombre} ${updatedInvitado.apellido}`)
         res.status(200).json(updatedInvitado);
     } catch (error) {
         throw new BadRequestException('Error al actualizar invitado', ErrorCodes.INTERNAL_EXCEPTION)
@@ -108,9 +112,10 @@ export const updateInvitadoById = async (req: Request, res: Response) => {
 export const deleteInvitadoById = async (req: Request, res: Response) => {
     const id = req.params.id;
     try {
-        await prismaClient.invitados.delete({
+        const invitado = await prismaClient.invitados.delete({
             where: { id_invitado: +id },
         });
+        describir(res, `Eliminó al invitado ${invitado.nombre} ${invitado.apellido}`)
         res.status(200).json({ message: 'Invitado eliminado exitosamente' });
     } catch (error) {
         throw new BadRequestException('Error al eliminar invitado', ErrorCodes.INTERNAL_EXCEPTION)

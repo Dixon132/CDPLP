@@ -61,7 +61,7 @@ export default function BuzonCorrespondencia() {
     };
 
     return (
-        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
+        <div className="space-y-6 p-6 min-h-full bg-slate-50/50">
             {/* Header Reutilizable */}
             <Header
                 title="Buzón de Correspondencia"

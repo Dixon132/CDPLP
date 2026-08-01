@@ -1,9 +1,14 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { TextField, Button, Box } from "@mui/material";
-import { getUserById, ModificarUsuario } from "../../../services/usuarios";
+import { getUserById } from "../../../services/usuarios";
 
-const ModificarUser = ({ id, onClose, onSuccess }) => {
+/**
+ * Formulario de modificación de usuario.
+ * No llama a la API: entrega los datos validados vía `onSubmitForm` para que el
+ * contenedor los confirme (ConfirmActionModal) antes de persistirlos.
+ */
+const ModificarUser = ({ id, onClose, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -25,15 +30,9 @@ const ModificarUser = ({ id, onClose, onSuccess }) => {
         if (id) getUser();
     }, [id]);
 
-    // ✅ Enviar cambios
-    const onSubmit = async (data) => {
-        try {
-            await ModificarUsuario(id, data);
-            if (onSuccess) onSuccess();
-            else if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al modificar usuario:", error);
-        }
+    // ✅ Entregar cambios al contenedor para su confirmación
+    const onSubmit = (data) => {
+        onSubmitForm(data);
     };
 
     return (

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
-import Table from "../../components/Table";
+import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 
@@ -11,11 +11,10 @@ import CreateActInstitucional from "./components/CreateActInstitucional";
 import EditActInstitucional from "./components/EditActInstitucional";
 import RegisterColegiadoInst from "./components/RegisterColegiadoInst";
 import GestionAsistenciaInst from "./components/GestionAsistenciaInst";
-import GenerarReporteActividadesInst from "./components/GenerarReporteActividadesInst";
 
 import {
     Sparkles, Calendar, Edit3, UserPlus, ClipboardList,
-    Power, PowerOff, Download, Activity, Settings,
+    Power, PowerOff, Activity, Settings,
     Target, Rocket, CheckCircle2, XCircle, AlertCircle,
     Filter, Plus, DollarSign, Award,
 } from 'lucide-react';
@@ -28,7 +27,6 @@ const AcInstitucionales = () => {
     const [search, setSearch] = useState("");
     const [total, setTotal] = useState(0);
     const [totalPage, setTotalPage] = useState(1);
-    const [modalReporte, setModalReporte] = useState(false);
     const [filterType, setFilterType] = useState('all');
 
     const [showModalCreate, setShowModalCreate] = useState(false);
@@ -103,7 +101,7 @@ const AcInstitucionales = () => {
         [actividades, filterType]);
 
     return (
-        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
+        <div className="space-y-6 p-6 min-h-full bg-slate-50/50">
             <Header
                 title="Actividades Institucionales" icon={<Sparkles className="w-8 h-8" />}
                 stats={[
@@ -113,7 +111,6 @@ const AcInstitucionales = () => {
                 searchPlaceholder="Buscar actividades..."
                 onSearch={(v) => { setSearch(v); setPage(1); }}
                 buttons={[
-                    { label: "Generar Reporte", icon: <Download />, onClick: () => setModalReporte(true), color: "blue" },
                     { label: "Crear Actividad", icon: <Plus />, onClick: () => setShowModalCreate(true), color: "purple" },
                 ]}
             />
@@ -131,8 +128,9 @@ const AcInstitucionales = () => {
                 </div>
             </div>
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200">
-                <Table
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200 p-2 sm:p-4">
+                <ResponsiveTable
+                    storageKey="actividades-institucionales"
                     columns={[
                         {
                             label: "Actividad", key: "nombre", render: (a) => (
@@ -213,10 +211,6 @@ const AcInstitucionales = () => {
 
             <Modal isOpen={showModalAsistencia} title="Gestionar Asistencias" onClose={() => setShowModalAsistencia(false)}>
                 {selectedId && <GestionAsistenciaInst id={selectedId} onClose={() => setShowModalAsistencia(false)} />}
-            </Modal>
-
-            <Modal isOpen={modalReporte} title="Generar Reporte de Actividades" onClose={() => setModalReporte(false)}>
-                <GenerarReporteActividadesInst onClose={() => setModalReporte(false)} />
             </Modal>
 
             {/* ✅ Confirm DESPUÉS de guardar */}

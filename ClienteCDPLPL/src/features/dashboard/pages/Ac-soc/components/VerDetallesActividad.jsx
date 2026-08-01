@@ -11,6 +11,7 @@ import AsignarColegiados from "./AsignarColegiados";
 import Alerts from "../../../components/Alerts";
 import AsignarPasantes from "./AsignarPasante";
 import PinDisplay from "../../../../../components/PinDisplay";
+import { getActividadSocialById, updateMetaAsignacion } from "../../../services/ac-sociales";
 
 function formatTime(isoDate) {
     if (!isoDate) return "—";
@@ -55,25 +56,34 @@ export const VerDetallesActividad = () => {
     const [metaInput, setMetaInput] = useState("");
     const [savingMeta, setSavingMeta] = useState(false);
 
+    // Vía axios: lleva el token de sesión e informa el fallo en vez de guardar
+    // el cuerpo del error como si fueran datos.
     const getData = () => {
-        fetch(`/api/ac-sociales/ac-social/detalles/${id}`)
-            .then((res) => res.json())
-            .then((data) => { setData(data); setLoading(false); })
-            .catch((err) => { console.error(err); setError("Error al cargar datos"); setLoading(false); });
+        getActividadSocialById(id)
+            .then((data) => { setData(data); setError(null); })
+            .catch((err) => {
+                console.error(err);
+                setError(err?.response?.status === 401
+                    ? "Tu sesión no tiene acceso a esta actividad."
+                    : "Error al cargar datos");
+            })
+            .finally(() => setLoading(false));
     };
 
     useEffect(() => { getData(); }, [id]);
 
     if (loading) return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-full">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
         </div>
     );
     if (error) return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex items-center justify-center min-h-full">
             <p className="text-red-500 text-lg">{error}</p>
         </div>
     );
+
+    if (!data) return null;
 
     const { nombre, descripcion, ubicacion, motivo, fecha_inicio, estado, tipo, convenio } = data;
 
@@ -110,12 +120,7 @@ export const VerDetallesActividad = () => {
         if (!modalMeta || isNaN(Number(metaInput))) return;
         setSavingMeta(true);
         try {
-            const res = await fetch(`/api/ac-sociales/ac-social/asignacion/${modalMeta.id_asignacion}/meta`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ horas_meta: Number(metaInput) })
-            });
-            if (!res.ok) throw new Error();
+            await updateMetaAsignacion(modalMeta.id_asignacion, Number(metaInput));
             handleSuccess("Meta actualizada correctamente");
             setModalMeta(null);
             getData();
@@ -197,7 +202,7 @@ export const VerDetallesActividad = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50/50 p-6">
+        <div className="min-h-full bg-slate-50/50 p-6">
             <div className="max-w-7xl mx-auto space-y-6">
                 <Header
                     title={nombre}

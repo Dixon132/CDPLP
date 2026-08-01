@@ -1,22 +1,19 @@
 import { Router } from "express";
-import { authMiddleware } from "../../../middlewares/auth";
 import { validateBody } from "../../../middlewares/validate";
 import errorHandler from "../../../utils/error-handler";
-import { createPasante, deletePasanteById, getPasanteById, getPasantes, getPasantesReportDetail, getPasantesReportSummary, getPasantesSimple, updateEstadoById, updateEstadoPasanteById, updatePasanteById } from "../controllers/pasantes";
+import { createPasante, deletePasanteById, getPasanteById, getPasantes, getPasantesSimple, updateEstadoById, updatePasanteById } from "../controllers/pasantes";
 import { pasanteSchema } from "../schemas/pasantes";
+import { Acciones, Modulos } from "../../../types/auditoria";
 
 
 const pasantesRouter: Router = Router()
 
-pasantesRouter.get('/', [authMiddleware], errorHandler(getPasantes))
-pasantesRouter.post('/', [validateBody(pasanteSchema)], errorHandler(createPasante))
-pasantesRouter.get('/:id', [authMiddleware], errorHandler(getPasanteById))
-pasantesRouter.put('/estado/:id', [authMiddleware], errorHandler(updateEstadoById))
-pasantesRouter.put('/:id', [authMiddleware], errorHandler(updatePasanteById))
-pasantesRouter.delete('/:id', [authMiddleware], errorHandler(deletePasanteById))
-pasantesRouter.get('/simple/:id', [authMiddleware], errorHandler(getPasantesSimple))
-pasantesRouter.get('/', [authMiddleware], errorHandler(getPasantesReportSummary))
-pasantesRouter.get('/', [authMiddleware], errorHandler(getPasantesReportDetail))
-pasantesRouter.put('/', [authMiddleware], errorHandler(updateEstadoPasanteById))
+pasantesRouter.get('/', errorHandler(getPasantes))
+pasantesRouter.post('/', [validateBody(pasanteSchema)], errorHandler(createPasante, { modulo: Modulos.COLEGIADOS, accion: Acciones.CREO }))
+pasantesRouter.get('/simple/:id', errorHandler(getPasantesSimple))
+pasantesRouter.put('/estado/:id', errorHandler(updateEstadoById, { modulo: Modulos.COLEGIADOS, accion: Acciones.MODIFICO }))
+pasantesRouter.get('/:id', errorHandler(getPasanteById))
+pasantesRouter.put('/:id', errorHandler(updatePasanteById, { modulo: Modulos.COLEGIADOS, accion: Acciones.MODIFICO }))
+pasantesRouter.delete('/:id', errorHandler(deletePasanteById, { modulo: Modulos.COLEGIADOS, accion: Acciones.ELIMINO }))
 
 export default pasantesRouter

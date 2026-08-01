@@ -8,10 +8,9 @@ import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import CrearCorrespondencia from './components/CrearCorrespondencia';
 import EditarCorrespondencia from './components/EditarCorrespondencia';
-import GenerarReporteCorrespondencia from './components/GenerarReporteCorrespondencia';
 import {
     Mail, Plus, Eye, Edit3, Trash2, User, Calendar, FileText,
-    Filter, BarChart3, Clock, CheckCircle, AlertCircle,
+    Filter, Clock, CheckCircle, AlertCircle,
     MessageCircle, Zap, Users, Sparkles, Target
 } from 'lucide-react';
 
@@ -23,7 +22,6 @@ const Correspondencia = () => {
     const [correspondencia, setCorrespondencia] = useState([]);
     const [filtroEstado, setFiltroEstado] = useState('TODOS');
     const [correspondenciaToDelete, setCorrespondenciaToDelete] = useState(null);
-    const [modalReporte, setModalReporte] = useState(false);
     const [alert, setAlert] = useState({ show: false, type: 'success', message: '', duration: 2000 });
 
     const [mostrarModal, setMostrarModal] = useState(false);
@@ -80,7 +78,7 @@ const Correspondencia = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 icon={<Mail className="w-8 h-8" />} title="Centro de Correspondencia"
                 stats={[
@@ -93,7 +91,6 @@ const Correspondencia = () => {
                 searchPlaceholder="Buscar correspondencia..."
                 onSearch={(v) => setSearch(v)}
                 buttons={[
-                    { label: "Reportes", icon: <BarChart3 className="w-4 h-4" />, onClick: () => setModalReporte(true), color: "red" },
                     { label: "Nueva Correspondencia", icon: <Plus className="w-4 h-4" />, onClick: () => setMostrarModal(true), color: "blue" },
                 ]}
             />
@@ -163,11 +160,6 @@ const Correspondencia = () => {
                     }}
                 />
             </Modal>
-
-            <Modal isOpen={modalReporte} onClose={() => setModalReporte(false)}>
-                <GenerarReporteCorrespondencia />
-            </Modal>
-
 
             {/* ✅ Doble confirmación eliminar (2s + 4s) */}
             <ConfirmDeleteModal

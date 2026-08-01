@@ -127,7 +127,7 @@ const Contenido = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50/50 flex items-center justify-center">
+      <div className="min-h-full bg-slate-50/50 flex items-center justify-center">
         <div className="flex items-center gap-3 text-slate-500">
           <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           <span className="text-lg">Cargando correspondencia...</span>
@@ -144,7 +144,7 @@ const Contenido = () => {
   return (
     <>
       <Alerts type={alert.type} message={alert.message} show={alert.show} duration={3000} onClose={() => setAlert((p) => ({ ...p, show: false }))} />
-      <div className="min-h-screen bg-slate-50/50 p-6">
+      <div className="min-h-full bg-slate-50/50 p-6">
         <div className="max-w-5xl mx-auto space-y-6">
           {/* Header con navegación */}
           <div className="flex items-center gap-4">

@@ -1,29 +1,25 @@
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useState } from "react";
 import {
     TextField,
     Button,
     Box,
     Typography,
-    Stack,
-    MenuItem,
-    Select,
-    InputLabel,
-    FormControl,
-    Alert,
-    IconButton
+    Stack
 } from "@mui/material";
-import { Visibility, VisibilityOff, ContentCopy } from "@mui/icons-material";
-import { createPasante } from "../../../../services/pasantes";
 import InstitucionesSelect from "../../../../components/InstitucionesSelect";
 
-const CreatePasante = ({ onSuccess, onClose }) => {
+/**
+ * Formulario de registro de pasante.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo. El PIN
+ * generado por el servidor lo muestra el contenedor tras la creación.
+ */
+const CreatePasante = ({ onSubmitForm, onClose }) => {
     const {
         register,
         handleSubmit,
-        reset,
-        control,
         formState: { errors, isSubmitting }
     } = useForm({
         defaultValues: {
@@ -31,28 +27,13 @@ const CreatePasante = ({ onSuccess, onClose }) => {
         },
     })
 
-    const [pinGenerado, setPinGenerado] = useState(null);
-    const [mostrarPin, setMostrarPin] = useState(false);
     const [institucionSeleccionada, setInstitucionSeleccionada] = useState("");
 
-    const onSubmit = async (data) => {
-        try {
-            const response = await createPasante({
-                ...data,
-                institucion: institucionSeleccionada,
-            })
-            const pin = response?.pin_temporal;
-            if (pin) {
-                setPinGenerado(pin);
-            } else {
-                if (onSuccess) onSuccess()
-                reset()
-                if (onClose) onClose()
-            }
-        } catch (e) {
-            console.error(e)
-            alert("Error al crear pasante")
-        }
+    const onSubmit = (data) => {
+        onSubmitForm({
+            ...data,
+            institucion: institucionSeleccionada,
+        })
     }
 
     return (
@@ -138,37 +119,6 @@ const CreatePasante = ({ onSuccess, onClose }) => {
                 </Box>
 
                 {/* Botones */}
-                {pinGenerado && (
-                    <Alert
-                        severity="warning"
-                        sx={{ mt: 1 }}
-                        action={
-                            <IconButton
-                                color="inherit"
-                                size="small"
-                                onClick={() => {
-                                    navigator.clipboard.writeText(pinGenerado);
-                                }}
-                            >
-                                <ContentCopy fontSize="small" />
-                            </IconButton>
-                        }
-                    >
-                        <strong>PIN de acceso:</strong>{" "}
-                        {mostrarPin ? pinGenerado : "••••"}
-                        <IconButton
-                            size="small"
-                            onClick={() => setMostrarPin(!mostrarPin)}
-                            sx={{ ml: 0.5 }}
-                        >
-                            {mostrarPin ? <VisibilityOff fontSize="small" /> : <Visibility fontSize="small" />}
-                        </IconButton>
-                        <br />
-                        <Typography variant="caption" color="text.secondary">
-                            Guarda este PIN, solo se muestra una vez y es necesario para el acceso por GPS.
-                        </Typography>
-                    </Alert>
-                )}
                 <Stack direction="row" justifyContent="flex-end" spacing={2} mt={2}>
                     <Button
                         variant="outlined"
@@ -177,29 +127,14 @@ const CreatePasante = ({ onSuccess, onClose }) => {
                     >
                         Cancelar
                     </Button>
-                    {pinGenerado ? (
-                        <Button
-                            variant="contained"
-                            color="success"
-                            onClick={() => {
-                                setPinGenerado(null);
-                                if (onSuccess) onSuccess();
-                                reset();
-                                if (onClose) onClose();
-                            }}
-                        >
-                            Entendido, continuar
-                        </Button>
-                    ) : (
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            disabled={isSubmitting}
-                        >
-                            {isSubmitting ? "Guardando..." : "Guardar"}
-                        </Button>
-                    )}
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        disabled={isSubmitting}
+                    >
+                        {isSubmitting ? "Guardando..." : "Guardar"}
+                    </Button>
                 </Stack>
             </Stack>
         </Box>

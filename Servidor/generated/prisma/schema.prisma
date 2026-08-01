@@ -162,7 +162,9 @@ model movimientos_financieros {
   estado            String?            @default("COMPLETADO") @db.VarChar(30)
   metodo_pago       String?            @db.VarChar(50)
   tipo_origen_label String?            @default("MANUAL") @db.VarChar(50)
-  updatedAt         DateTime?
+  // @updatedAt faltaba: era el único modelo con esta columna sin el atributo, así
+  // que Prisma nunca la rellenaba y el orden "últimos modificados" no funcionaba.
+  updatedAt         DateTime?          @updatedAt
   origen_movimiento origen_movimiento? @relation(fields: [id_origen], references: [id_origen], onDelete: NoAction, onUpdate: NoAction)
   presupuestos      presupuestos?      @relation(fields: [id_presupuesto], references: [id_presupuesto], onDelete: NoAction, onUpdate: NoAction)
   usuario           usuarios?          @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
@@ -217,6 +219,41 @@ model auditoria {
   usuario      usuarios @relation(fields: [id_usuario], references: [id_usuario])
 }
 
+/// Aviso generado por un hecho del sistema (un pago, una inscripción, una
+/// postulación...). La notificación NO se duplica por usuario: se emite una vez
+/// y se muestra a todo el que tenga acceso al módulo. Quién la ha leído se
+/// guarda aparte, en `notificaciones_leidas`.
+model notificaciones {
+  id_notificacion Int                     @id @default(autoincrement())
+  modulo          String                  @db.VarChar(60)
+  tipo            String                  @default("info") @db.VarChar(30)
+  titulo          String                  @db.VarChar(160)
+  descripcion     String?
+  /// Ruta del dashboard a la que lleva al pulsarla.
+  enlace          String?                 @db.VarChar(200)
+  /// Autor del hecho, para no notificárselo a quien lo provocó.
+  id_usuario      Int?
+  createdAt       DateTime                @default(now())
+  usuario         usuarios?               @relation(fields: [id_usuario], references: [id_usuario], onDelete: SetNull, onUpdate: NoAction)
+  lecturas        notificaciones_leidas[]
+
+  @@index([createdAt])
+  @@index([modulo])
+}
+
+/// Marca de lectura POR usuario. Que un usuario abra una notificación no la
+/// marca como leída para los demás.
+model notificaciones_leidas {
+  id_notificacion Int
+  id_usuario      Int
+  leida_en        DateTime       @default(now())
+  notificacion    notificaciones @relation(fields: [id_notificacion], references: [id_notificacion], onDelete: Cascade)
+  usuario         usuarios       @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade)
+
+  @@id([id_notificacion, id_usuario])
+  @@index([id_usuario])
+}
+
 model pasantes {
   id_pasante                  Int                           @id @default(autoincrement())
   nombre                      String?
@@ -258,6 +295,8 @@ model usuarios {
   destinatario                correspondencia[]             @relation("destinatario")
   movimientos_financieros     movimientos_financieros[]
   roles                       roles[]
+  notificaciones              notificaciones[]
+  notificaciones_leidas       notificaciones_leidas[]
 }
 
 model invitados {

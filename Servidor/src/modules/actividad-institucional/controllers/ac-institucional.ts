@@ -4,10 +4,12 @@ import puppeteer from "puppeteer";
 import prismaClient from "../../../utils/prismaClient";
 import { registrarMovimientoPagoCurso } from "../../financiero/services/movimiento";
 import { Origen } from "../../../types/movimientos";
-import registrarAuditoria from "../../Auditorias/services";
-import { Acciones, Modulos } from "../../../types/auditoria";
-import { subirArchivo } from "../../../utils/uploadS3";
+import { Modulos } from "../../../types/auditoria";
+import { describir } from "../../../utils/auditoria";
+import { subirArchivo, eliminarArchivo } from "../../../utils/uploadS3";
 import crypto from "crypto";
+import { emitirNotificacion } from "../../notificaciones/services";
+import { esc, generarInformePdf, enviarInformePdf, renderInformeHTML, renderTabla, renderBarraProgreso } from "../../../utils/informes";
 
 /**
  * GET /api/ac-institucionales
@@ -96,6 +98,7 @@ export const createActInst = async (req: Request, res: Response) => {
         },
     });
 
+    describir(res, `Se creó la actividad institucional "${nueva.nombre}"`);
     return res
         .status(201)
         .json({ message: "Actividad institucional creada", data: nueva });
@@ -128,6 +131,7 @@ export const updateActInstById = async (req: Request, res: Response) => {
         },
     });
 
+    describir(res, `Modificó la actividad institucional "${updated.nombre}"`);
     return res.status(200).json(updated);
 };
 
@@ -142,6 +146,7 @@ export const updateEstadoActInst = async (req: Request, res: Response) => {
         where: { id_actividad: id },
         data: { estado },
     });
+    describir(res, `Cambió el estado de la actividad institucional "${updated.nombre}" a ${estado}`);
     return res.status(200).json(updated);
 };
 
@@ -160,6 +165,14 @@ export const createRegistroInst = async (req: Request, res: Response) => {
         metodo_pago,
         presupuesto
     } = req.body;
+
+    // ─── Validación del inscrito ────────────────────────────────────────────
+    if (!id_colegiado && !id_invitado) {
+        return res.status(400).json({ error: "Debe indicarse un colegiado o un invitado" });
+    }
+    if (id_colegiado && id_invitado) {
+        return res.status(400).json({ error: "Un registro corresponde a un colegiado o a un invitado, no a ambos" });
+    }
 
     // ─── Validación de duplicado ────────────────────────────────────────────
     let existingRegistro = null;
@@ -193,6 +206,33 @@ export const createRegistroInst = async (req: Request, res: Response) => {
     }
     // ────────────────────────────────────────────────────────────────────────
 
+    const act = await prismaClient.actividades_institucionales.findFirstOrThrow({
+        where: { id_actividad: Number(id_actividad) },
+        select: { costo: true, nombre: true }
+    });
+
+    // El costo va directo a `pagos_*` y a tesorería, así que se valida antes de
+    // crear nada: un costo nulo o negativo generaría un INGRESO inválido que
+    // descuadra el saldo del presupuesto.
+    const costo = Number(act.costo);
+    if (act.costo === null || act.costo === undefined || Number.isNaN(costo) || costo <= 0) {
+        return res.status(400).json({
+            error: `La actividad "${act.nombre}" no tiene un costo válido (${act.costo}). Corrígelo antes de inscribir participantes.`
+        });
+    }
+
+    // La subida va ANTES de la transacción: una transacción interactiva de
+    // Prisma expira a los 5s, y mantenerla abierta durante una subida de red
+    // la hace abortar con P2028.
+    let urlComprobante: string | undefined = undefined;
+    if (req.file) {
+        const nombreAct = act.nombre || 'ACT';
+        const prefix = nombreAct.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, 'A');
+        const hash4 = crypto.createHash('md5').update(String(id_actividad)).digest('hex').substring(0, 4);
+        const folderName = `${prefix}-${hash4}`;
+        urlComprobante = await subirArchivo(req.file, `comprobantes_institucional/${folderName}`);
+    }
+
     try {
         const configPresupuesto = await prismaClient.config_pago.findUnique({
             where: { clave: 'PRESUPUESTO_ACTIVO' }
@@ -225,25 +265,7 @@ export const createRegistroInst = async (req: Request, res: Response) => {
                 });
             }
 
-            const act = await tx.actividades_institucionales.findFirstOrThrow({
-                where: { id_actividad: Number(id_actividad) },
-                select: { costo: true, nombre: true }
-            });
-
-            // Upload file if exists
-            let urlComprobante = undefined;
-            if (req.file) {
-                const nombreAct = act.nombre || 'ACT';
-                const prefix = nombreAct.substring(0, 3).toUpperCase().replace(/[^A-Z]/g, 'A');
-                const hash4 = crypto.createHash('md5').update(String(id_actividad)).digest('hex').substring(0, 4);
-                const folderName = `${prefix}-${hash4}`;
-                // append original extension to keep it valid
-                const ext = req.file.originalname.split('.').pop() || 'png';
-                const fileName = `comp_${registro.id_registro}.${ext}`;
-                urlComprobante = await subirArchivo(req.file, `comprobantes_institucional/${folderName}/${fileName}`);
-            }
-
-            const userId = (req as any).user ? Number((req as any).user) : undefined;
+            const userId = req.user?.id_usuario;
             
             let idPagoColegiado = undefined;
             let idPagoInvitado = undefined;
@@ -280,9 +302,22 @@ export const createRegistroInst = async (req: Request, res: Response) => {
             return registro;
         });
 
-        await registrarAuditoria((req as any).user, Acciones.REGISTRO, Modulos.FINANCIERO, `Se registro una inscripcion al curso con id_actividad ${id_actividad}`);
+        describir(res, `Se registró una inscripción a la actividad institucional "${act.nombre}" por Bs. ${costo}`);
+        await emitirNotificacion({
+            modulo: Modulos.ACT_INSTITUCIONALES,
+            tipo: 'info',
+            titulo: 'Nueva inscripción a actividad',
+            descripcion: `${act.nombre} · Bs. ${costo}`,
+            enlace: '/dashboard/actividades_institucionales',
+            idUsuario: req.user!.id_usuario,
+        });
         return res.status(201).json(reg);
     } catch (error) {
+        // La transacción revirtió pero el comprobante ya está en la nube: se borra
+        // para no dejar archivos huérfanos.
+        if (urlComprobante) {
+            await eliminarArchivo(urlComprobante).catch(e => console.error("Error eliminando comprobante huérfano:", e));
+        }
         console.error("Error en createRegistroInst:", error);
         return res.status(500).json({ error: "Error al registrar la inscripción y sus movimientos financieros" });
     }
@@ -344,13 +379,13 @@ export const anularRegistroInst = async (req: Request, res: Response) => {
             return urlComprobante;
         });
 
-        // Eliminar el archivo de S3 si existía
+        // El archivo se borra ya confirmada la transacción: si se borrara dentro
+        // y la transacción revirtiera, el comprobante se perdería sin motivo.
         if (urlComprobante) {
-            import('../../../utils/uploadS3').then(({ eliminarArchivo }) => {
-                eliminarArchivo(urlComprobante).catch(e => console.error("Error eliminando comprobante:", e));
-            });
+            await eliminarArchivo(urlComprobante).catch(e => console.error("Error eliminando comprobante:", e));
         }
 
+        describir(res, `Anuló el registro de inscripción #${id_registro} a una actividad institucional`);
         res.status(200).json({ message: "Registro anulado correctamente" });
     } catch (error) {
         console.error("Error anularRegistroInst:", error);
@@ -393,6 +428,7 @@ export const createAsistenciaInst = async (req: Request, res: Response) => {
             id_invitado: id_invitado ? Number(id_invitado) : null,
         }
     });
+    describir(res, `Marcó asistencia a la actividad institucional #${id_actividad}`);
     return res.status(201).json(a);
 };
 
@@ -401,6 +437,7 @@ export const deleteAsistenciaInst = async (req: Request, res: Response) => {
     const deleted = await prismaClient.asistencias_actividad.delete({
         where: { id_asistencia: id },
     });
+    describir(res, `Eliminó una asistencia registrada (#${id})`);
     return res.status(200).json(deleted);
 };
 
@@ -555,118 +592,80 @@ export const getActividadInstDetailReport = async (req: Request, res: Response) 
             // Representa solo que asistió; si quisieras la fecha de asistencia, no la hay
         }));
 
-        // 2.3) Construir HTML
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            h2 { color: #444; margin-top: 20px; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-            .seccion { margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <h1>Detalle Actividad Institucional</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
+        // 2.3) Tasa de asistencia: asistencias marcadas / registros inscritos
+        const tasaAsistencia = registros.length > 0 ? (asistencias.length / registros.length) * 100 : 0;
 
-          <div class="seccion">
-            <h2>Datos Básicos</h2>
-            <p><strong>Nombre:</strong> ${nombre}</p>
-            <p><strong>Descripción:</strong> ${descripcion}</p>
-            <p><strong>Tipo:</strong> ${tipo}</p>
-            <p><strong>Fecha Programada:</strong> ${fechaProg}</p>
-            <p><strong>Costo (Bs.):</strong> ${costo}</p>
-            <p><strong>Estado:</strong> ${estado}</p>
-          </div>
+        const kpis = [
+            { label: "Inscritos", value: registros.length, accent: "violeta" as const },
+            { label: "Asistencias", value: asistencias.length, accent: "violeta" as const },
+            { label: "Tasa de Asistencia", value: `${Math.round(tasaAsistencia)}%`, accent: "rosa" as const },
+        ];
 
-          <div class="seccion">
-            <h2>Registros Inscritos (Colegiados & Invitados)</h2>
-            ${registros.length === 0
-                ? "<p>No hay registros inscritos.</p>"
-                : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Tipo</th>
-                    <th>Nombre Completo</th>
-                    <th>Correo</th>
-                    <th>Teléfono</th>
-                    <th>Detalles</th>
-                    <th>Estado Registro</th>
-                    <th>Fecha Registro</th>
-                    <th>Método Pago</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${registros.map((r) => `
-                    <tr>
-                      <td>${r.tipo}</td>
-                      <td>${r.nombreCompleto}</td>
-                      <td>${r.correo}</td>
-                      <td>${r.telefono}</td>
-                      <td>${r.detalles}</td>
-                      <td>${r.estadoRegistro}</td>
-                      <td>${r.fechaRegistro}</td>
-                      <td>${r.metodoPago}</td>
-                    </tr>
-                  `).join("")}
-                </tbody>
-              </table>
-            `
-            }
-          </div>
+        const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Datos Básicos</h2>
+        <p><strong>Nombre:</strong> ${esc(nombre)}</p>
+        <p><strong>Descripción:</strong> ${esc(descripcion)}</p>
+        <p><strong>Tipo:</strong> ${esc(tipo)}</p>
+        <p><strong>Fecha Programada:</strong> ${esc(fechaProg)}</p>
+        <p><strong>Costo (Bs.):</strong> ${esc(costo)}</p>
+        <p><strong>Estado:</strong> ${esc(estado)}</p>
+      </section>
 
-          <div class="seccion">
-            <h2>Asistencias Marcadas (solo Colegiados)</h2>
-            ${asistencias.length === 0
-                ? "<p>No hay asistencias registradas.</p>"
-                : `
-              <ul>
-                ${asistencias.map((a) => `<li>${a.nombreCompleto}</li>`).join("")}
-              </ul>
-            `
-            }
-          </div>
-        </body>
-      </html>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Registros Inscritos (Colegiados &amp; Invitados)</h2>
+        ${renderTabla(
+            [
+                { label: "Tipo" },
+                { label: "Nombre Completo" },
+                { label: "Correo" },
+                { label: "Teléfono" },
+                { label: "Detalles" },
+                { label: "Estado Registro" },
+                { label: "Fecha Registro" },
+                { label: "Método Pago" },
+            ],
+            registros.map(
+                (r) => `
+            <tr>
+              <td>${esc(r.tipo)}</td>
+              <td>${esc(r.nombreCompleto)}</td>
+              <td>${esc(r.correo)}</td>
+              <td>${esc(r.telefono)}</td>
+              <td>${esc(r.detalles)}</td>
+              <td>${esc(r.estadoRegistro)}</td>
+              <td>${esc(r.fechaRegistro)}</td>
+              <td>${esc(r.metodoPago)}</td>
+            </tr>`
+            ),
+            "No hay registros inscritos."
+        )}
+      </section>
+
+      <section class="seccion">
+        <h2 class="seccion-titulo">Asistencias Marcadas (solo Colegiados)</h2>
+        ${renderTabla(
+            [{ label: "Nombre Completo" }],
+            asistencias.map((a) => `<tr><td>${esc(a.nombreCompleto)}</td></tr>`),
+            "No hay asistencias registradas."
+        )}
+      </section>
     `;
 
-        // 2.4) Generar PDF con Puppeteer
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe de Actividad Institucional",
+            subtitulo: nombre,
+            kpis,
+            bodyHtml,
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({
-            format: "A4",
-            printBackground: true,
-        });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res
-                .status(500)
-                .send("Error generando PDF detalle de actividad institucional.");
-        }
-
-        const filename = `detalle_actividad_inst_${id}.pdf`;
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html);
+        return enviarInformePdf(res, pdfBuffer, `informe_actividad_institucional_${id}.pdf`);
     } catch (error) {
         console.error("Error en getActividadInstDetailReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte detallado de actividad institucional.");
+            .send("Error al generar informe detallado de actividad institucional.");
     }
 };
 
@@ -734,100 +733,71 @@ export const getActividadesInstSummaryReport = async (req: Request, res: Respons
         });
 
         // 3.4) Texto con filtros aplicados
-        let filtrosTexto = "<p>Todos los registros.</p>";
+        let filtrosTexto = "Todos los registros.";
         if (fecha_inicio || fecha_fin) {
             const inicio = fecha_inicio ? String(fecha_inicio) : "—";
             const fin = fecha_fin ? String(fecha_fin) : "—";
-            filtrosTexto = `<p><strong>Rango Fecha Programada:</strong> ${inicio} – ${fin}</p>`;
+            filtrosTexto = `Rango Fecha Programada: ${esc(inicio)} – ${esc(fin)}`;
         }
 
-        // 3.5) Construir tabla HTML
-        let tablaHTML = "";
-        if (datos.length === 0) {
-            tablaHTML = `<p>No hay actividades institucionales en este rango.</p>`;
-        } else {
-            tablaHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Tipo</th>
-            <th>Fecha Programada</th>
-            <th>Costo (Bs.)</th>
-            <th>Estado</th>
-            <th># Inscritos</th>
-            <th># Asistencias</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${datos.map((d) => `
+        const totalInscritosGlobal = datos.reduce((acc, d) => acc + d.totalInscritos, 0);
+        const totalAsistenciasGlobal = datos.reduce((acc, d) => acc + d.totalAsistencias, 0);
+        const tasaAsistenciaGlobal = totalInscritosGlobal > 0 ? (totalAsistenciasGlobal / totalInscritosGlobal) * 100 : 0;
+
+        const kpis = [
+            { label: "Actividades", value: datos.length, accent: "violeta" as const },
+            { label: "Total Inscritos", value: totalInscritosGlobal, accent: "violeta" as const },
+            { label: "Tasa de Asistencia Global", value: `${Math.round(tasaAsistenciaGlobal)}%`, accent: "rosa" as const },
+        ];
+
+        // 3.5) Construir tabla
+        const bodyHtml = `
+      <section class="seccion">
+        ${renderTabla(
+            [
+                { label: "Nombre" },
+                { label: "Tipo" },
+                { label: "Fecha Programada" },
+                { label: "Costo (Bs.)", align: "right" },
+                { label: "Estado" },
+                { label: "# Inscritos", align: "right" },
+                { label: "# Asistencias", align: "right" },
+                { label: "% Asistencia" },
+            ],
+            datos.map((d) => {
+                const pctAsistencia = d.totalInscritos > 0 ? (d.totalAsistencias / d.totalInscritos) * 100 : 0;
+                return `
             <tr>
-              <td>${d.nombre}</td>
-              <td>${d.tipo}</td>
-              <td>${d.fechaProg}</td>
-              <td>${d.costo}</td>
-              <td>${d.estado}</td>
-              <td>${d.totalInscritos}</td>
-              <td>${d.totalAsistencias}</td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
-      `;
-        }
-
-        // 3.6) HTML completo
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Resumen de Actividades Institucionales</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
-          ${filtrosTexto}
-          ${tablaHTML}
-        </body>
-      </html>
+              <td>${esc(d.nombre)}</td>
+              <td>${esc(d.tipo)}</td>
+              <td>${esc(d.fechaProg)}</td>
+              <td style="text-align:right">${esc(d.costo)}</td>
+              <td>${esc(d.estado)}</td>
+              <td style="text-align:right">${d.totalInscritos}</td>
+              <td style="text-align:right">${d.totalAsistencias}</td>
+              <td>${renderBarraProgreso(pctAsistencia)}</td>
+            </tr>`;
+            }),
+            "No hay actividades institucionales en este rango."
+        )}
+      </section>
     `;
 
-        // 3.7) Generar PDF con Puppeteer
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe Consolidado de Actividades Institucionales",
+            filtrosTexto,
+            kpis,
+            bodyHtml,
+            orientacion: "landscape",
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res
-                .status(500)
-                .send("Error generando PDF resumen de actividades institucionales.");
-        }
-
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="resumen_actividades_institucionales.pdf"`
-        );
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html, { landscape: true });
+        return enviarInformePdf(res, pdfBuffer, "informe_actividades_institucionales.pdf");
     } catch (error) {
         console.error("Error en getActividadesInstSummaryReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte resumen de actividades institucionales.");
+            .send("Error al generar informe resumen de actividades institucionales.");
     }
 };
 

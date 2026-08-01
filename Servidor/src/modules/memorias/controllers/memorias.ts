@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { subirArchivo, eliminarArchivo } from "../../../utils/uploadS3";
+import { describir } from "../../../utils/auditoria";
 
 export const getMemorias = async (req: Request, res: Response) => {
     try {
@@ -34,6 +35,7 @@ export const createMemoria = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Se subió el documento "${nueva.titulo}" a Memorias y Balances`);
         res.status(201).json(nueva);
     } catch (error) {
         console.error("Error al crear memoria:", error);
@@ -70,6 +72,7 @@ export const updateMemoria = async (req: Request, res: Response) => {
             }
         });
 
+        describir(res, `Modificó el documento "${actualizada.titulo}" de Memorias y Balances`);
         res.status(200).json(actualizada);
     } catch (error) {
         console.error("Error al actualizar memoria:", error);
@@ -90,6 +93,7 @@ export const deleteMemoria = async (req: Request, res: Response) => {
             where: { id }
         });
 
+        describir(res, `Eliminó el documento "${memoriaActual.titulo}" de Memorias y Balances`);
         res.status(200).json({ message: "Documento eliminado correctamente" });
     } catch (error) {
         console.error("Error al eliminar memoria:", error);

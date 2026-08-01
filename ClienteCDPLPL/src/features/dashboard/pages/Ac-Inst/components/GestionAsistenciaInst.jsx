@@ -4,6 +4,7 @@ import {
     getAsistenciasPorActividad,
     createAsistenciaActividad,
     deleteAsistenciaActividad,
+    anularRegistroActividadInst,
 } from "../../../services/ac-institucionales";
 import {
     Users,
@@ -18,9 +19,11 @@ import {
 } from 'lucide-react';
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../../components/Header";
-import Table from "../../../components/Table";
-import ConfirmDialog from "../../../components/ConfirmDialog";
+import ResponsiveTable from "../../../components/ResponsiveTable";
+import Alerts from "../../../components/Alerts";
 import Modal from "../../../../../components/Modal";
+import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
+import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import { CircularProgress, Box, Typography } from "@mui/material";
 
 export default function GestionAsistenciaInst() {
@@ -30,13 +33,23 @@ export default function GestionAsistenciaInst() {
     const { id } = useParams();
     const navigate = useNavigate();
 
-    // Estados para el Modal de Confirmación
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [selectedColegiado, setSelectedColegiado] = useState(null);
-    const [confirmAction, setConfirmAction] = useState(""); // "MARCAR" o "DESMARCAR"
+    // Confirmación de marcar / desmarcar asistencia
+    const [asistenciaTarget, setAsistenciaTarget] = useState(null);
+
+    // Doble confirmación para anular el registro (anula el pago asociado)
+    const [anularTarget, setAnularTarget] = useState(null);
 
     // Estado para el Modal de Ver Lista
     const [showListaModal, setShowListaModal] = useState(false);
+
+    const [alert, setAlert] = useState(false);
+    const [alertType, setAlertType] = useState("success");
+    const [alertMsg, setAlertMsg] = useState("");
+
+    const showAlertFn = (type, msg) => {
+        setAlertType(type); setAlertMsg(msg); setAlert(true);
+        setTimeout(() => setAlert(false), 3000);
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -78,33 +91,27 @@ export default function GestionAsistenciaInst() {
         return null;
     };
 
-    const handleToggleClick = (r) => {
-        const asistio = hasAssisted(r);
-        setSelectedColegiado(r);
-        setConfirmAction(asistio ? "DESMARCAR" : "MARCAR");
-        setShowConfirm(true);
-    };
-
     const confirmToggle = async () => {
-        if (!selectedColegiado) return;
-        
-        const existingId = findAsistenciaId(selectedColegiado);
+        if (!asistenciaTarget) return;
+
+        const existingId = findAsistenciaId(asistenciaTarget);
         try {
             if (existingId) {
                 await deleteAsistenciaActividad(existingId);
             } else {
                 await createAsistenciaActividad({
                     id_actividad: id,
-                    id_colegiado: selectedColegiado.id_colegiado || null,
-                    id_invitado: selectedColegiado.id_invitado || null,
+                    id_colegiado: asistenciaTarget.id_colegiado || null,
+                    id_invitado: asistenciaTarget.id_invitado || null,
                 });
             }
             await fetchData();
-            setShowConfirm(false);
+            showAlertFn("success", existingId ? "Asistencia desmarcada." : "Asistencia marcada.");
         } catch (err) {
             console.error("Error toggling asistencia", err);
-            alert("Error al actualizar la asistencia");
-            setShowConfirm(false);
+            showAlertFn("error", "Error al actualizar la asistencia.");
+        } finally {
+            setAsistenciaTarget(null);
         }
     };
 
@@ -117,17 +124,24 @@ export default function GestionAsistenciaInst() {
     }
 
     const registrosTotales = registros.filter((r) => r.id_colegiado !== null || r.id_invitado !== null);
-    const handleAnularRegistro = async (registro) => {
-        if (window.confirm(`¿Estás seguro de que deseas anular el registro de ${registro.colegiados ? registro.colegiados.nombre + ' ' + registro.colegiados.apellido : registro.invitados?.nombre + ' ' + registro.invitados?.apellido}? Esta acción anulará el pago asociado y eliminará el comprobante.`)) {
-            try {
-                const { anularRegistroActividadInst } = await import('../../../services/ac-institucionales');
-                await anularRegistroActividadInst(registro.id_registro);
-                fetchData();
-            } catch (error) {
-                console.error("Error al anular registro:", error);
-                alert("Error al anular el registro");
-            }
+
+    const handleAnularRegistro = async () => {
+        if (!anularTarget) return;
+        try {
+            await anularRegistroActividadInst(anularTarget.id_registro);
+            showAlertFn("success", "Registro anulado correctamente.");
+            fetchData();
+        } catch (error) {
+            console.error("Error al anular registro:", error);
+            showAlertFn("error", "Error al anular el registro.");
+        } finally {
+            setAnularTarget(null);
         }
+    };
+
+    const nombreDe = (r) => {
+        const persona = r?.colegiados || r?.invitados;
+        return `${persona?.nombre ?? ""} ${persona?.apellido ?? ""}`.trim() || "este inscrito";
     };
 
     const columns = [
@@ -203,19 +217,19 @@ export default function GestionAsistenciaInst() {
             className: (r) => hasAssisted(r) 
                 ? "text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100" 
                 : "text-emerald-600 bg-emerald-50 border-emerald-100 hover:bg-emerald-100",
-            onClick: (r) => handleToggleClick(r)
+            onClick: (r) => setAsistenciaTarget(r)
         },
         {
             label: "Anular",
             icon: Ban,
             show: (r) => r.estado_registro !== 'ANULADO',
             className: "text-rose-600 bg-rose-50 border-rose-100 hover:bg-rose-100",
-            onClick: (r) => handleAnularRegistro(r)
+            onClick: (r) => setAnularTarget(r)
         }
     ];
 
     return (
-        <div className="space-y-6 p-6 min-h-screen bg-slate-50/50">
+        <div className="space-y-6 p-6 min-h-full bg-slate-50/50">
             <Header
                 title="Gestión de Asistencia"
                 icon={<Users className="w-8 h-8" />}
@@ -241,7 +255,7 @@ export default function GestionAsistenciaInst() {
                 ]}
             />
 
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200">
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200 p-2 sm:p-4">
                 <div className="px-6 py-4 border-b border-slate-200/60 bg-slate-50/50">
                     <div className="flex items-center gap-3">
                         <UserPlus className="w-5 h-5 text-indigo-600" />
@@ -249,7 +263,8 @@ export default function GestionAsistenciaInst() {
                     </div>
                 </div>
                 
-                <Table 
+                <ResponsiveTable
+                    storageKey="asistencia-institucional"
                     columns={columns}
                     data={registrosTotales}
                     actions={actions}
@@ -257,15 +272,31 @@ export default function GestionAsistenciaInst() {
                 />
             </div>
 
-            {/* Modal de Confirmación */}
-            <ConfirmDialog
-                isOpen={showConfirm}
-                message={confirmAction === "MARCAR" 
-                    ? "¿Estás seguro de que deseas MARCAR la asistencia de este inscrito?" 
-                    : "¿Estás seguro de que deseas DESMARCAR la asistencia de este inscrito?"}
+            {/* ✅ Confirmación de marcar / desmarcar asistencia */}
+            <ConfirmActionModal
+                isOpen={!!asistenciaTarget}
+                onClose={() => setAsistenciaTarget(null)}
                 onConfirm={confirmToggle}
-                onClose={() => setShowConfirm(false)}
-                confirmText={confirmAction === "MARCAR" ? "Marcar" : "Desmarcar"}
+                title={asistenciaTarget && hasAssisted(asistenciaTarget) ? "Desmarcar asistencia" : "Marcar asistencia"}
+                message={asistenciaTarget && hasAssisted(asistenciaTarget)
+                    ? `¿Confirmas que deseas desmarcar la asistencia de ${nombreDe(asistenciaTarget)}?`
+                    : `¿Confirmas que deseas marcar la asistencia de ${nombreDe(asistenciaTarget)}?`}
+                confirmLabel={asistenciaTarget && hasAssisted(asistenciaTarget) ? "Desmarcar" : "Marcar"}
+                confirmColor={asistenciaTarget && hasAssisted(asistenciaTarget) ? "amber" : "emerald"}
+                confirmIcon={asistenciaTarget && hasAssisted(asistenciaTarget) ? <UserX className="w-4 h-4" /> : <UserCheck className="w-4 h-4" />}
+            />
+
+            {/* ✅ Doble confirmación para anular el registro (2s + 4s) */}
+            <ConfirmDeleteModal
+                isOpen={!!anularTarget}
+                onClose={() => setAnularTarget(null)}
+                onConfirm={handleAnularRegistro}
+                title="Anular Registro"
+                message={`¿Confirmas que deseas anular el registro de ${nombreDe(anularTarget)}? Esta acción anulará el pago asociado y eliminará el comprobante.`}
+                waitSeconds={4}
+                confirmLabel="Anular"
+                confirmColor="red"
+                confirmIcon={<Ban className="w-4 h-4" />}
             />
 
             {/* Modal de Ver Lista de Asistentes */}
@@ -307,6 +338,8 @@ export default function GestionAsistenciaInst() {
                     )}
                 </div>
             </Modal>
+
+            <Alerts type={alertType} message={alertMsg} show={alert} onClose={() => setAlert(false)} />
         </div>
     );
 }

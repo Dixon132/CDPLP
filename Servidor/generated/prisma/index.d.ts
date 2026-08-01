@@ -89,6 +89,20 @@ export type presupuestos = $Result.DefaultSelection<Prisma.$presupuestosPayload>
  */
 export type auditoria = $Result.DefaultSelection<Prisma.$auditoriaPayload>
 /**
+ * Model notificaciones
+ * Aviso generado por un hecho del sistema (un pago, una inscripción, una
+ * postulación...). La notificación NO se duplica por usuario: se emite una vez
+ * y se muestra a todo el que tenga acceso al módulo. Quién la ha leído se
+ * guarda aparte, en `notificaciones_leidas`.
+ */
+export type notificaciones = $Result.DefaultSelection<Prisma.$notificacionesPayload>
+/**
+ * Model notificaciones_leidas
+ * Marca de lectura POR usuario. Que un usuario abra una notificación no la
+ * marca como leída para los demás.
+ */
+export type notificaciones_leidas = $Result.DefaultSelection<Prisma.$notificaciones_leidasPayload>
+/**
  * Model pasantes
  * 
  */
@@ -440,6 +454,26 @@ export class PrismaClient<
     * ```
     */
   get auditoria(): Prisma.auditoriaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notificaciones`: Exposes CRUD operations for the **notificaciones** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notificaciones
+    * const notificaciones = await prisma.notificaciones.findMany()
+    * ```
+    */
+  get notificaciones(): Prisma.notificacionesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.notificaciones_leidas`: Exposes CRUD operations for the **notificaciones_leidas** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Notificaciones_leidas
+    * const notificaciones_leidas = await prisma.notificaciones_leidas.findMany()
+    * ```
+    */
+  get notificaciones_leidas(): Prisma.notificaciones_leidasDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.pasantes`: Exposes CRUD operations for the **pasantes** model.
@@ -1005,6 +1039,8 @@ export namespace Prisma {
     pagos_colegiados: 'pagos_colegiados',
     presupuestos: 'presupuestos',
     auditoria: 'auditoria',
+    notificaciones: 'notificaciones',
+    notificaciones_leidas: 'notificaciones_leidas',
     pasantes: 'pasantes',
     roles: 'roles',
     usuarios: 'usuarios',
@@ -1034,7 +1070,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "especialidades" | "documentos_requeridos" | "config_pago" | "memorias_balances" | "pagos_invitados" | "instituciones"
+      modelProps: "actividades_institucionales" | "asistencias_actividad" | "colegiados_registrados_actividad_institucional" | "actividades_sociales" | "convenio" | "correspondencia" | "colegiados" | "colegiados_asignados_social" | "asistencia_social_diaria" | "documentos_colegiados" | "movimientos_financieros" | "origen_movimiento" | "pagos_colegiados" | "presupuestos" | "auditoria" | "notificaciones" | "notificaciones_leidas" | "pasantes" | "roles" | "usuarios" | "invitados" | "postulaciones" | "especialidades" | "documentos_requeridos" | "config_pago" | "memorias_balances" | "pagos_invitados" | "instituciones"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2148,6 +2184,154 @@ export namespace Prisma {
           }
         }
       }
+      notificaciones: {
+        payload: Prisma.$notificacionesPayload<ExtArgs>
+        fields: Prisma.notificacionesFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.notificacionesFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.notificacionesFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          findFirst: {
+            args: Prisma.notificacionesFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.notificacionesFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          findMany: {
+            args: Prisma.notificacionesFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>[]
+          }
+          create: {
+            args: Prisma.notificacionesCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          createMany: {
+            args: Prisma.notificacionesCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.notificacionesCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>[]
+          }
+          delete: {
+            args: Prisma.notificacionesDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          update: {
+            args: Prisma.notificacionesUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          deleteMany: {
+            args: Prisma.notificacionesDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.notificacionesUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.notificacionesUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>[]
+          }
+          upsert: {
+            args: Prisma.notificacionesUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificacionesPayload>
+          }
+          aggregate: {
+            args: Prisma.NotificacionesAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotificaciones>
+          }
+          groupBy: {
+            args: Prisma.notificacionesGroupByArgs<ExtArgs>
+            result: $Utils.Optional<NotificacionesGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.notificacionesCountArgs<ExtArgs>
+            result: $Utils.Optional<NotificacionesCountAggregateOutputType> | number
+          }
+        }
+      }
+      notificaciones_leidas: {
+        payload: Prisma.$notificaciones_leidasPayload<ExtArgs>
+        fields: Prisma.notificaciones_leidasFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.notificaciones_leidasFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.notificaciones_leidasFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          findFirst: {
+            args: Prisma.notificaciones_leidasFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.notificaciones_leidasFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          findMany: {
+            args: Prisma.notificaciones_leidasFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>[]
+          }
+          create: {
+            args: Prisma.notificaciones_leidasCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          createMany: {
+            args: Prisma.notificaciones_leidasCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.notificaciones_leidasCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>[]
+          }
+          delete: {
+            args: Prisma.notificaciones_leidasDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          update: {
+            args: Prisma.notificaciones_leidasUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          deleteMany: {
+            args: Prisma.notificaciones_leidasDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.notificaciones_leidasUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.notificaciones_leidasUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>[]
+          }
+          upsert: {
+            args: Prisma.notificaciones_leidasUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$notificaciones_leidasPayload>
+          }
+          aggregate: {
+            args: Prisma.Notificaciones_leidasAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateNotificaciones_leidas>
+          }
+          groupBy: {
+            args: Prisma.notificaciones_leidasGroupByArgs<ExtArgs>
+            result: $Utils.Optional<Notificaciones_leidasGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.notificaciones_leidasCountArgs<ExtArgs>
+            result: $Utils.Optional<Notificaciones_leidasCountAggregateOutputType> | number
+          }
+        }
+      }
       pasantes: {
         payload: Prisma.$pasantesPayload<ExtArgs>
         fields: Prisma.pasantesFieldRefs
@@ -3061,6 +3245,8 @@ export namespace Prisma {
     pagos_colegiados?: pagos_colegiadosOmit
     presupuestos?: presupuestosOmit
     auditoria?: auditoriaOmit
+    notificaciones?: notificacionesOmit
+    notificaciones_leidas?: notificaciones_leidasOmit
     pasantes?: pasantesOmit
     roles?: rolesOmit
     usuarios?: usuariosOmit
@@ -3486,6 +3672,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type NotificacionesCountOutputType
+   */
+
+  export type NotificacionesCountOutputType = {
+    lecturas: number
+  }
+
+  export type NotificacionesCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    lecturas?: boolean | NotificacionesCountOutputTypeCountLecturasArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * NotificacionesCountOutputType without action
+   */
+  export type NotificacionesCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the NotificacionesCountOutputType
+     */
+    select?: NotificacionesCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * NotificacionesCountOutputType without action
+   */
+  export type NotificacionesCountOutputTypeCountLecturasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: notificaciones_leidasWhereInput
+  }
+
+
+  /**
    * Count Type PasantesCountOutputType
    */
 
@@ -3526,6 +3743,8 @@ export namespace Prisma {
     destinatario: number
     movimientos_financieros: number
     roles: number
+    notificaciones: number
+    notificaciones_leidas: number
   }
 
   export type UsuariosCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3534,6 +3753,8 @@ export namespace Prisma {
     destinatario?: boolean | UsuariosCountOutputTypeCountDestinatarioArgs
     movimientos_financieros?: boolean | UsuariosCountOutputTypeCountMovimientos_financierosArgs
     roles?: boolean | UsuariosCountOutputTypeCountRolesArgs
+    notificaciones?: boolean | UsuariosCountOutputTypeCountNotificacionesArgs
+    notificaciones_leidas?: boolean | UsuariosCountOutputTypeCountNotificaciones_leidasArgs
   }
 
   // Custom InputTypes
@@ -3580,6 +3801,20 @@ export namespace Prisma {
    */
   export type UsuariosCountOutputTypeCountRolesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: rolesWhereInput
+  }
+
+  /**
+   * UsuariosCountOutputType without action
+   */
+  export type UsuariosCountOutputTypeCountNotificacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: notificacionesWhereInput
+  }
+
+  /**
+   * UsuariosCountOutputType without action
+   */
+  export type UsuariosCountOutputTypeCountNotificaciones_leidasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: notificaciones_leidasWhereInput
   }
 
 
@@ -21738,6 +21973,2274 @@ export namespace Prisma {
 
 
   /**
+   * Model notificaciones
+   */
+
+  export type AggregateNotificaciones = {
+    _count: NotificacionesCountAggregateOutputType | null
+    _avg: NotificacionesAvgAggregateOutputType | null
+    _sum: NotificacionesSumAggregateOutputType | null
+    _min: NotificacionesMinAggregateOutputType | null
+    _max: NotificacionesMaxAggregateOutputType | null
+  }
+
+  export type NotificacionesAvgAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+  }
+
+  export type NotificacionesSumAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+  }
+
+  export type NotificacionesMinAggregateOutputType = {
+    id_notificacion: number | null
+    modulo: string | null
+    tipo: string | null
+    titulo: string | null
+    descripcion: string | null
+    enlace: string | null
+    id_usuario: number | null
+    createdAt: Date | null
+  }
+
+  export type NotificacionesMaxAggregateOutputType = {
+    id_notificacion: number | null
+    modulo: string | null
+    tipo: string | null
+    titulo: string | null
+    descripcion: string | null
+    enlace: string | null
+    id_usuario: number | null
+    createdAt: Date | null
+  }
+
+  export type NotificacionesCountAggregateOutputType = {
+    id_notificacion: number
+    modulo: number
+    tipo: number
+    titulo: number
+    descripcion: number
+    enlace: number
+    id_usuario: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type NotificacionesAvgAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+  }
+
+  export type NotificacionesSumAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+  }
+
+  export type NotificacionesMinAggregateInputType = {
+    id_notificacion?: true
+    modulo?: true
+    tipo?: true
+    titulo?: true
+    descripcion?: true
+    enlace?: true
+    id_usuario?: true
+    createdAt?: true
+  }
+
+  export type NotificacionesMaxAggregateInputType = {
+    id_notificacion?: true
+    modulo?: true
+    tipo?: true
+    titulo?: true
+    descripcion?: true
+    enlace?: true
+    id_usuario?: true
+    createdAt?: true
+  }
+
+  export type NotificacionesCountAggregateInputType = {
+    id_notificacion?: true
+    modulo?: true
+    tipo?: true
+    titulo?: true
+    descripcion?: true
+    enlace?: true
+    id_usuario?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type NotificacionesAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which notificaciones to aggregate.
+     */
+    where?: notificacionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones to fetch.
+     */
+    orderBy?: notificacionesOrderByWithRelationInput | notificacionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: notificacionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned notificaciones
+    **/
+    _count?: true | NotificacionesCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: NotificacionesAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: NotificacionesSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: NotificacionesMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: NotificacionesMaxAggregateInputType
+  }
+
+  export type GetNotificacionesAggregateType<T extends NotificacionesAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotificaciones]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotificaciones[P]>
+      : GetScalarType<T[P], AggregateNotificaciones[P]>
+  }
+
+
+
+
+  export type notificacionesGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: notificacionesWhereInput
+    orderBy?: notificacionesOrderByWithAggregationInput | notificacionesOrderByWithAggregationInput[]
+    by: NotificacionesScalarFieldEnum[] | NotificacionesScalarFieldEnum
+    having?: notificacionesScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: NotificacionesCountAggregateInputType | true
+    _avg?: NotificacionesAvgAggregateInputType
+    _sum?: NotificacionesSumAggregateInputType
+    _min?: NotificacionesMinAggregateInputType
+    _max?: NotificacionesMaxAggregateInputType
+  }
+
+  export type NotificacionesGroupByOutputType = {
+    id_notificacion: number
+    modulo: string
+    tipo: string
+    titulo: string
+    descripcion: string | null
+    enlace: string | null
+    id_usuario: number | null
+    createdAt: Date
+    _count: NotificacionesCountAggregateOutputType | null
+    _avg: NotificacionesAvgAggregateOutputType | null
+    _sum: NotificacionesSumAggregateOutputType | null
+    _min: NotificacionesMinAggregateOutputType | null
+    _max: NotificacionesMaxAggregateOutputType | null
+  }
+
+  type GetNotificacionesGroupByPayload<T extends notificacionesGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<NotificacionesGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof NotificacionesGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], NotificacionesGroupByOutputType[P]>
+            : GetScalarType<T[P], NotificacionesGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type notificacionesSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    modulo?: boolean
+    tipo?: boolean
+    titulo?: boolean
+    descripcion?: boolean
+    enlace?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+    lecturas?: boolean | notificaciones$lecturasArgs<ExtArgs>
+    _count?: boolean | NotificacionesCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones"]>
+
+  export type notificacionesSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    modulo?: boolean
+    tipo?: boolean
+    titulo?: boolean
+    descripcion?: boolean
+    enlace?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones"]>
+
+  export type notificacionesSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    modulo?: boolean
+    tipo?: boolean
+    titulo?: boolean
+    descripcion?: boolean
+    enlace?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones"]>
+
+  export type notificacionesSelectScalar = {
+    id_notificacion?: boolean
+    modulo?: boolean
+    tipo?: boolean
+    titulo?: boolean
+    descripcion?: boolean
+    enlace?: boolean
+    id_usuario?: boolean
+    createdAt?: boolean
+  }
+
+  export type notificacionesOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_notificacion" | "modulo" | "tipo" | "titulo" | "descripcion" | "enlace" | "id_usuario" | "createdAt", ExtArgs["result"]["notificaciones"]>
+  export type notificacionesInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+    lecturas?: boolean | notificaciones$lecturasArgs<ExtArgs>
+    _count?: boolean | NotificacionesCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type notificacionesIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+  }
+  export type notificacionesIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    usuario?: boolean | notificaciones$usuarioArgs<ExtArgs>
+  }
+
+  export type $notificacionesPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "notificaciones"
+    objects: {
+      usuario: Prisma.$usuariosPayload<ExtArgs> | null
+      lecturas: Prisma.$notificaciones_leidasPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_notificacion: number
+      modulo: string
+      tipo: string
+      titulo: string
+      descripcion: string | null
+      /**
+       * Ruta del dashboard a la que lleva al pulsarla.
+       */
+      enlace: string | null
+      /**
+       * Autor del hecho, para no notificárselo a quien lo provocó.
+       */
+      id_usuario: number | null
+      createdAt: Date
+    }, ExtArgs["result"]["notificaciones"]>
+    composites: {}
+  }
+
+  type notificacionesGetPayload<S extends boolean | null | undefined | notificacionesDefaultArgs> = $Result.GetResult<Prisma.$notificacionesPayload, S>
+
+  type notificacionesCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<notificacionesFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: NotificacionesCountAggregateInputType | true
+    }
+
+  export interface notificacionesDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['notificaciones'], meta: { name: 'notificaciones' } }
+    /**
+     * Find zero or one Notificaciones that matches the filter.
+     * @param {notificacionesFindUniqueArgs} args - Arguments to find a Notificaciones
+     * @example
+     * // Get one Notificaciones
+     * const notificaciones = await prisma.notificaciones.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends notificacionesFindUniqueArgs>(args: SelectSubset<T, notificacionesFindUniqueArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notificaciones that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {notificacionesFindUniqueOrThrowArgs} args - Arguments to find a Notificaciones
+     * @example
+     * // Get one Notificaciones
+     * const notificaciones = await prisma.notificaciones.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends notificacionesFindUniqueOrThrowArgs>(args: SelectSubset<T, notificacionesFindUniqueOrThrowArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notificaciones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesFindFirstArgs} args - Arguments to find a Notificaciones
+     * @example
+     * // Get one Notificaciones
+     * const notificaciones = await prisma.notificaciones.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends notificacionesFindFirstArgs>(args?: SelectSubset<T, notificacionesFindFirstArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notificaciones that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesFindFirstOrThrowArgs} args - Arguments to find a Notificaciones
+     * @example
+     * // Get one Notificaciones
+     * const notificaciones = await prisma.notificaciones.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends notificacionesFindFirstOrThrowArgs>(args?: SelectSubset<T, notificacionesFindFirstOrThrowArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notificaciones that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notificaciones
+     * const notificaciones = await prisma.notificaciones.findMany()
+     * 
+     * // Get first 10 Notificaciones
+     * const notificaciones = await prisma.notificaciones.findMany({ take: 10 })
+     * 
+     * // Only select the `id_notificacion`
+     * const notificacionesWithId_notificacionOnly = await prisma.notificaciones.findMany({ select: { id_notificacion: true } })
+     * 
+     */
+    findMany<T extends notificacionesFindManyArgs>(args?: SelectSubset<T, notificacionesFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notificaciones.
+     * @param {notificacionesCreateArgs} args - Arguments to create a Notificaciones.
+     * @example
+     * // Create one Notificaciones
+     * const Notificaciones = await prisma.notificaciones.create({
+     *   data: {
+     *     // ... data to create a Notificaciones
+     *   }
+     * })
+     * 
+     */
+    create<T extends notificacionesCreateArgs>(args: SelectSubset<T, notificacionesCreateArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notificaciones.
+     * @param {notificacionesCreateManyArgs} args - Arguments to create many Notificaciones.
+     * @example
+     * // Create many Notificaciones
+     * const notificaciones = await prisma.notificaciones.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends notificacionesCreateManyArgs>(args?: SelectSubset<T, notificacionesCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notificaciones and returns the data saved in the database.
+     * @param {notificacionesCreateManyAndReturnArgs} args - Arguments to create many Notificaciones.
+     * @example
+     * // Create many Notificaciones
+     * const notificaciones = await prisma.notificaciones.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notificaciones and only return the `id_notificacion`
+     * const notificacionesWithId_notificacionOnly = await prisma.notificaciones.createManyAndReturn({
+     *   select: { id_notificacion: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends notificacionesCreateManyAndReturnArgs>(args?: SelectSubset<T, notificacionesCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Notificaciones.
+     * @param {notificacionesDeleteArgs} args - Arguments to delete one Notificaciones.
+     * @example
+     * // Delete one Notificaciones
+     * const Notificaciones = await prisma.notificaciones.delete({
+     *   where: {
+     *     // ... filter to delete one Notificaciones
+     *   }
+     * })
+     * 
+     */
+    delete<T extends notificacionesDeleteArgs>(args: SelectSubset<T, notificacionesDeleteArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notificaciones.
+     * @param {notificacionesUpdateArgs} args - Arguments to update one Notificaciones.
+     * @example
+     * // Update one Notificaciones
+     * const notificaciones = await prisma.notificaciones.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends notificacionesUpdateArgs>(args: SelectSubset<T, notificacionesUpdateArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notificaciones.
+     * @param {notificacionesDeleteManyArgs} args - Arguments to filter Notificaciones to delete.
+     * @example
+     * // Delete a few Notificaciones
+     * const { count } = await prisma.notificaciones.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends notificacionesDeleteManyArgs>(args?: SelectSubset<T, notificacionesDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notificaciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notificaciones
+     * const notificaciones = await prisma.notificaciones.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends notificacionesUpdateManyArgs>(args: SelectSubset<T, notificacionesUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notificaciones and returns the data updated in the database.
+     * @param {notificacionesUpdateManyAndReturnArgs} args - Arguments to update many Notificaciones.
+     * @example
+     * // Update many Notificaciones
+     * const notificaciones = await prisma.notificaciones.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Notificaciones and only return the `id_notificacion`
+     * const notificacionesWithId_notificacionOnly = await prisma.notificaciones.updateManyAndReturn({
+     *   select: { id_notificacion: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends notificacionesUpdateManyAndReturnArgs>(args: SelectSubset<T, notificacionesUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Notificaciones.
+     * @param {notificacionesUpsertArgs} args - Arguments to update or create a Notificaciones.
+     * @example
+     * // Update or create a Notificaciones
+     * const notificaciones = await prisma.notificaciones.upsert({
+     *   create: {
+     *     // ... data to create a Notificaciones
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notificaciones we want to update
+     *   }
+     * })
+     */
+    upsert<T extends notificacionesUpsertArgs>(args: SelectSubset<T, notificacionesUpsertArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notificaciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesCountArgs} args - Arguments to filter Notificaciones to count.
+     * @example
+     * // Count the number of Notificaciones
+     * const count = await prisma.notificaciones.count({
+     *   where: {
+     *     // ... the filter for the Notificaciones we want to count
+     *   }
+     * })
+    **/
+    count<T extends notificacionesCountArgs>(
+      args?: Subset<T, notificacionesCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], NotificacionesCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notificaciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NotificacionesAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends NotificacionesAggregateArgs>(args: Subset<T, NotificacionesAggregateArgs>): Prisma.PrismaPromise<GetNotificacionesAggregateType<T>>
+
+    /**
+     * Group by Notificaciones.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificacionesGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends notificacionesGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: notificacionesGroupByArgs['orderBy'] }
+        : { orderBy?: notificacionesGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, notificacionesGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificacionesGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the notificaciones model
+   */
+  readonly fields: notificacionesFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for notificaciones.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__notificacionesClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    usuario<T extends notificaciones$usuarioArgs<ExtArgs> = {}>(args?: Subset<T, notificaciones$usuarioArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    lecturas<T extends notificaciones$lecturasArgs<ExtArgs> = {}>(args?: Subset<T, notificaciones$lecturasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the notificaciones model
+   */
+  interface notificacionesFieldRefs {
+    readonly id_notificacion: FieldRef<"notificaciones", 'Int'>
+    readonly modulo: FieldRef<"notificaciones", 'String'>
+    readonly tipo: FieldRef<"notificaciones", 'String'>
+    readonly titulo: FieldRef<"notificaciones", 'String'>
+    readonly descripcion: FieldRef<"notificaciones", 'String'>
+    readonly enlace: FieldRef<"notificaciones", 'String'>
+    readonly id_usuario: FieldRef<"notificaciones", 'Int'>
+    readonly createdAt: FieldRef<"notificaciones", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * notificaciones findUnique
+   */
+  export type notificacionesFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones to fetch.
+     */
+    where: notificacionesWhereUniqueInput
+  }
+
+  /**
+   * notificaciones findUniqueOrThrow
+   */
+  export type notificacionesFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones to fetch.
+     */
+    where: notificacionesWhereUniqueInput
+  }
+
+  /**
+   * notificaciones findFirst
+   */
+  export type notificacionesFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones to fetch.
+     */
+    where?: notificacionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones to fetch.
+     */
+    orderBy?: notificacionesOrderByWithRelationInput | notificacionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for notificaciones.
+     */
+    cursor?: notificacionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of notificaciones.
+     */
+    distinct?: NotificacionesScalarFieldEnum | NotificacionesScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones findFirstOrThrow
+   */
+  export type notificacionesFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones to fetch.
+     */
+    where?: notificacionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones to fetch.
+     */
+    orderBy?: notificacionesOrderByWithRelationInput | notificacionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for notificaciones.
+     */
+    cursor?: notificacionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of notificaciones.
+     */
+    distinct?: NotificacionesScalarFieldEnum | NotificacionesScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones findMany
+   */
+  export type notificacionesFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones to fetch.
+     */
+    where?: notificacionesWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones to fetch.
+     */
+    orderBy?: notificacionesOrderByWithRelationInput | notificacionesOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing notificaciones.
+     */
+    cursor?: notificacionesWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones.
+     */
+    skip?: number
+    distinct?: NotificacionesScalarFieldEnum | NotificacionesScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones create
+   */
+  export type notificacionesCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * The data needed to create a notificaciones.
+     */
+    data: XOR<notificacionesCreateInput, notificacionesUncheckedCreateInput>
+  }
+
+  /**
+   * notificaciones createMany
+   */
+  export type notificacionesCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many notificaciones.
+     */
+    data: notificacionesCreateManyInput | notificacionesCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * notificaciones createManyAndReturn
+   */
+  export type notificacionesCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * The data used to create many notificaciones.
+     */
+    data: notificacionesCreateManyInput | notificacionesCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * notificaciones update
+   */
+  export type notificacionesUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * The data needed to update a notificaciones.
+     */
+    data: XOR<notificacionesUpdateInput, notificacionesUncheckedUpdateInput>
+    /**
+     * Choose, which notificaciones to update.
+     */
+    where: notificacionesWhereUniqueInput
+  }
+
+  /**
+   * notificaciones updateMany
+   */
+  export type notificacionesUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update notificaciones.
+     */
+    data: XOR<notificacionesUpdateManyMutationInput, notificacionesUncheckedUpdateManyInput>
+    /**
+     * Filter which notificaciones to update
+     */
+    where?: notificacionesWhereInput
+    /**
+     * Limit how many notificaciones to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * notificaciones updateManyAndReturn
+   */
+  export type notificacionesUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * The data used to update notificaciones.
+     */
+    data: XOR<notificacionesUpdateManyMutationInput, notificacionesUncheckedUpdateManyInput>
+    /**
+     * Filter which notificaciones to update
+     */
+    where?: notificacionesWhereInput
+    /**
+     * Limit how many notificaciones to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * notificaciones upsert
+   */
+  export type notificacionesUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * The filter to search for the notificaciones to update in case it exists.
+     */
+    where: notificacionesWhereUniqueInput
+    /**
+     * In case the notificaciones found by the `where` argument doesn't exist, create a new notificaciones with this data.
+     */
+    create: XOR<notificacionesCreateInput, notificacionesUncheckedCreateInput>
+    /**
+     * In case the notificaciones was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<notificacionesUpdateInput, notificacionesUncheckedUpdateInput>
+  }
+
+  /**
+   * notificaciones delete
+   */
+  export type notificacionesDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    /**
+     * Filter which notificaciones to delete.
+     */
+    where: notificacionesWhereUniqueInput
+  }
+
+  /**
+   * notificaciones deleteMany
+   */
+  export type notificacionesDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which notificaciones to delete
+     */
+    where?: notificacionesWhereInput
+    /**
+     * Limit how many notificaciones to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * notificaciones.usuario
+   */
+  export type notificaciones$usuarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the usuarios
+     */
+    select?: usuariosSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the usuarios
+     */
+    omit?: usuariosOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: usuariosInclude<ExtArgs> | null
+    where?: usuariosWhereInput
+  }
+
+  /**
+   * notificaciones.lecturas
+   */
+  export type notificaciones$lecturasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    where?: notificaciones_leidasWhereInput
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    cursor?: notificaciones_leidasWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Notificaciones_leidasScalarFieldEnum | Notificaciones_leidasScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones without action
+   */
+  export type notificacionesDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model notificaciones_leidas
+   */
+
+  export type AggregateNotificaciones_leidas = {
+    _count: Notificaciones_leidasCountAggregateOutputType | null
+    _avg: Notificaciones_leidasAvgAggregateOutputType | null
+    _sum: Notificaciones_leidasSumAggregateOutputType | null
+    _min: Notificaciones_leidasMinAggregateOutputType | null
+    _max: Notificaciones_leidasMaxAggregateOutputType | null
+  }
+
+  export type Notificaciones_leidasAvgAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+  }
+
+  export type Notificaciones_leidasSumAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+  }
+
+  export type Notificaciones_leidasMinAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+    leida_en: Date | null
+  }
+
+  export type Notificaciones_leidasMaxAggregateOutputType = {
+    id_notificacion: number | null
+    id_usuario: number | null
+    leida_en: Date | null
+  }
+
+  export type Notificaciones_leidasCountAggregateOutputType = {
+    id_notificacion: number
+    id_usuario: number
+    leida_en: number
+    _all: number
+  }
+
+
+  export type Notificaciones_leidasAvgAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+  }
+
+  export type Notificaciones_leidasSumAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+  }
+
+  export type Notificaciones_leidasMinAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+    leida_en?: true
+  }
+
+  export type Notificaciones_leidasMaxAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+    leida_en?: true
+  }
+
+  export type Notificaciones_leidasCountAggregateInputType = {
+    id_notificacion?: true
+    id_usuario?: true
+    leida_en?: true
+    _all?: true
+  }
+
+  export type Notificaciones_leidasAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which notificaciones_leidas to aggregate.
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones_leidas to fetch.
+     */
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: notificaciones_leidasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones_leidas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones_leidas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned notificaciones_leidas
+    **/
+    _count?: true | Notificaciones_leidasCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: Notificaciones_leidasAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: Notificaciones_leidasSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: Notificaciones_leidasMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: Notificaciones_leidasMaxAggregateInputType
+  }
+
+  export type GetNotificaciones_leidasAggregateType<T extends Notificaciones_leidasAggregateArgs> = {
+        [P in keyof T & keyof AggregateNotificaciones_leidas]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateNotificaciones_leidas[P]>
+      : GetScalarType<T[P], AggregateNotificaciones_leidas[P]>
+  }
+
+
+
+
+  export type notificaciones_leidasGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: notificaciones_leidasWhereInput
+    orderBy?: notificaciones_leidasOrderByWithAggregationInput | notificaciones_leidasOrderByWithAggregationInput[]
+    by: Notificaciones_leidasScalarFieldEnum[] | Notificaciones_leidasScalarFieldEnum
+    having?: notificaciones_leidasScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: Notificaciones_leidasCountAggregateInputType | true
+    _avg?: Notificaciones_leidasAvgAggregateInputType
+    _sum?: Notificaciones_leidasSumAggregateInputType
+    _min?: Notificaciones_leidasMinAggregateInputType
+    _max?: Notificaciones_leidasMaxAggregateInputType
+  }
+
+  export type Notificaciones_leidasGroupByOutputType = {
+    id_notificacion: number
+    id_usuario: number
+    leida_en: Date
+    _count: Notificaciones_leidasCountAggregateOutputType | null
+    _avg: Notificaciones_leidasAvgAggregateOutputType | null
+    _sum: Notificaciones_leidasSumAggregateOutputType | null
+    _min: Notificaciones_leidasMinAggregateOutputType | null
+    _max: Notificaciones_leidasMaxAggregateOutputType | null
+  }
+
+  type GetNotificaciones_leidasGroupByPayload<T extends notificaciones_leidasGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<Notificaciones_leidasGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof Notificaciones_leidasGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], Notificaciones_leidasGroupByOutputType[P]>
+            : GetScalarType<T[P], Notificaciones_leidasGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type notificaciones_leidasSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    id_usuario?: boolean
+    leida_en?: boolean
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones_leidas"]>
+
+  export type notificaciones_leidasSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    id_usuario?: boolean
+    leida_en?: boolean
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones_leidas"]>
+
+  export type notificaciones_leidasSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id_notificacion?: boolean
+    id_usuario?: boolean
+    leida_en?: boolean
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["notificaciones_leidas"]>
+
+  export type notificaciones_leidasSelectScalar = {
+    id_notificacion?: boolean
+    id_usuario?: boolean
+    leida_en?: boolean
+  }
+
+  export type notificaciones_leidasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id_notificacion" | "id_usuario" | "leida_en", ExtArgs["result"]["notificaciones_leidas"]>
+  export type notificaciones_leidasInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+  export type notificaciones_leidasIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+  export type notificaciones_leidasIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    notificacion?: boolean | notificacionesDefaultArgs<ExtArgs>
+    usuario?: boolean | usuariosDefaultArgs<ExtArgs>
+  }
+
+  export type $notificaciones_leidasPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "notificaciones_leidas"
+    objects: {
+      notificacion: Prisma.$notificacionesPayload<ExtArgs>
+      usuario: Prisma.$usuariosPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id_notificacion: number
+      id_usuario: number
+      leida_en: Date
+    }, ExtArgs["result"]["notificaciones_leidas"]>
+    composites: {}
+  }
+
+  type notificaciones_leidasGetPayload<S extends boolean | null | undefined | notificaciones_leidasDefaultArgs> = $Result.GetResult<Prisma.$notificaciones_leidasPayload, S>
+
+  type notificaciones_leidasCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<notificaciones_leidasFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: Notificaciones_leidasCountAggregateInputType | true
+    }
+
+  export interface notificaciones_leidasDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['notificaciones_leidas'], meta: { name: 'notificaciones_leidas' } }
+    /**
+     * Find zero or one Notificaciones_leidas that matches the filter.
+     * @param {notificaciones_leidasFindUniqueArgs} args - Arguments to find a Notificaciones_leidas
+     * @example
+     * // Get one Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends notificaciones_leidasFindUniqueArgs>(args: SelectSubset<T, notificaciones_leidasFindUniqueArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Notificaciones_leidas that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {notificaciones_leidasFindUniqueOrThrowArgs} args - Arguments to find a Notificaciones_leidas
+     * @example
+     * // Get one Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends notificaciones_leidasFindUniqueOrThrowArgs>(args: SelectSubset<T, notificaciones_leidasFindUniqueOrThrowArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notificaciones_leidas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasFindFirstArgs} args - Arguments to find a Notificaciones_leidas
+     * @example
+     * // Get one Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends notificaciones_leidasFindFirstArgs>(args?: SelectSubset<T, notificaciones_leidasFindFirstArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Notificaciones_leidas that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasFindFirstOrThrowArgs} args - Arguments to find a Notificaciones_leidas
+     * @example
+     * // Get one Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends notificaciones_leidasFindFirstOrThrowArgs>(args?: SelectSubset<T, notificaciones_leidasFindFirstOrThrowArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Notificaciones_leidas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findMany()
+     * 
+     * // Get first 10 Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.findMany({ take: 10 })
+     * 
+     * // Only select the `id_notificacion`
+     * const notificaciones_leidasWithId_notificacionOnly = await prisma.notificaciones_leidas.findMany({ select: { id_notificacion: true } })
+     * 
+     */
+    findMany<T extends notificaciones_leidasFindManyArgs>(args?: SelectSubset<T, notificaciones_leidasFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Notificaciones_leidas.
+     * @param {notificaciones_leidasCreateArgs} args - Arguments to create a Notificaciones_leidas.
+     * @example
+     * // Create one Notificaciones_leidas
+     * const Notificaciones_leidas = await prisma.notificaciones_leidas.create({
+     *   data: {
+     *     // ... data to create a Notificaciones_leidas
+     *   }
+     * })
+     * 
+     */
+    create<T extends notificaciones_leidasCreateArgs>(args: SelectSubset<T, notificaciones_leidasCreateArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Notificaciones_leidas.
+     * @param {notificaciones_leidasCreateManyArgs} args - Arguments to create many Notificaciones_leidas.
+     * @example
+     * // Create many Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends notificaciones_leidasCreateManyArgs>(args?: SelectSubset<T, notificaciones_leidasCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Notificaciones_leidas and returns the data saved in the database.
+     * @param {notificaciones_leidasCreateManyAndReturnArgs} args - Arguments to create many Notificaciones_leidas.
+     * @example
+     * // Create many Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Notificaciones_leidas and only return the `id_notificacion`
+     * const notificaciones_leidasWithId_notificacionOnly = await prisma.notificaciones_leidas.createManyAndReturn({
+     *   select: { id_notificacion: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends notificaciones_leidasCreateManyAndReturnArgs>(args?: SelectSubset<T, notificaciones_leidasCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Notificaciones_leidas.
+     * @param {notificaciones_leidasDeleteArgs} args - Arguments to delete one Notificaciones_leidas.
+     * @example
+     * // Delete one Notificaciones_leidas
+     * const Notificaciones_leidas = await prisma.notificaciones_leidas.delete({
+     *   where: {
+     *     // ... filter to delete one Notificaciones_leidas
+     *   }
+     * })
+     * 
+     */
+    delete<T extends notificaciones_leidasDeleteArgs>(args: SelectSubset<T, notificaciones_leidasDeleteArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Notificaciones_leidas.
+     * @param {notificaciones_leidasUpdateArgs} args - Arguments to update one Notificaciones_leidas.
+     * @example
+     * // Update one Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends notificaciones_leidasUpdateArgs>(args: SelectSubset<T, notificaciones_leidasUpdateArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Notificaciones_leidas.
+     * @param {notificaciones_leidasDeleteManyArgs} args - Arguments to filter Notificaciones_leidas to delete.
+     * @example
+     * // Delete a few Notificaciones_leidas
+     * const { count } = await prisma.notificaciones_leidas.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends notificaciones_leidasDeleteManyArgs>(args?: SelectSubset<T, notificaciones_leidasDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notificaciones_leidas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends notificaciones_leidasUpdateManyArgs>(args: SelectSubset<T, notificaciones_leidasUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Notificaciones_leidas and returns the data updated in the database.
+     * @param {notificaciones_leidasUpdateManyAndReturnArgs} args - Arguments to update many Notificaciones_leidas.
+     * @example
+     * // Update many Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Notificaciones_leidas and only return the `id_notificacion`
+     * const notificaciones_leidasWithId_notificacionOnly = await prisma.notificaciones_leidas.updateManyAndReturn({
+     *   select: { id_notificacion: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends notificaciones_leidasUpdateManyAndReturnArgs>(args: SelectSubset<T, notificaciones_leidasUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Notificaciones_leidas.
+     * @param {notificaciones_leidasUpsertArgs} args - Arguments to update or create a Notificaciones_leidas.
+     * @example
+     * // Update or create a Notificaciones_leidas
+     * const notificaciones_leidas = await prisma.notificaciones_leidas.upsert({
+     *   create: {
+     *     // ... data to create a Notificaciones_leidas
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Notificaciones_leidas we want to update
+     *   }
+     * })
+     */
+    upsert<T extends notificaciones_leidasUpsertArgs>(args: SelectSubset<T, notificaciones_leidasUpsertArgs<ExtArgs>>): Prisma__notificaciones_leidasClient<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Notificaciones_leidas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasCountArgs} args - Arguments to filter Notificaciones_leidas to count.
+     * @example
+     * // Count the number of Notificaciones_leidas
+     * const count = await prisma.notificaciones_leidas.count({
+     *   where: {
+     *     // ... the filter for the Notificaciones_leidas we want to count
+     *   }
+     * })
+    **/
+    count<T extends notificaciones_leidasCountArgs>(
+      args?: Subset<T, notificaciones_leidasCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], Notificaciones_leidasCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Notificaciones_leidas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {Notificaciones_leidasAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends Notificaciones_leidasAggregateArgs>(args: Subset<T, Notificaciones_leidasAggregateArgs>): Prisma.PrismaPromise<GetNotificaciones_leidasAggregateType<T>>
+
+    /**
+     * Group by Notificaciones_leidas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {notificaciones_leidasGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends notificaciones_leidasGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: notificaciones_leidasGroupByArgs['orderBy'] }
+        : { orderBy?: notificaciones_leidasGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, notificaciones_leidasGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNotificaciones_leidasGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the notificaciones_leidas model
+   */
+  readonly fields: notificaciones_leidasFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for notificaciones_leidas.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__notificaciones_leidasClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    notificacion<T extends notificacionesDefaultArgs<ExtArgs> = {}>(args?: Subset<T, notificacionesDefaultArgs<ExtArgs>>): Prisma__notificacionesClient<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    usuario<T extends usuariosDefaultArgs<ExtArgs> = {}>(args?: Subset<T, usuariosDefaultArgs<ExtArgs>>): Prisma__usuariosClient<$Result.GetResult<Prisma.$usuariosPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the notificaciones_leidas model
+   */
+  interface notificaciones_leidasFieldRefs {
+    readonly id_notificacion: FieldRef<"notificaciones_leidas", 'Int'>
+    readonly id_usuario: FieldRef<"notificaciones_leidas", 'Int'>
+    readonly leida_en: FieldRef<"notificaciones_leidas", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * notificaciones_leidas findUnique
+   */
+  export type notificaciones_leidasFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones_leidas to fetch.
+     */
+    where: notificaciones_leidasWhereUniqueInput
+  }
+
+  /**
+   * notificaciones_leidas findUniqueOrThrow
+   */
+  export type notificaciones_leidasFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones_leidas to fetch.
+     */
+    where: notificaciones_leidasWhereUniqueInput
+  }
+
+  /**
+   * notificaciones_leidas findFirst
+   */
+  export type notificaciones_leidasFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones_leidas to fetch.
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones_leidas to fetch.
+     */
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for notificaciones_leidas.
+     */
+    cursor?: notificaciones_leidasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones_leidas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones_leidas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of notificaciones_leidas.
+     */
+    distinct?: Notificaciones_leidasScalarFieldEnum | Notificaciones_leidasScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones_leidas findFirstOrThrow
+   */
+  export type notificaciones_leidasFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones_leidas to fetch.
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones_leidas to fetch.
+     */
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for notificaciones_leidas.
+     */
+    cursor?: notificaciones_leidasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones_leidas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones_leidas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of notificaciones_leidas.
+     */
+    distinct?: Notificaciones_leidasScalarFieldEnum | Notificaciones_leidasScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones_leidas findMany
+   */
+  export type notificaciones_leidasFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter, which notificaciones_leidas to fetch.
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of notificaciones_leidas to fetch.
+     */
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing notificaciones_leidas.
+     */
+    cursor?: notificaciones_leidasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` notificaciones_leidas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` notificaciones_leidas.
+     */
+    skip?: number
+    distinct?: Notificaciones_leidasScalarFieldEnum | Notificaciones_leidasScalarFieldEnum[]
+  }
+
+  /**
+   * notificaciones_leidas create
+   */
+  export type notificaciones_leidasCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * The data needed to create a notificaciones_leidas.
+     */
+    data: XOR<notificaciones_leidasCreateInput, notificaciones_leidasUncheckedCreateInput>
+  }
+
+  /**
+   * notificaciones_leidas createMany
+   */
+  export type notificaciones_leidasCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many notificaciones_leidas.
+     */
+    data: notificaciones_leidasCreateManyInput | notificaciones_leidasCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * notificaciones_leidas createManyAndReturn
+   */
+  export type notificaciones_leidasCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * The data used to create many notificaciones_leidas.
+     */
+    data: notificaciones_leidasCreateManyInput | notificaciones_leidasCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * notificaciones_leidas update
+   */
+  export type notificaciones_leidasUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * The data needed to update a notificaciones_leidas.
+     */
+    data: XOR<notificaciones_leidasUpdateInput, notificaciones_leidasUncheckedUpdateInput>
+    /**
+     * Choose, which notificaciones_leidas to update.
+     */
+    where: notificaciones_leidasWhereUniqueInput
+  }
+
+  /**
+   * notificaciones_leidas updateMany
+   */
+  export type notificaciones_leidasUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update notificaciones_leidas.
+     */
+    data: XOR<notificaciones_leidasUpdateManyMutationInput, notificaciones_leidasUncheckedUpdateManyInput>
+    /**
+     * Filter which notificaciones_leidas to update
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * Limit how many notificaciones_leidas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * notificaciones_leidas updateManyAndReturn
+   */
+  export type notificaciones_leidasUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * The data used to update notificaciones_leidas.
+     */
+    data: XOR<notificaciones_leidasUpdateManyMutationInput, notificaciones_leidasUncheckedUpdateManyInput>
+    /**
+     * Filter which notificaciones_leidas to update
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * Limit how many notificaciones_leidas to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * notificaciones_leidas upsert
+   */
+  export type notificaciones_leidasUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * The filter to search for the notificaciones_leidas to update in case it exists.
+     */
+    where: notificaciones_leidasWhereUniqueInput
+    /**
+     * In case the notificaciones_leidas found by the `where` argument doesn't exist, create a new notificaciones_leidas with this data.
+     */
+    create: XOR<notificaciones_leidasCreateInput, notificaciones_leidasUncheckedCreateInput>
+    /**
+     * In case the notificaciones_leidas was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<notificaciones_leidasUpdateInput, notificaciones_leidasUncheckedUpdateInput>
+  }
+
+  /**
+   * notificaciones_leidas delete
+   */
+  export type notificaciones_leidasDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    /**
+     * Filter which notificaciones_leidas to delete.
+     */
+    where: notificaciones_leidasWhereUniqueInput
+  }
+
+  /**
+   * notificaciones_leidas deleteMany
+   */
+  export type notificaciones_leidasDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which notificaciones_leidas to delete
+     */
+    where?: notificaciones_leidasWhereInput
+    /**
+     * Limit how many notificaciones_leidas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * notificaciones_leidas without action
+   */
+  export type notificaciones_leidasDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model pasantes
    */
 
@@ -24290,6 +26793,8 @@ export namespace Prisma {
     destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
     movimientos_financieros?: boolean | usuarios$movimientos_financierosArgs<ExtArgs>
     roles?: boolean | usuarios$rolesArgs<ExtArgs>
+    notificaciones?: boolean | usuarios$notificacionesArgs<ExtArgs>
+    notificaciones_leidas?: boolean | usuarios$notificaciones_leidasArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["usuarios"]>
 
@@ -24339,6 +26844,8 @@ export namespace Prisma {
     destinatario?: boolean | usuarios$destinatarioArgs<ExtArgs>
     movimientos_financieros?: boolean | usuarios$movimientos_financierosArgs<ExtArgs>
     roles?: boolean | usuarios$rolesArgs<ExtArgs>
+    notificaciones?: boolean | usuarios$notificacionesArgs<ExtArgs>
+    notificaciones_leidas?: boolean | usuarios$notificaciones_leidasArgs<ExtArgs>
     _count?: boolean | UsuariosCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type usuariosIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -24352,6 +26859,8 @@ export namespace Prisma {
       destinatario: Prisma.$correspondenciaPayload<ExtArgs>[]
       movimientos_financieros: Prisma.$movimientos_financierosPayload<ExtArgs>[]
       roles: Prisma.$rolesPayload<ExtArgs>[]
+      notificaciones: Prisma.$notificacionesPayload<ExtArgs>[]
+      notificaciones_leidas: Prisma.$notificaciones_leidasPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id_usuario: number
@@ -24763,6 +27272,8 @@ export namespace Prisma {
     destinatario<T extends usuarios$destinatarioArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$destinatarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$correspondenciaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     movimientos_financieros<T extends usuarios$movimientos_financierosArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$movimientos_financierosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$movimientos_financierosPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     roles<T extends usuarios$rolesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$rolesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$rolesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notificaciones<T extends usuarios$notificacionesArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$notificacionesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificacionesPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    notificaciones_leidas<T extends usuarios$notificaciones_leidasArgs<ExtArgs> = {}>(args?: Subset<T, usuarios$notificaciones_leidasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$notificaciones_leidasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -25307,6 +27818,54 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: RolesScalarFieldEnum | RolesScalarFieldEnum[]
+  }
+
+  /**
+   * usuarios.notificaciones
+   */
+  export type usuarios$notificacionesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones
+     */
+    select?: notificacionesSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones
+     */
+    omit?: notificacionesOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificacionesInclude<ExtArgs> | null
+    where?: notificacionesWhereInput
+    orderBy?: notificacionesOrderByWithRelationInput | notificacionesOrderByWithRelationInput[]
+    cursor?: notificacionesWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: NotificacionesScalarFieldEnum | NotificacionesScalarFieldEnum[]
+  }
+
+  /**
+   * usuarios.notificaciones_leidas
+   */
+  export type usuarios$notificaciones_leidasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the notificaciones_leidas
+     */
+    select?: notificaciones_leidasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the notificaciones_leidas
+     */
+    omit?: notificaciones_leidasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: notificaciones_leidasInclude<ExtArgs> | null
+    where?: notificaciones_leidasWhereInput
+    orderBy?: notificaciones_leidasOrderByWithRelationInput | notificaciones_leidasOrderByWithRelationInput[]
+    cursor?: notificaciones_leidasWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: Notificaciones_leidasScalarFieldEnum | Notificaciones_leidasScalarFieldEnum[]
   }
 
   /**
@@ -34320,6 +36879,29 @@ export namespace Prisma {
   export type AuditoriaScalarFieldEnum = (typeof AuditoriaScalarFieldEnum)[keyof typeof AuditoriaScalarFieldEnum]
 
 
+  export const NotificacionesScalarFieldEnum: {
+    id_notificacion: 'id_notificacion',
+    modulo: 'modulo',
+    tipo: 'tipo',
+    titulo: 'titulo',
+    descripcion: 'descripcion',
+    enlace: 'enlace',
+    id_usuario: 'id_usuario',
+    createdAt: 'createdAt'
+  };
+
+  export type NotificacionesScalarFieldEnum = (typeof NotificacionesScalarFieldEnum)[keyof typeof NotificacionesScalarFieldEnum]
+
+
+  export const Notificaciones_leidasScalarFieldEnum: {
+    id_notificacion: 'id_notificacion',
+    id_usuario: 'id_usuario',
+    leida_en: 'leida_en'
+  };
+
+  export type Notificaciones_leidasScalarFieldEnum = (typeof Notificaciones_leidasScalarFieldEnum)[keyof typeof Notificaciones_leidasScalarFieldEnum]
+
+
   export const PasantesScalarFieldEnum: {
     id_pasante: 'id_pasante',
     nombre: 'nombre',
@@ -35772,6 +38354,132 @@ export namespace Prisma {
     fecha?: DateTimeWithAggregatesFilter<"auditoria"> | Date | string
   }
 
+  export type notificacionesWhereInput = {
+    AND?: notificacionesWhereInput | notificacionesWhereInput[]
+    OR?: notificacionesWhereInput[]
+    NOT?: notificacionesWhereInput | notificacionesWhereInput[]
+    id_notificacion?: IntFilter<"notificaciones"> | number
+    modulo?: StringFilter<"notificaciones"> | string
+    tipo?: StringFilter<"notificaciones"> | string
+    titulo?: StringFilter<"notificaciones"> | string
+    descripcion?: StringNullableFilter<"notificaciones"> | string | null
+    enlace?: StringNullableFilter<"notificaciones"> | string | null
+    id_usuario?: IntNullableFilter<"notificaciones"> | number | null
+    createdAt?: DateTimeFilter<"notificaciones"> | Date | string
+    usuario?: XOR<UsuariosNullableScalarRelationFilter, usuariosWhereInput> | null
+    lecturas?: Notificaciones_leidasListRelationFilter
+  }
+
+  export type notificacionesOrderByWithRelationInput = {
+    id_notificacion?: SortOrder
+    modulo?: SortOrder
+    tipo?: SortOrder
+    titulo?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    enlace?: SortOrderInput | SortOrder
+    id_usuario?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    usuario?: usuariosOrderByWithRelationInput
+    lecturas?: notificaciones_leidasOrderByRelationAggregateInput
+  }
+
+  export type notificacionesWhereUniqueInput = Prisma.AtLeast<{
+    id_notificacion?: number
+    AND?: notificacionesWhereInput | notificacionesWhereInput[]
+    OR?: notificacionesWhereInput[]
+    NOT?: notificacionesWhereInput | notificacionesWhereInput[]
+    modulo?: StringFilter<"notificaciones"> | string
+    tipo?: StringFilter<"notificaciones"> | string
+    titulo?: StringFilter<"notificaciones"> | string
+    descripcion?: StringNullableFilter<"notificaciones"> | string | null
+    enlace?: StringNullableFilter<"notificaciones"> | string | null
+    id_usuario?: IntNullableFilter<"notificaciones"> | number | null
+    createdAt?: DateTimeFilter<"notificaciones"> | Date | string
+    usuario?: XOR<UsuariosNullableScalarRelationFilter, usuariosWhereInput> | null
+    lecturas?: Notificaciones_leidasListRelationFilter
+  }, "id_notificacion">
+
+  export type notificacionesOrderByWithAggregationInput = {
+    id_notificacion?: SortOrder
+    modulo?: SortOrder
+    tipo?: SortOrder
+    titulo?: SortOrder
+    descripcion?: SortOrderInput | SortOrder
+    enlace?: SortOrderInput | SortOrder
+    id_usuario?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: notificacionesCountOrderByAggregateInput
+    _avg?: notificacionesAvgOrderByAggregateInput
+    _max?: notificacionesMaxOrderByAggregateInput
+    _min?: notificacionesMinOrderByAggregateInput
+    _sum?: notificacionesSumOrderByAggregateInput
+  }
+
+  export type notificacionesScalarWhereWithAggregatesInput = {
+    AND?: notificacionesScalarWhereWithAggregatesInput | notificacionesScalarWhereWithAggregatesInput[]
+    OR?: notificacionesScalarWhereWithAggregatesInput[]
+    NOT?: notificacionesScalarWhereWithAggregatesInput | notificacionesScalarWhereWithAggregatesInput[]
+    id_notificacion?: IntWithAggregatesFilter<"notificaciones"> | number
+    modulo?: StringWithAggregatesFilter<"notificaciones"> | string
+    tipo?: StringWithAggregatesFilter<"notificaciones"> | string
+    titulo?: StringWithAggregatesFilter<"notificaciones"> | string
+    descripcion?: StringNullableWithAggregatesFilter<"notificaciones"> | string | null
+    enlace?: StringNullableWithAggregatesFilter<"notificaciones"> | string | null
+    id_usuario?: IntNullableWithAggregatesFilter<"notificaciones"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"notificaciones"> | Date | string
+  }
+
+  export type notificaciones_leidasWhereInput = {
+    AND?: notificaciones_leidasWhereInput | notificaciones_leidasWhereInput[]
+    OR?: notificaciones_leidasWhereInput[]
+    NOT?: notificaciones_leidasWhereInput | notificaciones_leidasWhereInput[]
+    id_notificacion?: IntFilter<"notificaciones_leidas"> | number
+    id_usuario?: IntFilter<"notificaciones_leidas"> | number
+    leida_en?: DateTimeFilter<"notificaciones_leidas"> | Date | string
+    notificacion?: XOR<NotificacionesScalarRelationFilter, notificacionesWhereInput>
+    usuario?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
+  }
+
+  export type notificaciones_leidasOrderByWithRelationInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+    leida_en?: SortOrder
+    notificacion?: notificacionesOrderByWithRelationInput
+    usuario?: usuariosOrderByWithRelationInput
+  }
+
+  export type notificaciones_leidasWhereUniqueInput = Prisma.AtLeast<{
+    id_notificacion_id_usuario?: notificaciones_leidasId_notificacionId_usuarioCompoundUniqueInput
+    AND?: notificaciones_leidasWhereInput | notificaciones_leidasWhereInput[]
+    OR?: notificaciones_leidasWhereInput[]
+    NOT?: notificaciones_leidasWhereInput | notificaciones_leidasWhereInput[]
+    id_notificacion?: IntFilter<"notificaciones_leidas"> | number
+    id_usuario?: IntFilter<"notificaciones_leidas"> | number
+    leida_en?: DateTimeFilter<"notificaciones_leidas"> | Date | string
+    notificacion?: XOR<NotificacionesScalarRelationFilter, notificacionesWhereInput>
+    usuario?: XOR<UsuariosScalarRelationFilter, usuariosWhereInput>
+  }, "id_notificacion_id_usuario">
+
+  export type notificaciones_leidasOrderByWithAggregationInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+    leida_en?: SortOrder
+    _count?: notificaciones_leidasCountOrderByAggregateInput
+    _avg?: notificaciones_leidasAvgOrderByAggregateInput
+    _max?: notificaciones_leidasMaxOrderByAggregateInput
+    _min?: notificaciones_leidasMinOrderByAggregateInput
+    _sum?: notificaciones_leidasSumOrderByAggregateInput
+  }
+
+  export type notificaciones_leidasScalarWhereWithAggregatesInput = {
+    AND?: notificaciones_leidasScalarWhereWithAggregatesInput | notificaciones_leidasScalarWhereWithAggregatesInput[]
+    OR?: notificaciones_leidasScalarWhereWithAggregatesInput[]
+    NOT?: notificaciones_leidasScalarWhereWithAggregatesInput | notificaciones_leidasScalarWhereWithAggregatesInput[]
+    id_notificacion?: IntWithAggregatesFilter<"notificaciones_leidas"> | number
+    id_usuario?: IntWithAggregatesFilter<"notificaciones_leidas"> | number
+    leida_en?: DateTimeWithAggregatesFilter<"notificaciones_leidas"> | Date | string
+  }
+
   export type pasantesWhereInput = {
     AND?: pasantesWhereInput | pasantesWhereInput[]
     OR?: pasantesWhereInput[]
@@ -35940,6 +38648,8 @@ export namespace Prisma {
     destinatario?: CorrespondenciaListRelationFilter
     movimientos_financieros?: Movimientos_financierosListRelationFilter
     roles?: RolesListRelationFilter
+    notificaciones?: NotificacionesListRelationFilter
+    notificaciones_leidas?: Notificaciones_leidasListRelationFilter
   }
 
   export type usuariosOrderByWithRelationInput = {
@@ -35958,6 +38668,8 @@ export namespace Prisma {
     destinatario?: correspondenciaOrderByRelationAggregateInput
     movimientos_financieros?: movimientos_financierosOrderByRelationAggregateInput
     roles?: rolesOrderByRelationAggregateInput
+    notificaciones?: notificacionesOrderByRelationAggregateInput
+    notificaciones_leidas?: notificaciones_leidasOrderByRelationAggregateInput
   }
 
   export type usuariosWhereUniqueInput = Prisma.AtLeast<{
@@ -35979,6 +38691,8 @@ export namespace Prisma {
     destinatario?: CorrespondenciaListRelationFilter
     movimientos_financieros?: Movimientos_financierosListRelationFilter
     roles?: RolesListRelationFilter
+    notificaciones?: NotificacionesListRelationFilter
+    notificaciones_leidas?: Notificaciones_leidasListRelationFilter
   }, "id_usuario">
 
   export type usuariosOrderByWithAggregationInput = {
@@ -37733,6 +40447,123 @@ export namespace Prisma {
     fecha?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type notificacionesCreateInput = {
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    createdAt?: Date | string
+    usuario?: usuariosCreateNestedOneWithoutNotificacionesInput
+    lecturas?: notificaciones_leidasCreateNestedManyWithoutNotificacionInput
+  }
+
+  export type notificacionesUncheckedCreateInput = {
+    id_notificacion?: number
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string
+    lecturas?: notificaciones_leidasUncheckedCreateNestedManyWithoutNotificacionInput
+  }
+
+  export type notificacionesUpdateInput = {
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: usuariosUpdateOneWithoutNotificacionesNestedInput
+    lecturas?: notificaciones_leidasUpdateManyWithoutNotificacionNestedInput
+  }
+
+  export type notificacionesUncheckedUpdateInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lecturas?: notificaciones_leidasUncheckedUpdateManyWithoutNotificacionNestedInput
+  }
+
+  export type notificacionesCreateManyInput = {
+    id_notificacion?: number
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string
+  }
+
+  export type notificacionesUpdateManyMutationInput = {
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificacionesUncheckedUpdateManyInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasCreateInput = {
+    leida_en?: Date | string
+    notificacion: notificacionesCreateNestedOneWithoutLecturasInput
+    usuario: usuariosCreateNestedOneWithoutNotificaciones_leidasInput
+  }
+
+  export type notificaciones_leidasUncheckedCreateInput = {
+    id_notificacion: number
+    id_usuario: number
+    leida_en?: Date | string
+  }
+
+  export type notificaciones_leidasUpdateInput = {
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+    notificacion?: notificacionesUpdateOneRequiredWithoutLecturasNestedInput
+    usuario?: usuariosUpdateOneRequiredWithoutNotificaciones_leidasNestedInput
+  }
+
+  export type notificaciones_leidasUncheckedUpdateInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasCreateManyInput = {
+    id_notificacion: number
+    id_usuario: number
+    leida_en?: Date | string
+  }
+
+  export type notificaciones_leidasUpdateManyMutationInput = {
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasUncheckedUpdateManyInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type pasantesCreateInput = {
     nombre?: string | null
     apellido?: string | null
@@ -37906,6 +40737,8 @@ export namespace Prisma {
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
     roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateInput = {
@@ -37924,6 +40757,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
     roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUpdateInput = {
@@ -37941,6 +40776,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateInput = {
@@ -37959,6 +40796,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosCreateManyInput = {
@@ -39647,6 +42486,97 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type Notificaciones_leidasListRelationFilter = {
+    every?: notificaciones_leidasWhereInput
+    some?: notificaciones_leidasWhereInput
+    none?: notificaciones_leidasWhereInput
+  }
+
+  export type notificaciones_leidasOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type notificacionesCountOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    modulo?: SortOrder
+    tipo?: SortOrder
+    titulo?: SortOrder
+    descripcion?: SortOrder
+    enlace?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type notificacionesAvgOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+  }
+
+  export type notificacionesMaxOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    modulo?: SortOrder
+    tipo?: SortOrder
+    titulo?: SortOrder
+    descripcion?: SortOrder
+    enlace?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type notificacionesMinOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    modulo?: SortOrder
+    tipo?: SortOrder
+    titulo?: SortOrder
+    descripcion?: SortOrder
+    enlace?: SortOrder
+    id_usuario?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type notificacionesSumOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+  }
+
+  export type NotificacionesScalarRelationFilter = {
+    is?: notificacionesWhereInput
+    isNot?: notificacionesWhereInput
+  }
+
+  export type notificaciones_leidasId_notificacionId_usuarioCompoundUniqueInput = {
+    id_notificacion: number
+    id_usuario: number
+  }
+
+  export type notificaciones_leidasCountOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+    leida_en?: SortOrder
+  }
+
+  export type notificaciones_leidasAvgOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+  }
+
+  export type notificaciones_leidasMaxOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+    leida_en?: SortOrder
+  }
+
+  export type notificaciones_leidasMinOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+    leida_en?: SortOrder
+  }
+
+  export type notificaciones_leidasSumOrderByAggregateInput = {
+    id_notificacion?: SortOrder
+    id_usuario?: SortOrder
+  }
+
   export type pasantesCountOrderByAggregateInput = {
     id_pasante?: SortOrder
     nombre?: SortOrder
@@ -39788,6 +42718,12 @@ export namespace Prisma {
     none?: rolesWhereInput
   }
 
+  export type NotificacionesListRelationFilter = {
+    every?: notificacionesWhereInput
+    some?: notificacionesWhereInput
+    none?: notificacionesWhereInput
+  }
+
   export type actividades_institucionalesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -39801,6 +42737,10 @@ export namespace Prisma {
   }
 
   export type rolesOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type notificacionesOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -41183,6 +44123,92 @@ export namespace Prisma {
     update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutAuditoriaInput, usuariosUpdateWithoutAuditoriaInput>, usuariosUncheckedUpdateWithoutAuditoriaInput>
   }
 
+  export type usuariosCreateNestedOneWithoutNotificacionesInput = {
+    create?: XOR<usuariosCreateWithoutNotificacionesInput, usuariosUncheckedCreateWithoutNotificacionesInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutNotificacionesInput
+    connect?: usuariosWhereUniqueInput
+  }
+
+  export type notificaciones_leidasCreateNestedManyWithoutNotificacionInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput> | notificaciones_leidasCreateWithoutNotificacionInput[] | notificaciones_leidasUncheckedCreateWithoutNotificacionInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutNotificacionInput | notificaciones_leidasCreateOrConnectWithoutNotificacionInput[]
+    createMany?: notificaciones_leidasCreateManyNotificacionInputEnvelope
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+  }
+
+  export type notificaciones_leidasUncheckedCreateNestedManyWithoutNotificacionInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput> | notificaciones_leidasCreateWithoutNotificacionInput[] | notificaciones_leidasUncheckedCreateWithoutNotificacionInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutNotificacionInput | notificaciones_leidasCreateOrConnectWithoutNotificacionInput[]
+    createMany?: notificaciones_leidasCreateManyNotificacionInputEnvelope
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+  }
+
+  export type usuariosUpdateOneWithoutNotificacionesNestedInput = {
+    create?: XOR<usuariosCreateWithoutNotificacionesInput, usuariosUncheckedCreateWithoutNotificacionesInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutNotificacionesInput
+    upsert?: usuariosUpsertWithoutNotificacionesInput
+    disconnect?: usuariosWhereInput | boolean
+    delete?: usuariosWhereInput | boolean
+    connect?: usuariosWhereUniqueInput
+    update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutNotificacionesInput, usuariosUpdateWithoutNotificacionesInput>, usuariosUncheckedUpdateWithoutNotificacionesInput>
+  }
+
+  export type notificaciones_leidasUpdateManyWithoutNotificacionNestedInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput> | notificaciones_leidasCreateWithoutNotificacionInput[] | notificaciones_leidasUncheckedCreateWithoutNotificacionInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutNotificacionInput | notificaciones_leidasCreateOrConnectWithoutNotificacionInput[]
+    upsert?: notificaciones_leidasUpsertWithWhereUniqueWithoutNotificacionInput | notificaciones_leidasUpsertWithWhereUniqueWithoutNotificacionInput[]
+    createMany?: notificaciones_leidasCreateManyNotificacionInputEnvelope
+    set?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    disconnect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    delete?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    update?: notificaciones_leidasUpdateWithWhereUniqueWithoutNotificacionInput | notificaciones_leidasUpdateWithWhereUniqueWithoutNotificacionInput[]
+    updateMany?: notificaciones_leidasUpdateManyWithWhereWithoutNotificacionInput | notificaciones_leidasUpdateManyWithWhereWithoutNotificacionInput[]
+    deleteMany?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
+  }
+
+  export type notificaciones_leidasUncheckedUpdateManyWithoutNotificacionNestedInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput> | notificaciones_leidasCreateWithoutNotificacionInput[] | notificaciones_leidasUncheckedCreateWithoutNotificacionInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutNotificacionInput | notificaciones_leidasCreateOrConnectWithoutNotificacionInput[]
+    upsert?: notificaciones_leidasUpsertWithWhereUniqueWithoutNotificacionInput | notificaciones_leidasUpsertWithWhereUniqueWithoutNotificacionInput[]
+    createMany?: notificaciones_leidasCreateManyNotificacionInputEnvelope
+    set?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    disconnect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    delete?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    update?: notificaciones_leidasUpdateWithWhereUniqueWithoutNotificacionInput | notificaciones_leidasUpdateWithWhereUniqueWithoutNotificacionInput[]
+    updateMany?: notificaciones_leidasUpdateManyWithWhereWithoutNotificacionInput | notificaciones_leidasUpdateManyWithWhereWithoutNotificacionInput[]
+    deleteMany?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
+  }
+
+  export type notificacionesCreateNestedOneWithoutLecturasInput = {
+    create?: XOR<notificacionesCreateWithoutLecturasInput, notificacionesUncheckedCreateWithoutLecturasInput>
+    connectOrCreate?: notificacionesCreateOrConnectWithoutLecturasInput
+    connect?: notificacionesWhereUniqueInput
+  }
+
+  export type usuariosCreateNestedOneWithoutNotificaciones_leidasInput = {
+    create?: XOR<usuariosCreateWithoutNotificaciones_leidasInput, usuariosUncheckedCreateWithoutNotificaciones_leidasInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutNotificaciones_leidasInput
+    connect?: usuariosWhereUniqueInput
+  }
+
+  export type notificacionesUpdateOneRequiredWithoutLecturasNestedInput = {
+    create?: XOR<notificacionesCreateWithoutLecturasInput, notificacionesUncheckedCreateWithoutLecturasInput>
+    connectOrCreate?: notificacionesCreateOrConnectWithoutLecturasInput
+    upsert?: notificacionesUpsertWithoutLecturasInput
+    connect?: notificacionesWhereUniqueInput
+    update?: XOR<XOR<notificacionesUpdateToOneWithWhereWithoutLecturasInput, notificacionesUpdateWithoutLecturasInput>, notificacionesUncheckedUpdateWithoutLecturasInput>
+  }
+
+  export type usuariosUpdateOneRequiredWithoutNotificaciones_leidasNestedInput = {
+    create?: XOR<usuariosCreateWithoutNotificaciones_leidasInput, usuariosUncheckedCreateWithoutNotificaciones_leidasInput>
+    connectOrCreate?: usuariosCreateOrConnectWithoutNotificaciones_leidasInput
+    upsert?: usuariosUpsertWithoutNotificaciones_leidasInput
+    connect?: usuariosWhereUniqueInput
+    update?: XOR<XOR<usuariosUpdateToOneWithWhereWithoutNotificaciones_leidasInput, usuariosUpdateWithoutNotificaciones_leidasInput>, usuariosUncheckedUpdateWithoutNotificaciones_leidasInput>
+  }
+
   export type colegiados_asignados_socialCreateNestedManyWithoutPasantesInput = {
     create?: XOR<colegiados_asignados_socialCreateWithoutPasantesInput, colegiados_asignados_socialUncheckedCreateWithoutPasantesInput> | colegiados_asignados_socialCreateWithoutPasantesInput[] | colegiados_asignados_socialUncheckedCreateWithoutPasantesInput[]
     connectOrCreate?: colegiados_asignados_socialCreateOrConnectWithoutPasantesInput | colegiados_asignados_socialCreateOrConnectWithoutPasantesInput[]
@@ -41284,6 +44310,20 @@ export namespace Prisma {
     connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
   }
 
+  export type notificacionesCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput> | notificacionesCreateWithoutUsuarioInput[] | notificacionesUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificacionesCreateOrConnectWithoutUsuarioInput | notificacionesCreateOrConnectWithoutUsuarioInput[]
+    createMany?: notificacionesCreateManyUsuarioInputEnvelope
+    connect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+  }
+
+  export type notificaciones_leidasCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput> | notificaciones_leidasCreateWithoutUsuarioInput[] | notificaciones_leidasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutUsuarioInput | notificaciones_leidasCreateOrConnectWithoutUsuarioInput[]
+    createMany?: notificaciones_leidasCreateManyUsuarioInputEnvelope
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+  }
+
   export type actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput = {
     create?: XOR<actividades_institucionalesCreateWithoutUsuariosInput, actividades_institucionalesUncheckedCreateWithoutUsuariosInput> | actividades_institucionalesCreateWithoutUsuariosInput[] | actividades_institucionalesUncheckedCreateWithoutUsuariosInput[]
     connectOrCreate?: actividades_institucionalesCreateOrConnectWithoutUsuariosInput | actividades_institucionalesCreateOrConnectWithoutUsuariosInput[]
@@ -41317,6 +44357,20 @@ export namespace Prisma {
     connectOrCreate?: rolesCreateOrConnectWithoutUsuariosInput | rolesCreateOrConnectWithoutUsuariosInput[]
     createMany?: rolesCreateManyUsuariosInputEnvelope
     connect?: rolesWhereUniqueInput | rolesWhereUniqueInput[]
+  }
+
+  export type notificacionesUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput> | notificacionesCreateWithoutUsuarioInput[] | notificacionesUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificacionesCreateOrConnectWithoutUsuarioInput | notificacionesCreateOrConnectWithoutUsuarioInput[]
+    createMany?: notificacionesCreateManyUsuarioInputEnvelope
+    connect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+  }
+
+  export type notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput> | notificaciones_leidasCreateWithoutUsuarioInput[] | notificaciones_leidasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutUsuarioInput | notificaciones_leidasCreateOrConnectWithoutUsuarioInput[]
+    createMany?: notificaciones_leidasCreateManyUsuarioInputEnvelope
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
   }
 
   export type actividades_institucionalesUpdateManyWithoutUsuariosNestedInput = {
@@ -41389,6 +44443,34 @@ export namespace Prisma {
     deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
   }
 
+  export type notificacionesUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput> | notificacionesCreateWithoutUsuarioInput[] | notificacionesUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificacionesCreateOrConnectWithoutUsuarioInput | notificacionesCreateOrConnectWithoutUsuarioInput[]
+    upsert?: notificacionesUpsertWithWhereUniqueWithoutUsuarioInput | notificacionesUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: notificacionesCreateManyUsuarioInputEnvelope
+    set?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    disconnect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    delete?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    connect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    update?: notificacionesUpdateWithWhereUniqueWithoutUsuarioInput | notificacionesUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: notificacionesUpdateManyWithWhereWithoutUsuarioInput | notificacionesUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: notificacionesScalarWhereInput | notificacionesScalarWhereInput[]
+  }
+
+  export type notificaciones_leidasUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput> | notificaciones_leidasCreateWithoutUsuarioInput[] | notificaciones_leidasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutUsuarioInput | notificaciones_leidasCreateOrConnectWithoutUsuarioInput[]
+    upsert?: notificaciones_leidasUpsertWithWhereUniqueWithoutUsuarioInput | notificaciones_leidasUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: notificaciones_leidasCreateManyUsuarioInputEnvelope
+    set?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    disconnect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    delete?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    update?: notificaciones_leidasUpdateWithWhereUniqueWithoutUsuarioInput | notificaciones_leidasUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: notificaciones_leidasUpdateManyWithWhereWithoutUsuarioInput | notificaciones_leidasUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
+  }
+
   export type actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput = {
     create?: XOR<actividades_institucionalesCreateWithoutUsuariosInput, actividades_institucionalesUncheckedCreateWithoutUsuariosInput> | actividades_institucionalesCreateWithoutUsuariosInput[] | actividades_institucionalesUncheckedCreateWithoutUsuariosInput[]
     connectOrCreate?: actividades_institucionalesCreateOrConnectWithoutUsuariosInput | actividades_institucionalesCreateOrConnectWithoutUsuariosInput[]
@@ -41457,6 +44539,34 @@ export namespace Prisma {
     update?: rolesUpdateWithWhereUniqueWithoutUsuariosInput | rolesUpdateWithWhereUniqueWithoutUsuariosInput[]
     updateMany?: rolesUpdateManyWithWhereWithoutUsuariosInput | rolesUpdateManyWithWhereWithoutUsuariosInput[]
     deleteMany?: rolesScalarWhereInput | rolesScalarWhereInput[]
+  }
+
+  export type notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput> | notificacionesCreateWithoutUsuarioInput[] | notificacionesUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificacionesCreateOrConnectWithoutUsuarioInput | notificacionesCreateOrConnectWithoutUsuarioInput[]
+    upsert?: notificacionesUpsertWithWhereUniqueWithoutUsuarioInput | notificacionesUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: notificacionesCreateManyUsuarioInputEnvelope
+    set?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    disconnect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    delete?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    connect?: notificacionesWhereUniqueInput | notificacionesWhereUniqueInput[]
+    update?: notificacionesUpdateWithWhereUniqueWithoutUsuarioInput | notificacionesUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: notificacionesUpdateManyWithWhereWithoutUsuarioInput | notificacionesUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: notificacionesScalarWhereInput | notificacionesScalarWhereInput[]
+  }
+
+  export type notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput = {
+    create?: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput> | notificaciones_leidasCreateWithoutUsuarioInput[] | notificaciones_leidasUncheckedCreateWithoutUsuarioInput[]
+    connectOrCreate?: notificaciones_leidasCreateOrConnectWithoutUsuarioInput | notificaciones_leidasCreateOrConnectWithoutUsuarioInput[]
+    upsert?: notificaciones_leidasUpsertWithWhereUniqueWithoutUsuarioInput | notificaciones_leidasUpsertWithWhereUniqueWithoutUsuarioInput[]
+    createMany?: notificaciones_leidasCreateManyUsuarioInputEnvelope
+    set?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    disconnect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    delete?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    connect?: notificaciones_leidasWhereUniqueInput | notificaciones_leidasWhereUniqueInput[]
+    update?: notificaciones_leidasUpdateWithWhereUniqueWithoutUsuarioInput | notificaciones_leidasUpdateWithWhereUniqueWithoutUsuarioInput[]
+    updateMany?: notificaciones_leidasUpdateManyWithWhereWithoutUsuarioInput | notificaciones_leidasUpdateManyWithWhereWithoutUsuarioInput[]
+    deleteMany?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
   }
 
   export type asistencias_actividadCreateNestedManyWithoutInvitadosInput = {
@@ -41977,6 +45087,8 @@ export namespace Prisma {
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
     roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutActividades_institucionalesInput = {
@@ -41994,6 +45106,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
     roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutActividades_institucionalesInput = {
@@ -42080,6 +45194,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutActividades_institucionalesInput = {
@@ -42097,6 +45213,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type asistencias_actividadUpsertWithWhereUniqueWithoutActividades_institucionalesInput = {
@@ -42836,6 +45954,8 @@ export namespace Prisma {
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
     roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutDestinatarioInput = {
@@ -42853,6 +45973,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
     roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutDestinatarioInput = {
@@ -42885,6 +46007,8 @@ export namespace Prisma {
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutDestinatarioInput = {
@@ -42902,6 +46026,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type asistencias_actividadCreateWithoutColegiadosInput = {
@@ -43641,6 +46767,8 @@ export namespace Prisma {
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutMovimientos_financierosInput = {
@@ -43658,6 +46786,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutMovimientos_financierosInput = {
@@ -43750,6 +46880,8 @@ export namespace Prisma {
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutMovimientos_financierosInput = {
@@ -43767,6 +46899,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type movimientos_financierosCreateWithoutOrigen_movimientoInput = {
@@ -44313,6 +47447,8 @@ export namespace Prisma {
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
     roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutAuditoriaInput = {
@@ -44330,6 +47466,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
     roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutAuditoriaInput = {
@@ -44362,6 +47500,8 @@ export namespace Prisma {
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutAuditoriaInput = {
@@ -44379,6 +47519,291 @@ export namespace Prisma {
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
     roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type usuariosCreateWithoutNotificacionesInput = {
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type usuariosUncheckedCreateWithoutNotificacionesInput = {
+    id_usuario?: number
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type usuariosCreateOrConnectWithoutNotificacionesInput = {
+    where: usuariosWhereUniqueInput
+    create: XOR<usuariosCreateWithoutNotificacionesInput, usuariosUncheckedCreateWithoutNotificacionesInput>
+  }
+
+  export type notificaciones_leidasCreateWithoutNotificacionInput = {
+    leida_en?: Date | string
+    usuario: usuariosCreateNestedOneWithoutNotificaciones_leidasInput
+  }
+
+  export type notificaciones_leidasUncheckedCreateWithoutNotificacionInput = {
+    id_usuario: number
+    leida_en?: Date | string
+  }
+
+  export type notificaciones_leidasCreateOrConnectWithoutNotificacionInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    create: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput>
+  }
+
+  export type notificaciones_leidasCreateManyNotificacionInputEnvelope = {
+    data: notificaciones_leidasCreateManyNotificacionInput | notificaciones_leidasCreateManyNotificacionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type usuariosUpsertWithoutNotificacionesInput = {
+    update: XOR<usuariosUpdateWithoutNotificacionesInput, usuariosUncheckedUpdateWithoutNotificacionesInput>
+    create: XOR<usuariosCreateWithoutNotificacionesInput, usuariosUncheckedCreateWithoutNotificacionesInput>
+    where?: usuariosWhereInput
+  }
+
+  export type usuariosUpdateToOneWithWhereWithoutNotificacionesInput = {
+    where?: usuariosWhereInput
+    data: XOR<usuariosUpdateWithoutNotificacionesInput, usuariosUncheckedUpdateWithoutNotificacionesInput>
+  }
+
+  export type usuariosUpdateWithoutNotificacionesInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type usuariosUncheckedUpdateWithoutNotificacionesInput = {
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type notificaciones_leidasUpsertWithWhereUniqueWithoutNotificacionInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    update: XOR<notificaciones_leidasUpdateWithoutNotificacionInput, notificaciones_leidasUncheckedUpdateWithoutNotificacionInput>
+    create: XOR<notificaciones_leidasCreateWithoutNotificacionInput, notificaciones_leidasUncheckedCreateWithoutNotificacionInput>
+  }
+
+  export type notificaciones_leidasUpdateWithWhereUniqueWithoutNotificacionInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    data: XOR<notificaciones_leidasUpdateWithoutNotificacionInput, notificaciones_leidasUncheckedUpdateWithoutNotificacionInput>
+  }
+
+  export type notificaciones_leidasUpdateManyWithWhereWithoutNotificacionInput = {
+    where: notificaciones_leidasScalarWhereInput
+    data: XOR<notificaciones_leidasUpdateManyMutationInput, notificaciones_leidasUncheckedUpdateManyWithoutNotificacionInput>
+  }
+
+  export type notificaciones_leidasScalarWhereInput = {
+    AND?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
+    OR?: notificaciones_leidasScalarWhereInput[]
+    NOT?: notificaciones_leidasScalarWhereInput | notificaciones_leidasScalarWhereInput[]
+    id_notificacion?: IntFilter<"notificaciones_leidas"> | number
+    id_usuario?: IntFilter<"notificaciones_leidas"> | number
+    leida_en?: DateTimeFilter<"notificaciones_leidas"> | Date | string
+  }
+
+  export type notificacionesCreateWithoutLecturasInput = {
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    createdAt?: Date | string
+    usuario?: usuariosCreateNestedOneWithoutNotificacionesInput
+  }
+
+  export type notificacionesUncheckedCreateWithoutLecturasInput = {
+    id_notificacion?: number
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    id_usuario?: number | null
+    createdAt?: Date | string
+  }
+
+  export type notificacionesCreateOrConnectWithoutLecturasInput = {
+    where: notificacionesWhereUniqueInput
+    create: XOR<notificacionesCreateWithoutLecturasInput, notificacionesUncheckedCreateWithoutLecturasInput>
+  }
+
+  export type usuariosCreateWithoutNotificaciones_leidasInput = {
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    roles?: rolesCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type usuariosUncheckedCreateWithoutNotificaciones_leidasInput = {
+    id_usuario?: number
+    nombre?: string | null
+    apellido?: string | null
+    correo?: string | null
+    contrase_a?: string | null
+    telefono?: string | null
+    direccion?: string | null
+    fecha_registro?: Date | string | null
+    estado?: string | null
+    fecha_actualizacion?: Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedCreateNestedManyWithoutUsuariosInput
+    auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
+    destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
+    movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    roles?: rolesUncheckedCreateNestedManyWithoutUsuariosInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+  }
+
+  export type usuariosCreateOrConnectWithoutNotificaciones_leidasInput = {
+    where: usuariosWhereUniqueInput
+    create: XOR<usuariosCreateWithoutNotificaciones_leidasInput, usuariosUncheckedCreateWithoutNotificaciones_leidasInput>
+  }
+
+  export type notificacionesUpsertWithoutLecturasInput = {
+    update: XOR<notificacionesUpdateWithoutLecturasInput, notificacionesUncheckedUpdateWithoutLecturasInput>
+    create: XOR<notificacionesCreateWithoutLecturasInput, notificacionesUncheckedCreateWithoutLecturasInput>
+    where?: notificacionesWhereInput
+  }
+
+  export type notificacionesUpdateToOneWithWhereWithoutLecturasInput = {
+    where?: notificacionesWhereInput
+    data: XOR<notificacionesUpdateWithoutLecturasInput, notificacionesUncheckedUpdateWithoutLecturasInput>
+  }
+
+  export type notificacionesUpdateWithoutLecturasInput = {
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: usuariosUpdateOneWithoutNotificacionesNestedInput
+  }
+
+  export type notificacionesUncheckedUpdateWithoutLecturasInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    id_usuario?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type usuariosUpsertWithoutNotificaciones_leidasInput = {
+    update: XOR<usuariosUpdateWithoutNotificaciones_leidasInput, usuariosUncheckedUpdateWithoutNotificaciones_leidasInput>
+    create: XOR<usuariosCreateWithoutNotificaciones_leidasInput, usuariosUncheckedCreateWithoutNotificaciones_leidasInput>
+    where?: usuariosWhereInput
+  }
+
+  export type usuariosUpdateToOneWithWhereWithoutNotificaciones_leidasInput = {
+    where?: usuariosWhereInput
+    data: XOR<usuariosUpdateWithoutNotificaciones_leidasInput, usuariosUncheckedUpdateWithoutNotificaciones_leidasInput>
+  }
+
+  export type usuariosUpdateWithoutNotificaciones_leidasInput = {
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+  }
+
+  export type usuariosUncheckedUpdateWithoutNotificaciones_leidasInput = {
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    nombre?: NullableStringFieldUpdateOperationsInput | string | null
+    apellido?: NullableStringFieldUpdateOperationsInput | string | null
+    correo?: NullableStringFieldUpdateOperationsInput | string | null
+    contrase_a?: NullableStringFieldUpdateOperationsInput | string | null
+    telefono?: NullableStringFieldUpdateOperationsInput | string | null
+    direccion?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_registro?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    estado?: NullableStringFieldUpdateOperationsInput | string | null
+    fecha_actualizacion?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    actividades_institucionales?: actividades_institucionalesUncheckedUpdateManyWithoutUsuariosNestedInput
+    auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
+    destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
+    movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    roles?: rolesUncheckedUpdateManyWithoutUsuariosNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type colegiados_asignados_socialCreateWithoutPasantesInput = {
@@ -44440,6 +47865,8 @@ export namespace Prisma {
     auditoria?: auditoriaCreateNestedManyWithoutUsuarioInput
     destinatario?: correspondenciaCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosCreateNestedManyWithoutUsuarioInput
+    notificaciones?: notificacionesCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosUncheckedCreateWithoutRolesInput = {
@@ -44457,6 +47884,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedCreateNestedManyWithoutUsuarioInput
     destinatario?: correspondenciaUncheckedCreateNestedManyWithoutDestinatarioInput
     movimientos_financieros?: movimientos_financierosUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones?: notificacionesUncheckedCreateNestedManyWithoutUsuarioInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedCreateNestedManyWithoutUsuarioInput
   }
 
   export type usuariosCreateOrConnectWithoutRolesInput = {
@@ -44489,6 +47918,8 @@ export namespace Prisma {
     auditoria?: auditoriaUpdateManyWithoutUsuarioNestedInput
     destinatario?: correspondenciaUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUpdateManyWithoutUsuarioNestedInput
+    notificaciones?: notificacionesUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUpdateManyWithoutUsuarioNestedInput
   }
 
   export type usuariosUncheckedUpdateWithoutRolesInput = {
@@ -44506,6 +47937,8 @@ export namespace Prisma {
     auditoria?: auditoriaUncheckedUpdateManyWithoutUsuarioNestedInput
     destinatario?: correspondenciaUncheckedUpdateManyWithoutDestinatarioNestedInput
     movimientos_financieros?: movimientos_financierosUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones?: notificacionesUncheckedUpdateManyWithoutUsuarioNestedInput
+    notificaciones_leidas?: notificaciones_leidasUncheckedUpdateManyWithoutUsuarioNestedInput
   }
 
   export type actividades_institucionalesCreateWithoutUsuariosInput = {
@@ -44671,6 +48104,57 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type notificacionesCreateWithoutUsuarioInput = {
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    createdAt?: Date | string
+    lecturas?: notificaciones_leidasCreateNestedManyWithoutNotificacionInput
+  }
+
+  export type notificacionesUncheckedCreateWithoutUsuarioInput = {
+    id_notificacion?: number
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    createdAt?: Date | string
+    lecturas?: notificaciones_leidasUncheckedCreateNestedManyWithoutNotificacionInput
+  }
+
+  export type notificacionesCreateOrConnectWithoutUsuarioInput = {
+    where: notificacionesWhereUniqueInput
+    create: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type notificacionesCreateManyUsuarioInputEnvelope = {
+    data: notificacionesCreateManyUsuarioInput | notificacionesCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type notificaciones_leidasCreateWithoutUsuarioInput = {
+    leida_en?: Date | string
+    notificacion: notificacionesCreateNestedOneWithoutLecturasInput
+  }
+
+  export type notificaciones_leidasUncheckedCreateWithoutUsuarioInput = {
+    id_notificacion: number
+    leida_en?: Date | string
+  }
+
+  export type notificaciones_leidasCreateOrConnectWithoutUsuarioInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    create: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type notificaciones_leidasCreateManyUsuarioInputEnvelope = {
+    data: notificaciones_leidasCreateManyUsuarioInput | notificaciones_leidasCreateManyUsuarioInput[]
+    skipDuplicates?: boolean
+  }
+
   export type actividades_institucionalesUpsertWithWhereUniqueWithoutUsuariosInput = {
     where: actividades_institucionalesWhereUniqueInput
     update: XOR<actividades_institucionalesUpdateWithoutUsuariosInput, actividades_institucionalesUncheckedUpdateWithoutUsuariosInput>
@@ -44805,6 +48289,52 @@ export namespace Prisma {
     fecha_fin?: DateTimeNullableFilter<"roles"> | Date | string | null
     activo?: BoolNullableFilter<"roles"> | boolean | null
     rol?: EnumRolUsuarioNullableFilter<"roles"> | $Enums.RolUsuario | null
+  }
+
+  export type notificacionesUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: notificacionesWhereUniqueInput
+    update: XOR<notificacionesUpdateWithoutUsuarioInput, notificacionesUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<notificacionesCreateWithoutUsuarioInput, notificacionesUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type notificacionesUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: notificacionesWhereUniqueInput
+    data: XOR<notificacionesUpdateWithoutUsuarioInput, notificacionesUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type notificacionesUpdateManyWithWhereWithoutUsuarioInput = {
+    where: notificacionesScalarWhereInput
+    data: XOR<notificacionesUpdateManyMutationInput, notificacionesUncheckedUpdateManyWithoutUsuarioInput>
+  }
+
+  export type notificacionesScalarWhereInput = {
+    AND?: notificacionesScalarWhereInput | notificacionesScalarWhereInput[]
+    OR?: notificacionesScalarWhereInput[]
+    NOT?: notificacionesScalarWhereInput | notificacionesScalarWhereInput[]
+    id_notificacion?: IntFilter<"notificaciones"> | number
+    modulo?: StringFilter<"notificaciones"> | string
+    tipo?: StringFilter<"notificaciones"> | string
+    titulo?: StringFilter<"notificaciones"> | string
+    descripcion?: StringNullableFilter<"notificaciones"> | string | null
+    enlace?: StringNullableFilter<"notificaciones"> | string | null
+    id_usuario?: IntNullableFilter<"notificaciones"> | number | null
+    createdAt?: DateTimeFilter<"notificaciones"> | Date | string
+  }
+
+  export type notificaciones_leidasUpsertWithWhereUniqueWithoutUsuarioInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    update: XOR<notificaciones_leidasUpdateWithoutUsuarioInput, notificaciones_leidasUncheckedUpdateWithoutUsuarioInput>
+    create: XOR<notificaciones_leidasCreateWithoutUsuarioInput, notificaciones_leidasUncheckedCreateWithoutUsuarioInput>
+  }
+
+  export type notificaciones_leidasUpdateWithWhereUniqueWithoutUsuarioInput = {
+    where: notificaciones_leidasWhereUniqueInput
+    data: XOR<notificaciones_leidasUpdateWithoutUsuarioInput, notificaciones_leidasUncheckedUpdateWithoutUsuarioInput>
+  }
+
+  export type notificaciones_leidasUpdateManyWithWhereWithoutUsuarioInput = {
+    where: notificaciones_leidasScalarWhereInput
+    data: XOR<notificaciones_leidasUpdateManyMutationInput, notificaciones_leidasUncheckedUpdateManyWithoutUsuarioInput>
   }
 
   export type asistencias_actividadCreateWithoutInvitadosInput = {
@@ -45688,6 +49218,26 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type notificaciones_leidasCreateManyNotificacionInput = {
+    id_usuario: number
+    leida_en?: Date | string
+  }
+
+  export type notificaciones_leidasUpdateWithoutNotificacionInput = {
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+    usuario?: usuariosUpdateOneRequiredWithoutNotificaciones_leidasNestedInput
+  }
+
+  export type notificaciones_leidasUncheckedUpdateWithoutNotificacionInput = {
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasUncheckedUpdateManyWithoutNotificacionInput = {
+    id_usuario?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type colegiados_asignados_socialCreateManyPasantesInput = {
     id_asignacion?: number
     id_actividad_social?: number | null
@@ -45780,6 +49330,21 @@ export namespace Prisma {
     fecha_fin?: Date | string | null
     activo?: boolean | null
     rol?: $Enums.RolUsuario | null
+  }
+
+  export type notificacionesCreateManyUsuarioInput = {
+    id_notificacion?: number
+    modulo: string
+    tipo?: string
+    titulo: string
+    descripcion?: string | null
+    enlace?: string | null
+    createdAt?: Date | string
+  }
+
+  export type notificaciones_leidasCreateManyUsuarioInput = {
+    id_notificacion: number
+    leida_en?: Date | string
   }
 
   export type actividades_institucionalesUpdateWithoutUsuariosInput = {
@@ -45950,6 +49515,52 @@ export namespace Prisma {
     fecha_fin?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     activo?: NullableBoolFieldUpdateOperationsInput | boolean | null
     rol?: NullableEnumRolUsuarioFieldUpdateOperationsInput | $Enums.RolUsuario | null
+  }
+
+  export type notificacionesUpdateWithoutUsuarioInput = {
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lecturas?: notificaciones_leidasUpdateManyWithoutNotificacionNestedInput
+  }
+
+  export type notificacionesUncheckedUpdateWithoutUsuarioInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lecturas?: notificaciones_leidasUncheckedUpdateManyWithoutNotificacionNestedInput
+  }
+
+  export type notificacionesUncheckedUpdateManyWithoutUsuarioInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    modulo?: StringFieldUpdateOperationsInput | string
+    tipo?: StringFieldUpdateOperationsInput | string
+    titulo?: StringFieldUpdateOperationsInput | string
+    descripcion?: NullableStringFieldUpdateOperationsInput | string | null
+    enlace?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasUpdateWithoutUsuarioInput = {
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+    notificacion?: notificacionesUpdateOneRequiredWithoutLecturasNestedInput
+  }
+
+  export type notificaciones_leidasUncheckedUpdateWithoutUsuarioInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type notificaciones_leidasUncheckedUpdateManyWithoutUsuarioInput = {
+    id_notificacion?: IntFieldUpdateOperationsInput | number
+    leida_en?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type asistencias_actividadCreateManyInvitadosInput = {

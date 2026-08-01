@@ -3,7 +3,7 @@ import ResponsiveTable from "../../../components/ResponsiveTable";
 import Modal from "../../../../../components/Modal";
 import Alerts from "../../../components/Alerts";
 import { Outlet, useNavigate } from "react-router-dom";
-import { getAllInvitados, deleteInvitado, updateEstadoInvitado } from "../../../services/invitados";
+import { getAllInvitados, updateEstadoInvitado, createInvitado, updateInvitado } from "../../../services/invitados";
 import CreateInvitado from "./Components/CreateInvitado";
 import ModificarInvitado from "./Components/ModificarInvitado";
 import GenerarReporteInvitados from "./Components/GenerarReporte";
@@ -28,7 +28,6 @@ import {
     UserCheck,
 } from 'lucide-react';
 import Header from '../../../components/Header';
-import ConfirmDialog from '../../../components/ConfirmDialog';
 import ConfirmActionModal from '../../../../../components/ConfirmActionModal';
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 
@@ -45,7 +44,7 @@ const Invitados = () => {
     const [invitadoSeleccionado, setInvitadoSeleccionado] = useState(null);
     const [desacTarget, setDesacTarget] = useState(null);
 
-    // Confirm DESPUÉS de guardar
+    // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
     const [alertType, setAlertType] = useState("success");
     const [alertMessage, setAlertMessage] = useState("");
@@ -54,10 +53,6 @@ const Invitados = () => {
     const [modalReporte, setModalReporte] = useState(false);
 
     const [alert, setAlert] = useState(false);
-    
-    // Doble confirmación eliminar
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [invitadoToDelete, setInvitadoToDelete] = useState(null);
 
     const fetchInvitados = async () => {
         const { data, total, page: currentPage, totalPages } =
@@ -86,17 +81,12 @@ const Invitados = () => {
         setTimeout(() => setAlert(false), 3000);
     };
 
-    const confirmDelete = (id) => {
-        setInvitadoToDelete(id);
-        setShowDeleteConfirm(true);
-    };
-
     const handleDesactivar = async () => {
         try {
             await updateEstadoInvitado(desacTarget, mostrarInactivos ? "ACTIVO" : "INACTIVO");
             handleSuccess(mostrarInactivos ? "Invitado activado correctamente." : "Invitado desactivado correctamente.");
             fetchInvitados();
-        } catch (error) {
+        } catch {
             handleError('Error al cambiar el estado del invitado');
         } finally {
             setDesacTarget(null);
@@ -149,7 +139,7 @@ const Invitados = () => {
     };
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             {/* Header */}
             <Header
                 icon={<UserCircle />}
@@ -244,14 +234,17 @@ const Invitados = () => {
 
 
 
-            {/* ✅ Confirm DESPUÉS de guardar */}
+            {/* ✅ Confirm ANTES de guardar — cancelar aborta la operación */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
                 variant={confirmSave.variant}
                 title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
                 message={confirmSave.variant === "create" ? "¿Confirmas que deseas registrar este invitado?" : "¿Confirmas que deseas guardar los cambios realizados?"}
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+                onClose={() => setConfirmSave((prev) => ({ ...prev, open: false }))}
+                onConfirm={async () => {
+                    await confirmSave.callback?.();
+                    setConfirmSave((prev) => ({ ...prev, open: false }));
+                }}
             />
 
             {/* ✅ Doble confirmación desactivar/activar (2s + 4s) */}
@@ -270,12 +263,19 @@ const Invitados = () => {
             />
 
             {/*  Modales */}
-            <Modal isOpen={mostrarModal} title="" onClose={() => setMostrarModal(false)}>
+            <Modal isOpen={mostrarModal} title="Crear Invitado" onClose={() => setMostrarModal(false)}>
                 <CreateInvitado
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "create",
-                            callback: () => { setMostrarModal(false); handleSuccess("Invitado creado correctamente."); fetchInvitados(); },
+                            callback: async () => {
+                                try {
+                                    await createInvitado(payload);
+                                    setMostrarModal(false);
+                                    handleSuccess("Invitado creado correctamente.");
+                                    fetchInvitados();
+                                } catch { handleError("Error al crear el invitado."); }
+                            },
                         });
                     }}
                 />
@@ -285,10 +285,17 @@ const Invitados = () => {
                 <ModificarInvitado
                     id={invitadoSeleccionado}
                     onClose={() => setMostrarModal2(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "edit",
-                            callback: () => { setMostrarModal2(false); handleSuccess("Invitado modificado exitosamente."); fetchInvitados(); },
+                            callback: async () => {
+                                try {
+                                    await updateInvitado(invitadoSeleccionado, payload);
+                                    setMostrarModal2(false);
+                                    handleSuccess("Invitado modificado exitosamente.");
+                                    fetchInvitados();
+                                } catch { handleError("Error al modificar el invitado."); }
+                            },
                         });
                     }}
                 />

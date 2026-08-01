@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
+import { describir } from "../../../utils/auditoria";
+import { Modulos } from "../../../types/auditoria";
+import { emitirNotificacion } from "../../notificaciones/services";
 
 export const getUsuarios = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '', inactivos } = req.query
@@ -25,6 +28,7 @@ export const getUsuarios = async (req: Request, res: Response) => {
             estado: mostrarInactivos ? 'INACTIVO' : 'ACTIVO',
             ...searchFilter
         },
+        omit: { contrase_a: true },
         skip,
         take
     })
@@ -62,8 +66,10 @@ export const updateUsuarioById = async (req: Request, res: Response) => {
         where: {
             id_usuario: +id
         },
-        data: { telefono, direccion }
+        data: { telefono, direccion },
+        omit: { contrase_a: true }
     })
+    describir(res, `Modificó los datos de contacto del usuario ${usuario.nombre} ${usuario.apellido}`)
     res.status(200).json(usuario)
 }
 export const desactivarUsuarioById = async (req: Request, res: Response) => {
@@ -72,7 +78,17 @@ export const desactivarUsuarioById = async (req: Request, res: Response) => {
         where: {
             id_usuario: +id
         },
-        data: { estado: 'INACTIVO' }
+        data: { estado: 'INACTIVO' },
+        omit: { contrase_a: true }
+    })
+    describir(res, `Desactivó al usuario ${usuario.nombre} ${usuario.apellido}`)
+    await emitirNotificacion({
+        modulo: Modulos.USUARIOS,
+        tipo: 'aviso',
+        titulo: 'Usuario desactivado',
+        descripcion: `${usuario.nombre} ${usuario.apellido}`,
+        enlace: '/dashboard/usuarios',
+        idUsuario: req.user?.id_usuario,
     })
     res.status(200).json(usuario)
 }
@@ -82,8 +98,10 @@ export const activarUsuarioById = async (req: Request, res: Response) => {
         where: {
             id_usuario: +id
         },
-        data: { estado: 'ACTIVO' }
+        data: { estado: 'ACTIVO' },
+        omit: { contrase_a: true }
     })
+    describir(res, `Activó al usuario ${usuario.nombre} ${usuario.apellido}`)
     res.status(200).json(usuario)
 }
 export const getUsuariosFiltrados = async (req: Request, res: Response) => {
@@ -91,7 +109,8 @@ export const getUsuariosFiltrados = async (req: Request, res: Response) => {
     const usuario = await prismaClient.usuarios.findMany({
         where: {
             estado: estado as string
-        }
+        },
+        omit: { contrase_a: true }
     })
     res.status(200).json(usuario)
 }

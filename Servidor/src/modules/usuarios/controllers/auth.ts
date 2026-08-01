@@ -8,6 +8,9 @@ import NotFoundException from "../../../exceptions/not-found";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET } from "../../../utils/secrets";
 import UnauthorizedException from "../../../exceptions/unauthorized";
+import { describir, registrarAuditoria } from "../../../utils/auditoria";
+import { Acciones, Modulos } from "../../../types/auditoria";
+import { emitirNotificacion } from "../../notificaciones/services";
 export const singUp = async (req: Request, res: Response) => {
     const validated = signupSchema.parse(req.body)
     const {
@@ -35,13 +38,23 @@ export const singUp = async (req: Request, res: Response) => {
             direccion
         }
     })
-    const roles = await prismaClient.roles.create({
+    await prismaClient.roles.create({
         data: {
             id_usuario: user.id_usuario,
             rol: "NO_DEFINIDO"
         }
     })
-    res.json(user)
+    describir(res, `Se creó el usuario ${user.nombre} ${user.apellido} (${user.correo})`)
+    await emitirNotificacion({
+        modulo: Modulos.USUARIOS,
+        tipo: 'exito',
+        titulo: 'Nuevo usuario del sistema',
+        descripcion: `${user.nombre} ${user.apellido} (${user.correo})`,
+        enlace: '/dashboard/usuarios',
+        idUsuario: req.user?.id_usuario,
+    })
+    const { contrase_a, ...usuarioPublico } = user
+    res.json(usuarioPublico)
 }
 
 export const login = async (req: Request, res: Response) => {
@@ -74,9 +87,14 @@ export const login = async (req: Request, res: Response) => {
         userId: user.id_usuario,
         rol
     }, JWT_SECRET!, { expiresIn: '8h' })
-    res.json({ user, token })
+    // No pasa por el wrapper de `errorHandler`: en este punto `req.user` todavía
+    // no existe (recién se está generando el token), así que se audita a mano.
+    await registrarAuditoria(user.id_usuario, Acciones.INICIO_SESION, Modulos.USUARIOS, `${user.nombre} ${user.apellido} inició sesión`)
+    const { contrase_a, ...usuarioPublico } = user
+    res.json({ user: usuarioPublico, token })
 }
 
 export const me = async (req: Request, res: Response, next: NextFunction) => {
+    // `req.user` ya viene sin contraseña desde authMiddleware.
     res.json(req.user)
 }

@@ -3,22 +3,20 @@ import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import ResponsiveTable from "../../components/ResponsiveTable";
 import { useEffect, useState } from 'react';
-import { getAllColegiados, updateEstadoColegiado } from "../../services/colegiados";
+import { getAllColegiados, updateEstadoColegiado, createColegiado, modificarColegiados } from "../../services/colegiados";
 import CreateColegiado from "./components/CreateColegiado";
 import ModificarColegiado from "./components/ModificarColegiado";
-import GenerarReporteColegios from "./components/GenerarReporte";
 import parseDate from "../../../../utils/parseData";
 import Alerts from "../../components/Alerts";
 import { Outlet } from "react-router-dom";
 import PinDisplay from "../../../../components/PinDisplay";
-import { Users, Plus, Eye, BarChart3, EyeOff, FileText, CreditCard, Edit3, UserCheck, UserX, Calendar, Mail, Phone, GraduationCap } from 'lucide-react';
+import { Users, Plus, Eye, EyeOff, FileText, CreditCard, Edit3, UserCheck, UserX, Calendar, Mail, Phone, GraduationCap, KeyRound, Copy } from 'lucide-react';
 import Header from "../../components/Header";
 import { getEstadoBadge, getEstadoIcon } from "../../hooks/estados";
 
 const Colegiados = () => {
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
     const [colegiados, setColegiados] = useState([]);
-    const [modalReporte, setModalReporte] = useState(false);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -28,8 +26,11 @@ const Colegiados = () => {
     const [mostrarModal2, setMostrarModal2] = useState(false);
     const [colegiadoSeleccionado, setColegiadoSeleccionado] = useState(null);
 
-    // Confirm DESPUÉS de guardar
+    // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
+
+    // PIN devuelto por el servidor al registrar (solo se muestra una vez)
+    const [pinGenerado, setPinGenerado] = useState(null);
 
     // Doble confirmación desactivar/activar
     const [desacTarget, setDesacTarget] = useState(null);
@@ -75,7 +76,7 @@ const Colegiados = () => {
     ];
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-screen">
+        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
                 icon={<Users className="w-8 h-8" />} title="Gestión de Colegiados"
                 stats={[{ label: "Total", value: total, color: "purple" }]}
@@ -83,7 +84,6 @@ const Colegiados = () => {
                 onSearch={(v) => setSearch(v)}
                 buttons={[
                     { label: "Añadir colegiado", icon: <Plus />, onClick: () => SetMostrarModal(true), color: "purple" },
-                    { label: "Reporte", icon: <BarChart3 />, onClick: () => setModalReporte(true), color: "blue" },
                     { label: mostrarInactivos ? "Ver activos" : "Ver inactivos", icon: mostrarInactivos ? <Eye /> : <EyeOff />, onClick: () => setMostrarInactivos(!mostrarInactivos), color: mostrarInactivos ? "emerald" : "rose" },
                 ]}
             />
@@ -127,13 +127,21 @@ const Colegiados = () => {
                 />
             </div>
 
-            {/* Forms — abren directo */}
+            {/* Forms — abren directo y delegan el guardado al confirm */}
             <Modal isOpen={mostrarModal} title="Crear Colegiado" onClose={() => SetMostrarModal(false)}>
                 <CreateColegiado
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "create",
-                            callback: () => { SetMostrarModal(false); showAlertFn('success', 'Colegiado registrado exitosamente.'); fetchColegiados(); },
+                            callback: async () => {
+                                try {
+                                    const response = await createColegiado(payload);
+                                    SetMostrarModal(false);
+                                    fetchColegiados();
+                                    if (response?.pin_temporal) setPinGenerado(response.pin_temporal);
+                                    else showAlertFn('success', 'Colegiado registrado exitosamente.');
+                                } catch { showAlertFn('error', 'Error al registrar el colegiado.'); }
+                            },
                         });
                     }}
                 />
@@ -143,27 +151,60 @@ const Colegiados = () => {
                 <ModificarColegiado
                     id={colegiadoSeleccionado}
                     onClose={() => setMostrarModal2(false)}
-                    onSuccess={() => {
+                    onSubmitForm={(payload) => {
                         setConfirmSave({
                             open: true, variant: "edit",
-                            callback: () => { setMostrarModal2(false); showAlertFn('success', 'Colegiado modificado exitosamente.'); fetchColegiados(); },
+                            callback: async () => {
+                                try {
+                                    await modificarColegiados(colegiadoSeleccionado, payload);
+                                    setMostrarModal2(false);
+                                    showAlertFn('success', 'Colegiado modificado exitosamente.');
+                                    fetchColegiados();
+                                } catch { showAlertFn('error', 'Error al modificar el colegiado.'); }
+                            },
                         });
                     }}
                 />
             </Modal>
 
-            <Modal isOpen={modalReporte} title="Generar Reporte" onClose={() => setModalReporte(false)}>
-                <GenerarReporteColegios />
+            {/* PIN de acceso — solo se muestra esta vez */}
+            <Modal isOpen={!!pinGenerado} title="PIN de acceso generado" onClose={() => setPinGenerado(null)}>
+                <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center">
+                        <KeyRound className="w-8 h-8" />
+                    </div>
+                    <p className="text-slate-600 text-sm max-w-sm">
+                        Guarda este PIN y comunícaselo al colegiado. Es necesario para el acceso por GPS.
+                    </p>
+                    <PinDisplay pin={pinGenerado} />
+                    <div className="flex items-center gap-3 pt-2">
+                        <button
+                            onClick={() => navigator.clipboard.writeText(pinGenerado)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium bg-slate-100 text-slate-700 hover:bg-slate-200 transition-colors"
+                        >
+                            <Copy className="w-4 h-4" /> Copiar
+                        </button>
+                        <button
+                            onClick={() => { setPinGenerado(null); showAlertFn('success', 'Colegiado registrado exitosamente.'); }}
+                            className="px-4 py-2 rounded-lg font-bold text-white bg-emerald-500 hover:bg-emerald-600 shadow-md transition-all"
+                        >
+                            Entendido, continuar
+                        </button>
+                    </div>
+                </div>
             </Modal>
 
-            {/* ✅ Confirm DESPUÉS de guardar */}
+            {/* ✅ Confirm ANTES de guardar — cancelar aborta la operación */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
                 variant={confirmSave.variant}
                 title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
                 message={confirmSave.variant === "create" ? "¿Confirmas que deseas registrar este colegiado?" : "¿Confirmas que deseas guardar los cambios realizados?"}
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
+                onClose={() => setConfirmSave((prev) => ({ ...prev, open: false }))}
+                onConfirm={async () => {
+                    await confirmSave.callback?.();
+                    setConfirmSave((prev) => ({ ...prev, open: false }));
+                }}
             />
 
             {/* ✅ Doble confirmación desactivar/activar (2s + 4s) */}

@@ -3,11 +3,10 @@ import { Request, Response } from "express";
 
 import { Prisma } from "../../../../generated/prisma";
 import prismaClient from "../../../utils/prismaClient";
-import puppeteer from "puppeteer";
-import { subirArchivo, buildPublicUrl } from "../../../utils/uploadS3";
-import registrarAuditoria from "../../Auditorias/services";
-import { Acciones, Modulos } from "../../../types/auditoria";
+import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
+import { describir } from "../../../utils/auditoria";
 import { movimientoSchema } from "../schemas/tesoreria";
+import { esc, generarInformePdf, enviarInformePdf, renderInformeHTML, renderTabla, renderBarraProgreso } from "../../../utils/informes";
 
 /**
  * Listar todos los presupuestos (paginado + búsqueda opcional).
@@ -150,6 +149,7 @@ export const createPresupuesto = async (req: Request, res: Response) => {
             },
         });
 
+        describir(res, `Se creó el presupuesto "${nuevo.nombre_presupuesto}"`);
         return res.status(201).json(nuevo);
     } catch (error) {
         console.error("Error createPresupuesto:", error);
@@ -178,6 +178,7 @@ export const updatePresupuesto = async (req: Request, res: Response) => {
             },
         });
 
+        describir(res, `Modificó el presupuesto "${updated.nombre_presupuesto}"`);
         return res.status(200).json(updated);
     } catch (error) {
         console.error("Error updatePresupuesto:", error);
@@ -197,7 +198,8 @@ export const deletePresupuesto = async (req: Request, res: Response) => {
             where: { id_presupuesto: id },
         });
         // Luego eliminar el presupuesto
-        await prismaClient.presupuestos.delete({ where: { id_presupuesto: id } });
+        const eliminado = await prismaClient.presupuestos.delete({ where: { id_presupuesto: id } });
+        describir(res, `Eliminó el presupuesto "${eliminado.nombre_presupuesto}" y sus movimientos asociados`);
         return res.status(200).json({ message: "Presupuesto eliminado" });
     } catch (error) {
         console.error("Error deletePresupuesto:", error);
@@ -232,8 +234,8 @@ export const createMovimientoFinanciero = async (req: Request, res: Response) =>
     try {
         const validatedData = movimientoSchema.parse(req.body);
         const { id_presupuesto, tipo_movimiento, categoria, descripcion, monto, metodo_pago, fecha_movimiento } = validatedData;
-        const userId = (req as any).user ? Number((req as any).user) : undefined;
-        
+        const userId = req.user?.id_usuario;
+
         let rutaComprobante: string | null = null;
         if (req.file) {
             const p = await prismaClient.presupuestos.findUnique({
@@ -266,19 +268,10 @@ export const createMovimientoFinanciero = async (req: Request, res: Response) =>
                 },
             });
 
-            if (userId) {
-                await tx.auditoria.create({
-                    data: {
-                        id_usuario: userId,
-                        accion: Acciones.REGISTRO,
-                        modulo: Modulos.FINANCIERO,
-                        descripcion: `Se registró un movimiento manual de ${tipo_movimiento} por ${monto}Bs en tesorería`
-                    }
-                });
-            }
             return mov;
         });
 
+        describir(res, `Se registró un movimiento manual de ${tipo_movimiento} por ${monto}Bs en tesorería`);
         return res.status(201).json(nuevoMov);
     } catch (error: any) {
         if (error.name === 'ZodError') {
@@ -317,6 +310,7 @@ export const updateMovimientoFinanciero = async (req: Request, res: Response) =>
             },
         });
 
+        describir(res, `Modificó el movimiento manual de ${updatedMov.tipo_movimiento} #${updatedMov.id_movimiento} en tesorería`);
         return res.status(200).json(updatedMov);
     } catch (error) {
         console.error("Error updateMovimientoFinanciero:", error);
@@ -336,7 +330,10 @@ export const deleteMovimientoFinanciero = async (req: Request, res: Response) =>
             include: { origen_movimiento: true }
         });
         if (!existing) return res.status(404).json({ message: "Movimiento no encontrado" });
-        
+        if (existing.estado === 'ANULADO') {
+            return res.status(409).json({ message: "Este movimiento ya fue anulado" });
+        }
+
         await prismaClient.$transaction(async (tx) => {
             // Anular el movimiento en tesorería
             await tx.movimientos_financieros.update({
@@ -393,13 +390,12 @@ export const deleteMovimientoFinanciero = async (req: Request, res: Response) =>
             }
         });
 
-        // Eliminar archivo si existía (fuera de la transacción por si falla)
+        // Eliminar archivo ya confirmada la transacción
         if (existing.comprobante) {
-            import('../../../utils/uploadS3').then(({ eliminarArchivo }) => {
-                eliminarArchivo(existing.comprobante!).catch(e => console.error("Error eliminando comprobante:", e));
-            });
+            await eliminarArchivo(existing.comprobante).catch(e => console.error("Error eliminando comprobante:", e));
         }
 
+        describir(res, `Anuló el movimiento financiero #${existing.id_movimiento} (${existing.tipo_movimiento}, ${existing.monto}Bs)`);
         return res.status(200).json({ message: "Movimiento anulado" });
     } catch (error) {
         console.error("Error deleteMovimientoFinanciero:", error);
@@ -469,118 +465,100 @@ export const getPresupuestosSummaryReport = async (req: Request, res: Response) 
                 const sumaMov = agg._sum.monto ?? new Prisma.Decimal(0);
                 const montoTotalDecimal = p.monto_total ?? new Prisma.Decimal(0);
                 const montoTotal = montoTotalDecimal.toNumber();
-                const saldoRest = montoTotal - sumaMov.toNumber();
+                const ejecutado = sumaMov.toNumber();
+                const saldoRest = montoTotal - ejecutado;
+                const pctEjecutado = montoTotal > 0 ? (ejecutado / montoTotal) * 100 : 0;
 
                 return {
                     nombre_presupuesto: p.nombre_presupuesto || "",
                     descripcion: p.descripcion || "",
-                    monto_total: montoTotal.toFixed(2),
+                    monto_total: montoTotal,
                     fecha_asignacion: p.fecha_asignacion
                         ? p.fecha_asignacion.toISOString().split("T")[0]
                         : "",
                     estado: p.estado || "",
-                    saldo_restante: saldoRest.toFixed(2),
+                    saldo_restante: saldoRest,
+                    pct_ejecutado: pctEjecutado,
                 };
             })
         );
 
         // 1.1.4) Texto con filtros aplicados
-        let filtrosTexto = "<p>Todos los presupuestos.</p>";
+        let filtrosTexto = "Todos los presupuestos.";
         if (fecha_inicio || fecha_fin) {
             const inicio = fecha_inicio ? String(fecha_inicio) : "—";
             const fin = fecha_fin ? String(fecha_fin) : "—";
-            filtrosTexto = `<p><strong>Rango Fecha Asignación:</strong> ${inicio} – ${fin}</p>`;
+            filtrosTexto = `Rango Fecha Asignación: ${esc(inicio)} – ${esc(fin)}`;
         }
 
-        // 1.1.5) Generar tabla HTML
-        let tablaHTML = "";
-        if (datos.length === 0) {
-            tablaHTML = `<p>No hay presupuestos en este rango de fechas.</p>`;
-        } else {
-            tablaHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Monto Total (Bs.)</th>
-            <th>Fecha Asignación</th>
-            <th>Estado</th>
-            <th>Saldo Restante (Bs.)</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${datos
-                    .map(
-                        (d) => `
+        const totalMontoAsignado = datos.reduce((acc, d) => acc + d.monto_total, 0);
+        const totalSaldoRestante = datos.reduce((acc, d) => acc + d.saldo_restante, 0);
+
+        const kpis = [
+            { label: "Presupuestos", value: datos.length, accent: "violeta" as const },
+            { label: "Monto Total Asignado (Bs.)", value: totalMontoAsignado.toFixed(2), accent: "violeta" as const },
+            { label: "Saldo Total Restante (Bs.)", value: totalSaldoRestante.toFixed(2), accent: "rosa" as const },
+        ];
+
+        const filas = datos.map(
+            (d) => `
             <tr>
-              <td>${d.nombre_presupuesto}</td>
-              <td>${d.descripcion}</td>
-              <td>${d.monto_total}</td>
-              <td>${d.fecha_asignacion}</td>
-              <td>${d.estado}</td>
-              <td>${d.saldo_restante}</td>
-            </tr>
-          `
-                    )
-                    .join("")}
-        </tbody>
-      </table>
-      `;
+              <td>${esc(d.nombre_presupuesto)}</td>
+              <td>${esc(d.descripcion)}</td>
+              <td style="text-align:right">${d.monto_total.toFixed(2)}</td>
+              <td>${esc(d.fecha_asignacion)}</td>
+              <td>${esc(d.estado)}</td>
+              <td style="text-align:right">${d.saldo_restante.toFixed(2)}</td>
+              <td>${renderBarraProgreso(d.pct_ejecutado)}</td>
+            </tr>`
+        );
+
+        if (datos.length > 0) {
+            filas.push(`
+            <tr class="fila-total">
+              <td colspan="2">TOTAL</td>
+              <td style="text-align:right">${totalMontoAsignado.toFixed(2)}</td>
+              <td></td>
+              <td></td>
+              <td style="text-align:right">${totalSaldoRestante.toFixed(2)}</td>
+              <td></td>
+            </tr>`);
         }
 
-        // 1.1.6) HTML completo para PDF
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 8px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Reporte Resumen de Presupuestos</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
-          ${filtrosTexto}
-          ${tablaHTML}
-        </body>
-      </html>
+        const bodyHtml = `
+      <section class="seccion">
+        ${renderTabla(
+            [
+                { label: "Nombre" },
+                { label: "Descripción" },
+                { label: "Monto Total (Bs.)", align: "right" },
+                { label: "Fecha Asignación" },
+                { label: "Estado" },
+                { label: "Saldo Restante (Bs.)", align: "right" },
+                { label: "% Ejecutado" },
+            ],
+            filas,
+            "No hay presupuestos en este rango de fechas."
+        )}
+      </section>
     `;
 
-        // 1.1.7) Puppeteer → convertir a PDF
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe de Estado Presupuestario",
+            subtitulo: "Resumen consolidado de presupuestos",
+            filtrosTexto,
+            kpis,
+            bodyHtml,
+            orientacion: "landscape",
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res
-                .status(500)
-                .send("Error generando PDF resumen de presupuestos.");
-        }
-
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="resumen_presupuestos.pdf"`
-        );
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html, { landscape: true });
+        return enviarInformePdf(res, pdfBuffer, "informe_estado_presupuestario.pdf");
     } catch (error) {
         console.error("Error en getPresupuestosSummaryReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte resumen de presupuestos.");
+            .send("Error al generar informe resumen de presupuestos.");
     }
 };
 
@@ -629,108 +607,79 @@ export const getPresupuestoDetailReport = async (req: Request, res: Response) =>
             fecha_movimiento: m.fecha_movimiento
                 ? m.fecha_movimiento.toISOString().split("T")[0]
                 : "",
-            tipo_movimiento: m.tipo_movimiento,
-            categoria: m.categoria,
+            tipo_movimiento: m.tipo_movimiento ?? "",
+            categoria: m.categoria ?? "Sin categoría",
             descripcion: m.descripcion || "",
-            monto: m.monto?.toNumber().toFixed(2),
+            monto: m.monto?.toNumber() ?? 0,
         }));
 
-        // 1.2.4) Construir HTML del detalle
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            h2 { color: #444; margin-top: 20px; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-            .seccion { margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <h1>Detalle Presupuesto</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
+        const pctEjecutado = montoTotal > 0 ? (sumaMov.toNumber() / montoTotal) * 100 : 0;
 
-          <div class="seccion">
-            <h2>Información General</h2>
-            <p><strong>Nombre:</strong> ${p.nombre_presupuesto}</p>
-            <p><strong>Descripción:</strong> ${p.descripcion || ""}</p>
-            <p><strong>Monto Total (Bs.):</strong> ${montoTotal.toFixed(2)}</p>
-            <p><strong>Saldo Restante (Bs.):</strong> ${saldoRest.toFixed(2)}</p>
-            <p><strong>Fecha Asignación:</strong> ${p.fecha_asignacion ? p.fecha_asignacion.toISOString().split("T")[0] : ""
-            }</p>
-            <p><strong>Estado:</strong> ${p.estado || ""}</p>
-          </div>
-
-          <div class="seccion">
-            <h2>Movimientos Financieros</h2>
-            ${movimientos.length === 0
-                ? "<p>No hay movimientos para este presupuesto.</p>"
-                : `
-              <table>
-                <thead>
-                  <tr>
-                    <th>Fecha</th>
-                    <th>Tipo</th>
-                    <th>Categoría</th>
-                    <th>Descripción</th>
-                    <th>Monto (Bs.)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${movimientos
-                    .map(
-                        (m) => `
-                    <tr>
-                      <td>${m.fecha_movimiento}</td>
-                      <td>${m.tipo_movimiento}</td>
-                      <td>${m.categoria}</td>
-                      <td>${m.descripcion}</td>
-                      <td>${m.monto}</td>
-                    </tr>
-                  `
-                    )
-                    .join("")}
-                </tbody>
-              </table>
-            `
-            }
-          </div>
-        </body>
-      </html>
-    `;
-
-        // 1.2.5) Puppeteer → PDF
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
-        });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
-
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res
-                .status(500)
-                .send("Error generando PDF detalle de presupuesto.");
+        // Subtotal por categoría (agrupando también por tipo de movimiento)
+        const subtotalesPorCategoria = new Map<string, number>();
+        for (const m of movimientos) {
+            const clave = `${m.categoria}|${m.tipo_movimiento}`;
+            subtotalesPorCategoria.set(clave, (subtotalesPorCategoria.get(clave) ?? 0) + m.monto);
         }
 
-        const filename = `detalle_presupuesto_${id}.pdf`;
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
-        return res.send(pdfBuffer);
+        const kpis = [
+            { label: "Monto Total (Bs.)", value: montoTotal.toFixed(2), accent: "violeta" as const },
+            { label: "Ejecutado (Bs.)", value: sumaMov.toNumber().toFixed(2), accent: "violeta" as const },
+            { label: "Saldo Restante (Bs.)", value: saldoRest.toFixed(2), accent: "rosa" as const },
+        ];
+
+        const filasCategoria = Array.from(subtotalesPorCategoria.entries()).map(([clave, subtotal]) => {
+            const [categoria, tipo] = clave.split("|");
+            return `<tr><td>${esc(categoria)}</td><td>${esc(tipo)}</td><td style="text-align:right">${subtotal.toFixed(2)}</td></tr>`;
+        });
+
+        const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Información General</h2>
+        <p><strong>Nombre:</strong> ${esc(p.nombre_presupuesto)}</p>
+        <p><strong>Descripción:</strong> ${esc(p.descripcion || "")}</p>
+        <p><strong>Fecha Asignación:</strong> ${esc(p.fecha_asignacion ? p.fecha_asignacion.toISOString().split("T")[0] : "")}</p>
+        <p><strong>Estado:</strong> ${esc(p.estado || "")}</p>
+        <p><strong>% Ejecutado:</strong></p>
+        ${renderBarraProgreso(pctEjecutado)}
+      </section>
+
+      <section class="seccion">
+        <h2 class="seccion-titulo">Subtotal por Categoría</h2>
+        ${renderTabla(
+            [{ label: "Categoría" }, { label: "Tipo" }, { label: "Subtotal (Bs.)", align: "right" }],
+            filasCategoria,
+            "No hay movimientos para este presupuesto."
+        )}
+      </section>
+
+      <section class="seccion">
+        <h2 class="seccion-titulo">Movimientos Financieros</h2>
+        ${renderTabla(
+            [{ label: "Fecha" }, { label: "Tipo" }, { label: "Categoría" }, { label: "Descripción" }, { label: "Monto (Bs.)", align: "right" }],
+            movimientos.map(
+                (m) => `<tr><td>${esc(m.fecha_movimiento)}</td><td>${esc(m.tipo_movimiento)}</td><td>${esc(m.categoria)}</td><td>${esc(m.descripcion)}</td><td style="text-align:right">${m.monto.toFixed(2)}</td></tr>`
+            ),
+            "No hay movimientos para este presupuesto."
+        )}
+      </section>
+    `;
+
+        const html = renderInformeHTML({
+            titulo: "Detalle de Presupuesto",
+            subtitulo: p.nombre_presupuesto ?? undefined,
+            kpis,
+            bodyHtml,
+        });
+
+        const pdfBuffer = await generarInformePdf(html);
+        const filename = `informe_detalle_presupuesto_${id}.pdf`;
+        return enviarInformePdf(res, pdfBuffer, filename);
     } catch (error) {
         console.error("Error en getPresupuestoDetailReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte detallado de presupuesto.");
+            .send("Error al generar informe detallado de presupuesto.");
     }
 };
 
@@ -772,110 +721,81 @@ export const getMovimientosSummaryReport = async (req: Request, res: Response) =
             fecha_movimiento: m.fecha_movimiento
                 ? m.fecha_movimiento.toISOString().split("T")[0]
                 : "",
-            tipo_movimiento: m.tipo_movimiento,
-            categoria: m.categoria,
+            tipo_movimiento: m.tipo_movimiento ?? "",
+            categoria: m.categoria ?? "",
             descripcion: m.descripcion || "",
-            monto: m.monto?.toNumber().toFixed(2),
+            monto: m.monto?.toNumber() ?? 0,
             presupuesto: m.presupuestos?.nombre_presupuesto || "",
         }));
 
         // 2.1.4) Texto con filtros aplicados
-        let filtrosTexto = "<p>Todos los movimientos.</p>";
+        let filtrosTexto = "Todos los movimientos.";
         if (fecha_inicio || fecha_fin) {
             const inicio = fecha_inicio ? String(fecha_inicio) : "—";
             const fin = fecha_fin ? String(fecha_fin) : "—";
-            filtrosTexto = `<p><strong>Rango Fecha Movimiento:</strong> ${inicio} – ${fin}</p>`;
+            filtrosTexto = `Rango Fecha Movimiento: ${esc(inicio)} – ${esc(fin)}`;
         }
 
-        // 2.1.5) Construir tabla HTML
-        let tablaHTML = "";
-        if (datos.length === 0) {
-            tablaHTML = `<p>No hay movimientos en este rango de fechas.</p>`;
-        } else {
-            tablaHTML = `
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Tipo</th>
-            <th>Categoría</th>
-            <th>Descripción</th>
-            <th>Monto (Bs.)</th>
-            <th>Presupuesto Asociado</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${datos
-                    .map(
-                        (d) => `
-            <tr>
-              <td>${d.fecha_movimiento}</td>
-              <td>${d.tipo_movimiento}</td>
-              <td>${d.categoria}</td>
-              <td>${d.descripcion}</td>
-              <td>${d.monto}</td>
-              <td>${d.presupuesto}</td>
-            </tr>
-          `
-                    )
-                    .join("")}
-        </tbody>
-      </table>
-      `;
+        const ingresos = datos.filter((d) => d.tipo_movimiento === "INGRESO");
+        const egresos = datos.filter((d) => d.tipo_movimiento === "EGRESO");
+        const totalIngresos = ingresos.reduce((acc, d) => acc + d.monto, 0);
+        const totalEgresos = egresos.reduce((acc, d) => acc + d.monto, 0);
+        const neto = totalIngresos - totalEgresos;
+
+        const kpis = [
+            { label: "Total Ingresos (Bs.)", value: totalIngresos.toFixed(2), accent: "violeta" as const },
+            { label: "Total Egresos (Bs.)", value: totalEgresos.toFixed(2), accent: "rosa" as const },
+            { label: "Neto (Bs.)", value: neto.toFixed(2), accent: neto >= 0 ? ("violeta" as const) : ("rosa" as const) },
+        ];
+
+        const columnas = [
+            { label: "Fecha" },
+            { label: "Categoría" },
+            { label: "Descripción" },
+            { label: "Monto (Bs.)", align: "right" as const },
+            { label: "Presupuesto Asociado" },
+        ];
+
+        const filaMovimiento = (d: (typeof datos)[number]) =>
+            `<tr><td>${esc(d.fecha_movimiento)}</td><td>${esc(d.categoria)}</td><td>${esc(d.descripcion)}</td><td style="text-align:right">${d.monto.toFixed(2)}</td><td>${esc(d.presupuesto)}</td></tr>`;
+
+        const filasIngresos = ingresos.map(filaMovimiento);
+        if (ingresos.length > 0) {
+            filasIngresos.push(`<tr class="fila-total"><td colspan="3">SUBTOTAL INGRESOS</td><td style="text-align:right">${totalIngresos.toFixed(2)}</td><td></td></tr>`);
         }
 
-        // 2.1.6) HTML completo
-        const html = `
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { text-align: center; color: #333; }
-            p { margin: 4px 0; font-size: 14px; }
-            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 12px; }
-            th, td { border: 1px solid #ccc; padding: 6px; text-align: left; vertical-align: top; }
-            th { background-color: #eee; }
-            tr:nth-child(even) { background-color: #f9f9f9; }
-          </style>
-        </head>
-        <body>
-          <h1>Reporte de Movimientos Financieros</h1>
-          <h3>Generado: ${new Date().toLocaleString()}</h3>
-          ${filtrosTexto}
-          ${tablaHTML}
-        </body>
-      </html>
+        const filasEgresos = egresos.map(filaMovimiento);
+        if (egresos.length > 0) {
+            filasEgresos.push(`<tr class="fila-total"><td colspan="3">SUBTOTAL EGRESOS</td><td style="text-align:right">${totalEgresos.toFixed(2)}</td><td></td></tr>`);
+        }
+
+        const bodyHtml = `
+      <section class="seccion">
+        <h2 class="seccion-titulo">Ingresos</h2>
+        ${renderTabla(columnas, filasIngresos, "No hay ingresos en este rango de fechas.")}
+      </section>
+      <section class="seccion">
+        <h2 class="seccion-titulo">Egresos</h2>
+        ${renderTabla(columnas, filasEgresos, "No hay egresos en este rango de fechas.")}
+      </section>
     `;
 
-        // 2.1.7) Puppeteer → PDF
-        const browser = await puppeteer.launch({
-            headless: true,
-            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        const html = renderInformeHTML({
+            titulo: "Informe de Movimientos Financieros",
+            subtitulo: "Ingresos y egresos agrupados por tipo",
+            filtrosTexto,
+            kpis,
+            bodyHtml,
+            orientacion: "landscape",
         });
-        const page = await browser.newPage();
-        await page.setContent(html, { waitUntil: "networkidle0" });
 
-        const pdfBuffer = await page.pdf({ format: "A4", printBackground: true });
-        await browser.close();
-
-        if (!pdfBuffer || pdfBuffer.length === 0) {
-            return res
-                .status(500)
-                .send("Error generando PDF de movimientos financieros.");
-        }
-
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader(
-            "Content-Disposition",
-            `attachment; filename="reporte_movimientos_financieros.pdf"`
-        );
-        return res.send(pdfBuffer);
+        const pdfBuffer = await generarInformePdf(html, { landscape: true });
+        return enviarInformePdf(res, pdfBuffer, "informe_movimientos_financieros.pdf");
     } catch (error) {
         console.error("Error en getMovimientosSummaryReport:", error);
         return res
             .status(500)
-            .send("Error al generar reporte de movimientos financieros.");
+            .send("Error al generar informe de movimientos financieros.");
     }
 };
 
@@ -987,7 +907,7 @@ export const getPresupuestoAnalytics = async (req: Request, res: Response) => {
 export const getMovimientosFiltrados = async (req: Request, res: Response) => {
     try {
         const id = Number(req.params.id);
-        const { page = 1, limit = 10, tipo, categoria, fecha_desde, fecha_hasta, search, sortOrder = 'desc', metodo, origen, estado } = req.query;
+        const { page = 1, limit = 10, tipo, categoria, fecha_desde, fecha_hasta, search, sortOrder = 'desc', sortBy = 'actividad', metodo, origen, estado } = req.query;
         const pageNum = Number(page);
         const take = Number(limit);
         const skip = (pageNum - 1) * take;
@@ -1007,12 +927,30 @@ export const getMovimientosFiltrados = async (req: Request, res: Response) => {
 
         const orderByDirection = String(sortOrder).toLowerCase() === 'asc' ? 'asc' : 'desc';
 
+        /**
+         * Orden del listado.
+         *
+         * - "actividad" (por defecto): última vez que se tocó el movimiento, sea
+         *   por alta, edición o anulación. Es lo que el usuario espera ver arriba.
+         *   `updatedAt` lo mantiene Prisma con `@updatedAt`; el `nulls: 'last'` y
+         *   los criterios de desempate cubren las filas antiguas que aún no lo
+         *   tengan (en PostgreSQL un DESC pondría los NULL delante).
+         * - "fecha": fecha contable del movimiento, que puede ser muy anterior.
+         */
+        const orderBy = String(sortBy) === 'fecha'
+            ? [{ fecha_movimiento: orderByDirection }, { id_movimiento: orderByDirection }]
+            : [
+                { updatedAt: { sort: orderByDirection, nulls: 'last' } },
+                { createdAt: orderByDirection },
+                { id_movimiento: orderByDirection },
+            ];
+
         const [movimientos, total] = await Promise.all([
             prismaClient.movimientos_financieros.findMany({
                 where,
                 skip,
                 take,
-                orderBy: { updatedAt: orderByDirection },
+                orderBy: orderBy as any,
                 include: {
                     usuario: {
                         select: {

@@ -12,8 +12,11 @@ export default function ModalDetallesMovimiento({ isOpen, onClose, movimiento, o
     const fechaFormateada = fechaObj ? fechaObj.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' }) : '\u2014';
     const fechaCreacionObj = movimiento.createdAt ? new Date(movimiento.createdAt) : null;
     const horaFormateada = fechaCreacionObj ? fechaCreacionObj.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '\u2014';
-    const fechaActObj = movimiento.updatedAt ? new Date(movimiento.updatedAt) : null;
-    const horaActFormateada = fechaActObj ? fechaActObj.toLocaleString('es-ES') : '\u2014';
+    // Se cae a createdAt / fecha_movimiento para las filas antiguas que puedan
+    // no tener updatedAt, igual que hace la tabla.
+    const ultimaActividad = movimiento.updatedAt ?? movimiento.createdAt ?? movimiento.fecha_movimiento;
+    const fechaActObj = ultimaActividad ? new Date(ultimaActividad) : null;
+    const horaActFormateada = fechaActObj ? fechaActObj.toLocaleString('es-ES', { dateStyle: 'short', timeStyle: 'short' }) : '\u2014';
 
     const formatMoney = (amount) => new Intl.NumberFormat('es-BO').format(amount || 0);
 

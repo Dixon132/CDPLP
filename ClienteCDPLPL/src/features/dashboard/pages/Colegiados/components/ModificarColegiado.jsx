@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Button, Box, MenuItem, Typography } from "@mui/material";
-import { getColegiadoById, modificarColegiados } from "../../../services/colegiados";
+import { getColegiadoById } from "../../../services/colegiados";
 import EspecialidadesSelect from "../../../components/EspecialidadesSelect";
 
-const ModificarColegiado = ({ id, onClose, onSuccess }) => {
+/**
+ * Formulario de modificación de colegiado.
+ * No llama a la API: entrega el payload validado vía `onSubmitForm` para que el
+ * contenedor lo confirme (ConfirmActionModal) antes de persistirlo.
+ */
+const ModificarColegiado = ({ id, onClose, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
@@ -42,21 +47,15 @@ const ModificarColegiado = ({ id, onClose, onSuccess }) => {
         fetchData();
     }, [id, reset]);
 
-    const onSubmit = async (formData) => {
-        try {
-            const payload = {
-                ...formData,
-                especialidades: especialidades.join(", "),
-            };
-            if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
-            if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
-            
-            await modificarColegiados(id, payload);
-            if (onSuccess) onSuccess();
-            else if (onClose) onClose();
-        } catch (error) {
-            console.error("Error al modificar:", error);
-        }
+    const onSubmit = (formData) => {
+        const payload = {
+            ...formData,
+            especialidades: especialidades.join(", "),
+        };
+        if (payload.fecha_inscripcion) payload.fecha_inscripcion = `${payload.fecha_inscripcion}T00:00:00`;
+        if (payload.fecha_renovacion) payload.fecha_renovacion = `${payload.fecha_renovacion}T00:00:00`;
+
+        onSubmitForm(payload);
     };
 
     return (

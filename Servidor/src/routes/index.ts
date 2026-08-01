@@ -32,6 +32,11 @@ import institucionesRouter from '../modules/instituciones/routes/index'
 rootRouter.use('/postulaciones', postulacionesRouter)
 rootRouter.use('/memorias', memoriasRouter)
 
+import notificacionesRouter, { dashboardRouter } from '../modules/notificaciones/routes'
+
+rootRouter.use('/notificaciones', notificacionesRouter)
+rootRouter.use('/dashboard', dashboardRouter)
+
 // Entidades centralizadas
 rootRouter.use('/especialidades', especialidadesRouter)
 rootRouter.use('/documentos-requeridos', documentosRequeridosRouter)

@@ -289,6 +289,23 @@ exports.Prisma.AuditoriaScalarFieldEnum = {
   fecha: 'fecha'
 };
 
+exports.Prisma.NotificacionesScalarFieldEnum = {
+  id_notificacion: 'id_notificacion',
+  modulo: 'modulo',
+  tipo: 'tipo',
+  titulo: 'titulo',
+  descripcion: 'descripcion',
+  enlace: 'enlace',
+  id_usuario: 'id_usuario',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.Notificaciones_leidasScalarFieldEnum = {
+  id_notificacion: 'id_notificacion',
+  id_usuario: 'id_usuario',
+  leida_en: 'leida_en'
+};
+
 exports.Prisma.PasantesScalarFieldEnum = {
   id_pasante: 'id_pasante',
   nombre: 'nombre',
@@ -444,6 +461,8 @@ exports.Prisma.ModelName = {
   pagos_colegiados: 'pagos_colegiados',
   presupuestos: 'presupuestos',
   auditoria: 'auditoria',
+  notificaciones: 'notificaciones',
+  notificaciones_leidas: 'notificaciones_leidas',
   pasantes: 'pasantes',
   roles: 'roles',
   usuarios: 'usuarios',

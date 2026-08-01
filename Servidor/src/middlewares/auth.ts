@@ -7,9 +7,23 @@ import { JWT_SECRET } from "../utils/secrets";
 import prismaClient from "../utils/prismaClient";
 import { MyJwtPayload } from "../types/express";
 
+/**
+ * Acepta tanto `Authorization: <token>` como `Authorization: Bearer <token>`:
+ * el cliente del dashboard manda el token crudo y el de GDS/campo lo manda con
+ * el prefijo Bearer.
+ */
+const extraerToken = (header?: string): string | null => {
+    if (!header) return null
+    const valor = header.trim()
+    if (valor.toLowerCase().startsWith('bearer ')) {
+        return valor.slice(7).trim() || null
+    }
+    return valor || null
+}
+
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const token = req.headers.authorization
+        const token = extraerToken(req.headers.authorization)
         if (!token) {
             return next(new UnauthorizedException(
                 'Unauthorized!',
@@ -18,12 +32,16 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
         }
         const payload = jwt.verify(token, JWT_SECRET!) as MyJwtPayload
         const user = await prismaClient.usuarios.findFirst({
-            where: { id_usuario: payload.userId }
+            where: { id_usuario: payload.userId },
+            omit: { contrase_a: true }
         })
         if (!user) {
             return next(new UnauthorizedException('Unathorized!', ErrorCodes.UNAUTHORIZED))
         }
-        req.user = user.id_usuario
+        if (user.estado === 'INACTIVO') {
+            return next(new UnauthorizedException('Usuario desactivado', ErrorCodes.UNAUTHORIZED))
+        }
+        req.user = user
         next()
     } catch (err) {
         if (err instanceof TokenExpiredError) {

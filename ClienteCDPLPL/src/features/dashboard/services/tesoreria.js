@@ -65,6 +65,7 @@ export const getMovimientosFiltrados = async (id, params = {}) => {
         if (params.fecha_hasta) query.append("fecha_hasta", params.fecha_hasta);
         if (params.search) query.append("search", params.search);
         if (params.sortOrder) query.append("sortOrder", params.sortOrder);
+        if (params.sortBy) query.append("sortBy", params.sortBy);
         if (params.metodo) query.append("metodo", params.metodo);
         if (params.origen) query.append("origen", params.origen);
         if (params.estado) query.append("estado", params.estado);
@@ -91,6 +92,6 @@ export const getPresupuestoDetailReport = async (id) => {
     return res.data;
 };
 export const getMovimientosSummaryReport = async (params) => {
-    const res = await axios.get(`${BASE_URL}/report`, { params, responseType: "blob" });
+    const res = await axios.get(`${BASE_URL}/reportMovimiento`, { params, responseType: "blob" });
     return res.data;
 };
