@@ -3,6 +3,7 @@ import prismaClient from "../../../utils/prismaClient";
 import dotenv from "dotenv";
 import { subirAaws, subirArchivo, eliminarArchivo, buildPublicUrl } from "../../../utils/uploadS3";
 import { describir } from "../../../utils/auditoria";
+import { sumarMeses } from "../../../utils/fechas";
 dotenv.config();
 
 export const obtenerUrlFirmada = async (req: Request, res: Response) => {
@@ -66,13 +67,28 @@ export const createDoc = async (req: Request, res: Response) => {
 
         const rutaRelativa = await subirArchivo(req.file, `colegiados/${folderUser}`);
 
+        const fechaEntrega = new Date();
+
+        // Si no viene fecha manual, se calcula desde la vigencia configurada en
+        // el catálogo (documentos_requeridos.vigencia_meses). Si el tipo tampoco
+        // tiene vigencia configurada, el documento simplemente no vence.
+        let fechaVencimientoFinal: Date | null = fecha_vencimiento ? new Date(fecha_vencimiento) : null;
+        if (!fechaVencimientoFinal) {
+            const docRequerido = await prismaClient.documentos_requeridos.findFirst({
+                where: { nombre: tipo_documento }
+            });
+            if (docRequerido?.vigencia_meses) {
+                fechaVencimientoFinal = sumarMeses(fechaEntrega, docRequerido.vigencia_meses);
+            }
+        }
+
         const doc = await prismaClient.documentos_colegiados.create({
             data: {
                 id_colegiado: id,
                 tipo_documento,
                 archivo: rutaRelativa,
-                fecha_entrega: new Date(),
-                fecha_vencimiento: new Date(fecha_vencimiento),
+                fecha_entrega: fechaEntrega,
+                fecha_vencimiento: fechaVencimientoFinal,
                 estado: "VIGENTE"
             },
         });

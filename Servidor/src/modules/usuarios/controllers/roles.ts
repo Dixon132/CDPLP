@@ -6,16 +6,15 @@ export const getRoles = async (req: Request, res: Response) => {
     const { page = 1, limit = 15, search = '', inactivos } = req.query
     const skip: number = (Number(page) - 1) * Number(limit)
     const take: number = Number(limit)
-    const searchFields = ['rol'];
     const mostrarInactivos = inactivos === 'true';
     const searchFilter = search
         ? {
-            OR: searchFields.map(field => ({
-                [field]: {
-                    contains: search,
-                    mode: 'insensitive',
+            catalogo_roles: {
+                nombre: {
+                    contains: String(search),
+                    mode: 'insensitive' as const,
                 },
-            })),
+            },
         }
         : {};
     const roles = await prismaClient.roles.findMany({
@@ -29,7 +28,8 @@ export const getRoles = async (req: Request, res: Response) => {
                     nombre: true,
                     apellido: true
                 }
-            }
+            },
+            catalogo_roles: true
         },
         skip,
         take
@@ -51,11 +51,12 @@ export const getRoles = async (req: Request, res: Response) => {
 }
 
 export const createRole = async (req: Request, res: Response) => {
-    const { id_usuario, rol, fecha_inicio, fecha_fin } = req.body
+    const { id_usuario, id_rol_catalogo, fecha_inicio, fecha_fin } = req.body
     const role = await prismaClient.roles.create({
-        data: { id_usuario, rol, fecha_inicio, fecha_fin }
+        data: { id_usuario, id_rol_catalogo, fecha_inicio, fecha_fin },
+        include: { catalogo_roles: true }
     })
-    describir(res, `Asignó el rol ${rol} al usuario #${id_usuario}`)
+    describir(res, `Asignó el rol ${role.catalogo_roles?.nombre} al usuario #${id_usuario}`)
     res.status(200).json(role)
 }
 export const updateRoleById = async (req: Request, res: Response) => {
@@ -68,9 +69,10 @@ export const updateRoleById = async (req: Request, res: Response) => {
         },
         data: {
             activo: estado === "ACTIVO" ? true : false
-        }
+        },
+        include: { catalogo_roles: true }
     })
-    describir(res, `${estado === "ACTIVO" ? 'Activó' : 'Desactivó'} el rol ${rol.rol} (#${rol.id_rol})`)
+    describir(res, `${estado === "ACTIVO" ? 'Activó' : 'Desactivó'} el rol ${rol.catalogo_roles?.nombre} (#${rol.id_rol})`)
     res.status(200).json(rol)
 }
 
@@ -79,7 +81,7 @@ export const updateRol = async (req: Request, res: Response) => {
     const {
         fecha_inicio,
         fecha_fin,
-        rol
+        id_rol_catalogo
     } = req.body
     const data = await prismaClient.roles.update({
         where: {
@@ -88,10 +90,11 @@ export const updateRol = async (req: Request, res: Response) => {
         data: {
             fecha_fin: new Date(fecha_fin),
             fecha_inicio: new Date(fecha_inicio),
-            rol
-        }
+            id_rol_catalogo
+        },
+        include: { catalogo_roles: true }
     })
-    describir(res, `Modificó el rol ${data.rol} (#${data.id_rol})`)
+    describir(res, `Modificó el rol ${data.catalogo_roles?.nombre} (#${data.id_rol})`)
     res.status(200).json(data)
 }
 export const getRolById = async (req: Request, res: Response) => {
@@ -100,7 +103,8 @@ export const getRolById = async (req: Request, res: Response) => {
     const data = await prismaClient.roles.findFirstOrThrow({
         where: {
             id_rol: +id
-        }
+        },
+        include: { catalogo_roles: true }
     })
     res.status(200).json(data)
 }

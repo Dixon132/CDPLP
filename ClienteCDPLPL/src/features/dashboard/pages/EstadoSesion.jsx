@@ -4,7 +4,7 @@ import { ShieldAlert, CalendarX, UserX, LogOut } from 'lucide-react';
 /**
  * Pantallas de estado de sesión.
  *
- * `RequireRole` redirige a `/dashboard/roleNotDefined`, `/dashboard/roleExpired`
+ * `RequirePermiso` redirige a `/dashboard/roleNotDefined`, `/dashboard/roleExpired`
  * y `/dashboard/roleInactive`, pero esas rutas no existían y el usuario acababa
  * en el 404 genérico sin saber qué había pasado.
  */

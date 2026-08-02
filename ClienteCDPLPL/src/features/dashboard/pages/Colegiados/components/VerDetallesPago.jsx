@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { getPagoById, updatePago, verComprobantePago } from "../../../services/colegiados";
 import { AlertTriangle, XCircle, CheckCircle, Calendar, DollarSign, FileText, Ban, Receipt } from "lucide-react";
 import parseDate from "../../../../../utils/parseData";
+import { useSession } from "../../../../../context/SessionProvider";
 
 const VerDetallesPago = ({ id_pago, onSuccess }) => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados");
     const [pago, setPago] = useState(null);
     const [loading, setLoading] = useState(true);
     const [confirmando, setConfirmando] = useState(false);
@@ -122,7 +125,7 @@ const VerDetallesPago = ({ id_pago, onSuccess }) => {
             )}
 
             {/* Zona de acción */}
-            {yaAnulado ? (
+            {!esEditor ? null : yaAnulado ? (
                 <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-sm text-red-700">
                     <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
                     <p>

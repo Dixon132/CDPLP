@@ -30,8 +30,11 @@ import {
 import Header from '../../../components/Header';
 import ConfirmActionModal from '../../../../../components/ConfirmActionModal';
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
+import { useSession } from "../../../../../context/SessionProvider";
 
 const Invitados = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados.invitados");
     const navigate = useNavigate();
     const [invitados, setInvitados] = useState([]);
     const [search, setSearch] = useState("");
@@ -115,26 +118,26 @@ const Invitados = () => {
 
         if (mostrarInactivos) {
             return [
-                editarAction,
+                ...(esEditor ? [editarAction] : []),
                 verPagosAction,
-                {
+                ...(esEditor ? [{
                     label: "Activar",
                     icon: UserCheck,
                     className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 transition-colors",
                     onClick: (item) => setDesacTarget(item.id_invitado)
-                }
+                }] : []),
             ];
         }
 
         return [
-            editarAction,
+            ...(esEditor ? [editarAction] : []),
             verPagosAction,
-            {
+            ...(esEditor ? [{
                 label: "Desactivar",
                 icon: UserX,
                 className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 transition-colors",
                 onClick: (item) => setDesacTarget(item.id_invitado)
-            }
+            }] : []),
         ];
     };
 
@@ -157,13 +160,13 @@ const Invitados = () => {
                         onClick: () => { setMostrarInactivos(!mostrarInactivos); setPage(1); },
                         color: mostrarInactivos ? "emerald" : "rose",
                     },
-                    {
+                    ...(esEditor ? [{
                         label: "Añadir Invitado",
                         icon: <Plus />,
                         onClick: () => setMostrarModal(true),
                         color: "purple", // se transforma en un gradient
                         type: "create", // aplica estilos especiales
-                    }
+                    }] : []),
                 ]}
             />
 

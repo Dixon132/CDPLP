@@ -194,6 +194,7 @@ model pagos_colegiados {
   estado_pago       String?             @default("REALIZADO") @db.VarChar(50)
   comprobante       String?             @db.VarChar(300)
   metodo_pago       String?             @db.VarChar(50)
+  gestiones         Int?
   origen_movimiento origen_movimiento[]
   colegiados        colegiados?         @relation(fields: [id_colegiado], references: [id_colegiado], onDelete: NoAction, onUpdate: NoAction)
 }
@@ -270,13 +271,15 @@ model pasantes {
 }
 
 model roles {
-  id_rol       Int         @id @default(autoincrement())
-  id_usuario   Int?
-  fecha_inicio DateTime?   @db.Date
-  fecha_fin    DateTime?   @db.Date
-  activo       Boolean?    @default(true)
-  rol          RolUsuario?
-  usuarios     usuarios?   @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
+  id_rol          Int             @id @default(autoincrement())
+  id_usuario      Int?
+  id_rol_catalogo Int?
+  fecha_inicio    DateTime?       @db.Date
+  fecha_fin       DateTime?       @db.Date
+  activo          Boolean?        @default(true)
+  rol             RolUsuario?
+  usuarios        usuarios?       @relation(fields: [id_usuario], references: [id_usuario], onDelete: NoAction, onUpdate: NoAction)
+  catalogo_roles  catalogo_roles? @relation(fields: [id_rol_catalogo], references: [id_rol_catalogo], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model usuarios {
@@ -297,6 +300,7 @@ model usuarios {
   roles                       roles[]
   notificaciones              notificaciones[]
   notificaciones_leidas       notificaciones_leidas[]
+  usuario_permisos            usuario_permisos[]
 }
 
 model invitados {
@@ -338,13 +342,15 @@ model especialidades {
 }
 
 model documentos_requeridos {
-  id_doc_req  Int      @id @default(autoincrement())
-  nombre      String   @db.VarChar(200)
-  descripcion String?
-  activo      Boolean  @default(true)
-  es_opcional Boolean  @default(false)
-  orden       Int      @default(0)
-  createdAt   DateTime @default(now())
+  id_doc_req     Int      @id @default(autoincrement())
+  nombre         String   @db.VarChar(200)
+  descripcion    String?
+  activo         Boolean  @default(true)
+  es_opcional    Boolean  @default(false)
+  orden          Int      @default(0)
+  // Meses de vigencia desde la entrega. NULL = el documento no vence (ej. título profesional).
+  vigencia_meses Int?
+  createdAt      DateTime @default(now())
 }
 
 model config_pago {
@@ -387,6 +393,67 @@ enum RolUsuario {
   SECRETARIO
   TESORERO
   NO_DEFINIDO
+}
+
+enum NivelAcceso {
+  SIN_ACCESO
+  OBSERVADOR
+  EDITOR
+}
+
+/// Catálogo dinámico de roles de negocio (reemplaza al enum RolUsuario).
+/// `es_sistema` protege NO_DEFINIDO de ser renombrado/desactivado desde la UI.
+model catalogo_roles {
+  id_rol_catalogo Int            @id @default(autoincrement())
+  nombre          String         @unique @db.VarChar(50)
+  descripcion     String?        @db.VarChar(200)
+  activo          Boolean        @default(true)
+  es_sistema      Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  roles           roles[]
+  rol_permisos    rol_permisos[]
+}
+
+/// Árbol de módulos y submódulos del dashboard sobre los que se otorgan permisos.
+model recursos {
+  id_recurso       Int                @id @default(autoincrement())
+  clave            String             @unique @db.VarChar(100)
+  nombre           String             @db.VarChar(150)
+  id_padre         Int?
+  orden            Int                @default(0)
+  activo           Boolean            @default(true)
+  padre            recursos?          @relation("recurso_jerarquia", fields: [id_padre], references: [id_recurso], onDelete: NoAction, onUpdate: NoAction)
+  hijos            recursos[]         @relation("recurso_jerarquia")
+  rol_permisos     rol_permisos[]
+  usuario_permisos usuario_permisos[]
+}
+
+/// Plantilla de permisos por defecto de cada rol sobre cada recurso.
+model rol_permisos {
+  id_rol_permiso  Int            @id @default(autoincrement())
+  id_rol_catalogo Int
+  id_recurso      Int
+  nivel           NivelAcceso    @default(SIN_ACCESO)
+  updatedAt       DateTime       @updatedAt
+  catalogo_roles  catalogo_roles @relation(fields: [id_rol_catalogo], references: [id_rol_catalogo], onDelete: Cascade, onUpdate: NoAction)
+  recursos        recursos       @relation(fields: [id_recurso], references: [id_recurso], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([id_rol_catalogo, id_recurso])
+}
+
+/// Override individual: si existe una fila para (usuario, recurso), gana sobre
+/// el permiso que le daría su rol, sin modificar el rol en sí.
+model usuario_permisos {
+  id_usuario_permiso Int         @id @default(autoincrement())
+  id_usuario         Int
+  id_recurso         Int
+  nivel              NivelAcceso
+  updatedAt          DateTime    @updatedAt
+  usuarios           usuarios    @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade, onUpdate: NoAction)
+  recursos           recursos    @relation(fields: [id_recurso], references: [id_recurso], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([id_usuario, id_recurso])
 }
 
 model instituciones {

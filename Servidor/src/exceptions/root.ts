@@ -26,6 +26,7 @@ export enum ErrorCodes{
 
     UNAUTHORIZED = 4001,
     TOKEN_EXPIRED = 4002,
+    FORBIDDEN = 4003,
 
-    
+
 }

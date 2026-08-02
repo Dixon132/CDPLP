@@ -17,4 +17,8 @@ export const crearPagoSchema = z.object({
   fecha_pago: z.coerce.date({ invalid_type_error: 'Fecha de pago inválida' }),
   monto: z.coerce.number().positive('El monto debe ser mayor que 0'),
   metodo_pago: z.string().max(50).optional(),
+  // Cantidad de gestiones (años) de colegiatura que cubre este pago. Se usa
+  // para extender `colegiados.fecha_renovacion` automáticamente al registrar
+  // el pago — antes este dato lo calculaba el frontend y se descartaba.
+  gestiones: z.coerce.number().int().min(1, 'Mínimo 1 gestión').max(10, 'Máximo 10 gestiones').default(1),
 });

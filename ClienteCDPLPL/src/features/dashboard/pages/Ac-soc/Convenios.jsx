@@ -8,8 +8,11 @@ import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import { Handshake, Plus, Edit3, Calendar, CheckCircle, XCircle, Clock, Trash2, RotateCcw, Eye, EyeOff } from "lucide-react";
+import { useSession } from "../../../../context/SessionProvider";
 
 const Convenios = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("actividades_sociales.convenios");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -81,10 +84,10 @@ const Convenios = () => {
                         onClick: () => { setEstadoFiltro(estadoFiltro === "ACTIVO" ? "INACTIVO" : "ACTIVO"); setPage(1); },
                         color: "slate",
                     },
-                    {
+                    ...(esEditor ? [{
                         label: "Crear Convenio", icon: <Plus />,
                         onClick: () => setShowCreate(true), color: "purple",
-                    }
+                    }] : []),
                 ]}
             />
 
@@ -119,7 +122,7 @@ const Convenios = () => {
                         { label: "Estado", key: "estado", render: (c) => <span className={getEstadoBadge(c.estado)}>{getEstadoIcon(c.estado)} {c.estado || "—"}</span> },
                     ]}
                     data={convenios}
-                    actions={[
+                    actions={esEditor ? [
                         {
                             label: "Modificar", icon: Edit3,
                             className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
@@ -137,7 +140,7 @@ const Convenios = () => {
                             className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
                             onClick: (c) => setConfirmStateChange({ open: true, id: c.id_convenio, nuevoEstado: "ACTIVO" }),
                         }
-                    ]}
+                    ] : []}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                 />
             </div>

@@ -99,7 +99,7 @@ export default function GenerarReporteActividadesSociales() {
     return (
         <div className="space-y-6 w-full mx-auto">
             <h2 className="text-xl font-semibold text-center mb-4">
-                Generar Reporte de Actividades Sociales
+                Generar Reporte de Actividades Académicas
             </h2>
 
             {/* Botones para cambiar entre “Resumen” y “Detalle” */}

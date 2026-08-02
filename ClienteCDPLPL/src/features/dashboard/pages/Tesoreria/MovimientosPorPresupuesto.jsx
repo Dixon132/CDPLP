@@ -17,6 +17,7 @@ import Alerts from "../../components/Alerts";
 import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import MovimientoForm from "./components/MovimientoForm";
 import ModalDetallesMovimiento from "./components/ModalDetallesMovimiento";
+import { useSession } from "../../../../context/SessionProvider";
 
 /**
  * Fecha + hora en un único formato para toda la tabla.
@@ -40,6 +41,8 @@ import GroupedBarChart from "./components/charts/GroupedBarChart";
 
 
 export default function MovimientosPorPresupuesto() {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("tesoreria");
     const { id } = useParams();
     const presupuestoId = Number(id);
 
@@ -233,13 +236,15 @@ export default function MovimientosPorPresupuesto() {
                         </div>
                     </div>
                 </div>
-                <Button
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm flex items-center gap-2"
-                    onClick={() => setShowModalCrearMovimiento(true)}
-                >
-                    <Plus size={18} />
-                    Nuevo Movimiento
-                </Button>
+                {esEditor && (
+                    <Button
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm flex items-center gap-2"
+                        onClick={() => setShowModalCrearMovimiento(true)}
+                    >
+                        <Plus size={18} />
+                        Nuevo Movimiento
+                    </Button>
+                )}
             </div>
 
             {/* --- KPIs --- */}
@@ -663,7 +668,7 @@ export default function MovimientosPorPresupuesto() {
                 isOpen={showDetallesModal}
                 onClose={() => { setShowDetallesModal(false); setSelectedMovimiento(null); }}
                 movimiento={selectedMovimiento}
-                onAnular={(idMovimiento) => setAnularTarget(idMovimiento)}
+                onAnular={esEditor ? (idMovimiento) => setAnularTarget(idMovimiento) : undefined}
             />
 
             {/* ✅ Doble confirmación para anular el movimiento (2s + 4s) */}

@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import errorHandler from "../../../utils/error-handler";
 import { authMiddleware as auth } from "../../../middlewares/auth";
+import requirePermiso from "../../../middlewares/requirePermiso";
 import {
     verificarCI,
     getConfigPago,
@@ -35,13 +36,16 @@ router.post(
 );
 
 // ─── RUTAS ADMIN (con auth) ───────────────────────────────────
-router.get("/admin", auth, errorHandler(getPostulaciones));
-router.get("/admin/config-pago", auth, errorHandler(getConfigPagoAdmin));
-router.put("/admin/config-pago", auth, errorHandler(upsertConfigPago, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
-router.post("/admin/upload-qr", auth, upload.single('qr'), errorHandler(uploadQr, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
-router.get("/admin/:id", auth, errorHandler(getPostulacionById));
-router.patch("/admin/:id/aceptar", auth, errorHandler(aceptarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ACTIVO }));
-router.patch("/admin/:id/rechazar", auth, errorHandler(rechazarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.RECHAZO }));
-router.delete("/admin/:id", auth, errorHandler(eliminarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ELIMINO }));
+// Este archivo mezcla dos recursos: admin de postulaciones propiamente dicho
+// (colegiados.postulaciones) y la configuración de pago/QR, que conceptualmente
+// es "Ajustes → Pagos" (ajustes.pagos) aunque viva en este mismo router.
+router.get("/admin", auth, requirePermiso('colegiados.postulaciones', 'OBSERVADOR'), errorHandler(getPostulaciones));
+router.get("/admin/config-pago", auth, requirePermiso('ajustes.pagos', 'OBSERVADOR'), errorHandler(getConfigPagoAdmin));
+router.put("/admin/config-pago", auth, requirePermiso('ajustes.pagos', 'EDITOR'), errorHandler(upsertConfigPago, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
+router.post("/admin/upload-qr", auth, requirePermiso('ajustes.pagos', 'EDITOR'), upload.single('qr'), errorHandler(uploadQr, { modulo: Modulos.CONFIGURACION, accion: Acciones.MODIFICO }));
+router.get("/admin/:id", auth, requirePermiso('colegiados.postulaciones', 'OBSERVADOR'), errorHandler(getPostulacionById));
+router.patch("/admin/:id/aceptar", auth, requirePermiso('colegiados.postulaciones', 'EDITOR'), errorHandler(aceptarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ACTIVO }));
+router.patch("/admin/:id/rechazar", auth, requirePermiso('colegiados.postulaciones', 'EDITOR'), errorHandler(rechazarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.RECHAZO }));
+router.delete("/admin/:id", auth, requirePermiso('colegiados.postulaciones', 'EDITOR'), errorHandler(eliminarPostulacion, { modulo: Modulos.POSTULACIONES, accion: Acciones.ELIMINO }));
 
 export default router;

@@ -25,7 +25,7 @@ const normalizar = (s = '') =>
 
 export default function CommandPalette({ abierto, onClose }) {
     const navigate = useNavigate();
-    const { rol } = useSession();
+    const { rol, permisos } = useSession();
     const [consulta, setConsulta] = useState('');
     const [personas, setPersonas] = useState([]);
     const [buscando, setBuscando] = useState(false);
@@ -34,13 +34,13 @@ export default function CommandPalette({ abierto, onClose }) {
     const peticionRef = useRef(0);
 
     const modulos = useMemo(() => {
-        const todos = getFlatNavForRole(rol);
+        const todos = getFlatNavForRole(rol, permisos);
         const q = normalizar(consulta.trim());
         if (!q) return todos;
         return todos.filter(
             (m) => normalizar(formatTitle(m.title)).includes(q) || normalizar(m.grupo).includes(q)
         );
-    }, [rol, consulta]);
+    }, [rol, permisos, consulta]);
 
     // Búsqueda de personas con debounce
     useEffect(() => {

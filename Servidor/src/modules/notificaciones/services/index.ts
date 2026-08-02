@@ -1,40 +1,44 @@
 import prismaClient from "../../../utils/prismaClient";
 import { Modulos } from "../../../types/auditoria";
+import { resolverMapaPermisos } from "../../permisos/services/resolverPermiso";
 
 /**
- * Módulos que puede ver cada rol.
- *
- * Es el equivalente en servidor de la navegación del cliente: una notificación
- * solo llega a quien tiene acceso al módulo que la originó. Debe mantenerse
- * alineado con `ClienteCDPLPL/src/layouts/navigation.js`.
+ * Qué recurso del catálogo de permisos granulares corresponde a cada módulo
+ * de auditoría/notificaciones. Reemplaza a la vieja `MODULOS_POR_ROL`
+ * hardcodeada por rol: aquella se desincronizaba con cualquier rol nuevo
+ * creado desde el catálogo dinámico (`catalogo_roles`), porque nadie se
+ * acordaba de agregarlo a mano acá. Ahora se deriva en vivo de
+ * `usuario_permisos`/`rol_permisos`, así que un rol nuevo (o un override
+ * individual) queda bien enrutado sin tocar este archivo.
  */
-export const MODULOS_POR_ROL: Record<string, string[]> = {
-    PRESIDENTE: Object.values(Modulos),
-    VICEPRESIDENTE: [
-        Modulos.USUARIOS, Modulos.COLEGIADOS, Modulos.CORRESPONDENCIA,
-        Modulos.ACT_SOCIALES, Modulos.ACT_INSTITUCIONALES, Modulos.FINANCIERO,
-        Modulos.POSTULACIONES, Modulos.MEMORIAS, Modulos.INSTITUCIONES, Modulos.CONFIGURACION,
-    ],
-    SECRETARIO_GENERAL: [
-        Modulos.CORRESPONDENCIA, Modulos.ACT_SOCIALES,
-        Modulos.ACT_INSTITUCIONALES, Modulos.FINANCIERO,
-        Modulos.MEMORIAS, Modulos.INSTITUCIONES, Modulos.CONFIGURACION,
-    ],
-    SECRETARIO: [
-        Modulos.CORRESPONDENCIA, Modulos.COLEGIADOS,
-        Modulos.ACT_INSTITUCIONALES, Modulos.FINANCIERO,
-        Modulos.POSTULACIONES, Modulos.MEMORIAS, Modulos.INSTITUCIONES, Modulos.CONFIGURACION,
-    ],
-    TESORERO: [Modulos.FINANCIERO, Modulos.CORRESPONDENCIA, Modulos.INSTITUCIONES, Modulos.CONFIGURACION],
-    VOCAL: [
-        Modulos.ACT_SOCIALES, Modulos.ACT_INSTITUCIONALES,
-        Modulos.FINANCIERO, Modulos.CORRESPONDENCIA,
-        Modulos.MEMORIAS, Modulos.INSTITUCIONES, Modulos.CONFIGURACION,
-    ],
+const RECURSO_A_MODULO: Record<string, Modulos> = {
+    usuarios: Modulos.USUARIOS,
+    colegiados: Modulos.COLEGIADOS,
+    'colegiados.postulaciones': Modulos.POSTULACIONES,
+    correspondencia: Modulos.CORRESPONDENCIA,
+    'correspondencia.buzon': Modulos.CORRESPONDENCIA,
+    actividades_sociales: Modulos.ACT_SOCIALES,
+    actividades_institucionales: Modulos.ACT_INSTITUCIONALES,
+    tesoreria: Modulos.FINANCIERO,
+    memorias: Modulos.MEMORIAS,
+    'ajustes.instituciones': Modulos.INSTITUCIONES,
+    ajustes: Modulos.CONFIGURACION,
 };
 
-export const modulosDelRol = (rol?: string): string[] =>
-    (rol && MODULOS_POR_ROL[rol]) || [];
+/**
+ * Módulos de auditoría/notificaciones a los que este usuario tiene acceso
+ * ahora mismo, resueltos desde su permiso efectivo (rol + overrides).
+ */
+export const modulosDelUsuario = async (idUsuario: number): Promise<string[]> => {
+    const permisos = await resolverMapaPermisos(idUsuario);
+    const modulos = new Set<string>();
+    for (const [clave, nivel] of Object.entries(permisos)) {
+        if (nivel === 'SIN_ACCESO') continue;
+        const modulo = RECURSO_A_MODULO[clave];
+        if (modulo) modulos.add(modulo);
+    }
+    return Array.from(modulos);
+};
 
 /**
  * Emite una notificación.

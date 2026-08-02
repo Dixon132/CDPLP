@@ -1,17 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { TextField, Button, Box, MenuItem } from "@mui/material";
 import { getRolById } from "../../../services/roles";
-
-const roles = [
-    "SECRETARIO_GENERAL",
-    "PRESIDENTE",
-    "VICEPRESIDENTE",
-    "VOCAL",
-    "SECRETARIO",
-    "TESORERO",
-    "NO_DEFINIDO",
-];
+import { getCatalogoRolesActivos } from "../../../services/catalogoRoles";
 
 /**
  * Formulario de asignación de rol.
@@ -19,6 +10,8 @@ const roles = [
  * contenedor los confirme (ConfirmActionModal) antes de persistirlos.
  */
 const AsignarRol = ({ id, onClose, onSubmitForm }) => {
+    const [roles, setRoles] = useState([]);
+
     const {
         register,
         handleSubmit,
@@ -30,9 +23,16 @@ const AsignarRol = ({ id, onClose, onSubmitForm }) => {
         defaultValues: {
             fecha_inicio: "",
             fecha_fin: "",
-            rol: "",
+            id_rol_catalogo: "",
         },
     });
+
+    // Catálogo de roles activos (dinámico: crece según lo que se cree en "Roles y Permisos").
+    useEffect(() => {
+        getCatalogoRolesActivos()
+            .then(setRoles)
+            .catch((error) => console.error("Error al obtener el catálogo de roles:", error));
+    }, []);
 
     // ✅ Cargar datos si existen en la BD
     useEffect(() => {
@@ -42,9 +42,9 @@ const AsignarRol = ({ id, onClose, onSubmitForm }) => {
                 reset({
                     fecha_inicio: data.fecha_inicio?.split("T")[0] || "",
                     fecha_fin: data.fecha_fin?.split("T")[0] || "",
-                    rol: data.rol || "",
+                    id_rol_catalogo: data.id_rol_catalogo || "",
                 });
-                setValue("rol", data.rol || "");
+                setValue("id_rol_catalogo", data.id_rol_catalogo || "");
             } catch (error) {
                 console.error("Error al obtener el rol:", error);
             }
@@ -83,7 +83,7 @@ const AsignarRol = ({ id, onClose, onSubmitForm }) => {
                 />
 
                 <Controller
-                    name="rol"
+                    name="id_rol_catalogo"
                     control={control}
                     rules={{ required: "Debe seleccionar un rol" }}
                     render={({ field }) => (
@@ -92,13 +92,13 @@ const AsignarRol = ({ id, onClose, onSubmitForm }) => {
                             select
                             label="Rol del Usuario"
                             InputLabelProps={{ shrink: true }}
-                            error={!!errors.rol}
-                            helperText={errors.rol?.message}
+                            error={!!errors.id_rol_catalogo}
+                            helperText={errors.id_rol_catalogo?.message}
                         >
                             <MenuItem value="">-- Seleccione un rol --</MenuItem>
-                            {roles.map((rol, i) => (
-                                <MenuItem key={i} value={rol}>
-                                    {rol.replaceAll("_", " ")}
+                            {roles.map((rol) => (
+                                <MenuItem key={rol.id_rol_catalogo} value={rol.id_rol_catalogo}>
+                                    {rol.nombre.replaceAll("_", " ")}
                                 </MenuItem>
                             ))}
                         </TextField>

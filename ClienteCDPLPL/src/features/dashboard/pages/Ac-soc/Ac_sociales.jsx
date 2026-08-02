@@ -13,8 +13,11 @@ import ModificarActividadSocial from "./components/ModificarActividadSocial";
 import { PartyPopper, Plus, Edit3, Eye, Target, FileText, Calendar, MapPin, Trash2, RotateCcw, EyeOff } from "lucide-react";
 import { getEstadoBadge, getEstadoIcon, getTipoIcon } from "../../hooks/estados";
 import { VerDetallesActividad } from "./components/VerDetallesActividad";
+import { useSession } from "../../../../context/SessionProvider";
 
 const Ac_sociales = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("actividades_sociales");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -69,7 +72,7 @@ const Ac_sociales = () => {
     return (
         <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
             <Header
-                title="Actividades Sociales" icon={<PartyPopper />}
+                title="Actividades Académicas" icon={<PartyPopper />}
                 stats={stats} searchPlaceholder="Buscar actividad..."
                 onSearch={(v) => setSearch(v)}
                 buttons={[
@@ -79,7 +82,7 @@ const Ac_sociales = () => {
                         onClick: () => { setEstadoFiltro(estadoFiltro === "ACTIVO" ? "INACTIVO" : "ACTIVO"); setPage(1); },
                         color: "slate",
                     },
-                    { label: "Nueva Actividad", icon: <Plus />, onClick: () => setShowCreate(true), color: "indigo" },
+                    ...(esEditor ? [{ label: "Nueva Actividad", icon: <Plus />, onClick: () => setShowCreate(true), color: "indigo" }] : []),
                 ]}
             />
 
@@ -108,22 +111,24 @@ const Ac_sociales = () => {
                     data={actividades}
                     actions={[
                         { label: "Ver", icon: Eye, className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg text-sm hover:bg-blue-200", onClick: (a) => navigate(`/dashboard/actividades_sociales/detalles/${a.id_actividad_social}`) },
-                        {
-                            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
-                            onClick: (a) => { setCurrentId(a.id_actividad_social); setShowEdit(true); }
-                        },
-                        {
-                            label: "Desactivar", icon: Trash2,
-                            show: (a) => a.estado === "ACTIVO",
-                            className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
-                            onClick: (a) => setConfirmStateChange({ open: true, id: a.id_actividad_social, nuevoEstado: "INACTIVO" }),
-                        },
-                        {
-                            label: "Activar", icon: RotateCcw,
-                            show: (a) => a.estado !== "ACTIVO",
-                            className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
-                            onClick: (a) => setConfirmStateChange({ open: true, id: a.id_actividad_social, nuevoEstado: "ACTIVO" }),
-                        }
+                        ...(esEditor ? [
+                            {
+                                label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg text-sm hover:bg-amber-200",
+                                onClick: (a) => { setCurrentId(a.id_actividad_social); setShowEdit(true); }
+                            },
+                            {
+                                label: "Desactivar", icon: Trash2,
+                                show: (a) => a.estado === "ACTIVO",
+                                className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200",
+                                onClick: (a) => setConfirmStateChange({ open: true, id: a.id_actividad_social, nuevoEstado: "INACTIVO" }),
+                            },
+                            {
+                                label: "Activar", icon: RotateCcw,
+                                show: (a) => a.estado !== "ACTIVO",
+                                className: "px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200",
+                                onClick: (a) => setConfirmStateChange({ open: true, id: a.id_actividad_social, nuevoEstado: "ACTIVO" }),
+                            },
+                        ] : []),
                     ]}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                 />

@@ -3,6 +3,7 @@ import prismaClient from "../../../utils/prismaClient";
 import BadRequestException from "../../../exceptions/bad-request";
 import { ErrorCodes } from "../../../exceptions/root";
 import { describir } from "../../../utils/auditoria";
+import { Prisma } from "../../../../generated/prisma";
 
 
 export const getPasantes = async (req: Request, res: Response) => {
@@ -69,6 +70,9 @@ export const createPasante = async (req: Request, res: Response) => {
         // ⚠️ pin_temporal solo se devuelve ESTA vez
         res.status(201).json({ message: 'Pasante creado exitosamente', pasante, pin_temporal: pinPlano })
     } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+            throw new BadRequestException('Ya existe un pasante registrado con ese carnet de identidad.', ErrorCodes.USER_ALREADY_EXISTS)
+        }
         console.error('Error al crear pasante:', error);
         throw new BadRequestException('Error al crear pasante', ErrorCodes.INTERNAL_EXCEPTION)
     }

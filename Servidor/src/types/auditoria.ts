@@ -3,9 +3,11 @@
  *
  * Cada valor debe tener un mapeo en `MODELO_A_MODULO`
  * (`Servidor/src/utils/auditContext.ts`) para que la auditoría automática sepa
- * a qué categoría pertenece cada modelo de Prisma, y debe mantenerse alineado
- * con `MODULOS_POR_ROL` (`Servidor/src/modules/notificaciones/services/index.ts`)
- * y con la navegación del cliente (`ClienteCDPLPL/src/layouts/navigation.js`).
+ * a qué categoría pertenece cada modelo de Prisma. Quién puede VER las
+ * notificaciones de cada módulo ya no es una matriz aparte por rol: se deriva
+ * en vivo del permiso efectivo (`RECURSO_A_MODULO` en
+ * `Servidor/src/modules/notificaciones/services/index.ts`), así que un rol
+ * nuevo del catálogo dinámico queda bien enrutado sin tocar nada acá.
  */
 export enum Modulos {
     USUARIOS = 'Usuarios',
@@ -18,6 +20,7 @@ export enum Modulos {
     INSTITUCIONES = 'Instituciones',
     MEMORIAS = 'Memorias',
     CONFIGURACION = 'Configuración',
+    PERMISOS = 'Roles y Permisos',
 }
 
 /**

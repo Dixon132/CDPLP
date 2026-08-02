@@ -10,6 +10,7 @@ import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ResponsiveTable from "../../../components/ResponsiveTable";
 import Alerts from "../../../components/Alerts";
+import { useSession } from "../../../../../context/SessionProvider";
 import {
     BookOpen,
     Plus,
@@ -98,6 +99,8 @@ function EspecialidadForm({ initial = {}, onSubmit, onCancel, loading }) {
 
 // ── Componente principal ───────────────────────────────────────────────────────
 const EspecialidadesCRUD = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("ajustes.especialidades");
     const [especialidades, setEspecialidades] = useState([]);
     const [loadingData, setLoadingData] = useState(false);
 
@@ -236,13 +239,15 @@ const EspecialidadesCRUD = () => {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={() => setShowCreate(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
-                >
-                    <Plus className="w-4 h-4" />
-                    Agregar especialidad
-                </button>
+                {esEditor && (
+                    <button
+                        onClick={() => setShowCreate(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Agregar especialidad
+                    </button>
+                )}
             </div>
 
             {/* Tabla */}
@@ -283,7 +288,7 @@ const EspecialidadesCRUD = () => {
                             },
                         ]}
                         data={especialidades}
-                        actions={[
+                        actions={esEditor ? [
                             {
                                 label: "Editar",
                                 icon: Edit3,
@@ -299,7 +304,7 @@ const EspecialidadesCRUD = () => {
                                         : "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 border border-emerald-100 flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest",
                                 onClick: (item) => setToggleTarget(item),
                             },
-                        ]}
+                        ] : []}
                         emptyMessage="No hay especialidades registradas"
                     />
                 )}

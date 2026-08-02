@@ -2,6 +2,9 @@ import { createContext, useContext, useCallback, useEffect, useMemo, useState } 
 import { useNavigate } from 'react-router-dom';
 import { parseToken } from '../utils/parsejwt';
 import { getMe } from '../features/dashboard/services/usuarios';
+import { getMisPermisos } from '../features/dashboard/services/permisos';
+
+const NIVEL_ORDEN = { SIN_ACCESO: 0, OBSERVADOR: 1, EDITOR: 2 };
 
 /**
  * Sesión del usuario para todo el dashboard.
@@ -27,6 +30,7 @@ export function SessionProvider({ children }) {
     const navigate = useNavigate();
     const [payload] = useState(leerToken);
     const [usuario, setUsuario] = useState(null);
+    const [permisos, setPermisos] = useState(null);
     const [cargando, setCargando] = useState(true);
     const [ahora, setAhora] = useState(() => Date.now());
 
@@ -36,10 +40,18 @@ export function SessionProvider({ children }) {
             setCargando(false);
             return undefined;
         }
-        getMe()
-            .then((data) => { if (!cancelado) setUsuario(data); })
-            .catch((e) => console.error('No se pudo cargar la sesión:', e))
-            .finally(() => { if (!cancelado) setCargando(false); });
+        // `allSettled`, no `all`: un fallo puntual de /mis-permisos no debe tumbar
+        // también el nombre/correo ya resuelto por /me (y viceversa). Si los
+        // permisos no cargan, `permisos` queda `null` -> todo se resuelve a
+        // SIN_ACCESO (fail-closed), nunca se abre acceso de más por un error de red.
+        Promise.allSettled([getMe(), getMisPermisos()]).then(([resUsuario, resPermisos]) => {
+            if (cancelado) return;
+            if (resUsuario.status === 'fulfilled') setUsuario(resUsuario.value);
+            else console.error('No se pudo cargar el usuario de la sesión:', resUsuario.reason);
+            if (resPermisos.status === 'fulfilled') setPermisos(resPermisos.value);
+            else console.error('No se pudieron cargar los permisos de la sesión:', resPermisos.reason);
+            setCargando(false);
+        });
         return () => { cancelado = true; };
     }, [payload]);
 
@@ -68,6 +80,12 @@ export function SessionProvider({ children }) {
             ? nombreCompleto.split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('')
             : (rol[0] ?? 'U');
 
+        const mapaPermisos = permisos ?? {};
+        const puedeVer = (clave) => (mapaPermisos[clave] ?? 'SIN_ACCESO') !== 'SIN_ACCESO';
+        const puedeEditar = (clave) => (mapaPermisos[clave] ?? 'SIN_ACCESO') === 'EDITOR';
+        const tieneNivel = (clave, nivelMinimo) =>
+            NIVEL_ORDEN[mapaPermisos[clave] ?? 'SIN_ACCESO'] >= NIVEL_ORDEN[nivelMinimo];
+
         return {
             usuario,
             cargando,
@@ -80,9 +98,13 @@ export function SessionProvider({ children }) {
                 : null,
             minutosRestantes,
             porExpirar: minutosRestantes !== null && minutosRestantes <= 10,
+            permisos: mapaPermisos,
+            puedeVer,
+            puedeEditar,
+            tieneNivel,
             logout,
         };
-    }, [payload, usuario, cargando, ahora, logout]);
+    }, [payload, usuario, permisos, cargando, ahora, logout]);
 
     return <SessionContext.Provider value={valor}>{children}</SessionContext.Provider>;
 }
@@ -105,6 +127,10 @@ export function useSession() {
         vigencia: null,
         minutosRestantes: null,
         porExpirar: false,
+        permisos: {},
+        puedeVer: () => false,
+        puedeEditar: () => false,
+        tieneNivel: () => false,
         logout: () => {
             localStorage.removeItem('token');
             window.location.assign('/auth/login');

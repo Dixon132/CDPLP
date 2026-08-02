@@ -8,6 +8,7 @@ import parseDate from "../../../../utils/parseData";
 import VerDetallesPago from "./components/VerDetallesPago";
 import Alerts from "../../components/Alerts";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
+import { useSession } from "../../../../context/SessionProvider";
 import {
     CreditCard,
     DollarSign,
@@ -23,8 +24,11 @@ import {
     Eye
 } from 'lucide-react';
 
-const Pagos = () => {
-    const { id } = useParams()
+const Pagos = ({ id: idProp, dentroDeModal = false } = {}) => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados");
+    const { id: idParam } = useParams()
+    const id = idProp ?? idParam
     const [pagos, setPagos] = useState([])
     const [modalAñadir, setModalAñadir] = useState(false)
     const [modalDetalles, setModalDetalles] = useState(false)
@@ -88,7 +92,7 @@ const Pagos = () => {
     const totalPagos     = pagos.length;
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
+        <div className={dentroDeModal ? "space-y-6" : "space-y-6 p-6 bg-slate-50/50 min-h-full"}>
             {/* Header mejorado */}
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -106,13 +110,15 @@ const Pagos = () => {
                         </div>
                     </div>
 
-                    <button
-                        onClick={() => setModalAñadir(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Añadir Pago
-                    </button>
+                    {esEditor && (
+                        <button
+                            onClick={() => setModalAñadir(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                        >
+                            <Plus className="w-4 h-4" />
+                            Añadir Pago
+                        </button>
+                    )}
                 </div>
 
                 {/* Estadísticas */}
@@ -182,13 +188,15 @@ const Pagos = () => {
                             <Banknote className="w-16 h-16 text-slate-300 mx-auto mb-4" />
                             <p className="text-slate-500 font-medium mb-2">No hay pagos registrados</p>
                             <p className="text-slate-400 text-sm mb-6">Añade el primer pago para comenzar</p>
-                            <button
-                                onClick={() => setModalAñadir(true)}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
-                            >
-                                <Plus className="w-4 h-4" />
-                                Añadir Primer Pago
-                            </button>
+                            {esEditor && (
+                                <button
+                                    onClick={() => setModalAñadir(true)}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-medium hover:shadow-lg hover:shadow-emerald-500/25 transition-all duration-200 hover:scale-105"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Añadir Primer Pago
+                                </button>
+                            )}
                         </div>
                     </div>
                 ) : (
@@ -255,7 +263,7 @@ const Pagos = () => {
                                                 className="inline-flex items-center gap-2 px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-medium hover:bg-indigo-100 transition-colors duration-150 shadow-sm"
                                             >
                                                 <Eye className="w-3.5 h-3.5" />
-                                                {pago.estado_pago === 'ANULADO' ? 'Ver detalle' : 'Ver / Anular'}
+                                                {pago.estado_pago === 'ANULADO' || !esEditor ? 'Ver detalle' : 'Ver / Anular'}
                                             </button>
                                         </td>
                                     </tr>

@@ -13,8 +13,11 @@ import Alerts from "../../../components/Alerts";
 import { getEstadoBadge, getEstadoIcon } from "../../../hooks/estados";
 import { Briefcase, UserPlus, Eye, EyeOff, Mail, Phone, Building2, Calendar, Edit3, UserCheck, UserX, Trash2, KeyRound, Copy } from 'lucide-react';
 import Header from "../../../components/Header";
+import { useSession } from "../../../../../context/SessionProvider";
 
 const Pasantes = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados.pasantes");
     const [pasantes, setPasantes] = useState([]);
     const [total, setTotal] = useState(0);
     const [page, setPage] = useState(1);
@@ -77,6 +80,7 @@ const Pasantes = () => {
             className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
             onClick: (item) => { setPasanteSeleccionado(item.id_pasante); setMostrarModal2(true); },
         };
+        if (!esEditor) return [];
         if (mostrarInactivos) {
             return [
                 editarAction,
@@ -98,7 +102,7 @@ const Pasantes = () => {
                 searchPlaceholder="Buscar pasantes..."
                 onSearch={(v) => { setSearch(v); setPage(1); }}
                 buttons={[
-                    { label: "Añadir Pasante", icon: <UserPlus />, onClick: () => setMostrarModal(true), color: "purple" },
+                    ...(esEditor ? [{ label: "Añadir Pasante", icon: <UserPlus />, onClick: () => setMostrarModal(true), color: "purple" }] : []),
                     { label: mostrarInactivos ? 'Ver activos' : 'Ver inactivos', icon: mostrarInactivos ? <Eye /> : <EyeOff />, onClick: () => setMostrarInactivos(!mostrarInactivos), color: mostrarInactivos ? "emerald" : "rose" },
                 ]}
             />
@@ -152,7 +156,7 @@ const Pasantes = () => {
                                     fetchPasantes();
                                     if (response?.pin_temporal) setPinGenerado(response.pin_temporal);
                                     else showAlertFn("success", "Pasante registrado exitosamente.");
-                                } catch { showAlertFn("error", "Error al registrar el pasante."); }
+                                } catch (err) { showAlertFn("error", err?.response?.data?.message || "Error al registrar el pasante."); }
                             },
                         });
                     }}

@@ -10,6 +10,7 @@ import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ResponsiveTable from "../../../components/ResponsiveTable";
 import Alerts from "../../../components/Alerts";
+import { useSession } from "../../../../../context/SessionProvider";
 import {
     Building2,
     Plus,
@@ -82,6 +83,8 @@ function InstitucionForm({ initial = {}, onSubmit, onCancel, loading }) {
 
 // ── Componente principal ───────────────────────────────────────────────────────
 const InstitucionesCRUD = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("ajustes.instituciones");
     const [instituciones, setInstituciones] = useState([]);
     const [loadingData, setLoadingData] = useState(false);
 
@@ -203,13 +206,15 @@ const InstitucionesCRUD = () => {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={() => setShowCreate(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
-                >
-                    <Plus className="w-4 h-4" />
-                    Agregar institución
-                </button>
+                {esEditor && (
+                    <button
+                        onClick={() => setShowCreate(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Agregar institución
+                    </button>
+                )}
             </div>
 
             {/* Tabla */}
@@ -236,7 +241,7 @@ const InstitucionesCRUD = () => {
                             }
                         ]}
                         data={instituciones}
-                        actions={[
+                        actions={esEditor ? [
                             {
                                 label: "Editar",
                                 icon: Edit3,
@@ -249,7 +254,7 @@ const InstitucionesCRUD = () => {
                                 className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100 border border-rose-100 flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest",
                                 onClick: (item) => setDeleteTarget(item),
                             },
-                        ]}
+                        ] : []}
                         emptyMessage="No hay instituciones registradas"
                     />
                 )}

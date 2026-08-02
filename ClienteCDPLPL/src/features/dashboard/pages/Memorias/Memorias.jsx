@@ -11,8 +11,11 @@ import CreateMemoria from "./components/CreateMemoria";
 import EditMemoria from "./components/EditMemoria";
 
 import { BookMarked, Edit3, Trash2, Eye, Plus, Calendar, FileText } from 'lucide-react';
+import { useSession } from "../../../../context/SessionProvider";
 
 const Memorias = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("memorias");
     const [memorias, setMemorias] = useState([]);
     const [selectedMemoria, setSelectedMemoria] = useState(null);
     const [memoriaToDelete, setMemoriaToDelete] = useState(null);
@@ -60,10 +63,10 @@ const Memorias = () => {
                 stats={[{ value: memorias.length, label: "Total Documentos", color: "purple" }]}
                 searchPlaceholder="Buscar documento..."
                 onSearch={() => { }}
-                buttons={[{
+                buttons={esEditor ? [{
                     label: "Añadir Documento", icon: <Plus />,
                     onClick: () => setShowCreate(true), color: "purple",
-                }]}
+                }] : []}
             />
 
             <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-sm border border-slate-200 p-2 sm:p-4">
@@ -91,8 +94,10 @@ const Memorias = () => {
                     emptyMessage="No se encontraron documentos"
                     actions={[
                         { label: "Ver", icon: Eye, onClick: (m) => handleView(m.archivo) },
-                        { label: "Editar", icon: Edit3, onClick: (m) => { setSelectedMemoria(m); setShowEdit(true); } },
-                        { label: "Eliminar", icon: Trash2, onClick: (m) => handleDelete(m), className: () => "text-rose-600 bg-rose-50" },
+                        ...(esEditor ? [
+                            { label: "Editar", icon: Edit3, onClick: (m) => { setSelectedMemoria(m); setShowEdit(true); } },
+                            { label: "Eliminar", icon: Trash2, onClick: (m) => handleDelete(m), className: () => "text-rose-600 bg-rose-50" },
+                        ] : []),
                     ]}
                 />
             </div>

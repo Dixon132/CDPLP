@@ -11,23 +11,36 @@ import {
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
-const AñadirDocumento = ({ id, tipoDoc, onSubmitForm }) => {
+const AñadirDocumento = ({ id, tipoDoc, vigenciaMeses = null, onSubmitForm }) => {
     const {
         register,
         handleSubmit,
         formState: { errors }
     } = useForm();
     const [fileName, setFileName] = useState('');
-    const today = new Date().toISOString().split('T')[0];
+
+    // Si el tipo de documento ya trae vigencia configurada en el catálogo, el
+    // vencimiento lo calcula el servidor (fecha de entrega + vigencia_meses) y
+    // este campo no se pide.
+    const vencimientoAutomatico = vigenciaMeses != null;
+    const fechaVencimientoSugerida = vencimientoAutomatico
+        ? (() => {
+            const d = new Date();
+            d.setMonth(d.getMonth() + vigenciaMeses);
+            return d.toLocaleDateString('es-BO');
+        })()
+        : null;
 
     const onSubmit = (data) => {
         const formData = new FormData();
         formData.append('tipo_documento', tipoDoc);
         formData.append('archivo', data.archivo[0]);
-        
-        // Fix timezone issue by appending local time
-        const fecha_vencimiento_local = data.fecha_vencimiento ? `${data.fecha_vencimiento}T00:00:00` : "";
-        formData.append('fecha_vencimiento', fecha_vencimiento_local);
+
+        // Fix timezone issue by appending local time. Si el vencimiento es
+        // automático no se envía: lo calcula el servidor.
+        if (!vencimientoAutomatico && data.fecha_vencimiento) {
+            formData.append('fecha_vencimiento', `${data.fecha_vencimiento}T00:00:00`);
+        }
 
         if (onSubmitForm) onSubmitForm(formData);
     };
@@ -44,19 +57,20 @@ const AñadirDocumento = ({ id, tipoDoc, onSubmitForm }) => {
                 sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}
             >
                 {/* Fecha de Vencimiento */}
-                <TextField
-                    label="Fecha de Vencimiento"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    inputProps={{ max: today }}
-                    {...register('fecha_vencimiento', {
-                        required: 'La fecha es obligatoria',
-                        validate: (value) =>
-                            value <= today || 'No puede ser una fecha futura'
-                    })}
-                    error={!!errors.fecha_vencimiento}
-                    helperText={errors.fecha_vencimiento?.message}
-                />
+                {vencimientoAutomatico ? (
+                    <Typography variant="body2" color="text.secondary">
+                        Este documento vence automáticamente el <strong>{fechaVencimientoSugerida}</strong> ({vigenciaMeses} mes/es de vigencia desde hoy).
+                    </Typography>
+                ) : (
+                    <TextField
+                        label="Fecha de Vencimiento (opcional)"
+                        type="date"
+                        InputLabelProps={{ shrink: true }}
+                        {...register('fecha_vencimiento')}
+                        error={!!errors.fecha_vencimiento}
+                        helperText={errors.fecha_vencimiento?.message || 'Déjalo en blanco si este documento no vence'}
+                    />
+                )}
 
                 {/* Archivo PDF */}
                 <FormControl error={!!errors.archivo}>

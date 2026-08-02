@@ -11,6 +11,7 @@ import VerDetallesDoc from "./components/VerDetallesDoc";
 import Alerts from "../../components/Alerts";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import EspecialidadesSelect from "../../../dashboard/components/EspecialidadesSelect";
+import { useSession } from "../../../../context/SessionProvider";
 import {
     FileText,
     Upload,
@@ -37,8 +38,11 @@ import {
 
 // Documentos requeridos se cargarán dinámicamente desde la base de datos
 
-const Documentos = () => {
-    const { id } = useParams()
+const Documentos = ({ id: idProp, dentroDeModal = false } = {}) => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados");
+    const { id: idParam } = useParams()
+    const id = idProp ?? idParam
     const [docs, setDocs] = useState([])
     const [tipoDoc, setTipoDoc] = useState('')
     const [modalAñadir, setModalAñadir] = useState(false)
@@ -53,6 +57,8 @@ const Documentos = () => {
     
     // Estado para documentos requeridos dinámicos
     const [tiposDocumentos, setTiposDocumentos] = useState([]);
+    // Vigencia (meses) por nombre de tipo, para autocompletar fecha_vencimiento al subir
+    const [vigenciaPorTipo, setVigenciaPorTipo] = useState({});
 
     const [alert, setAlert] = useState(false);
     const [alertType, setAlertType] = useState("success");
@@ -106,6 +112,7 @@ const Documentos = () => {
                 const docs = res.data ?? [];
                 // Usamos el nombre del documento como tipo
                 setTiposDocumentos(docs.map(doc => doc.nombre));
+                setVigenciaPorTipo(Object.fromEntries(docs.map(doc => [doc.nombre, doc.vigencia_meses ?? null])));
             })
             .catch(err => console.error("Error al cargar documentos requeridos:", err));
     }, [id]);
@@ -177,7 +184,7 @@ const Documentos = () => {
     const documentosSubidos = tiposSubidos; // para el texto informativo
 
     return (
-        <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">
+        <div className={dentroDeModal ? "space-y-6" : "space-y-6 p-6 bg-slate-50/50 min-h-full"}>
             {/* Header mejorado */}
             <div className="bg-white border border-slate-200 shadow-sm rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-6">
@@ -325,7 +332,7 @@ const Documentos = () => {
                                                     <Info className="w-3.5 h-3.5" />
                                                     Ver detalles
                                                 </button>
-                                            ) : (
+                                            ) : esEditor ? (
                                                 <button
                                                     onClick={() => {
                                                         setModalAñadir(true)
@@ -336,6 +343,8 @@ const Documentos = () => {
                                                     <Plus className="w-3.5 h-3.5" />
                                                     Añadir
                                                 </button>
+                                            ) : (
+                                                <span className="text-xs text-slate-400">Sin permiso</span>
                                             )}
                                         </td>
                                     </tr>
@@ -355,15 +364,25 @@ const Documentos = () => {
                     </h2>
                 </div>
                 <div className="p-6 space-y-4 max-w-xl">
-                    <p className="text-sm text-slate-500 mb-2">
-                        Selecciona o crea especialidades para este colegiado. Los cambios se guardan automáticamente.
-                    </p>
-                    <EspecialidadesSelect
-                        value={especialidades}
-                        onChange={guardarEspecialidades}
-                        allowCreate={true}
-                    />
-                    
+                    {esEditor ? (
+                        <>
+                            <p className="text-sm text-slate-500 mb-2">
+                                Selecciona o crea especialidades para este colegiado. Los cambios se guardan automáticamente.
+                            </p>
+                            <EspecialidadesSelect
+                                value={especialidades}
+                                onChange={guardarEspecialidades}
+                                allowCreate={true}
+                            />
+                        </>
+                    ) : (
+                        <div className="flex flex-wrap gap-2">
+                            {especialidades.length ? especialidades.map((e) => (
+                                <span key={e} className="px-3 py-1 bg-purple-50 text-purple-700 rounded-full text-xs font-medium border border-purple-100">{e}</span>
+                            )) : <span className="text-sm text-slate-400">Sin especialidades</span>}
+                        </div>
+                    )}
+
                     {guardandoEsp && (
                         <span className="inline-flex items-center gap-1.5 text-blue-500 text-sm mt-2">
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -378,9 +397,10 @@ const Documentos = () => {
 
             {/* Modales */}
             <Modal isOpen={modalAñadir} onClose={() => setModalAñadir(false)} title={'Añadir documento'}>
-                <AñadirDocumento 
-                    id={id} 
-                    tipoDoc={tipoDoc} 
+                <AñadirDocumento
+                    id={id}
+                    tipoDoc={tipoDoc}
+                    vigenciaMeses={vigenciaPorTipo[tipoDoc] ?? null}
                     onSubmitForm={(formData) => {
                         setConfirmSave({
                             open: true, 

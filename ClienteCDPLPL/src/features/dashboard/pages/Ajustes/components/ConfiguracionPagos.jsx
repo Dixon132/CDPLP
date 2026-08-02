@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { getConfigPagoAdmin, upsertConfigPago, uploadQrConfig } from '../../../services/postulaciones';
 import { Loader2, CheckCircle2, AlertCircle, CreditCard } from 'lucide-react';
 import Alerts from '../../../components/Alerts';
+import { useSession } from '../../../../../context/SessionProvider';
 
 export default function ConfiguracionPagos() {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar('ajustes.pagos');
     const [config, setConfig] = useState({ MONTO_INICIAL: '', QR: '', CUENTA: '' });
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -29,6 +32,7 @@ export default function ConfiguracionPagos() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!esEditor) return;
         setSaving(true);
         setError('');
         try {
@@ -73,12 +77,18 @@ export default function ConfiguracionPagos() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+                <fieldset disabled={!esEditor} className="space-y-5">
+                {!esEditor && (
+                    <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        Solo puedes ver esta configuración; tu permiso sobre este módulo es de observador.
+                    </div>
+                )}
                 {error && (
                     <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
                         <AlertCircle className="w-4 h-4" /> {error}
                     </div>
                 )}
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-semibold text-slate-700 mb-1">Monto Inicial (Bs)</label>
@@ -111,12 +121,15 @@ export default function ConfiguracionPagos() {
                     </div>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 flex justify-end">
-                    <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-all disabled:opacity-60">
-                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                        Guardar Configuración
-                    </button>
-                </div>
+                {esEditor && (
+                    <div className="pt-4 border-t border-slate-100 flex justify-end">
+                        <button type="submit" disabled={saving} className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-all disabled:opacity-60">
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                            Guardar Configuración
+                        </button>
+                    </div>
+                )}
+                </fieldset>
             </form>
             <Alerts type={alert.type} message={alert.message} show={alert.show} onClose={() => setAlert(a => ({ ...a, show: false }))} />
         </div>

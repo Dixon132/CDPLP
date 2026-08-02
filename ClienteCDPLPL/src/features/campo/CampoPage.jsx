@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { MapPin, Clock, LogOut, CheckCircle, Navigation, Building, Users, Activity } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+    MapPin, Clock, LogOut, CheckCircle, Navigation, Building, Users, Activity,
+    AlertTriangle, Loader2, ChevronRight,
+} from "lucide-react";
 
 function formatTime(isoDate) {
     if (!isoDate) return "--:--";
@@ -19,39 +23,41 @@ function formatHoras(horas) {
     return `${h}h ${m}m`;
 }
 
-// ──────────────────────────────────────────────
-// Componente: Circular progress ring
-// ──────────────────────────────────────────────
-const CircularProgress = ({ value, max, size = 100, stroke = 10 }) => {
-    const pct = Math.min(100, (value / (max || 1)) * 100);
-    const r = (size - stroke) / 2;
-    const circ = 2 * Math.PI * r;
-    const dash = (pct / 100) * circ;
+const HOY_LARGO = new Date().toLocaleDateString("es-ES", { weekday: "long", day: "numeric", month: "long" });
 
-    const color =
-        pct >= 100 ? "#10b981" // completado (emerald)
-        : pct >= 50 ? "#3b82f6" // en camino (blue)
-        : pct >= 1 ? "#f59e0b" // iniciado (amber)
-        : "#e5e7eb"; // sin iniciar (gray)
+// Fondo de líneas punteadas — el mismo recurso que Home/About/Acceso.
+const GridLines = () => (
+    <div className="absolute inset-0 pointer-events-none z-0 flex justify-between px-4 md:px-20">
+        <div className="h-full border-l border-dashed border-gray-300 w-1/5"></div>
+        <div className="h-full border-l border-dashed border-gray-300 w-1/5"></div>
+        <div className="h-full border-l border-dashed border-gray-300 w-1/5"></div>
+        <div className="h-full border-l border-dashed border-gray-300 w-1/5"></div>
+        <div className="h-full border-l border-dashed border-gray-300 w-1/5 border-r"></div>
+    </div>
+);
 
-    return (
-        <div className="relative flex items-center justify-center">
-            <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-                {/* track */}
-                <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#e5e7eb" strokeWidth={stroke} />
-                {/* progress */}
-                <circle
-                    cx={size / 2} cy={size / 2} r={r} fill="none"
-                    stroke={color} strokeWidth={stroke} strokeDasharray={circ} strokeDashoffset={circ - dash}
-                    strokeLinecap="round" style={{ transition: "all 0.5s ease-out" }}
-                />
-            </svg>
-            <div className="absolute flex flex-col items-center">
-                <span className="text-xl font-extrabold text-slate-800">{Math.round(pct)}%</span>
-            </div>
+// ──────────────────────────────────────────────
+// Barra de progreso — bloque con borde duro, sin gradientes.
+// ──────────────────────────────────────────────
+const ProgressBar = ({ pct, horasTotal, horasMeta }) => (
+    <div className="shrink-0 border border-black p-3 bg-gray-50 sm:w-36">
+        <div className="flex items-center justify-between mb-1.5">
+            <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Avance</span>
+            <span className="text-xs font-black text-black">{pct}%</span>
         </div>
-    );
-};
+        <div className="h-2.5 w-full bg-white border border-black overflow-hidden">
+            <motion.div
+                className={`h-full ${pct >= 100 ? "bg-emerald-600" : "bg-blue-800"}`}
+                initial={{ width: 0 }}
+                animate={{ width: `${pct}%` }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+            />
+        </div>
+        <p className="text-[9px] font-bold text-gray-500 mt-1.5 uppercase tracking-wide">
+            {Math.round(horasTotal * 10) / 10} / {horasMeta} hrs
+        </p>
+    </div>
+);
 
 // ──────────────────────────────────────────────
 // Componente: Historial Diaria Timeline
@@ -59,35 +65,30 @@ const CircularProgress = ({ value, max, size = 100, stroke = 10 }) => {
 const HistoryTimeline = ({ historial }) => {
     if (!historial || historial.length === 0) {
         return (
-            <div className="text-center py-4 text-slate-400 text-sm border-t border-slate-100 mt-4">
-                No hay historial de asistencias aún.
+            <div className="text-center py-4 text-gray-400 text-xs font-bold uppercase tracking-widest border-t-2 border-black border-dashed mt-5">
+                Sin historial aún
             </div>
         );
     }
 
     return (
-        <div className="mt-6 pt-4 border-t border-slate-100">
-            <h4 className="text-sm font-bold text-slate-700 mb-3 flex items-center gap-2">
-                <Activity size={16} className="text-indigo-500" />
-                Historial de los últimos 5 días
+        <div className="mt-5 pt-4 border-t-2 border-black border-dashed">
+            <h4 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                <Activity size={12} />
+                Últimos días
             </h4>
-            <div className="space-y-3">
-                {historial.map((reg) => (
-                    <div key={reg.id_asistencia_diaria} className="flex items-center gap-3 bg-slate-50 p-2.5 rounded-lg border border-slate-100 text-sm">
-                        <div className="w-10 h-10 shrink-0 bg-white border border-slate-200 rounded-full flex flex-col items-center justify-center shadow-sm">
-                            <span className="text-xs font-bold text-slate-700">{new Date(reg.fecha_marcaje).getDate()}</span>
-                            <span className="text-[10px] text-slate-400 leading-none uppercase">{new Date(reg.fecha_marcaje).toLocaleString('es-ES', { month: 'short' })}</span>
+            <div className="space-y-2">
+                {historial.slice(0, 5).map((reg) => (
+                    <div key={reg.id_asistencia_diaria} className="flex items-center gap-3 border border-gray-300 p-2.5 text-sm">
+                        <div className="w-10 h-10 shrink-0 border border-black flex flex-col items-center justify-center">
+                            <span className="text-xs font-black text-black">{new Date(reg.fecha_marcaje).getDate()}</span>
+                            <span className="text-[8px] text-gray-400 leading-none uppercase">{new Date(reg.fecha_marcaje).toLocaleString('es-ES', { month: 'short' })}</span>
                         </div>
-                        <div className="flex-1 flex justify-between items-center">
-                            <div>
-                                <p className="text-slate-600 font-medium">Entrada: {formatTime(reg.hora_entrada)}</p>
-                                <p className="text-slate-600 font-medium">Salida: {formatTime(reg.hora_salida)}</p>
-                            </div>
-                            <div className="text-right">
-                                <span className="inline-flex items-center justify-center px-2 py-1 bg-emerald-50 text-emerald-700 font-bold text-xs rounded-md">
-                                    +{formatHoras(reg.horas_ganadas || 0)}
-                                </span>
-                            </div>
+                        <div className="flex-1 flex justify-between items-center min-w-0">
+                            <p className="text-gray-600 text-xs font-medium">{formatTime(reg.hora_entrada)} — {formatTime(reg.hora_salida)}</p>
+                            <span className="text-xs font-black text-emerald-700 shrink-0">
+                                +{formatHoras(reg.horas_ganadas || 0)}
+                            </span>
                         </div>
                     </div>
                 ))}
@@ -97,15 +98,15 @@ const HistoryTimeline = ({ historial }) => {
 };
 
 export default function CampoPage() {
-    const { tipo, id } = useParams();
+    const { id } = useParams();
     const navigate = useNavigate();
 
     const [tab, setTab] = useState("social"); // "social" | "institucional"
     const [asignaciones, setAsignaciones] = useState([]);
     const [registrosInst, setRegistrosInst] = useState([]);
-    
+
     const [loading, setLoading] = useState(true);
-    const [actionLoading, setActionLoading] = useState(false);
+    const [actionLoading, setActionLoading] = useState(null); // id_asignacion en curso, o null
     const [error, setError] = useState("");
     const [msg, setMsg] = useState("");
 
@@ -119,12 +120,13 @@ export default function CampoPage() {
             return;
         }
         fetchData();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     const fetchData = async () => {
         setLoading(true);
         setError("");
-        
+
         try {
             // Fetch Sociales
             const resSoc = await fetch(`/api/ac-sociales/ac-social/usuario/${usuario.tipo.toLowerCase()}/${usuario.id}`, {
@@ -149,7 +151,7 @@ export default function CampoPage() {
     };
 
     const handleMarcaje = async (id_asignacion, tipo_marcaje, latRequerida, lngRequerida, radio) => {
-        setActionLoading(true);
+        setActionLoading(id_asignacion);
         setError("");
         setMsg("");
 
@@ -164,7 +166,7 @@ export default function CampoPage() {
 
         try {
             const posUser = await geoPromise;
-            
+
             // Calculo de distancia básico (fórmula Haversine simplificada para distancias cortas)
             const R = 6371e3; // Radio de la tierra en metros
             const dLat = (posUser.latitud - latRequerida) * Math.PI / 180;
@@ -177,7 +179,7 @@ export default function CampoPage() {
 
             if (distancia > radio) {
                 setError(`Estás a ${Math.round(distancia)}m. Debes estar a menos de ${radio}m de la actividad.`);
-                setActionLoading(false);
+                setActionLoading(null);
                 return;
             }
 
@@ -200,7 +202,7 @@ export default function CampoPage() {
         } catch (err) {
             setError(typeof err === "string" ? err : err.message);
         } finally {
-            setActionLoading(false);
+            setActionLoading(null);
         }
     };
 
@@ -212,84 +214,119 @@ export default function CampoPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-                <div className="flex flex-col items-center gap-4 animate-pulse">
-                    <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-                    <p className="text-slate-500 font-medium">Cargando panel...</p>
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="flex flex-col items-center gap-4">
+                    <div className="w-14 h-14 border-2 border-black flex items-center justify-center animate-pulse">
+                        <span className="font-black text-lg">CD</span>
+                    </div>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">Cargando panel...</p>
                 </div>
             </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-12">
-            {/* Header Glassmorphism */}
-            <header className="sticky top-0 z-50 bg-white/70 backdrop-blur-md border-b border-slate-200/50 shadow-sm">
-                <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
-                    <div>
-                        <h1 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                            CDPLP | Campo
-                        </h1>
-                        <p className="text-sm font-medium text-slate-500 capitalize">
-                            {usuario.nombre} {usuario.apellido} • {usuario.tipo}
-                        </p>
+        <div className="relative min-h-screen bg-white text-black font-sans pb-16">
+            <GridLines />
+
+            {/* Header */}
+            <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-2 border-black">
+                <div className="h-1 w-full bg-gradient-to-r from-blue-800 via-amber-500 to-blue-800" />
+                <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-11 h-11 shrink-0 border-2 border-black bg-white flex items-center justify-center font-black text-lg">
+                            {usuario.nombre?.charAt(0)?.toUpperCase() ?? "?"}
+                        </div>
+                        <div className="min-w-0">
+                            <h1 className="text-sm font-black uppercase tracking-tight truncate">
+                                {usuario.nombre} {usuario.apellido}
+                            </h1>
+                            <div className="inline-flex items-center gap-1 border border-black px-1.5 py-[1px] mt-1">
+                                <span className="w-1.5 h-1.5 bg-emerald-500 shrink-0" />
+                                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-600">
+                                    {isColegiado ? "Colegiado" : "Pasante"} · Campo
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <button onClick={logout} className="p-2 text-rose-500 bg-rose-50 rounded-full hover:bg-rose-100 transition-colors">
-                        <LogOut size={20} />
+                    <button
+                        onClick={logout}
+                        className="p-2.5 border-2 border-black text-black hover:bg-black hover:text-white active:scale-95 transition-colors shrink-0"
+                        title="Cerrar sesión"
+                    >
+                        <LogOut size={18} />
                     </button>
                 </div>
             </header>
 
-            <main className="max-w-4xl mx-auto px-4 mt-8 space-y-6">
-                
+            <main className="relative z-10 max-w-4xl mx-auto px-4 mt-5 space-y-5">
+
+                {/* Fecha de hoy */}
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest px-1 capitalize">
+                    {HOY_LARGO}
+                </p>
+
                 {/* Alertas */}
-                {error && (
-                    <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl flex items-start gap-3 shadow-sm animate-in fade-in slide-in-from-top-4">
-                        <div className="mt-0.5 text-rose-500 shrink-0">⚠️</div>
-                        <p className="text-sm font-medium">{error}</p>
-                    </div>
-                )}
-                {msg && (
-                    <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl flex items-start gap-3 shadow-sm animate-in fade-in slide-in-from-top-4">
-                        <CheckCircle size={20} className="text-emerald-500 shrink-0" />
-                        <p className="text-sm font-medium">{msg}</p>
-                    </div>
-                )}
+                <AnimatePresence>
+                    {error && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -8, height: 0 }}
+                            animate={{ opacity: 1, y: 0, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="relative bg-white border-2 border-black pl-5 pr-4 py-3.5 flex items-start gap-3 overflow-hidden"
+                        >
+                            <span className="absolute left-0 top-0 bottom-0 w-1.5 bg-rose-600" />
+                            <AlertTriangle size={18} className="text-rose-600 shrink-0 mt-0.5" />
+                            <p className="text-sm font-semibold">{error}</p>
+                        </motion.div>
+                    )}
+                    {msg && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -8, height: 0 }}
+                            animate={{ opacity: 1, y: 0, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="relative bg-white border-2 border-black pl-5 pr-4 py-3.5 flex items-start gap-3 overflow-hidden"
+                        >
+                            <span className="absolute left-0 top-0 bottom-0 w-1.5 bg-emerald-600" />
+                            <CheckCircle size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+                            <p className="text-sm font-semibold">{msg}</p>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
 
                 {/* Tabs */}
                 {isColegiado && (
-                    <div className="flex p-1 bg-slate-200/50 rounded-xl">
+                    <div className="grid grid-cols-2 border-2 border-black">
                         <button
                             onClick={() => setTab("social")}
-                            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-2 ${tab === "social" ? "bg-white text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                            className={`py-3 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 border-r-2 border-black transition-colors ${tab === "social" ? "bg-black text-white" : "bg-white text-black hover:bg-gray-100"}`}
                         >
-                            <Users size={18} />
-                            Act. Sociales
+                            <Users size={15} /> Académicas
                         </button>
                         <button
                             onClick={() => setTab("institucional")}
-                            className={`flex-1 py-2.5 text-sm font-semibold rounded-lg transition-all flex items-center justify-center gap-2 ${tab === "institucional" ? "bg-white text-indigo-700 shadow-sm" : "text-slate-500 hover:text-slate-700"}`}
+                            className={`py-3 text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors ${tab === "institucional" ? "bg-black text-white" : "bg-white text-black hover:bg-gray-100"}`}
                         >
-                            <Building size={18} />
-                            Act. Institucionales
+                            <Building size={15} /> Institucionales
                         </button>
                     </div>
                 )}
 
-                {/* Contenido: Actividades Sociales */}
+                {/* Contenido: Actividades Académicas */}
                 {tab === "social" && (
                     <div className="space-y-4">
-                        <h2 className="text-lg font-bold text-slate-800">Tus Asignaciones de Campo</h2>
                         {asignaciones.length === 0 ? (
-                            <div className="p-8 text-center bg-white border border-slate-200 rounded-2xl shadow-sm">
-                                <Users className="mx-auto text-slate-300 mb-3" size={48} />
-                                <p className="text-slate-500 font-medium">No tienes actividades sociales asignadas en este momento.</p>
+                            <div className="p-10 text-center border-2 border-dashed border-gray-300">
+                                <div className="w-14 h-14 mx-auto mb-3 border-2 border-black flex items-center justify-center">
+                                    <Users size={24} />
+                                </div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-500">No tienes actividades académicas asignadas</p>
                             </div>
                         ) : (
-                            asignaciones.map((asig) => {
+                            asignaciones.map((asig, idx) => {
                                 const act = asig.actividades_sociales;
                                 const historial = asig.asistencia_social_diaria || [];
-                                
+
                                 // Lógica del día actual
                                 const hoyStr = new Date().toISOString().split('T')[0];
                                 const ultimoRegistro = historial.length > 0 ? historial[0] : null;
@@ -297,80 +334,83 @@ export default function CampoPage() {
 
                                 const enCurso = ultimoEsHoy && ultimoRegistro.hora_entrada && !ultimoRegistro.hora_salida;
                                 const finalizadoHoy = ultimoEsHoy && ultimoRegistro.hora_salida;
-                                
+
                                 // Metas
                                 const horasTotal = asig.total_horas || 0;
                                 const horasMeta = asig.horas_meta || 60; // fallback a 60 si no hay meta
                                 const metaAlcanzada = horasTotal >= horasMeta;
+                                const pct = Math.min(100, Math.round((horasTotal / (horasMeta || 1)) * 100));
+                                const marcando = actionLoading === asig.id_asignacion;
+                                const acentoColor = enCurso ? "border-amber-500" : finalizadoHoy ? "border-emerald-600" : "border-blue-800";
 
                                 return (
-                                    <div key={asig.id_asignacion} className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm relative overflow-hidden">
-                                        {enCurso && <div className="absolute top-0 left-0 w-1 h-full bg-amber-500"></div>}
-                                        {finalizadoHoy && <div className="absolute top-0 left-0 w-1 h-full bg-emerald-500"></div>}
-                                        
-                                        <div className="flex flex-col sm:flex-row gap-6 mb-4">
+                                    <motion.div
+                                        key={asig.id_asignacion}
+                                        initial={{ opacity: 0, y: 12 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.35, delay: idx * 0.05 }}
+                                        className="relative bg-white border-2 border-black p-5 md:p-6 shadow-[6px_6px_0px_0px_rgba(30,58,138,0.9)]"
+                                    >
+                                        <div className={`absolute top-0 left-0 w-7 h-7 border-t-4 border-l-4 ${acentoColor} -translate-x-0.5 -translate-y-0.5`} />
+
+                                        <div className="flex flex-col sm:flex-row gap-5">
                                             {/* Datos Izquierda */}
-                                            <div className="flex-1">
-                                                <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-indigo-50 text-indigo-700 text-xs font-bold uppercase tracking-wide mb-2">
+                                            <div className="flex-1 min-w-0">
+                                                <div className="inline-flex items-center border border-black px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest mb-2.5">
                                                     {act.tipo}
                                                 </div>
-                                                <h3 className="text-lg font-bold text-slate-800 leading-tight">{act.nombre}</h3>
-                                                <div className="mt-2 flex items-start gap-2 text-slate-500 text-sm">
-                                                    <MapPin size={16} className="mt-0.5 shrink-0" />
-                                                    <span>{act.ubicacion}</span>
-                                                </div>
-                                                <div className="mt-1 flex items-center gap-2 text-slate-500 text-sm">
-                                                    <Clock size={16} className="shrink-0" />
-                                                    <span>{formatDate(act.fecha_inicio)} - {formatDate(act.fecha_fin)}</span>
+                                                <h3 className="text-lg font-black uppercase tracking-tight leading-tight">{act.nombre}</h3>
+                                                <div className="w-10 h-[3px] bg-amber-500 my-2.5" />
+                                                <div className="space-y-1.5 text-sm text-gray-700 font-medium">
+                                                    <div className="flex items-start gap-2">
+                                                        <MapPin size={14} className="mt-0.5 shrink-0 text-gray-400" />
+                                                        <span className="truncate">{act.ubicacion}</span>
+                                                    </div>
+                                                    <div className="flex items-center gap-2">
+                                                        <Clock size={14} className="shrink-0 text-gray-400" />
+                                                        <span>{formatDate(act.fecha_inicio)} - {formatDate(act.fecha_fin)}</span>
+                                                    </div>
                                                 </div>
                                             </div>
 
-                                            {/* Progreso Derecha */}
-                                            <div className="flex flex-col items-center justify-center bg-slate-50 rounded-xl p-4 border border-slate-100 shrink-0">
-                                                <CircularProgress value={horasTotal} max={horasMeta} size={90} stroke={8} />
-                                                <p className="text-xs font-bold text-slate-500 mt-2 uppercase tracking-wider">
-                                                    {Math.round(horasTotal * 10) / 10} / {horasMeta} hrs
-                                                </p>
-                                            </div>
+                                            <ProgressBar pct={pct} horasTotal={horasTotal} horasMeta={horasMeta} />
                                         </div>
 
-                                        {/* Acciones de Marcaje (Solo aplican si no ha completado el 100% o si deseas permitir horas extras) */}
-                                        <div className="mt-4">
+                                        {/* Acciones de Marcaje */}
+                                        <div className="mt-5">
                                             {metaAlcanzada ? (
-                                                <div className="w-full flex items-center justify-center gap-2 py-3 bg-emerald-50 text-emerald-700 font-semibold rounded-xl border border-emerald-200">
-                                                    <CheckCircle size={18} />
-                                                    ¡Meta de horas alcanzada!
+                                                <div className="w-full flex items-center justify-center gap-2 py-3 border-2 border-emerald-600 text-emerald-700 font-bold uppercase tracking-widest text-xs">
+                                                    <CheckCircle size={16} />
+                                                    Meta de horas alcanzada
                                                 </div>
                                             ) : !ultimoEsHoy || (!enCurso && !finalizadoHoy) ? (
                                                 <button
-                                                    disabled={actionLoading}
+                                                    disabled={marcando}
                                                     onClick={() => handleMarcaje(asig.id_asignacion, 'entrada', act.latitud, act.longitud, act.radio_metros)}
-                                                    className="w-full flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl shadow-sm transition-all disabled:opacity-70"
+                                                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-blue-800 hover:bg-white hover:text-blue-800 text-white font-bold uppercase tracking-widest text-xs border-2 border-blue-800 transition-colors disabled:opacity-60"
                                                 >
-                                                    <Navigation size={18} />
-                                                    Marcar Entrada Hoy (GPS)
+                                                    {marcando ? <Loader2 size={17} className="animate-spin" /> : <Navigation size={17} />}
+                                                    {marcando ? "Ubicando..." : "Marcar Entrada Hoy (GPS)"}
                                                 </button>
                                             ) : enCurso ? (
                                                 <button
-                                                    disabled={actionLoading}
+                                                    disabled={marcando}
                                                     onClick={() => handleMarcaje(asig.id_asignacion, 'salida', act.latitud, act.longitud, act.radio_metros)}
-                                                    className="w-full flex items-center justify-center gap-2 py-3 bg-amber-500 hover:bg-amber-600 text-white font-semibold rounded-xl shadow-sm transition-all disabled:opacity-70"
+                                                    className="w-full flex items-center justify-center gap-2 py-3.5 bg-amber-500 hover:bg-white hover:text-amber-600 text-black font-bold uppercase tracking-widest text-xs border-2 border-amber-500 transition-colors disabled:opacity-60"
                                                 >
-                                                    <LogOut size={18} />
-                                                    Finalizar Turno de Hoy
+                                                    {marcando ? <Loader2 size={17} className="animate-spin" /> : <LogOut size={17} />}
+                                                    {marcando ? "Ubicando..." : "Finalizar Turno de Hoy"}
                                                 </button>
                                             ) : (
-                                                <div className="w-full flex items-center justify-center gap-2 py-3 bg-slate-100 text-slate-500 font-semibold rounded-xl border border-slate-200">
-                                                    <CheckCircle size={18} />
+                                                <div className="w-full flex items-center justify-center gap-2 py-3.5 border-2 border-gray-300 text-gray-500 font-bold uppercase tracking-widest text-xs">
+                                                    <CheckCircle size={16} />
                                                     Ya marcaste tu salida de hoy
                                                 </div>
                                             )}
                                         </div>
 
-                                        {/* Componente Historial de los ultimos 5 dias */}
                                         <HistoryTimeline historial={historial} />
-
-                                    </div>
+                                    </motion.div>
                                 );
                             })
                         )}
@@ -379,31 +419,39 @@ export default function CampoPage() {
 
                 {/* Contenido: Actividades Institucionales */}
                 {tab === "institucional" && isColegiado && (
-                    <div className="space-y-4">
-                        <h2 className="text-lg font-bold text-slate-800">Historial de Participación Institucional</h2>
-                        <p className="text-sm text-slate-500 mb-4">Registro visual de los eventos, asambleas y capacitaciones a los que fuiste registrado.</p>
-                        
+                    <div className="space-y-3">
+                        <p className="text-xs text-gray-500 font-medium px-1">Registro de eventos, asambleas y capacitaciones a los que fuiste registrado.</p>
+
                         {registrosInst.length === 0 ? (
-                            <div className="p-8 text-center bg-white border border-slate-200 rounded-2xl shadow-sm">
-                                <Building className="mx-auto text-slate-300 mb-3" size={48} />
-                                <p className="text-slate-500 font-medium">No tienes registros en actividades institucionales aún.</p>
+                            <div className="p-10 text-center border-2 border-dashed border-gray-300">
+                                <div className="w-14 h-14 mx-auto mb-3 border-2 border-black flex items-center justify-center">
+                                    <Building size={24} />
+                                </div>
+                                <p className="text-xs font-bold uppercase tracking-widest text-gray-500">No tienes registros institucionales aún</p>
                             </div>
                         ) : (
-                            registrosInst.map((reg) => {
+                            registrosInst.map((reg, idx) => {
                                 const actInst = reg.actividades_institucionales;
                                 return (
-                                    <div key={reg.id_registro} className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow">
-                                        <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
-                                            <Building className="text-purple-600" size={24} />
+                                    <motion.div
+                                        key={reg.id_registro}
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ duration: 0.3, delay: idx * 0.04 }}
+                                        className="bg-white border-2 border-black p-4 flex items-center gap-4"
+                                    >
+                                        <div className="w-12 h-12 border-2 border-black flex items-center justify-center shrink-0">
+                                            <Building size={20} />
                                         </div>
-                                        <div className="flex-1">
-                                            <h3 className="text-base font-bold text-slate-800">{actInst.nombre}</h3>
-                                            <p className="text-sm text-slate-500 mt-0.5">{actInst.tipo} • {formatDate(actInst.fecha_programada)}</p>
-                                            <div className="mt-2 inline-flex items-center px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wide">
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-sm font-black uppercase tracking-tight truncate">{actInst.nombre}</h3>
+                                            <p className="text-xs text-gray-500 mt-0.5 font-medium">{actInst.tipo} · {formatDate(actInst.fecha_programada)}</p>
+                                            <div className="mt-1.5 inline-flex items-center border border-black px-1.5 py-[1px] text-[9px] font-bold uppercase tracking-widest">
                                                 {reg.estado_registro}
                                             </div>
                                         </div>
-                                    </div>
+                                        <ChevronRight className="text-gray-300 shrink-0" size={18} />
+                                    </motion.div>
                                 );
                             })
                         )}

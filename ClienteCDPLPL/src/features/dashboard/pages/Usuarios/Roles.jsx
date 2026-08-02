@@ -7,9 +7,12 @@ import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import AsignarRol from "./Components/AsignarRol";
+import { useSession } from "../../../../context/SessionProvider";
 import { Shield, Eye, EyeOff, Edit3, ShieldCheck, ShieldX, Calendar, User, Crown, CheckCircle, XCircle, Settings } from "lucide-react";
 
 const Roles = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("usuarios.roles");
     const [roles, setRoles] = useState([]);
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
@@ -104,7 +107,7 @@ const Roles = () => {
                                     <div className="min-w-0 flex-1"><p className="font-semibold text-slate-800 truncate">{r.usuarios?.nombre} {r.usuarios?.apellido}</p><p className="text-xs text-slate-500">ID: {r.id_rol}</p></div>
                                 </div>)
                         },
-                        { label: "Rol", key: "rol", render: (r) => <span className={getRolBadge(r.rol)}>{getRolIcon(r.rol)} {r.rol}</span> },
+                        { label: "Rol", key: "rol", render: (r) => <span className={getRolBadge(r.catalogo_roles?.nombre)}>{getRolIcon(r.catalogo_roles?.nombre)} {r.catalogo_roles?.nombre ?? "—"}</span> },
                         {
                             label: "Período", key: "fecha", render: (r) => (
                                 <div className="text-sm text-slate-600 space-y-1">
@@ -115,7 +118,7 @@ const Roles = () => {
                         { label: "Estado", key: "estado", render: (r) => <span className={getEstadoBadge(r.activo)}>{getEstadoIcon(r.activo)} {r.activo ? "Activo" : "Inactivo"}</span> },
                     ]}
                     data={roles}
-                    actions={[
+                    actions={esEditor ? [
                         {
                             label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
                             onClick: (r) => { setCurrentId(r.id_rol); setMostrarModal(true); }
@@ -125,7 +128,7 @@ const Roles = () => {
                             className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
                             onClick: (r) => setEstadoTarget(r.id_rol)
                         },
-                    ]}
+                    ] : []}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                 />
             </div>

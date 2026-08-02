@@ -18,9 +18,14 @@ export default function Breadcrumbs() {
     const migas = segmentos.map((seg, i) => {
         const href = '/' + segmentos.slice(0, i + 1).join('/');
         const esId = /^\d+$/.test(seg);
+        const siguienteEsId = /^\d+$/.test(segmentos[i + 1] ?? '');
         return {
             href,
-            esId,
+            // Un segmento que solo es la "etiqueta" de un recurso con id (p. ej.
+            // "perfil" en /actividades_sociales/perfil/42) no es una página
+            // navegable por sí sola — sin el id cae en 404. Solo se enlazan los
+            // segmentos que de verdad resuelven a una ruta propia.
+            enlazable: !esId && !siguienteEsId,
             label: esId ? `#${seg}` : (SEGMENT_LABELS[seg] ?? seg.replace(/_/g, ' ')),
             ultimo: i === segmentos.length - 1,
         };
@@ -34,7 +39,7 @@ export default function Breadcrumbs() {
             <nav aria-label="Ruta de navegación" className="hidden md:flex items-center gap-1 text-[11px]">
                 {migas.map((m) => (
                     <span key={m.href} className="flex items-center gap-1 min-w-0">
-                        {m.ultimo || m.esId ? (
+                        {m.ultimo || !m.enlazable ? (
                             <span
                                 className={`truncate ${m.ultimo ? 'font-semibold text-slate-700' : 'text-slate-400'}`}
                                 aria-current={m.ultimo ? 'page' : undefined}

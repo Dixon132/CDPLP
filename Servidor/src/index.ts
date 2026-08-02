@@ -4,6 +4,7 @@ import { PORT } from './utils/secrets'
 import rootRouter from './routes'
 import errorMiddleware from './middlewares/errors'
 import { closeBrowserSingleton } from './utils/informes'
+import { iniciarJobVencimientos } from './jobs/vencimientos.job'
 
 const app: Express = express()
 
@@ -16,6 +17,8 @@ app.use('/api', rootRouter)
 app.use(errorMiddleware)
 
 const server = app.listen(PORT, () => console.log(`app working on port ${PORT}`))
+
+iniciarJobVencimientos()
 
 // El navegador de Puppeteer que generan los informes PDF (utils/informes) se
 // lanza una sola vez y se reusa entre requests; hay que cerrarlo explícitamente

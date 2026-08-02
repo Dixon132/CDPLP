@@ -13,11 +13,11 @@ import { useSession } from '../../../context/SessionProvider';
  * contexto de sesión cuando existe.
  */
 const Sidebar = ({ collapsed = false }) => {
-  const { rol, nombreCompleto, iniciales, vigencia, logout } = useSession();
+  const { rol, permisos, nombreCompleto, iniciales, vigencia, logout } = useSession();
   const [mostrarSubmenus, setMostrarSubmenus] = useState({});
   const location = useLocation();
 
-  const grupos = useMemo(() => getNavForRole(rol), [rol]);
+  const grupos = useMemo(() => getNavForRole(rol, permisos), [rol, permisos]);
 
   // Abre automáticamente el submenú del módulo en el que estás.
   useEffect(() => {

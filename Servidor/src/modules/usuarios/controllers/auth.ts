@@ -38,10 +38,13 @@ export const singUp = async (req: Request, res: Response) => {
             direccion
         }
     })
+    const rolNoDefinido = await prismaClient.catalogo_roles.findFirstOrThrow({
+        where: { nombre: "NO_DEFINIDO" }
+    })
     await prismaClient.roles.create({
         data: {
             id_usuario: user.id_usuario,
-            rol: "NO_DEFINIDO"
+            id_rol_catalogo: rolNoDefinido.id_rol_catalogo
         }
     })
     describir(res, `Se creó el usuario ${user.nombre} ${user.apellido} (${user.correo})`)
@@ -70,18 +73,26 @@ export const login = async (req: Request, res: Response) => {
     if (!compareSync(contraseña, user.contrase_a!)) {
         throw new UnauthorizedException('Contraseña incorrecta!', ErrorCodes.USER_NOT_FOUND)
     }
-    const rol = await prismaClient.roles.findFirstOrThrow({
+    // Fila de rol más reciente del usuario (corrige un bug preexistente: antes
+    // no se ordenaba y Postgres podía devolver cualquier fila del histórico,
+    // no la vigente). Deliberadamente NO se filtra por `activo`/vigencia acá:
+    // un rol vencido o inactivo debe poder iniciar sesión igual para que el
+    // cliente lo redirija a la pantalla correspondiente (`RequirePermiso`
+    // hace esa validación); bloquear el login sería un error 500 opaco.
+    const rolRow = await prismaClient.roles.findFirst({
         where: {
             id_usuario: user.id_usuario
         },
-        select: {
-            rol: true,
-            fecha_fin: true,
-            fecha_inicio: true,
-            activo: true
-        }
-
+        orderBy: { id_rol: 'desc' },
+        include: { catalogo_roles: true }
     })
+
+    const rol = {
+        rol: rolRow?.catalogo_roles?.nombre ?? 'NO_DEFINIDO',
+        fecha_inicio: rolRow?.fecha_inicio ?? null,
+        fecha_fin: rolRow?.fecha_fin ?? null,
+        activo: rolRow?.activo ?? false,
+    }
 
     const token = jwt.sign({
         userId: user.id_usuario,

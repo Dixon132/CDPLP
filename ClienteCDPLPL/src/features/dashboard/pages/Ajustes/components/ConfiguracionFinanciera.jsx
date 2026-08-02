@@ -3,8 +3,11 @@ import { getPresupuestoActivo, setPresupuestoActivo } from '../../../services/co
 import { getAllPresupuestos } from '../../../services/tesoreria';
 import { Loader2, CheckCircle2, AlertCircle, Briefcase } from 'lucide-react';
 import Alerts from '../../../components/Alerts';
+import { useSession } from '../../../../../context/SessionProvider';
 
 export default function ConfiguracionFinanciera() {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar('ajustes.financiero');
     const [presupuestos, setPresupuestos] = useState([]);
     const [activeId, setActiveId] = useState('');
     const [loading, setLoading] = useState(true);
@@ -37,6 +40,7 @@ export default function ConfiguracionFinanciera() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!esEditor) return;
         if (!activeId) {
             setError('Debe seleccionar un presupuesto.');
             return;
@@ -73,12 +77,18 @@ export default function ConfiguracionFinanciera() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
+                <fieldset disabled={!esEditor} className="space-y-5">
+                {!esEditor && (
+                    <div className="flex items-center gap-2 text-sm text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-200">
+                        Solo puedes ver esta configuración; tu permiso sobre este módulo es de observador.
+                    </div>
+                )}
                 {error && (
                     <div className="flex items-center gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
                         <AlertCircle className="w-4 h-4" /> {error}
                     </div>
                 )}
-                
+
                 <div>
                     <label className="block text-sm font-semibold text-slate-700 mb-1">Presupuesto Activo</label>
                     <select
@@ -99,12 +109,15 @@ export default function ConfiguracionFinanciera() {
                     </p>
                 </div>
 
-                <div className="pt-4 border-t border-slate-100 flex justify-end">
-                    <button type="submit" disabled={saving || !activeId} className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-all disabled:opacity-60">
-                        {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                        Guardar Presupuesto Activo
-                    </button>
-                </div>
+                {esEditor && (
+                    <div className="pt-4 border-t border-slate-100 flex justify-end">
+                        <button type="submit" disabled={saving || !activeId} className="flex items-center gap-2 px-6 py-2.5 bg-blue-600 text-white text-sm font-semibold rounded-lg hover:bg-blue-700 transition-all disabled:opacity-60">
+                            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                            Guardar Presupuesto Activo
+                        </button>
+                    </div>
+                )}
+                </fieldset>
             </form>
             <Alerts type={alert.type} message={alert.message} show={alert.show} onClose={() => setAlert(a => ({ ...a, show: false }))} />
         </div>

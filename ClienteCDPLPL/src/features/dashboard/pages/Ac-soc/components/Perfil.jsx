@@ -9,18 +9,12 @@ import {
     BadgeCheck,
     Clock,
     CalendarDays,
-    TrendingUp,
-    Award,
     ClipboardList,
-    UserCircle2,
     MapPin,
-    Target,
     CheckCircle2,
     XCircle,
     AlertCircle,
     Fingerprint,
-    Eye,
-    EyeOff,
     KeyRound,
 } from "lucide-react";
 import Alerts from "../../../components/Alerts";
@@ -31,80 +25,6 @@ import {
     updateEstadoAsignacion,
     resetHorasAsignacion,
 } from "../../../services/ac-sociales";
-
-// ──────────────────────────────────────────────
-// Circular progress ring
-// ──────────────────────────────────────────────
-const CircularProgress = ({ value, max, size = 160, stroke = 12 }) => {
-    const pct = Math.min(100, (value / (max || 1)) * 100);
-    const r = (size - stroke) / 2;
-    const circ = 2 * Math.PI * r;
-    const dash = (pct / 100) * circ;
-
-    const color =
-        pct >= 100
-            ? "#10b981"   // completado
-            : pct >= 60
-                ? "#3b82f6"   // en camino
-                : pct >= 30
-                    ? "#f59e0b"   // iniciado
-                    : "#e5e7eb";  // sin iniciar
-
-    return (
-        <svg width={size} height={size} style={{ transform: "rotate(-90deg)" }}>
-            {/* track */}
-            <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={r}
-                fill="none"
-                stroke="#f1f5f9"
-                strokeWidth={stroke}
-            />
-            {/* progress */}
-            <circle
-                cx={size / 2}
-                cy={size / 2}
-                r={r}
-                fill="none"
-                stroke={color}
-                strokeWidth={stroke}
-                strokeDasharray={`${dash} ${circ - dash}`}
-                strokeLinecap="round"
-                style={{ transition: "stroke-dasharray 1s ease" }}
-            />
-        </svg>
-    );
-};
-
-// ──────────────────────────────────────────────
-// Badge según porcentaje
-// ──────────────────────────────────────────────
-const ProgressBadge = ({ pct }) => {
-    if (pct >= 100)
-        return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-600 border border-emerald-100">
-                <Award className="w-3 h-3" /> Completado
-            </span>
-        );
-    if (pct >= 60)
-        return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-100">
-                <TrendingUp className="w-3 h-3" /> En camino
-            </span>
-        );
-    if (pct >= 30)
-        return (
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-600 border border-amber-100">
-                <AlertCircle className="w-3 h-3" /> Iniciado
-            </span>
-        );
-    return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-slate-50 text-slate-500 border border-slate-200">
-            <Clock className="w-3 h-3" /> Sin iniciar
-        </span>
-    );
-};
 
 // ──────────────────────────────────────────────
 // Icono de asistencia
@@ -147,7 +67,6 @@ export const Perfil = () => {
     const [asistencias, setAsistencias] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [showPin, setShowPin] = useState(false);
 
     // Alerts
     const [alert, setAlert] = useState(false);
@@ -261,13 +180,6 @@ export const Perfil = () => {
 
     const horasTotal = Number((data?.total_horas || 0).toFixed(1));
     const pct = Math.min(100, Math.round((horasTotal / HORAS_META_REAL) * 100));
-    const presentes = asistencias.filter((a) => a.estado === "PRESENTE").length;
-    const ausentes = asistencias.filter((a) => a.estado === "AUSENTE").length;
-    const tardanzas = asistencias.filter((a) => a.estado === "TARDANZA").length;
-    const promedioPorSesion =
-        asistencias.length > 0
-            ? Number((horasTotal / asistencias.filter((a) => a.horas > 0).length || 0).toFixed(1))
-            : 0;
 
     return (
         <div className="min-h-full bg-slate-50/50 p-4 md:p-8 font-sans">
@@ -375,6 +287,14 @@ export const Perfil = () => {
                                         <PinDisplay pin={persona.pin_acceso} />
                                     </div>
                                 )}
+                                {isColegiado && (
+                                    <div className="flex items-center gap-1.5">
+                                        <BadgeCheck className="w-4 h-4 text-teal-500" />
+                                        <span className="text-slate-600">
+                                            Colegiado desde {fmt(persona?.fecha_inscripcion)} · Renovación: {fmt(persona?.fecha_renovacion)}
+                                        </span>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Actividad */}
@@ -400,14 +320,12 @@ export const Perfil = () => {
                 </div>
 
                 {/* ══ STATS ROW ══════════════════════════════ */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                     {[
                         { label: "Horas Totales", value: horasTotal, icon: <Clock className="w-5 h-5 text-teal-500" /> },
                         { label: "Sesiones", value: asistencias.length, icon: <CalendarDays className="w-5 h-5 text-blue-500" /> },
-                        { label: "Prom. hrs/sesión", value: promedioPorSesion, icon: <TrendingUp className="w-5 h-5 text-violet-500" /> },
-                        { label: "Avance", value: `${pct}%`, icon: <Target className="w-5 h-5 text-amber-500" /> },
                     ].map((s) => (
-                        <div key={s.label} className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col gap-2 hover:shadow-md transition-shadow">
+                        <div key={s.label} className="bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col gap-2">
                             <div className="flex items-center justify-between">
                                 <p className="text-xs text-slate-500 font-medium uppercase tracking-wide">{s.label}</p>
                                 <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">{s.icon}</div>
@@ -417,69 +335,26 @@ export const Perfil = () => {
                     ))}
                 </div>
 
-                {/* ══ HORAS: ANILLO + DETALLE ═══════════════ */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-                    {/* Anillo */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col items-center gap-4">
-                        <h2 className="text-lg font-bold text-slate-700 self-start flex items-center gap-2">
-                            <Award className="w-5 h-5 text-amber-500" />
-                            Progreso de Horas
-                        </h2>
-
-                        <div className="relative flex items-center justify-center">
-                            <CircularProgress value={horasTotal} max={HORAS_META_REAL} size={180} stroke={14} />
-                            <div className="absolute flex flex-col items-center">
-                                <span className="text-4xl font-extrabold text-slate-800">{horasTotal}</span>
-                                <span className="text-sm text-slate-400">/ {HORAS_META_REAL} hrs</span>
-                            </div>
-                        </div>
-
-                        <ProgressBadge pct={pct} />
-
-                        <p className="text-sm text-slate-500 text-center">
-                            {HORAS_META_REAL - horasTotal > 0
-                                ? <>Faltan <strong className="text-slate-700">{HORAS_META_REAL - horasTotal} hrs</strong> para completar la meta.</>
-                                : <><strong className="text-emerald-500">¡Meta alcanzada!</strong> Excelente desempeño.</>}
-                        </p>
-                    </div>
-
-                    {/* Desglose */}
-                    <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-8 flex flex-col gap-5">
+                {/* ══ HORAS vs META ══════════════════════════ */}
+                <div className="bg-white/80 backdrop-blur-sm rounded-3xl border border-slate-200 shadow-sm p-6 md:p-8 space-y-3">
+                    <div className="flex items-center justify-between">
                         <h2 className="text-lg font-bold text-slate-700 flex items-center gap-2">
-                            <UserCircle2 className="w-5 h-5 text-teal-500" />
-                            Desglose de Asistencia
+                            <Clock className="w-5 h-5 text-teal-500" />
+                            Horas de participación
                         </h2>
-
-                        {[
-                            { label: "Presente", count: presentes, total: asistencias.length, color: "bg-emerald-400", light: "bg-emerald-50 text-emerald-600 border border-emerald-100" },
-                            { label: "Tardanza", count: tardanzas, total: asistencias.length, color: "bg-amber-400", light: "bg-amber-50 text-amber-600 border border-amber-100" },
-                            { label: "Ausente", count: ausentes, total: asistencias.length, color: "bg-rose-400", light: "bg-rose-50 text-rose-600 border border-rose-100" },
-                        ].map((row) => (
-                            <div key={row.label} className="space-y-2">
-                                <div className="flex items-center justify-between text-sm">
-                                    <span className={`font-semibold px-2 py-0.5 rounded-lg text-xs ${row.light}`}>{row.label}</span>
-                                    <span className="text-slate-500 font-medium">{row.count}/{row.total}</span>
-                                </div>
-                                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                    <div
-                                        className={`h-full rounded-full ${row.color} transition-all duration-700`}
-                                        style={{ width: row.total ? `${(row.count / row.total) * 100}%` : "0%" }}
-                                    />
-                                </div>
-                            </div>
-                        ))}
-
-                        {isColegiado && (
-                            <div className="mt-4 p-4 bg-teal-50/50 rounded-2xl border border-teal-100 text-sm text-teal-700 flex items-start gap-3">
-                                <BadgeCheck className="w-5 h-5 flex-shrink-0 mt-0.5 text-teal-500" />
-                                <div className="flex flex-col gap-1">
-                                    <span>Colegiado inscrito desde <strong>{fmt(persona?.fecha_inscripcion)}</strong>.</span>
-                                    <span>Última renovación: <strong>{fmt(persona?.fecha_renovacion)}</strong>.</span>
-                                </div>
-                            </div>
-                        )}
+                        <span className="text-sm font-semibold text-slate-600">{horasTotal} / {HORAS_META_REAL} hrs ({pct}%)</span>
                     </div>
+                    <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                        <div
+                            className="h-full bg-teal-500 rounded-full transition-all"
+                            style={{ width: `${pct}%` }}
+                        />
+                    </div>
+                    <p className="text-sm text-slate-500">
+                        {HORAS_META_REAL - horasTotal > 0
+                            ? `Faltan ${HORAS_META_REAL - horasTotal} hrs para llegar a la meta.`
+                            : "Meta de horas alcanzada."}
+                    </p>
                 </div>
 
                 {/* ══ TIMELINE DE ASISTENCIAS ═══════════════ */}

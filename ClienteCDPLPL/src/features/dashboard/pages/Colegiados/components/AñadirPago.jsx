@@ -60,6 +60,7 @@ const AñadirPago = ({ id, onSubmitForm }) => {
         const concepto = `Pago de colegiatura anual (${data.gestiones} gestión/es)`;
         formData.append("concepto", concepto);
         formData.append("metodo_pago", data.metodo_pago);
+        formData.append("gestiones", data.gestiones);
         
         // Fix timezone issue by appending local time
         const fecha_pago_local = data.fecha_pago ? `${data.fecha_pago}T00:00:00` : "";

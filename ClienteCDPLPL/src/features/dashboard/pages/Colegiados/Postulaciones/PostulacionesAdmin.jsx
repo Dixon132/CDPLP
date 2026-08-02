@@ -12,6 +12,7 @@ import Modal from '../../../../../components/Modal';
 import ConfirmDeleteModal from '../../../../../components/ConfirmDeleteModal';
 import ConfirmActionModal from '../../../../../components/ConfirmActionModal';
 import ResponsiveTable from '../../../components/ResponsiveTable';
+import { useSession } from '../../../../../context/SessionProvider';
 import {
     ClipboardList, Eye, CheckCircle2, XCircle, Trash2,
     User, Mail, Phone, CreditCard, FileText, Calendar,
@@ -56,7 +57,7 @@ function InfoRow({ icon: Icon, label, value }) {
 }
 
 // ─── Modal: Ver detalles ──────────────────────────────────────
-function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
+function VerPostulacionModal({ id, onClose, onAccept, onReject, esEditor }) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -148,7 +149,7 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
             )}
 
             {/* Acciones */}
-            {(isEnRevision || data?.estado === 'RECHAZADO') && (
+            {esEditor && (isEnRevision || data?.estado === 'RECHAZADO') && (
                 <div className="pt-2 border-t border-slate-100 space-y-3">
                         <div className="flex gap-3">
                             {isEnRevision && (
@@ -173,6 +174,8 @@ function VerPostulacionModal({ id, onClose, onAccept, onReject }) {
 
 // ─── MAIN PAGE ────────────────────────────────────────────────
 export default function PostulacionesAdmin() {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar('colegiados.postulaciones');
     const [data, setData] = useState([]);
     const [total, setTotal] = useState(0);
     const [totalPages, setTotalPages] = useState(1);
@@ -335,11 +338,11 @@ export default function PostulacionesAdmin() {
                                 label: "Revisar", icon: Eye, className: "px-3 py-1.5 bg-slate-100 text-slate-700 rounded-xl font-medium shadow-sm hover:bg-slate-200",
                                 onClick: (item) => { setSelectedId(item.id_postulacion); setShowModal(true); }
                             },
-                            {
+                            ...(esEditor ? [{
                                 label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-50 text-red-600 rounded-xl font-medium shadow-sm hover:bg-red-100",
                                 show: (item) => item.estado === 'RECHAZADO',
                                 onClick: (item) => setDeleteId(item.id_postulacion)
-                            }
+                            }] : []),
                         ]}
                         pagination={{ total, totalPage: totalPages, page, onPageChange: setPage }}
                     />
@@ -354,6 +357,7 @@ export default function PostulacionesAdmin() {
                         onClose={() => setShowModal(false)}
                         onAccept={(id) => setAcceptId(id)}
                         onReject={(id) => setRejectId(id)}
+                        esEditor={esEditor}
                     />
                 )}
             </Modal>

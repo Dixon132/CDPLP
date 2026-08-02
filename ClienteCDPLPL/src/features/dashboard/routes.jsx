@@ -3,6 +3,7 @@ import { DashboardLayout } from "../../layouts/DashboardLayout";
 import PrincipalPage from "./pages/PrincipalPage";
 import Usuarios from "./pages/Usuarios/Usuarios";
 import Colegiados from "./pages/Colegiados/Colegiados";
+import Vencimientos from "./pages/Vencimientos/Vencimientos";
 import Ac_sociales from "./pages/Ac-soc/Ac_sociales";
 import Ac_institucionales from "./pages/Ac-Inst/Ac_institucionales";
 
@@ -11,18 +12,19 @@ import Ajustes from "./pages/Ajustes/Ajustes";
 import NotAuthorized from "./pages/NotAuthorized";
 import EstadoSesion from "./pages/EstadoSesion";
 import Roles from "./pages/Usuarios/Roles";
+import PermisosAdmin from "./pages/Usuarios/Permisos/PermisosAdmin";
 import Documentos from "./pages/Colegiados/Documentos";
 import Pagos from "./pages/Colegiados/Pagos";
 import Correspondencia from "./pages/Correspondencia/Correspondencia";
 import Convenios from "./pages/Ac-soc/Convenios";
 import BuzonCorrespondencia from "./pages/Correspondencia/Buzon";
 import Contenido from "./pages/Correspondencia/Contenido";
-import GestionAsistenciaInst from "./pages/Ac-Inst/components/GestionAsistenciaInst";
+import DetalleActividadInst from "./pages/Ac-Inst/DetalleActividadInst";
 import MovimientosPorPresupuesto from "./pages/Tesoreria/MovimientosPorPresupuesto";
 import Auditorias from "./pages/Auditorias/Auditorias";
 import Informes from "./pages/Informes/Informes";
 import Memorias from "./pages/Memorias/Memorias";
-import { RequireRole } from "../../layouts/components/dashboard/RequireRole";
+import { RequirePermiso } from "../../layouts/components/dashboard/RequirePermiso";
 import Pasantes from "./pages/Colegiados/Pasantes/Pasantes";
 import Invitados from "./pages/Colegiados/invitados/Invitados";
 import PagosInvitado from "./pages/Colegiados/invitados/PagosInvitado";
@@ -42,65 +44,73 @@ export const dashboardRoutes = {
         {
             index: true,
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="dashboard">
                     <PrincipalPage />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'usuarios',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="usuarios">
                     <Usuarios />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'invitados',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="colegiados.invitados">
                     <Invitados />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'invitados/pagos/:id',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="colegiados.invitados">
                     <PagosInvitado />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'pasantes',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="colegiados.pasantes">
                     <Pasantes />
-                </RequireRole>
+                </RequirePermiso>
+            )
+        },
+        {
+            path: 'vencimientos',
+            element: (
+                <RequirePermiso recurso="colegiados">
+                    <Vencimientos />
+                </RequirePermiso>
             )
         },
         {
             path: 'colegiados',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="colegiados">
                     <Colegiados />
-                </RequireRole>
+                </RequirePermiso>
             ),
             children: [
                 {
                     path: 'documentos/:id',
                     element: (
-                        <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                        <RequirePermiso recurso="colegiados">
                             < Documentos />
-                        </RequireRole>
+                        </RequirePermiso>
                     )
                 },
                 {
                     path: 'pagos/:id',
                     element: (
-                        <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                        <RequirePermiso recurso="colegiados">
                             <Pagos />
-                        </RequireRole>
+                        </RequirePermiso>
                     )
                 }
             ]
@@ -108,117 +118,119 @@ export const dashboardRoutes = {
         {
             path: 'postulaciones',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE']}>
+                <RequirePermiso recurso="colegiados.postulaciones">
                     <PostulacionesAdmin />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'actividades_sociales',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="actividades_sociales">
                     <Ac_sociales />
 
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'actividades_sociales/detalles/:id',
             element: (
-                <VerDetallesActividad />
+                <RequirePermiso recurso="actividades_sociales">
+                    <VerDetallesActividad />
+                </RequirePermiso>
             )
         },
-        ////////////////AQUIIIIIIIIIII////////////////////////
         {
             path: 'actividades_sociales/perfil/:id',
             element: (
-                <Perfil />
+                <RequirePermiso recurso="actividades_sociales">
+                    <Perfil />
+                </RequirePermiso>
             )
         },
         {
             path: 'actividades_institucionales',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="actividades_institucionales">
                     <Ac_institucionales />
-                </RequireRole>)
+                </RequirePermiso>)
+        },
+        {
+            path: 'actividades_institucionales/detalles/:id',
+            element: (
+                <RequirePermiso recurso="actividades_institucionales">
+                    <DetalleActividadInst />
+                </RequirePermiso>
+            )
         },
         {
             path: 'memorias',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="memorias">
                     <Memorias />
-                </RequireRole>)
-        },
-        {
-            path: 'asistencias/:id',
-            element: (
-
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
-                    <GestionAsistenciaInst />
-                </RequireRole>
-            )
+                </RequirePermiso>)
         },
         {
             path: 'correspondencia',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="correspondencia">
                     <Correspondencia />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'buzon/:id',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="correspondencia.buzon">
                     <Contenido />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'buzon',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="correspondencia.buzon">
                     <BuzonCorrespondencia />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'convenios',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="actividades_sociales.convenios">
                     <Convenios />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'tesoreria',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="tesoreria">
                     <Tesoreria />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'tesoreria/movimientos/:id',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="tesoreria">
                     <MovimientosPorPresupuesto />,
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'ajustes',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="ajustes">
                     <Ajustes />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'notAuthorized',
             element: <NotAuthorized />
         },
-        // Destinos a los que redirige `RequireRole`. Antes no existían y caían
+        // Destinos a los que redirige `RequirePermiso`. Antes no existían y caían
         // en el 404 genérico.
         {
             path: 'roleNotDefined',
@@ -235,25 +247,33 @@ export const dashboardRoutes = {
         {
             path: 'roles',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'SECRETARIO', 'TESORERO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL']}>
+                <RequirePermiso recurso="usuarios.roles">
                     <Roles />
-                </RequireRole>
+                </RequirePermiso>
+            )
+        },
+        {
+            path: 'permisos',
+            element: (
+                <RequirePermiso recurso="usuarios.permisos">
+                    <PermisosAdmin />
+                </RequirePermiso>
             )
         },
         {
             path: 'auditorias',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE']}>
+                <RequirePermiso recurso="auditorias">
                     <Auditorias />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         {
             path: 'informes',
             element: (
-                <RequireRole allowedRoles={['PRESIDENTE', 'VICEPRESIDENTE', 'SECRETARIO_GENERAL', 'SECRETARIO', 'TESORERO', 'VOCAL']}>
+                <RequirePermiso recurso="informes">
                     <Informes />
-                </RequireRole>
+                </RequirePermiso>
             )
         },
         // Ruta 'modelo' (IRECDashboard) del módulo IREC anterior retirada del

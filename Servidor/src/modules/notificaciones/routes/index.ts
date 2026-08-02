@@ -1,6 +1,7 @@
 import { Router } from "express";
 import errorHandler from "../../../utils/error-handler";
 import { authMiddleware } from "../../../middlewares/auth";
+import requirePermiso from "../../../middlewares/requirePermiso";
 import {
     listarNotificaciones,
     marcarLeida,
@@ -23,4 +24,4 @@ export default notificacionesRouter;
 /** Router aparte para el resumen del panel de inicio. */
 export const dashboardRouter: Router = Router();
 dashboardRouter.use(authMiddleware);
-dashboardRouter.get('/resumen', errorHandler(getResumenDashboard));
+dashboardRouter.get('/resumen', requirePermiso('dashboard', 'OBSERVADOR'), errorHandler(getResumenDashboard));

@@ -13,11 +13,11 @@ import { useSession } from '../../../context/SessionProvider';
  * porque el layout no tenía ni un breakpoint.
  */
 export default function MobileNav() {
-    const { rol, nombreCompleto, iniciales, logout } = useSession();
+    const { rol, permisos, nombreCompleto, iniciales, logout } = useSession();
     const { pathname } = useLocation();
     const [hojaAbierta, setHojaAbierta] = useState(false);
 
-    const { principales, resto } = useMemo(() => getMobileNavForRole(rol, 4), [rol]);
+    const { principales, resto } = useMemo(() => getMobileNavForRole(rol, permisos, 4), [rol, permisos]);
 
     // Cierra la hoja al navegar.
     useEffect(() => setHojaAbierta(false), [pathname]);

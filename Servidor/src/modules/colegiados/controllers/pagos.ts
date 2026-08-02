@@ -7,6 +7,7 @@ import { describir } from "../../../utils/auditoria";
 import { subirArchivo, buildPublicUrl, eliminarArchivo } from "../../../utils/uploadS3";
 import { crearPagoSchema } from "../schemas/pagos";
 import { emitirNotificacion } from "../../notificaciones/services";
+import { sumarAnios } from "../../../utils/fechas";
 
 const ESTADOS_PAGO_VALIDOS = ["REALIZADO", "ANULADO"] as const;
 type EstadoPago = typeof ESTADOS_PAGO_VALIDOS[number];
@@ -52,11 +53,11 @@ export const createPago = async (req: Request, res: Response) => {
             detalles: parsed.error.issues.map(i => ({ campo: i.path.join('.'), mensaje: i.message }))
         })
     }
-    const { concepto, fecha_pago, monto, metodo_pago } = parsed.data
+    const { concepto, fecha_pago, monto, metodo_pago, gestiones } = parsed.data
 
     const col = await prismaClient.colegiados.findFirstOrThrow({
         where: { id_colegiado: +id },
-        select: { nombre: true, apellido: true }
+        select: { nombre: true, apellido: true, fecha_renovacion: true }
     });
 
     let rutaComprobante = null;
@@ -103,22 +104,34 @@ export const createPago = async (req: Request, res: Response) => {
                     fecha_pago,
                     monto,
                     metodo_pago,
+                    gestiones,
                     comprobante: rutaComprobante
                 }
             });
 
             await registrarMovimientoPagoColegiatura(
-                pago.id_pago, 
-                monto, 
-                Origen.COLEGIATURA, 
-                `Pago de colegiatura de ${col.nombre} ${col.apellido}`, 
-                activePresupuestoId, 
-                req.user!.id_usuario, 
-                metodo_pago ?? undefined, 
-                rutaComprobante ?? undefined, 
+                pago.id_pago,
+                monto,
+                Origen.COLEGIATURA,
+                `Pago de colegiatura de ${col.nombre} ${col.apellido}`,
+                activePresupuestoId,
+                req.user!.id_usuario,
+                metodo_pago ?? undefined,
+                rutaComprobante ?? undefined,
                 tx
             );
-            
+
+            // Extiende la renovación desde la fecha vigente si aún no venció (no se
+            // pierden gestiones pagadas de más), o desde la fecha del pago si ya
+            // estaba vencida o nunca se fijó.
+            const base = col.fecha_renovacion && col.fecha_renovacion > fecha_pago
+                ? col.fecha_renovacion
+                : fecha_pago;
+            await tx.colegiados.update({
+                where: { id_colegiado: +id },
+                data: { fecha_renovacion: sumarAnios(base, gestiones) }
+            });
+
             return pago;
         });
 

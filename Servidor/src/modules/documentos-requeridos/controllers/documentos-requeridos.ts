@@ -29,11 +29,11 @@ export const getAdmin = async (req: Request, res: Response) => {
 
 /**
  * POST /api/documentos-requeridos
- * Cuerpo: { nombre, descripcion?, es_opcional?, orden? }
+ * Cuerpo: { nombre, descripcion?, es_opcional?, orden?, vigencia_meses? }
  * Crea un nuevo documento requerido y retorna 201.
  */
 export const create = async (req: Request, res: Response) => {
-    const { nombre, descripcion, es_opcional, orden } = req.body;
+    const { nombre, descripcion, es_opcional, orden, vigencia_meses } = req.body;
 
     const nuevo = await prismaClient.documentos_requeridos.create({
         data: {
@@ -41,6 +41,9 @@ export const create = async (req: Request, res: Response) => {
             descripcion: descripcion !== undefined ? String(descripcion) : null,
             es_opcional: es_opcional !== undefined ? Boolean(es_opcional) : false,
             orden: orden !== undefined ? Number(orden) : 0,
+            vigencia_meses: vigencia_meses !== undefined && vigencia_meses !== null && vigencia_meses !== ''
+                ? Number(vigencia_meses)
+                : null,
         },
     });
 
@@ -50,12 +53,12 @@ export const create = async (req: Request, res: Response) => {
 
 /**
  * PUT /api/documentos-requeridos/:id
- * Cuerpo: { nombre?, descripcion?, es_opcional?, orden? }
+ * Cuerpo: { nombre?, descripcion?, es_opcional?, orden?, vigencia_meses? }
  * Actualiza un documento requerido identificado por `id_doc_req`.
  */
 export const update = async (req: Request, res: Response) => {
     const id = Number(req.params.id);
-    const { nombre, descripcion, es_opcional, orden } = req.body;
+    const { nombre, descripcion, es_opcional, orden, vigencia_meses } = req.body;
 
     const documento = await prismaClient.documentos_requeridos.findUnique({
         where: { id_doc_req: id },
@@ -72,6 +75,9 @@ export const update = async (req: Request, res: Response) => {
             ...(descripcion !== undefined && { descripcion: descripcion ? String(descripcion) : null }),
             ...(es_opcional !== undefined && { es_opcional: Boolean(es_opcional) }),
             ...(orden !== undefined && { orden: Number(orden) }),
+            ...(vigencia_meses !== undefined && {
+                vigencia_meses: vigencia_meses !== null && vigencia_meses !== '' ? Number(vigencia_meses) : null,
+            }),
         },
     });
 

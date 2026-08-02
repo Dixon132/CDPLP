@@ -13,8 +13,11 @@ import {
     Filter, Clock, CheckCircle, AlertCircle,
     MessageCircle, Zap, Users, Sparkles, Target
 } from 'lucide-react';
+import { useSession } from "../../../../context/SessionProvider";
 
 const Correspondencia = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("correspondencia");
     const [search, setSearch] = useState('');
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -91,7 +94,7 @@ const Correspondencia = () => {
                 searchPlaceholder="Buscar correspondencia..."
                 onSearch={(v) => setSearch(v)}
                 buttons={[
-                    { label: "Nueva Correspondencia", icon: <Plus className="w-4 h-4" />, onClick: () => setMostrarModal(true), color: "blue" },
+                    ...(esEditor ? [{ label: "Nueva Correspondencia", icon: <Plus className="w-4 h-4" />, onClick: () => setMostrarModal(true), color: "blue" }] : []),
                 ]}
             />
 
@@ -129,10 +132,10 @@ const Correspondencia = () => {
                         },
                         { label: "Fecha", key: "fecha_envio", render: (item) => <div className="flex items-center gap-2 text-slate-600"><Calendar className="w-4 h-4" /> {new Date(item.fecha_envio).toLocaleDateString()}</div> },
                     ]}
-                    actions={[
+                    actions={esEditor ? [
                         { label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100", onClick: (item) => { setActualId(item.id_correspondencia); setMostrarModalModificar(true); } },
                         { label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100", onClick: (item) => handleEliminar(item) },
-                    ]}
+                    ] : []}
                     emptyMessage="No hay correspondencia"
                 />
             </div>

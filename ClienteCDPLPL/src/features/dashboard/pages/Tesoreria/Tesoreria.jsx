@@ -15,8 +15,11 @@ import {
     Activity, Edit3, Trash2, CheckCircle, XCircle, Clock, AlertCircle,
     Banknote
 } from 'lucide-react';
+import { useSession } from "../../../../context/SessionProvider";
 
 export default function Tesoreria() {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("tesoreria");
     const [presupuestos, setPresupuestos] = useState([]);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
@@ -117,10 +120,12 @@ export default function Tesoreria() {
                 )}
                 <div className="flex flex-wrap items-center gap-3 mb-6">
                     {/* ✅ Abre el form DIRECTAMENTE */}
-                    <button onClick={() => setShowModalCreate(true)}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-medium shadow-lg hover:scale-105">
-                        <Plus className="w-4 h-4" /> Crear Presupuesto
-                    </button>
+                    {esEditor && (
+                        <button onClick={() => setShowModalCreate(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-medium shadow-lg hover:scale-105">
+                            <Plus className="w-4 h-4" /> Crear Presupuesto
+                        </button>
+                    )}
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                         <input type="text" value={search}
@@ -180,15 +185,17 @@ export default function Tesoreria() {
                             label: "Movimientos", icon: Activity, className: "px-3 py-1.5 bg-amber-100 text-amber-700 rounded-lg hover:bg-amber-200 text-sm",
                             onClick: (p) => { window.location.href = `/dashboard/tesoreria/movimientos/${p.id_presupuesto}`; }
                         },
-                        {
-                            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 text-sm",
-                            // ✅ Abre el form DIRECTAMENTE
-                            onClick: (p) => { setSelectedId(p.id_presupuesto); setShowModalEdit(true); }
-                        },
-                        {
-                            label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm",
-                            onClick: (p) => setPresupuestoToDelete(p)
-                        },
+                        ...(esEditor ? [
+                            {
+                                label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 text-sm",
+                                // ✅ Abre el form DIRECTAMENTE
+                                onClick: (p) => { setSelectedId(p.id_presupuesto); setShowModalEdit(true); }
+                            },
+                            {
+                                label: "Eliminar", icon: Trash2, className: "px-3 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 text-sm",
+                                onClick: (p) => setPresupuestoToDelete(p)
+                            },
+                        ] : []),
                     ]}
                 />
             </div>

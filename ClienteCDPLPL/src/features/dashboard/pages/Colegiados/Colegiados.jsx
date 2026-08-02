@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { getAllColegiados, updateEstadoColegiado, createColegiado, modificarColegiados } from "../../services/colegiados";
 import CreateColegiado from "./components/CreateColegiado";
 import ModificarColegiado from "./components/ModificarColegiado";
+import Documentos from "./Documentos";
+import Pagos from "./Pagos";
 import parseDate from "../../../../utils/parseData";
 import Alerts from "../../components/Alerts";
 import { Outlet } from "react-router-dom";
@@ -13,8 +15,11 @@ import PinDisplay from "../../../../components/PinDisplay";
 import { Users, Plus, Eye, EyeOff, FileText, CreditCard, Edit3, UserCheck, UserX, Calendar, Mail, Phone, GraduationCap, KeyRound, Copy } from 'lucide-react';
 import Header from "../../components/Header";
 import { getEstadoBadge, getEstadoIcon } from "../../hooks/estados";
+import { useSession } from "../../../../context/SessionProvider";
 
 const Colegiados = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados");
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
     const [colegiados, setColegiados] = useState([]);
     const [search, setSearch] = useState("");
@@ -25,6 +30,11 @@ const Colegiados = () => {
     const [mostrarModal, SetMostrarModal] = useState(false);
     const [mostrarModal2, setMostrarModal2] = useState(false);
     const [colegiadoSeleccionado, setColegiadoSeleccionado] = useState(null);
+
+    // Pagos/Documentos se ven en un modal grande en vez de navegar a otra
+    // página — evita perder el contexto de la tabla de colegiados.
+    const [pagosModalId, setPagosModalId] = useState(null);
+    const [documentosModalId, setDocumentosModalId] = useState(null);
 
     // Confirm ANTES de guardar — el callback es quien ejecuta la petición
     const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
@@ -62,17 +72,19 @@ const Colegiados = () => {
     };
 
     const getActions = () => [
-        { label: "Pagos", icon: CreditCard, className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/pagos/${item.id_colegiado}`) },
-        { label: "Docs", icon: FileText, className: "px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl font-medium shadow-sm hover:bg-blue-100", onClick: (item) => (window.location.href = `/dashboard/colegiados/documentos/${item.id_colegiado}`) },
-        {
-            label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
-            onClick: (item) => { setColegiadoSeleccionado(item.id_colegiado); setMostrarModal2(true); }
-        },
-        {
-            label: mostrarInactivos ? "Activar" : "Desactivar", icon: mostrarInactivos ? UserCheck : UserX,
-            className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
-            onClick: (item) => setDesacTarget(item.id_colegiado)
-        },
+        { label: "Pagos", icon: CreditCard, className: "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100", onClick: (item) => setPagosModalId(item.id_colegiado) },
+        { label: "Docs", icon: FileText, className: "px-3 py-1.5 bg-blue-50 text-blue-600 rounded-xl font-medium shadow-sm hover:bg-blue-100", onClick: (item) => setDocumentosModalId(item.id_colegiado) },
+        ...(esEditor ? [
+            {
+                label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
+                onClick: (item) => { setColegiadoSeleccionado(item.id_colegiado); setMostrarModal2(true); }
+            },
+            {
+                label: mostrarInactivos ? "Activar" : "Desactivar", icon: mostrarInactivos ? UserCheck : UserX,
+                className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
+                onClick: (item) => setDesacTarget(item.id_colegiado)
+            },
+        ] : []),
     ];
 
     return (
@@ -83,7 +95,7 @@ const Colegiados = () => {
                 searchPlaceholder="Buscar colegiados..."
                 onSearch={(v) => setSearch(v)}
                 buttons={[
-                    { label: "Añadir colegiado", icon: <Plus />, onClick: () => SetMostrarModal(true), color: "purple" },
+                    ...(esEditor ? [{ label: "Añadir colegiado", icon: <Plus />, onClick: () => SetMostrarModal(true), color: "purple" }] : []),
                     { label: mostrarInactivos ? "Ver activos" : "Ver inactivos", icon: mostrarInactivos ? <Eye /> : <EyeOff />, onClick: () => setMostrarInactivos(!mostrarInactivos), color: mostrarInactivos ? "emerald" : "rose" },
                 ]}
             />
@@ -165,6 +177,15 @@ const Colegiados = () => {
                         });
                     }}
                 />
+            </Modal>
+
+            {/* Pagos y Documentos — modal grande, sin salir de la lista */}
+            <Modal isOpen={!!pagosModalId} size="xl" title="Pagos del Colegiado" onClose={() => setPagosModalId(null)}>
+                <Pagos id={pagosModalId} dentroDeModal />
+            </Modal>
+
+            <Modal isOpen={!!documentosModalId} size="xl" title="Documentos del Colegiado" onClose={() => setDocumentosModalId(null)}>
+                <Documentos id={documentosModalId} dentroDeModal />
             </Modal>
 
             {/* PIN de acceso — solo se muestra esta vez */}

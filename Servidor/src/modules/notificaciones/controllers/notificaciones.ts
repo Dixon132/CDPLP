@@ -1,20 +1,6 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
-import { modulosDelRol } from "../services";
-
-/**
- * Rol vigente del usuario autenticado.
- * Se lee de la BD y no del JWT para que un cambio de rol tenga efecto sin
- * necesidad de volver a iniciar sesión.
- */
-const rolDe = async (idUsuario: number) => {
-    const rol = await prismaClient.roles.findFirst({
-        where: { id_usuario: idUsuario, activo: true },
-        orderBy: { id_rol: 'desc' },
-        select: { rol: true },
-    });
-    return rol?.rol ?? undefined;
-};
+import { modulosDelUsuario } from "../services";
 
 /**
  * GET /api/notificaciones
@@ -28,7 +14,7 @@ export const listarNotificaciones = async (req: Request, res: Response) => {
     const limit = Math.min(Number(req.query.limit) || 20, 50);
     const soloNoLeidas = req.query.soloNoLeidas === 'true';
 
-    const modulos = modulosDelRol(await rolDe(idUsuario));
+    const modulos = await modulosDelUsuario(idUsuario);
     if (modulos.length === 0) {
         return res.status(200).json({ data: [], noLeidas: 0 });
     }
@@ -95,7 +81,7 @@ export const marcarLeida = async (req: Request, res: Response) => {
     });
     if (!existe) return res.status(404).json({ error: 'Notificación no encontrada' });
 
-    const modulos = modulosDelRol(await rolDe(idUsuario));
+    const modulos = await modulosDelUsuario(idUsuario);
     if (!modulos.includes(existe.modulo)) {
         return res.status(403).json({ error: 'Sin acceso a esta notificación' });
     }
@@ -116,7 +102,7 @@ export const marcarLeida = async (req: Request, res: Response) => {
  */
 export const marcarTodasLeidas = async (req: Request, res: Response) => {
     const idUsuario = req.user!.id_usuario;
-    const modulos = modulosDelRol(await rolDe(idUsuario));
+    const modulos = await modulosDelUsuario(idUsuario);
     if (modulos.length === 0) return res.status(200).json({ marcadas: 0 });
 
     const pendientes = await prismaClient.notificaciones.findMany({

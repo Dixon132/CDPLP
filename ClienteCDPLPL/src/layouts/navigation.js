@@ -2,13 +2,16 @@
  * Fuente única de la navegación del dashboard.
  *
  * Antes cada rol tenía su propio array dentro de `Sidebar.jsx` mediante una
- * cadena de if/else. Ahora los módulos se declaran una sola vez con los roles
- * que pueden verlos, y los consumen el sidebar, la barra inferior móvil, el
- * buscador global y los breadcrumbs.
+ * cadena de if/else. Ahora los módulos se declaran una sola vez y los
+ * consumen el sidebar, la barra inferior móvil, el buscador global y los
+ * breadcrumbs.
  *
- * Los `roles` de cada módulo se corresponden exactamente con los que ya tenía
- * el sidebar; esto no cambia permisos. La autorización real vive en
- * `RequireRole` (cliente) y en `authMiddleware` (servidor): esto es solo
+ * Cada módulo lleva un `recurso` (clave del catálogo de permisos granulares
+ * del backend): se muestra si `permisos[recurso] !== 'SIN_ACCESO'`. `roles`
+ * se conserva solo como fallback legado para los pocos ítems sin `recurso`
+ * propio (hoy, únicamente Plataforma_GDS, que vive fuera de este sistema de
+ * permisos). La autorización real de las rutas vive en `RequirePermiso`
+ * (cliente) y en `requirePermiso` (servidor): esto sigue siendo solo
  * presentación del menú.
  */
 
@@ -28,6 +31,7 @@ import {
     Activity,
     LayoutGrid,
     FileBarChart2,
+    CalendarClock,
 } from 'lucide-react';
 
 /**
@@ -50,6 +54,7 @@ export const ICONS = {
     Activity,
     LayoutGrid,
     FileBarChart2,
+    CalendarClock,
 };
 
 export const getIcon = (nombre) => ICONS[nombre] ?? LayoutGrid;
@@ -80,6 +85,7 @@ export const NAV_GROUPS = [
                 title: 'Dashboard',
                 path: '/dashboard',
                 icon: 'Home',
+                recurso: 'dashboard',
                 roles: ['PRESIDENTE', 'SECRETARIO_GENERAL'],
                 exact: true,
                 mobilePriority: 0,
@@ -94,6 +100,7 @@ export const NAV_GROUPS = [
                 title: 'Colegiados',
                 path: '/dashboard/colegiados',
                 icon: 'UsersRound',
+                recurso: 'colegiados',
                 roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE'],
                 subtitles: ['Invitados', 'Pasantes'],
                 mobilePriority: 1,
@@ -102,15 +109,25 @@ export const NAV_GROUPS = [
                 title: 'Postulaciones',
                 path: '/dashboard/postulaciones',
                 icon: 'ClipboardList',
+                recurso: 'colegiados.postulaciones',
                 roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE'],
                 mobilePriority: 5,
+            },
+            {
+                title: 'Vencimientos',
+                path: '/dashboard/vencimientos',
+                icon: 'CalendarClock',
+                recurso: 'colegiados',
+                roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE'],
+                mobilePriority: 13,
             },
             {
                 title: 'Usuarios',
                 path: '/dashboard/usuarios',
                 icon: 'UserCog',
+                recurso: 'usuarios',
                 roles: ['PRESIDENTE', 'VICEPRESIDENTE'],
-                subtitles: ['Roles'],
+                subtitles: ['Roles', 'Permisos'],
                 mobilePriority: 8,
             },
         ],
@@ -120,9 +137,10 @@ export const NAV_GROUPS = [
         label: 'Actividades',
         items: [
             {
-                title: 'Actividades_Sociales',
+                title: 'Actividades_Académicas',
                 path: '/dashboard/actividades_sociales',
                 icon: 'HeartHandshake',
+                recurso: 'actividades_sociales',
                 roles: ['PRESIDENTE', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL'],
                 subtitles: ['Convenios'],
                 mobilePriority: 3,
@@ -131,6 +149,7 @@ export const NAV_GROUPS = [
                 title: 'Actividades_Institucionales',
                 path: '/dashboard/actividades_institucionales',
                 icon: 'BookMarked',
+                recurso: 'actividades_institucionales',
                 roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL'],
                 mobilePriority: 4,
             },
@@ -138,6 +157,7 @@ export const NAV_GROUPS = [
                 title: 'Memorias',
                 path: '/dashboard/memorias',
                 icon: 'Library',
+                recurso: 'memorias',
                 roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'VOCAL', 'SECRETARIO_GENERAL'],
                 mobilePriority: 7,
             },
@@ -151,6 +171,7 @@ export const NAV_GROUPS = [
                 title: 'Tesoreria',
                 path: '/dashboard/tesoreria',
                 icon: 'DollarSign',
+                recurso: 'tesoreria',
                 roles: TODOS,
                 mobilePriority: 2,
             },
@@ -164,6 +185,7 @@ export const NAV_GROUPS = [
                 title: 'Informes',
                 path: '/dashboard/informes',
                 icon: 'FileBarChart2',
+                recurso: 'informes',
                 roles: TODOS,
                 mobilePriority: 12,
             },
@@ -177,6 +199,7 @@ export const NAV_GROUPS = [
                 title: 'Correspondencia',
                 path: '/dashboard/correspondencia',
                 icon: 'FolderDot',
+                recurso: 'correspondencia',
                 roles: ['PRESIDENTE', 'SECRETARIO', 'VICEPRESIDENTE', 'SECRETARIO_GENERAL'],
                 subtitles: ['Buzon'],
                 mobilePriority: 6,
@@ -188,6 +211,7 @@ export const NAV_GROUPS = [
                 title: 'Buzon',
                 path: '/dashboard/buzon',
                 icon: 'Inbox',
+                recurso: 'correspondencia.buzon',
                 roles: ['TESORERO', 'VOCAL'],
                 mobilePriority: 3,
             },
@@ -201,6 +225,7 @@ export const NAV_GROUPS = [
                 title: 'Auditorias',
                 path: '/dashboard/auditorias',
                 icon: 'Shield',
+                recurso: 'auditorias',
                 roles: ['PRESIDENTE'],
                 mobilePriority: 9,
             },
@@ -208,6 +233,7 @@ export const NAV_GROUPS = [
                 title: 'Ajustes',
                 path: '/dashboard/ajustes',
                 icon: 'Settings',
+                recurso: 'ajustes',
                 roles: TODOS,
                 mobilePriority: 10,
             },
@@ -226,20 +252,47 @@ export const NAV_GROUPS = [
     },
 ];
 
-/** "Actividades_Sociales" → "Actividades Sociales" */
+/**
+ * "Actividades_Académicas" → "Actividades Académicas"
+ *
+ * `\b\w` no es Unicode-aware: `\w` no incluye letras acentuadas, así que una
+ * tilde a mitad de palabra (la "é" de "Académicas") rompe el límite `\b` y
+ * termina poniendo mayúscula donde no toca ("AcadéMicas"). `(^|\s)\p{L}` con
+ * el flag `u` sí reconoce cualquier letra Unicode.
+ */
 export const formatTitle = (title = '') =>
-    title.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    title.replace(/_/g, ' ').replace(/(^|\s)\p{L}/gu, (l) => l.toUpperCase());
+
+/**
+ * Recurso del catálogo de permisos para cada subtítulo (submódulo) declarado
+ * arriba. Los subtítulos siguen siendo strings simples en `NAV_GROUPS` (así
+ * los renderiza `Sidebar.jsx` hoy); este mapa es solo para que el buscador y
+ * la hoja "Más" del móvil puedan filtrarlos por permiso también.
+ */
+const RECURSO_POR_SUBTITULO = {
+    Invitados: 'colegiados.invitados',
+    Pasantes: 'colegiados.pasantes',
+    Roles: 'usuarios.roles',
+    Permisos: 'usuarios.permisos',
+    Convenios: 'actividades_sociales.convenios',
+    Buzon: 'correspondencia.buzon',
+};
+
+/** ¿El usuario puede al menos observar este ítem? Recurso nuevo -> permisos; sin recurso -> `roles` (legado, hoy solo GDS). */
+const puedeVerItem = (item, rol, permisos) =>
+    item.recurso ? (permisos?.[item.recurso] ?? 'SIN_ACCESO') !== 'SIN_ACCESO' : item.roles.includes(rol);
 
 /**
  * Grupos visibles para un rol, ya filtrados y sin grupos vacíos.
- * Un rol no definido (o ausente) no ve ningún módulo.
+ * Un rol no definido (o ausente) no ve ningún módulo. `permisos` es el mapa
+ * `{clave_recurso: nivel}` resuelto por el backend (`useSession().permisos`).
  */
-export const getNavForRole = (rol) => {
+export const getNavForRole = (rol, permisos) => {
     if (!rol || rol === 'NO_DEFINIDO') return [];
     return NAV_GROUPS
         .map((grupo) => ({
             ...grupo,
-            items: grupo.items.filter((item) => item.roles.includes(rol)),
+            items: grupo.items.filter((item) => puedeVerItem(item, rol, permisos)),
         }))
         .filter((grupo) => grupo.items.length > 0);
 };
@@ -256,15 +309,18 @@ const expandSubtitles = (item) =>
         title: sub,
         path: `/dashboard/${sub.toLowerCase()}`,
         icon: item.icon,
+        recurso: RECURSO_POR_SUBTITULO[sub],
         roles: item.roles,
     }));
 
 /** Lista plana de módulos visibles para un rol, incluidos los subtítulos de cada uno. */
-export const getFlatNavForRole = (rol) =>
-    getNavForRole(rol).flatMap((grupo) =>
+export const getFlatNavForRole = (rol, permisos) =>
+    getNavForRole(rol, permisos).flatMap((grupo) =>
         grupo.items.flatMap((item) => [
             { ...item, grupo: grupo.label },
-            ...expandSubtitles(item).map((sub) => ({ ...sub, grupo: grupo.label })),
+            ...expandSubtitles(item)
+                .filter((sub) => puedeVerItem(sub, rol, permisos))
+                .map((sub) => ({ ...sub, grupo: grupo.label })),
         ])
     );
 
@@ -272,8 +328,8 @@ export const getFlatNavForRole = (rol) =>
  * Los `max` módulos más relevantes del rol para la barra inferior en móvil.
  * El resto se muestra en la hoja "Más".
  */
-export const getMobileNavForRole = (rol, max = 4) => {
-    const planos = getFlatNavForRole(rol).filter((item) => !item.external);
+export const getMobileNavForRole = (rol, permisos, max = 4) => {
+    const planos = getFlatNavForRole(rol, permisos).filter((item) => !item.external);
     const ordenados = [...planos].sort(
         (a, b) => (a.mobilePriority ?? 99) - (b.mobilePriority ?? 99)
     );
@@ -281,11 +337,11 @@ export const getMobileNavForRole = (rol, max = 4) => {
     const rutasPrincipales = new Set(principales.map((i) => i.path));
     return {
         principales,
-        resto: getNavForRole(rol)
+        resto: getNavForRole(rol, permisos)
             .map((grupo) => ({
                 ...grupo,
                 items: grupo.items
-                    .flatMap((item) => [item, ...expandSubtitles(item)])
+                    .flatMap((item) => [item, ...expandSubtitles(item).filter((sub) => puedeVerItem(sub, rol, permisos))])
                     .filter((i) => !rutasPrincipales.has(i.path)),
             }))
             .filter((grupo) => grupo.items.length > 0),
@@ -302,11 +358,13 @@ export const SEGMENT_LABELS = {
     invitados: 'Invitados',
     pasantes: 'Pasantes',
     postulaciones: 'Postulaciones',
+    vencimientos: 'Vencimientos',
     usuarios: 'Usuarios',
     roles: 'Roles',
+    permisos: 'Roles y Permisos',
     pagos: 'Pagos',
     documentos: 'Documentos',
-    actividades_sociales: 'Actividades Sociales',
+    actividades_sociales: 'Actividades Académicas',
     actividades_institucionales: 'Actividades Institucionales',
     convenios: 'Convenios',
     detalles: 'Detalle',

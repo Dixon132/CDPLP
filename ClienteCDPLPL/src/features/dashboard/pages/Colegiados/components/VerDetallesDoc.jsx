@@ -9,6 +9,7 @@ import Alerts from "../../../components/Alerts";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import { deleteDoc } from "../../../services/colegiados";
+import { useSession } from "../../../../../context/SessionProvider";
 import { FileText, Calendar, ExternalLink, Plus, Pencil, Trash2 } from "lucide-react";
 
 // Misma lógica de badge de estado que el resto del sistema
@@ -22,6 +23,8 @@ const getEstadoBadge = (estado) => {
 };
 
 const VerDetallesDoc = ({ id, tipoDoc }) => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("colegiados");
     const [data, setData] = useState([]);
     const [modalAñadir, setModalAñadir] = useState(false);
     const [modalDetalles, setModalDetalles] = useState(false);
@@ -61,15 +64,17 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
     return (
         <div className="p-4 space-y-4">
             {/* Botón añadir */}
-            <div className="flex justify-end">
-                <Button
-                    onClick={() => setModalAñadir(true)}
-                    className="flex items-center gap-2"
-                >
-                    <Plus size={15} />
-                    Añadir documento
-                </Button>
-            </div>
+            {esEditor && (
+                <div className="flex justify-end">
+                    <Button
+                        onClick={() => setModalAñadir(true)}
+                        className="flex items-center gap-2"
+                    >
+                        <Plus size={15} />
+                        Añadir documento
+                    </Button>
+                </div>
+            )}
 
             {/* Lista de documentos */}
             {data.length === 0 ? (
@@ -123,23 +128,27 @@ const VerDetallesDoc = ({ id, tipoDoc }) => {
                                     <span className={`px-2 py-0.5 rounded-full border text-xs font-semibold ${badge.cls}`}>
                                         {badge.label}
                                     </span>
-                                    <button
-                                        onClick={() => {
-                                            setCurrentId(doc.id_documento);
-                                            setModalDetalles(true);
-                                        }}
-                                        className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
-                                    >
-                                        <Pencil size={12} />
-                                        Modificar
-                                    </button>
-                                    <button
-                                        onClick={() => setDeleteTarget(doc.id_documento)}
-                                        className="flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-700 transition-colors"
-                                    >
-                                        <Trash2 size={12} />
-                                        Eliminar
-                                    </button>
+                                    {esEditor && (
+                                        <>
+                                            <button
+                                                onClick={() => {
+                                                    setCurrentId(doc.id_documento);
+                                                    setModalDetalles(true);
+                                                }}
+                                                className="flex items-center gap-1 text-xs font-medium text-slate-600 hover:text-slate-900 transition-colors"
+                                            >
+                                                <Pencil size={12} />
+                                                Modificar
+                                            </button>
+                                            <button
+                                                onClick={() => setDeleteTarget(doc.id_documento)}
+                                                className="flex items-center gap-1 text-xs font-medium text-red-500 hover:text-red-700 transition-colors"
+                                            >
+                                                <Trash2 size={12} />
+                                                Eliminar
+                                            </button>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         );

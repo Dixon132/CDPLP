@@ -267,7 +267,8 @@ exports.Prisma.Pagos_colegiadosScalarFieldEnum = {
   monto: 'monto',
   estado_pago: 'estado_pago',
   comprobante: 'comprobante',
-  metodo_pago: 'metodo_pago'
+  metodo_pago: 'metodo_pago',
+  gestiones: 'gestiones'
 };
 
 exports.Prisma.PresupuestosScalarFieldEnum = {
@@ -323,6 +324,7 @@ exports.Prisma.PasantesScalarFieldEnum = {
 exports.Prisma.RolesScalarFieldEnum = {
   id_rol: 'id_rol',
   id_usuario: 'id_usuario',
+  id_rol_catalogo: 'id_rol_catalogo',
   fecha_inicio: 'fecha_inicio',
   fecha_fin: 'fecha_fin',
   activo: 'activo',
@@ -383,6 +385,7 @@ exports.Prisma.Documentos_requeridosScalarFieldEnum = {
   activo: 'activo',
   es_opcional: 'es_opcional',
   orden: 'orden',
+  vigencia_meses: 'vigencia_meses',
   createdAt: 'createdAt'
 };
 
@@ -416,6 +419,41 @@ exports.Prisma.Pagos_invitadosScalarFieldEnum = {
   metodo_pago: 'metodo_pago'
 };
 
+exports.Prisma.Catalogo_rolesScalarFieldEnum = {
+  id_rol_catalogo: 'id_rol_catalogo',
+  nombre: 'nombre',
+  descripcion: 'descripcion',
+  activo: 'activo',
+  es_sistema: 'es_sistema',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.RecursosScalarFieldEnum = {
+  id_recurso: 'id_recurso',
+  clave: 'clave',
+  nombre: 'nombre',
+  id_padre: 'id_padre',
+  orden: 'orden',
+  activo: 'activo'
+};
+
+exports.Prisma.Rol_permisosScalarFieldEnum = {
+  id_rol_permiso: 'id_rol_permiso',
+  id_rol_catalogo: 'id_rol_catalogo',
+  id_recurso: 'id_recurso',
+  nivel: 'nivel',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.Usuario_permisosScalarFieldEnum = {
+  id_usuario_permiso: 'id_usuario_permiso',
+  id_usuario: 'id_usuario',
+  id_recurso: 'id_recurso',
+  nivel: 'nivel',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.InstitucionesScalarFieldEnum = {
   id_institucion: 'id_institucion',
   nombre: 'nombre'
@@ -443,6 +481,12 @@ exports.RolUsuario = exports.$Enums.RolUsuario = {
   SECRETARIO: 'SECRETARIO',
   TESORERO: 'TESORERO',
   NO_DEFINIDO: 'NO_DEFINIDO'
+};
+
+exports.NivelAcceso = exports.$Enums.NivelAcceso = {
+  SIN_ACCESO: 'SIN_ACCESO',
+  OBSERVADOR: 'OBSERVADOR',
+  EDITOR: 'EDITOR'
 };
 
 exports.Prisma.ModelName = {
@@ -473,6 +517,10 @@ exports.Prisma.ModelName = {
   config_pago: 'config_pago',
   memorias_balances: 'memorias_balances',
   pagos_invitados: 'pagos_invitados',
+  catalogo_roles: 'catalogo_roles',
+  recursos: 'recursos',
+  rol_permisos: 'rol_permisos',
+  usuario_permisos: 'usuario_permisos',
   instituciones: 'instituciones'
 };
 

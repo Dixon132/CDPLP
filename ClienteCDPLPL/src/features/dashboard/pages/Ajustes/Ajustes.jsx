@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../../components/Header";
 import { Settings } from "lucide-react";
+import Can from "../../../../components/Can";
 import EspecialidadesCRUD from "./components/EspecialidadesCRUD";
 import InstitucionesCRUD from "./components/InstitucionesCRUD";
 import DocumentosRequeridosCRUD from "./components/DocumentosRequeridosCRUD";
@@ -26,29 +27,39 @@ const Ajustes = () => {
             </div>
 
             {/* Especialidades */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
-                <EspecialidadesCRUD />
-            </div>
+            <Can recurso="ajustes.especialidades" nivel="OBSERVADOR">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <EspecialidadesCRUD />
+                </div>
+            </Can>
 
             {/* Instituciones */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
-                <InstitucionesCRUD />
-            </div>
+            <Can recurso="ajustes.instituciones" nivel="OBSERVADOR">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <InstitucionesCRUD />
+                </div>
+            </Can>
 
             {/* Documentos Requeridos */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
-                <DocumentosRequeridosCRUD />
-            </div>
+            <Can recurso="ajustes.documentos_requeridos" nivel="OBSERVADOR">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <DocumentosRequeridosCRUD />
+                </div>
+            </Can>
 
             {/* Configuración de Pagos */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
-                <ConfiguracionPagos />
-            </div>
+            <Can recurso="ajustes.pagos" nivel="OBSERVADOR">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <ConfiguracionPagos />
+                </div>
+            </Can>
 
             {/* Configuración Financiera (Enrutamiento) */}
-            <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
-                <ConfiguracionFinanciera />
-            </div>
+            <Can recurso="ajustes.financiero" nivel="OBSERVADOR">
+                <div className="bg-white/80 backdrop-blur-xl rounded-3xl p-6 shadow-sm border border-slate-200">
+                    <ConfiguracionFinanciera />
+                </div>
+            </Can>
         </div>
     );
 };

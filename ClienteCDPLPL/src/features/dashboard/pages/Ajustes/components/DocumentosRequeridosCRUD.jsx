@@ -10,6 +10,7 @@ import ConfirmDeleteModal from "../../../../../components/ConfirmDeleteModal";
 import ConfirmActionModal from "../../../../../components/ConfirmActionModal";
 import ResponsiveTable from "../../../components/ResponsiveTable";
 import Alerts from "../../../components/Alerts";
+import { useSession } from "../../../../../context/SessionProvider";
 import {
     FileText,
     Plus,
@@ -24,6 +25,7 @@ function DocumentoRequeridoForm({ initial = {}, onSubmit, onCancel, loading }) {
     const [descripcion, setDescripcion] = useState(initial.descripcion || "");
     const [esOpcional, setEsOpcional] = useState(initial.es_opcional ?? false);
     const [orden, setOrden] = useState(initial.orden ?? 0);
+    const [vigenciaMeses, setVigenciaMeses] = useState(initial.vigencia_meses ?? "");
     const [errors, setErrors] = useState({});
 
     const validate = () => {
@@ -31,6 +33,9 @@ function DocumentoRequeridoForm({ initial = {}, onSubmit, onCancel, loading }) {
         if (!nombre.trim()) errs.nombre = "El nombre es obligatorio";
         else if (nombre.trim().length < 3) errs.nombre = "Mínimo 3 caracteres";
         if (orden !== "" && isNaN(Number(orden))) errs.orden = "El orden debe ser un número";
+        if (vigenciaMeses !== "" && (isNaN(Number(vigenciaMeses)) || Number(vigenciaMeses) < 1)) {
+            errs.vigenciaMeses = "Debe ser un número mayor a 0";
+        }
         return errs;
     };
 
@@ -43,6 +48,7 @@ function DocumentoRequeridoForm({ initial = {}, onSubmit, onCancel, loading }) {
             descripcion: descripcion.trim(),
             es_opcional: esOpcional,
             orden: Number(orden),
+            vigencia_meses: vigenciaMeses === "" ? null : Number(vigenciaMeses),
         });
     };
 
@@ -75,6 +81,26 @@ function DocumentoRequeridoForm({ initial = {}, onSubmit, onCancel, loading }) {
                     placeholder="Descripción breve (opcional)"
                     disabled={loading}
                 />
+            </div>
+
+            <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-1">
+                    Vigencia (meses)
+                </label>
+                <input
+                    type="number"
+                    min={1}
+                    value={vigenciaMeses}
+                    onChange={(e) => { setVigenciaMeses(e.target.value); setErrors((p) => ({ ...p, vigenciaMeses: "" })); }}
+                    className={`w-full px-4 py-2.5 rounded-xl border ${errors.vigenciaMeses ? "border-red-400 bg-red-50" : "border-slate-200 bg-white"} text-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300 transition`}
+                    placeholder="Déjalo en blanco si el documento no vence"
+                    disabled={loading}
+                />
+                {errors.vigenciaMeses ? (
+                    <p className="text-xs text-red-500 mt-1">{errors.vigenciaMeses}</p>
+                ) : (
+                    <p className="text-xs text-slate-400 mt-1">Al subir este documento, la fecha de vencimiento se calculará automáticamente</p>
+                )}
             </div>
 
             <div className="flex gap-4">
@@ -139,6 +165,8 @@ function DocumentoRequeridoForm({ initial = {}, onSubmit, onCancel, loading }) {
 
 // ── Componente principal ───────────────────────────────────────────────────────
 const DocumentosRequeridosCRUD = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("ajustes.documentos_requeridos");
     const [documentos, setDocumentos] = useState([]);
     const [loadingData, setLoadingData] = useState(false);
 
@@ -280,13 +308,15 @@ const DocumentosRequeridosCRUD = () => {
                         </p>
                     </div>
                 </div>
-                <button
-                    onClick={() => setShowCreate(true)}
-                    className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
-                >
-                    <Plus className="w-4 h-4" />
-                    Agregar documento
-                </button>
+                {esEditor && (
+                    <button
+                        onClick={() => setShowCreate(true)}
+                        className="flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white rounded-xl font-semibold text-sm hover:bg-indigo-700 transition shadow-sm"
+                    >
+                        <Plus className="w-4 h-4" />
+                        Agregar documento
+                    </button>
+                )}
             </div>
 
             {/* Tabla */}
@@ -326,6 +356,15 @@ const DocumentosRequeridosCRUD = () => {
                                 render: (item) => <OpcionalBadge esOpcional={item.es_opcional} />,
                             },
                             {
+                                label: "Vigencia",
+                                key: "vigencia_meses",
+                                render: (item) => (
+                                    <span className="text-slate-600 text-sm">
+                                        {item.vigencia_meses ? `${item.vigencia_meses} mes(es)` : <em className="text-slate-300">No vence</em>}
+                                    </span>
+                                ),
+                            },
+                            {
                                 label: "Orden",
                                 key: "orden",
                                 render: (item) => (
@@ -341,7 +380,7 @@ const DocumentosRequeridosCRUD = () => {
                             },
                         ]}
                         data={documentos}
-                        actions={[
+                        actions={esEditor ? [
                             {
                                 label: "Editar",
                                 icon: Edit3,
@@ -357,7 +396,7 @@ const DocumentosRequeridosCRUD = () => {
                                         : "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100 border border-emerald-100 flex items-center gap-1.5 text-xs uppercase font-bold tracking-widest",
                                 onClick: (item) => setToggleTarget(item),
                             },
-                        ]}
+                        ] : []}
                         emptyMessage="No hay documentos requeridos registrados"
                     />
                 )}

@@ -24,6 +24,12 @@ export const getUserById = async(id)=>{
     return res.data
 }
 
+/** Lista liviana de usuarios activos {id_usuario, nombre, apellido}, para selects. */
+export const getUsuariosSimples = async()=>{
+    const res = await axios.get('/api/usuarios/usuario/simple')
+    return res.data
+}
+
 /**
  * Usuario de la sesión actual (nombre, correo, teléfono...).
  * El JWT solo lleva `userId` y el rol, por eso hace falta este viaje.

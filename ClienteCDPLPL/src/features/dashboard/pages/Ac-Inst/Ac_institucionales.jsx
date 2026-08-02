@@ -1,27 +1,34 @@
 import React, { useEffect, useState, useMemo } from "react";
 import Modal from "../../../../components/Modal";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
-import ConfirmDeleteModal from "../../../../components/ConfirmDeleteModal";
 import ResponsiveTable from "../../components/ResponsiveTable";
 import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 
-import { getAllActividadesInstitucionales, updateEstadoActividadInstitucional, getActividadInstDetailReport } from "../../services/ac-institucionales";
+import { getAllActividadesInstitucionales } from "../../services/ac-institucionales";
 import CreateActInstitucional from "./components/CreateActInstitucional";
-import EditActInstitucional from "./components/EditActInstitucional";
-import RegisterColegiadoInst from "./components/RegisterColegiadoInst";
-import GestionAsistenciaInst from "./components/GestionAsistenciaInst";
 
 import {
-    Sparkles, Calendar, Edit3, UserPlus, ClipboardList,
-    Power, PowerOff, Activity, Settings,
-    Target, Rocket, CheckCircle2, XCircle, AlertCircle,
+    Sparkles, Calendar, Eye,
+    Activity, Settings,
+    Target, Rocket,
     Filter, Plus, DollarSign, Award,
 } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
 import ActividadEstadoBadge, { ESTADOS_ACTIVIDAD } from "./components/ActividadEstadoBadge";
+import { useSession } from "../../../../context/SessionProvider";
 
+/**
+ * Lista de actividades institucionales. Toda la gestión puntual de una
+ * actividad (editar, terminar/activar, registrar gente, marcar asistencia)
+ * vive en su propia página (`DetalleActividadInst`) — acá solo hay un punto
+ * de entrada, "Ver detalles", para no amontonar botones por fila.
+ */
 const AcInstitucionales = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("actividades_institucionales");
+    const navigate = useNavigate();
+
     const [actividades, setActividades] = useState([]);
     const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
@@ -30,16 +37,7 @@ const AcInstitucionales = () => {
     const [filterType, setFilterType] = useState('all');
 
     const [showModalCreate, setShowModalCreate] = useState(false);
-    const [showModalEdit, setShowModalEdit] = useState(false);
-    const [showModalRegister, setShowModalRegister] = useState(false);
-    const [showModalAsistencia, setShowModalAsistencia] = useState(false);
-    const [selectedId, setSelectedId] = useState(null);
-
-    // Confirm DESPUÉS de guardar
-    const [confirmSave, setConfirmSave] = useState({ open: false, variant: "create", callback: null });
-
-    // Doble confirmación toggle estado
-    const [toggleTarget, setToggleTarget] = useState(null);
+    const [confirmSave, setConfirmSave] = useState({ open: false, callback: null });
 
     const [alert, setAlert] = useState({ show: false, type: "success", message: "" });
     const showAlert = (type, message) => {
@@ -47,42 +45,12 @@ const AcInstitucionales = () => {
         setTimeout(() => setAlert((a) => ({ ...a, show: false })), 3000);
     };
 
-    const navigate = useNavigate();
-
     const fetchActividades = async () => {
         const { data, total: t, page: cp, totalPages } =
             await getAllActividadesInstitucionales({ page, search });
         setActividades(data || []); setTotal(t || 0); setTotalPage(totalPages || 1); setPage(cp || 1);
     };
     useEffect(() => { fetchActividades(); }, [page, search]);
-
-    const ejecutarToggle = async () => {
-        if (!toggleTarget) return;
-        const nuevoEstado = toggleTarget.estadoActual === "EN_CURSO" ? "TERMINADO" : "EN_CURSO";
-        try {
-            await updateEstadoActividadInstitucional(toggleTarget.id, nuevoEstado);
-            showAlert("success", `Actividad ${nuevoEstado === "EN_CURSO" ? "activada" : "terminada"} correctamente.`);
-            
-            if (nuevoEstado === "TERMINADO") {
-                try {
-                    const blob = await getActividadInstDetailReport(toggleTarget.id);
-                    const url = window.URL.createObjectURL(new Blob([blob]));
-                    const link = document.createElement("a");
-                    link.href = url;
-                    link.setAttribute("download", `lista_oficial_${toggleTarget.id}.pdf`);
-                    document.body.appendChild(link);
-                    link.click();
-                    link.remove();
-                } catch (e) {
-                    console.error(e);
-                    showAlert("error", "Error al descargar la lista oficial.");
-                }
-            }
-
-            fetchActividades();
-        } catch { showAlert("error", "Error al cambiar el estado."); }
-        finally { setToggleTarget(null); }
-    };
 
     const getActivityIcon = (tipo) => {
         switch (tipo?.toLowerCase()) {
@@ -93,8 +61,6 @@ const AcInstitucionales = () => {
             default: return <Activity className="w-5 h-5" />;
         }
     };
-
-
 
     const filteredActividades = useMemo(() =>
         actividades.filter(i => filterType === 'all' || i.estado === filterType),
@@ -111,7 +77,7 @@ const AcInstitucionales = () => {
                 searchPlaceholder="Buscar actividades..."
                 onSearch={(v) => { setSearch(v); setPage(1); }}
                 buttons={[
-                    { label: "Crear Actividad", icon: <Plus />, onClick: () => setShowModalCreate(true), color: "purple" },
+                    ...(esEditor ? [{ label: "Crear Actividad", icon: <Plus />, onClick: () => setShowModalCreate(true), color: "purple" }] : []),
                 ]}
             />
 
@@ -161,79 +127,31 @@ const AcInstitucionales = () => {
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                     emptyMessage="No se encontraron actividades"
                     actions={[
-                        {
-                            label: (a) => a.estado === "EN_CURSO" ? "Terminar" : "Activar",
-                            icon: (a) => a.estado === "EN_CURSO" ? PowerOff : Power,
-                            className: (a) => a.estado === "EN_CURSO"
-                                ? "text-rose-600 bg-rose-50 px-3 py-1.5 rounded-lg"
-                                : "text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded-lg",
-                            onClick: (a) => setToggleTarget({ id: a.id_actividad, estadoActual: a.estado }),
-                            hide: (a) => a.estado === "EN_INSCRIPCION",
-                        },
-                        { label: "Editar", icon: Edit3, onClick: (a) => { setSelectedId(a.id_actividad); setShowModalEdit(true); } },
-                        { label: "Registrar", icon: UserPlus, onClick: (a) => { setSelectedId(a.id_actividad); setShowModalRegister(true); } },
-                        { label: "Asistencia", icon: ClipboardList, onClick: (a) => navigate(`/dashboard/asistencias/${a.id_actividad}`) },
+                        { label: "Ver detalles", icon: Eye, onClick: (a) => navigate(`/dashboard/actividades_institucionales/detalles/${a.id_actividad}`) },
                     ]}
                 />
             </div>
 
-            {/* Forms — abren directo */}
+            {/* Crear actividad */}
             <Modal isOpen={showModalCreate} title="Crear Actividad Institucional" onClose={() => setShowModalCreate(false)}>
                 <CreateActInstitucional
                     onClose={() => setShowModalCreate(false)}
                     onSuccess={() => {
                         setConfirmSave({
-                            open: true, variant: "create",
+                            open: true,
                             callback: () => { setShowModalCreate(false); showAlert("success", "Actividad creada correctamente."); fetchActividades(); },
                         });
                     }}
                 />
             </Modal>
 
-            <Modal isOpen={showModalEdit} title="Editar Actividad Institucional" onClose={() => setShowModalEdit(false)}>
-                {selectedId && (
-                    <EditActInstitucional
-                        id={selectedId}
-                        onClose={() => setShowModalEdit(false)}
-                        onSuccess={() => {
-                            setConfirmSave({
-                                open: true, variant: "edit",
-                                callback: () => { setShowModalEdit(false); showAlert("success", "Actividad actualizada correctamente."); fetchActividades(); },
-                            });
-                        }}
-                    />
-                )}
-            </Modal>
-
-            <Modal isOpen={showModalRegister} title="Registrar Colegiado / Invitado" onClose={() => setShowModalRegister(false)}>
-                {selectedId && <RegisterColegiadoInst id={selectedId} onClose={() => setShowModalRegister(false)} onSuccess={() => setShowModalRegister(false)} />}
-            </Modal>
-
-            <Modal isOpen={showModalAsistencia} title="Gestionar Asistencias" onClose={() => setShowModalAsistencia(false)}>
-                {selectedId && <GestionAsistenciaInst id={selectedId} onClose={() => setShowModalAsistencia(false)} />}
-            </Modal>
-
-            {/* ✅ Confirm DESPUÉS de guardar */}
             <ConfirmActionModal
                 isOpen={confirmSave.open}
-                variant={confirmSave.variant}
-                title={confirmSave.variant === "create" ? "¿Confirmar creación?" : "¿Confirmar cambios?"}
-                message={confirmSave.variant === "create" ? "¿Confirmas que deseas guardar la nueva actividad?" : "¿Confirmas que deseas guardar los cambios realizados?"}
-                onClose={() => setConfirmSave({ ...confirmSave, open: false })}
-                onConfirm={() => { setConfirmSave({ ...confirmSave, open: false }); confirmSave.callback?.(); }}
-            />
-
-            {/* ✅ Doble confirmación toggle (2s + 4s) */}
-            <ConfirmDeleteModal
-                isOpen={!!toggleTarget}
-                onClose={() => setToggleTarget(null)}
-                onConfirm={ejecutarToggle}
-                title={toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar Actividad" : "Activar Actividad"}
-                message={`¿Confirmas que deseas ${toggleTarget?.estadoActual === "EN_CURSO" ? "marcar como terminada" : "activar"} esta actividad?`}
-                waitSeconds={4}
-                confirmColor={toggleTarget?.estadoActual === "EN_CURSO" ? "amber" : "emerald"}
-                confirmIcon={toggleTarget?.estadoActual === "EN_CURSO" ? <PowerOff className="w-4 h-4" /> : <Power className="w-4 h-4" />}
-                confirmLabel={toggleTarget?.estadoActual === "EN_CURSO" ? "Terminar" : "Activar"}
+                variant="create"
+                title="¿Confirmar creación?"
+                message="¿Confirmas que deseas guardar la nueva actividad?"
+                onClose={() => setConfirmSave({ open: false, callback: null })}
+                onConfirm={() => { setConfirmSave({ open: false, callback: null }); confirmSave.callback?.(); }}
             />
 
             <Alerts type={alert.type} message={alert.message} show={alert.show} onClose={() => setAlert((a) => ({ ...a, show: false }))} />

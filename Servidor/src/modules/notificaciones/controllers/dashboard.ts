@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import prismaClient from "../../../utils/prismaClient";
 import { Modulos } from "../../../types/auditoria";
-import { modulosDelRol } from "../services";
+import { modulosDelUsuario } from "../services";
+import { obtenerResumenVencimientos } from "../../vencimientos/services";
 
 /**
  * Resumen del panel de inicio.
@@ -61,12 +62,7 @@ export const getResumenDashboard = async (req: Request, res: Response) => {
 
     const { inicioActual, inicioAnterior, finAnterior } = calcularRangos(periodo);
 
-    const rol = await prismaClient.roles.findFirst({
-        where: { id_usuario: idUsuario, activo: true },
-        orderBy: { id_rol: 'desc' },
-        select: { rol: true },
-    });
-    const modulos = modulosDelRol(rol?.rol ?? undefined);
+    const modulos = await modulosDelUsuario(idUsuario);
     const puede = (m: string) => modulos.includes(m);
 
     const metricas: any[] = [];
@@ -95,27 +91,20 @@ export const getResumenDashboard = async (req: Request, res: Response) => {
             }),
         );
 
-        // Morosidad: colegiados activos cuya renovación ya venció.
-        // Solo cuenta los que tienen fecha registrada; los que la tienen en
-        // blanco no se pueden clasificar y se informan aparte para que no
-        // parezcan al día sin serlo.
-        const hoy = new Date();
-        const [vencidos, sinFecha] = await Promise.all([
-            prismaClient.colegiados.count({
-                where: { estado: 'ACTIVO', fecha_renovacion: { lt: hoy } },
-            }),
-            prismaClient.colegiados.count({
-                where: { estado: 'ACTIVO', fecha_renovacion: null },
-            }),
-        ]);
-        const porcentaje = activos > 0 ? Math.round((vencidos / activos) * 100) : 0;
+        // Vencimientos: colegiaturas y documentos vencidos o por vencer en 30
+        // días, calculados por el motor central de vencimientos (que también
+        // alimenta la vista dedicada `/dashboard/vencimientos`).
+        const sinFecha = await prismaClient.colegiados.count({
+            where: { estado: 'ACTIVO', fecha_renovacion: null },
+        });
+        const resumenVenc = await obtenerResumenVencimientos();
         metricas.push(
-            metrica('Colegiados con renovación vencida', vencidos, vencidos, vencidos, {
-                clave: 'morosidad', icono: 'AlertTriangle', color: 'rose',
-                enlace: '/dashboard/colegiados', sinTendencia: true, menosEsMejor: true,
+            metrica('Vencimientos próximos (30 días)', resumenVenc.proximos30, resumenVenc.proximos30, resumenVenc.proximos30, {
+                clave: 'vencimientos', icono: 'AlertTriangle', color: 'rose',
+                enlace: '/dashboard/vencimientos', sinTendencia: true, menosEsMejor: true,
                 pie: sinFecha > 0
-                    ? `${porcentaje}% de los activos · ${sinFecha} sin fecha registrada`
-                    : `${porcentaje}% de los colegiados activos`,
+                    ? `${resumenVenc.vencidos} ya vencido(s) · ${sinFecha} colegiado(s) sin fecha registrada`
+                    : `${resumenVenc.vencidos} ya vencido(s)`,
             }),
         );
     }

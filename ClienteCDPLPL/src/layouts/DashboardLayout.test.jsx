@@ -24,6 +24,38 @@ vi.mock('../features/dashboard/services/usuarios', () => ({
     ),
 }));
 
+// El mapa de permisos se pide a GET /api/permisos/mis-permisos; aquí se simula
+// con la misma matriz "cero-regresión" sembrada en Servidor/prisma/seedPermisos.ts,
+// leyendo el rol del token de la misma forma que lo haría el backend real.
+vi.mock('../features/dashboard/services/permisos', () => {
+    const TODOS_RECURSOS = [
+        'dashboard', 'colegiados', 'colegiados.invitados', 'colegiados.pasantes', 'colegiados.postulaciones',
+        'usuarios', 'usuarios.roles', 'usuarios.permisos', 'actividades_sociales', 'actividades_sociales.convenios',
+        'actividades_institucionales', 'memorias', 'tesoreria', 'informes', 'correspondencia',
+        'correspondencia.buzon', 'auditorias', 'ajustes', 'ajustes.especialidades', 'ajustes.instituciones',
+        'ajustes.documentos_requeridos', 'ajustes.pagos', 'ajustes.financiero',
+    ];
+    const EDITOR_POR_ROL = {
+        PRESIDENTE: TODOS_RECURSOS,
+        TESORERO: [
+            'usuarios.roles', 'actividades_sociales.convenios', 'tesoreria', 'informes', 'correspondencia.buzon',
+            'ajustes', 'ajustes.especialidades', 'ajustes.instituciones', 'ajustes.documentos_requeridos',
+            'ajustes.pagos', 'ajustes.financiero',
+        ],
+    };
+    return {
+        getMisPermisos: vi.fn(() => {
+            const token = localStorage.getItem('token');
+            const payload = token ? JSON.parse(atob(token.split('.')[1])) : null;
+            const permitidos = EDITOR_POR_ROL[payload?.rol?.rol] ?? [];
+            const mapa = Object.fromEntries(
+                TODOS_RECURSOS.map((clave) => [clave, permitidos.includes(clave) ? 'EDITOR' : 'SIN_ACCESO'])
+            );
+            return Promise.resolve(mapa);
+        }),
+    };
+});
+
 import { DashboardLayout } from './DashboardLayout';
 import { AppearanceProvider } from '../context/AppearanceProvider';
 

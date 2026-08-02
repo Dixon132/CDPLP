@@ -3,17 +3,15 @@ import { FileBarChart2, ArrowRight } from 'lucide-react';
 
 import Header from '../../components/Header';
 import Modal from '../../../../components/Modal';
-import { parseToken } from '../../../../utils/parsejwt';
+import { useSession } from '../../../../context/SessionProvider';
 import { INFORMES } from './informesConfig';
 
 const Informes = () => {
-    const token = localStorage.getItem('token');
-    const payload = token ? parseToken(token) : null;
-    const currentRole = payload?.rol?.rol;
+    const { puedeVer } = useSession();
 
     const [activeInforme, setActiveInforme] = useState(null);
 
-    const visibles = INFORMES.filter((i) => i.roles.includes(currentRole));
+    const visibles = INFORMES.filter((i) => puedeVer(i.recurso));
 
     return (
         <div className="space-y-6 p-6 bg-slate-50/50 min-h-full">

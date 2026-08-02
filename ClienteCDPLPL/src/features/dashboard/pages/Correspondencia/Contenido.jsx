@@ -25,6 +25,7 @@ import {
 } from "../../services/correspondencia";
 import ConfirmActionModal from "../../../../components/ConfirmActionModal";
 import Alerts from "../../components/Alerts";
+import { useSession } from "../../../../context/SessionProvider";
 
 // Componente Modal personalizado
 const Modal = ({ isOpen, onClose, title, children }) => {
@@ -51,6 +52,8 @@ const Modal = ({ isOpen, onClose, title, children }) => {
 };
 
 const Contenido = () => {
+  const { puedeEditar } = useSession();
+  const esEditor = puedeEditar("correspondencia.buzon");
   const { id } = useParams();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -206,13 +209,15 @@ const Contenido = () => {
             {/* Footer con acciones */}
             <div className="px-6 sm:px-8 py-4 border-t border-slate-100 bg-slate-50/50">
               <div className="flex items-center justify-between gap-4 flex-wrap">
-                <button
-                  onClick={() => setModalOpen(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm"
-                >
-                  <Settings className="w-4 h-4 text-slate-500" />
-                  Cambiar estado
-                </button>
+                {esEditor && (
+                  <button
+                    onClick={() => setModalOpen(true)}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm"
+                  >
+                    <Settings className="w-4 h-4 text-slate-500" />
+                    Cambiar estado
+                  </button>
+                )}
 
                 <button
                   onClick={() => verCorrespondencia(data.id_correspondencia)}

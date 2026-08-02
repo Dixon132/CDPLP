@@ -10,8 +10,11 @@ import Header from "../../components/Header";
 import Alerts from "../../components/Alerts";
 import { Users, UserPlus, Edit3, UserCheck, UserX, Mail, Phone, MapPin, Eye, EyeOff } from "lucide-react";
 import { getEstadoBadge, getEstadoIcon } from "../../hooks/estados";
+import { useSession } from "../../../../context/SessionProvider";
 
 const Usuarios = () => {
+    const { puedeEditar } = useSession();
+    const esEditor = puedeEditar("usuarios");
     const [mostrarInactivos, setMostrarInactivos] = useState(false);
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState("");
@@ -63,7 +66,7 @@ const Usuarios = () => {
                 searchPlaceholder="Buscar por nombre, correo o dirección..."
                 onSearch={(v) => { setSearch(v); setPage(1); }}
                 buttons={[
-                    { label: "Añadir Usuario", icon: <UserPlus />, onClick: () => setMostrarModal(true), color: "purple" },
+                    ...(esEditor ? [{ label: "Añadir Usuario", icon: <UserPlus />, onClick: () => setMostrarModal(true), color: "purple" }] : []),
                     { label: mostrarInactivos ? "Ver Activos" : "Ver Inactivos", icon: mostrarInactivos ? <Eye /> : <EyeOff />, onClick: () => setMostrarInactivos(!mostrarInactivos), color: mostrarInactivos ? "emerald" : "rose" },
                 ]}
             />
@@ -93,7 +96,7 @@ const Usuarios = () => {
                         { label: "Estado", key: "estado", render: (item) => <span className={getEstadoBadge(item.estado)}>{getEstadoIcon(item.estado)} {item.estado}</span> },
                     ]}
                     data={users}
-                    actions={[
+                    actions={esEditor ? [
                         {
                             label: "Editar", icon: Edit3, className: "px-3 py-1.5 bg-amber-50 text-amber-600 rounded-xl font-medium shadow-sm hover:bg-amber-100",
                             onClick: (item) => { setUsuarioModificando(item.id_usuario); setMostrarModalModificar(true); }
@@ -103,7 +106,7 @@ const Usuarios = () => {
                             className: mostrarInactivos ? "px-3 py-1.5 bg-emerald-50 text-emerald-600 rounded-xl font-medium shadow-sm hover:bg-emerald-100" : "px-3 py-1.5 bg-rose-50 text-rose-600 rounded-xl font-medium shadow-sm hover:bg-rose-100",
                             onClick: (item) => setEstadoTarget(item.id_usuario)
                         },
-                    ]}
+                    ] : []}
                     pagination={{ total, totalPage, page, onPageChange: setPage }}
                 />
             </div>
